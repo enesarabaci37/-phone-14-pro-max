@@ -4,7 +4,8 @@ Tamamen kodla sentezlenir (hazır örnek/sample kullanılmaz), bu yüzden telif 
 Hava uyarısı haberine uygun: gergin ama sakin bir pad, yumuşak bas vuruşu,
 sahne geçişlerinde "whoosh" efektleri ve başta gök gürültüsü.
 
-Kullanım: python3 muzik.py <cikti.wav> <sure_sn> <gecis1,gecis2,...> <simsek1,simsek2,...>
+Kullanım: python3 muzik.py <cikti.wav> <sure_sn> <gecis1,gecis2,...> <simsek1,simsek2,...> [bpm] [mod]
+  mod: "minor" (gergin, varsayılan) veya "major" (enerjik, teknoloji tanıtımı)
 """
 import sys
 import wave
@@ -135,21 +136,27 @@ def main():
     flashes = [float(x) for x in sys.argv[4].split(",") if x]
 
     t = np.arange(int(duration * SR)) / SR
-    bpm = 84
+    bpm = float(sys.argv[5]) if len(sys.argv) > 5 else 84
+    mode = sys.argv[6] if len(sys.argv) > 6 else "minor"
     beat = 60 / bpm
     bar = beat * 4
 
     # La minör: Am - F - C - G  (dramatik ama sakin)
-    chords = [[57, 60, 64], [53, 57, 60], [55, 60, 64], [55, 59, 62]]
-    roots = [45, 41, 48, 43]
-    chords = chords * 8
-    rhythm_start = 2.0
+    if mode == "major":
+        # Do majör: C - G - Am - F (pozitif, modern)
+        chords = [[60, 64, 67], [59, 62, 67], [57, 60, 64], [57, 60, 65]]
+        roots = [48, 43, 45, 41]
+    else:
+        chords = [[57, 60, 64], [53, 57, 60], [55, 60, 64], [55, 59, 62]]
+        roots = [45, 41, 48, 43]
+    chords = chords * 16
+    rhythm_start = 2.0 if mode == "minor" else 0.0
 
     mix = (
         0.32 * pad(duration, t, chords, bar)
         + 0.30 * bass(duration, t, roots, bar, beat, rhythm_start)
         + 0.42 * kick(duration, t, beat, rhythm_start)
-        + 0.05 * ticks(duration, t, beat, rhythm_start)
+        + (0.05 if mode == "minor" else 0.08) * ticks(duration, t, beat, rhythm_start)
     )
     for at in transitions:
         mix += 0.20 * whoosh(t, at)
