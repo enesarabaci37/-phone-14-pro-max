@@ -9,12 +9,21 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - Yeni bir **Bambu Lab X2D + AMS Pro 2** 3D yazıcısı var. 3D çizim bilmiyor, modelleri Claude kodla hazırlıyor.
 - Hedefi: internetten, kargoyla uğraşmadan, olabildiğince pasif gelir.
 - Türkçe, sade ve dürüst anlatım tercih ediyor.
+- **Adobe Creative Cloud üyeliği var (ücretli):** Photoshop, Premiere Pro, Illustrator, After Effects vb.
+  - Adobe bağlayıcısı henüz bağlı değil (claude.ai/customize/connectors > Adobe). Bağlanınca yeni oturumda araçları test et.
+  - Bağlayıcısız yol: düzenlenebilir dosya üret (Photoshop/Illustrator/AE için .jsx script, katmanlı PSD, vektör SVG/PDF, Premiere için XML).
 
 ## Şimdiye kadar yapılanlar (bu repoda)
 - `haber-videolari/`: Kastamonu sarı kod haber videosu ve Bambu Lab H3C tanıtım videosu (PIL + ffmpeg, müzik `muzik.py` ile koddan üretiliyor).
 - `instagram/oto-cam-filmi/`: Logolu 10 görsellik oto cam filmi Instagram gönderisi (`carousel.py`).
 - `instagram/logo-arabaci-reklam.png`: İşletme logosu.
 - `3d-modeller/anahtarlik/`: Logolu çok renkli anahtarlık modelleri (3MF + STL, `anahtarlik.py`).
+- `3d-modeller/magnet-taskopru/`: Taşköprü sarımsağı buzdolabı magneti (3 renk, 79x64x6.2 mm, arkada 2x 10x3 mm mıknatıs yuvası, `magnet.py`).
+  - Enes "çok basit" buldu. Önerilen v2: kabarık (hacimli) sarımsak dişleri + arkada Taşköprü taş köprü silüeti + dalgalı kurdele. Onay bekleniyor.
+- **kastamonuhaber.com haftalık haber videosu (4 Kasım 2026):** Tek video, 5 haber x ~11 sn, 1080x1920, ~71 sn.
+  - Enes'in tercihleri: haberler tek videoda (ayrı ayrı değil), her biri ~10 sn; logo beyaz zemin üstünde OLMASIN (koyu zemin için beyaz+kırmızı logo versiyonu kullanıldı); "Kaynak: İHA/AA" yazmasın; bilgiler kastamonuhaber.com'dan alınsın; arka plan halkası ortalı olsun.
+  - Yöntem: HTML/CSS şablon + Playwright ile kare kare render + ffmpeg; seslendirme edge-tts (tr-TR-AhmetNeural, +15%), müzik numpy ile üretildi. Betikler bu oturumun geçici klasöründeydi, repoya alınmadı.
+- **Bekleyen:** Instagram (arabacireklam) analizi. Instagram dışarıdan erişimi engelliyor; Enes'ten profil + İstatistikler ekran görüntüleri ya da "Bilgilerini indir" JSON'u istendi.
 
 ## Konuşulan gelir fikirleri ve durum
 - **Önerilen ana yol:** 3D baskı YouTube kanalı + STL dosyası satışı (Cults3D, Etsy; MakerWorld ücretsiz vitrin).
