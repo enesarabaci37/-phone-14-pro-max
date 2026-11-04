@@ -43,3 +43,9 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
     - `3D Modeller` (id: `1R3pSws9MsYxAU6H8lskDXDS0NPsZcrnW`)
 - Canva'da **ARABACI REKLAM** marka kiti var (id: `kAFsNPNzV8c`). Diğer marka kitleri Enes'in müşterilerine ait, izinsiz kullanma.
 - Canva akışı: tasarımı Claude yapar → Canva'ya aktarır → küçük düzenlemeleri Enes yapar.
+
+## Canva tasarımları
+- **Oto cam filmi kaydırmalı gönderi (10 sayfa, 1080x1350):** Canva tasarım id `DAHZ9qmmB5Y`
+  - Düzenleme: https://www.canva.com/d/5AZMksP_aZe5DpK
+  - Canva'ya yüklenen logolar: renkli `MAHZ9l7Bu2Q`, beyaz yazılı `MAHZ9jrn9As`. Kapak araç fotoğrafı `MAHZ9nFSnNQ`.
+  - Yöntem: `canva/oto-cam-filmi/` içindeki betikler Canva edit-design işlemlerini üretir (önce add_text/insert_shape, sonra format_text). Yazılar Canva'da düzenlenebilir.
