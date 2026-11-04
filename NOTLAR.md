@@ -33,12 +33,13 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - Anahtarları asla ekrana yazdırma; sadece var olup olmadıklarını ve çalıştıklarını kontrol et.
 - Ayarlar yapıldıktan sonra ilk iş: 3–4 Türkçe ses örneği hazırlayıp Enes'e seçtirmek.
 
-## Bağlayıcılar (Enes bağlıyor)
-- **Google Drive** ve **Canva** bağlanacak (claude.ai → Ayarlar → Bağlayıcılar).
-- Bağlandıktan sonraki ilk iş: yeni oturumda bağlayıcıların bu oturumda göründüğünü kontrol et.
-- Drive'da önerilen klasör düzeni (sadece bu klasörle çalış, Enes'in diğer dosyalarına bakma):
-  - `Arabacı Reklam - Claude/Ham Çekimler` (Enes'in yüklediği videolar ve fotoğraflar)
-  - `Arabacı Reklam - Claude/Instagram`
-  - `Arabacı Reklam - Claude/YouTube`
-  - `Arabacı Reklam - Claude/3D Modeller`
+## Bağlayıcılar (bağlandı ve test edildi, 4 Kasım 2026)
+- **Google Drive, Google Sheets, Canva** bağlı ve çalışıyor (Drive hesabı: arabacienes0@gmail.com).
+- Drive'da sadece şu klasörle çalış, Enes'in diğer dosyalarına bakma:
+  - `Arabacı Reklam - Claude` (id: `1R31ZVvUQWrOfuxQDUtq276jh-osCWn5X`)
+    - `Ham Çekimler` (id: `1RUpWKblJ9iq_Y4--KQqeprfu_1AkteWi`) Enes'in yüklediği videolar ve fotoğraflar
+    - `Instagram` (id: `1GnWRu15IF6fwJn2LucH40YdldyjkjhBl`)
+    - `YouTube` (id: `1VTXDydq0iamQD4Met453H1ImCSc7fWCz`)
+    - `3D Modeller` (id: `1R3pSws9MsYxAU6H8lskDXDS0NPsZcrnW`)
+- Canva'da **ARABACI REKLAM** marka kiti var (id: `kAFsNPNzV8c`). Diğer marka kitleri Enes'in müşterilerine ait, izinsiz kullanma.
 - Canva akışı: tasarımı Claude yapar → Canva'ya aktarır → küçük düzenlemeleri Enes yapar.
