@@ -24,6 +24,11 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - Enes'in eski bir Etsy hesabı var (durumu kontrol edilecek).
 
 ## Ortam ayarları (Enes yapıyor)
-- ElevenLabs API anahtarı ortam değişkeni olarak eklenecek: `ELEVENLABS_API_KEY`
-- Allowed domains'e eklenecekler: `api.elevenlabs.io`, yerel haber siteleri, Etsy, Cults3D, MakerWorld, Printables, `huggingface.co`.
+- ElevenLabs ücretli olduğu için vazgeçildi. Seslendirme için **Azure Speech (Free F0)** kuruldu.
+  - Kaynak: `enes-ses-servisi`, kaynak grubu `enes-ses`, bölge **North Europe** (West Europe yeni müşteri almıyordu).
+  - Ortam değişkenleri: `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION=northeurope`
+  - Erişim adresi: `northeurope.tts.speech.microsoft.com`
+- İsteğe bağlı: `PEXELS_API_KEY` (stok video).
+- Ağ erişimi geniş seviyeye çevrilecek ya da gerekli siteler Allowed domains'e eklenecek.
+- Anahtarları asla ekrana yazdırma; sadece var olup olmadıklarını ve çalıştıklarını kontrol et.
 - Ayarlar yapıldıktan sonra ilk iş: 3–4 Türkçe ses örneği hazırlayıp Enes'e seçtirmek.
