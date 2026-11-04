@@ -32,3 +32,13 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - Ağ erişimi geniş seviyeye çevrilecek ya da gerekli siteler Allowed domains'e eklenecek.
 - Anahtarları asla ekrana yazdırma; sadece var olup olmadıklarını ve çalıştıklarını kontrol et.
 - Ayarlar yapıldıktan sonra ilk iş: 3–4 Türkçe ses örneği hazırlayıp Enes'e seçtirmek.
+
+## Bağlayıcılar (Enes bağlıyor)
+- **Google Drive** ve **Canva** bağlanacak (claude.ai → Ayarlar → Bağlayıcılar).
+- Bağlandıktan sonraki ilk iş: yeni oturumda bağlayıcıların bu oturumda göründüğünü kontrol et.
+- Drive'da önerilen klasör düzeni (sadece bu klasörle çalış, Enes'in diğer dosyalarına bakma):
+  - `Arabacı Reklam - Claude/Ham Çekimler` (Enes'in yüklediği videolar ve fotoğraflar)
+  - `Arabacı Reklam - Claude/Instagram`
+  - `Arabacı Reklam - Claude/YouTube`
+  - `Arabacı Reklam - Claude/3D Modeller`
+- Canva akışı: tasarımı Claude yapar → Canva'ya aktarır → küçük düzenlemeleri Enes yapar.
