@@ -1,9 +1,8 @@
-"""Taşköprü sarımsağı buzdolabı magneti (Bambu Studio + AMS, 4 renk).
+"""Taşköprü sarımsağı buzdolabı magneti (Bambu Studio + AMS, 3 renk).
 
 Gövde sarımsak başı şeklinde. Ortasından "TAŞKÖPRÜ" yazılı kırmızı bir kurdele geçiyor.
 - beyaz  : sarımsak gövdesi + kurdele üstündeki kabartma yazı
 - mor    : diş (karanfil) çizgileri, gövdeye gömülü (üst 0.6 mm)
-- yesil  : sap ve yapraklar, gövdeye gömülü (üst 0.6 mm)
 - kirmizi: kabartma kurdele
 
 Arkada 2 adet 10x3 mm neodimyum mıknatıs yuvası var (yapıştırarak takılır).
@@ -47,24 +46,27 @@ def smooth(g, r):
     return g.buffer(r, join_style="round").buffer(-2 * r, join_style="round").buffer(r, join_style="round")
 
 
+CLOVES = [  # (x, y, rx, ry, açı) önden görünen dişler
+    (0, -1.5, 8.6, 19.0, 0),
+    (-10.5, -2.0, 9.4, 18.2, 9), (10.5, -2.0, 9.4, 18.2, -9),
+    (-20.5, -3.5, 9.0, 14.8, 24), (20.5, -3.5, 9.0, 14.8, -24),
+]
+
+
+def ellipse(x, y, rx, ry, ang):
+    e = affinity.scale(Point(0, 0).buffer(1, resolution=64), rx, ry)
+    return affinity.translate(affinity.rotate(e, ang, origin=(0, 0)), x, y)
+
+
 def bulb_shape():
-    """Sarımsak başı: altı geniş, tepesi sivri, boyun kısmı içbükey."""
-    pts = []
-    for i in range(361):
-        a = math.radians(i)
-        # alt kısım biraz basık, üst kısım sivri (damla)
-        x = 29 * math.cos(a)
-        y = 21 * math.sin(a)
-        if y > 0:
-            y *= 1.0 + 0.55 * (y / 21) ** 2
-        pts.append((x, y - 2))
-    body = Polygon(pts)
-    top = Point(0, 28).buffer(3.4)
-    shape = unary_union([body, top]).convex_hull
-    # içbükey boyun
-    for sx in (-1, 1):
-        shape = shape.difference(Point(sx * 17.5, 33).buffer(13.2))
-    return smooth(shape, 1.5)
+    """Sarımsak başı: alt kenarı diş diş, tepesi boyuna doğru sivrilir."""
+    cl = unary_union([ellipse(*c) for c in CLOVES])
+    upper = cl.intersection(box(-40, 2, 40, 40))
+    top = unary_union([upper, Point(0, 27).buffer(3.2)]).convex_hull
+    shape = unary_union([cl, top])
+    for sx in (-1, 1):  # içbükey boyun
+        shape = shape.difference(Point(sx * 16.5, 31.5).buffer(12.4))
+    return smooth(shape, 1.2)
 
 
 def roots():
@@ -72,50 +74,30 @@ def roots():
     for i, x in enumerate(np.linspace(-6, 6, 6)):
         ang = math.radians(-12 + 24 * i / 5)
         L = 4.2 + (0.8 if i in (2, 3) else 0)
-        x0, y0 = x * 0.9, -22.2
+        x0, y0 = x * 0.9, -19.6
         lines.append(LineString([(x0, y0), (x0 + L * math.sin(ang), y0 - L * math.cos(ang))]).buffer(0.75, cap_style="round"))
     return unary_union(lines)
 
 
 def stem_and_leaves():
-    stem = Polygon([(-3.2, 26.5), (3.2, 26.5), (2.4, 40), (-2.0, 40.5)])
-    stem = smooth(stem, 0.5)
-
-    def leaf(base, tip, width, bend):
-        bx, by = base
-        tx, ty = tip
-        n = 40
-        left, right = [], []
-        dx, dy = tx - bx, ty - by
-        L = math.hypot(dx, dy)
-        nx, ny = -dy / L, dx / L
-        for k in range(n + 1):
-            u = k / n
-            cx = bx + dx * u + nx * bend * math.sin(math.pi * u)
-            cy = by + dy * u + ny * bend * math.sin(math.pi * u)
-            w = width / 2 * math.sin(math.pi * min(1, u * 1.05)) ** 0.8
-            left.append((cx + nx * w, cy + ny * w))
-            right.append((cx - nx * w, cy - ny * w))
-        return Polygon(left + right[::-1]).buffer(0)
-
-    l1 = leaf((-0.5, 37), (-15, 47.5), 5.0, 2.5)
-    l2 = leaf((0.8, 38), (12.5, 49.5), 4.6, -2.2)
-    return unary_union([stem, l1, l2])
+    """Kurutulmuş sap (gövdeyle aynı renk)."""
+    stem = Polygon([(-3.0, 26.0), (3.0, 26.0), (2.3, 37.5), (-2.1, 38.2)])
+    return smooth(stem, 0.5)
 
 
 def clove_lines(bulb):
-    """Dişleri ayıran kavisli çizgiler (tepe ile dip arasında)."""
+    """Dişleri ayıran mor çizgiler: tepeden dişlerin birleştiği alt noktalara."""
     lines = []
-    top, bot = (0, 26), (0, -21)
-    for k in (-1.0, -0.55, 0.55, 1.0):
-        pts = []
-        for i in range(61):
-            u = i / 60
-            y = top[1] + (bot[1] - top[1]) * u
-            x = k * 23 * math.sin(math.pi * u) ** 0.85
-            pts.append((x, y))
-        lines.append(LineString(pts).buffer(0.6, cap_style="round"))
-    return unary_union(lines).intersection(bulb.buffer(-1.6))
+    for k in (-1, 1):
+        for xb, yb, bulge in ((5.0, -17.5, 0.35), (15.5, -14.0, 0.28)):
+            pts = []
+            for i in range(61):
+                u = i / 60
+                x = k * xb * math.sin(math.pi / 2 * u) ** 0.7 * (1 + bulge * math.sin(math.pi * u))
+                y = 25 + (yb - 25) * u
+                pts.append((x, y))
+            lines.append(LineString(pts).buffer(0.55, cap_style="round"))
+    return unary_union(lines).intersection(bulb.buffer(-1.4)).buffer(0)
 
 
 def text_geom(s, height):
@@ -152,7 +134,11 @@ def extrude(geom, z0, z1):
     parts = []
     polys = [geom] if geom.geom_type == "Polygon" else list(geom.geoms)
     for p in polys:
+        p = p.simplify(0.02, preserve_topology=True).buffer(0)
         if p.is_empty or p.area < 0.05:
+            continue
+        if p.geom_type != "Polygon":
+            parts.append(extrude(p, z0, z1))
             continue
         m = trimesh.creation.extrude_polygon(p, z1 - z0)
         m.apply_translation((0, 0, z0))
@@ -167,11 +153,10 @@ def boolean(op, a, b):
 def build():
     bulb = bulb_shape()
     outline = unary_union([bulb, roots(), stem_and_leaves()]).buffer(0.3).buffer(-0.3)
-    green = stem_and_leaves().difference(bulb.buffer(-0.01)).intersection(outline.buffer(-EDGE - 0.3))
-    green = green.buffer(-0.01)
+    green = Polygon()
     purple = clove_lines(bulb)
 
-    word, tw = text_geom("TAŞKÖPRÜ", 8.6)
+    word, tw = text_geom("TAŞKÖPRÜ", 7.0)
     cy = -6.0
     band, tails = banner(tw, cy)
     # yazıyı kurdele ortasına yerleştir (aksanlar dahil dikey ortala)
@@ -181,9 +166,8 @@ def build():
 
     # gövde: arka düz, ön kenarı pahlı
     inner = outline.buffer(-EDGE, join_style="round")
-    body = trimesh.util.concatenate([extrude(outline, 0, T - EDGE), extrude(inner, T - EDGE, T)])
     body = boolean("union", extrude(outline, 0, T - EDGE), extrude(inner, T - EDGE - 0.01, T))
-    inlays = unary_union([purple, green])
+    inlays = purple
     body = boolean("difference", body, extrude(inlays, T - INLAY, T + 1))
     # mıknatıs yuvaları (arkadan)
     mags = [(-10.5, 10.0), (10.5, 10.0)]
@@ -194,10 +178,20 @@ def build():
     # kurdele: kuyruklar biraz daha alçak, ana bant üstte
     z0 = T
     red = boolean("union", extrude(tails, z0, z0 + BANNER_H * 0.6), extrude(band, z0, z0 + BANNER_H))
+    # gövdenin dışına taşan kurdele kısımları havada kalmasın: tablaya kadar indir
+    out_t = tails.difference(outline.buffer(-0.01))
+    out_b = band.difference(outline.buffer(-0.01))
+    for g, top in ((out_t, z0 + BANNER_H * 0.6), (out_b, z0 + BANNER_H)):
+        if not g.is_empty and g.area > 0.05:
+            red = boolean("union", red, extrude(g.buffer(0.01), 0, top))
+    # pahlı kenar şeridinin üstünde kalan kısım da gövdeye otursun
+    ring = outline.difference(inner)
+    for g, top in ((tails.intersection(ring), z0 + BANNER_H * 0.6), (band.intersection(ring), z0 + BANNER_H)):
+        if not g.is_empty and g.area > 0.05:
+            red = boolean("union", red, extrude(g, T - EDGE, top))
     meshes = {
         "beyaz_govde": body,
         "mor_dis_cizgileri": extrude(purple.difference(band.buffer(0.2)), T - INLAY, T),
-        "yesil_sap": extrude(green, T - INLAY, T),
         "kirmizi_kurdele": red,
         "beyaz_yazi": extrude(word, z0 + BANNER_H, z0 + BANNER_H + TEXT_H),
     }
@@ -270,13 +264,12 @@ def flat_preview(parts2d, outline, path):
     fig, ax = plt.subplots(figsize=(7, 7.6), dpi=140)
     fig.patch.set_facecolor("#23272c")
     ax.set_facecolor("#23272c")
-    under = {1: "#23272c", 2: "#f5f2ea", 3: "#f5f2ea", 4: "#d42320", 5: "#d42320"}
+    under = {1: "#d9d3c5", 1.5: "#f5f2ea", 2: "#f5f2ea", 3: "#f5f2ea", 4: "#d42320", 5: "#d42320"}
     shadow = affinity.translate(outline, 0.8, -0.8)
     draw(ax, shadow, "#15181b", 0.5)
-    draw(ax, outline, "#f5f2ea", 1)
-    draw(ax, outline.difference(outline.buffer(-EDGE)), "#ddd8cc", 1.5)
+    draw(ax, outline, "#d9d3c5", 1)
+    draw(ax, outline.buffer(-EDGE), "#f5f2ea", 1.5)
     draw(ax, purple, "#9e73b8", 2)
-    draw(ax, green, "#5ca34d", 2)
     draw(ax, tails, "#a8150f", 3)
     draw(ax, band, "#d42320", 4)
     draw(ax, word, "#ffffff", 5)
