@@ -23,6 +23,11 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - **kastamonuhaber.com haftalık haber videosu (4 Kasım 2026):** Tek video, 5 haber x ~11 sn, 1080x1920, ~71 sn.
   - Enes'in tercihleri: haberler tek videoda (ayrı ayrı değil), her biri ~10 sn; logo beyaz zemin üstünde OLMASIN (koyu zemin için beyaz+kırmızı logo versiyonu kullanıldı); "Kaynak: İHA/AA" yazmasın; bilgiler kastamonuhaber.com'dan alınsın; arka plan halkası ortalı olsun.
   - Yöntem: HTML/CSS şablon + Playwright ile kare kare render + ffmpeg; seslendirme edge-tts (tr-TR-AhmetNeural, +15%), müzik numpy ile üretildi. Betikler bu oturumun geçici klasöründeydi, repoya alınmadı.
+- **Ediz Özcan röportajı (İyilik Var, Cide/Kastamonu) Instagram videosu:** 5 dk ham çekimden 55 sn dikey video (kastamonuhaber için).
+  - Enes'in tercihleri: Instagram videoları 45–60 sn, uzun olmasın; isim bandında sadece isim (EDİZ ÖZCAN), unvan yok.
+  - Yöntem: Drive paylaşım linkinden `drive.usercontent.google.com/download?id=...&export=download&confirm=t` ile curl (1.5 GB sorunsuz indi) → faster-whisper `large-v3-turbo` ile kelime zamanlı transkript (PyAV uyumsuzluğu yüzünden ses numpy dizisi olarak verilir) → ffmpeg kesim + kesimlerde %12 yakınlaştırma (jump cut gizleme) → Playwright ile şeffaf PNG grafik katmanı (logo, isim bandı, kelime kelime altyazı, kapanış) → ses: afftdn + sidechain müzik + loudnorm −14 LUFS.
+  - Uzun ffmpeg işlerini arka planda çalıştır; tpad yerine `color` arka plan + `overlay=eof_action=repeat` kullan (tpad son kareyi uzatmadı).
+- **Yeni iş fikri:** Enes'in eşi günlük hayat (vlog) Reels'i paylaşıyor. 10 civarı parça video verilecek; Claude içerikleri anlayıp sıralayacak, kesip hızlandıracak, Reels yapacak. Müzik: telifli trend şarkı eklenmez, eşi Instagram'da seçer. Eşinin tarzı/hesabı sorulacak.
 - **Bekleyen:** Instagram (arabacireklam) analizi. Instagram dışarıdan erişimi engelliyor; Enes'ten profil + İstatistikler ekran görüntüleri ya da "Bilgilerini indir" JSON'u istendi.
 
 ## Konuşulan gelir fikirleri ve durum
