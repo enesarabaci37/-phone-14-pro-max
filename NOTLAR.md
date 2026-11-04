@@ -19,7 +19,7 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - `instagram/logo-arabaci-reklam.png`: İşletme logosu.
 - `3d-modeller/anahtarlik/`: Logolu çok renkli anahtarlık modelleri (3MF + STL, `anahtarlik.py`).
 - `3d-modeller/magnet-taskopru/`: Taşköprü sarımsağı buzdolabı magneti (3 renk, 79x64x6.2 mm, arkada 2x 10x3 mm mıknatıs yuvası, `magnet.py`).
-  - Enes "çok basit" buldu. Önerilen v2: kabarık (hacimli) sarımsak dişleri + arkada Taşköprü taş köprü silüeti + dalgalı kurdele. Onay bekleniyor.
+  - Enes beğenmedi ("çok basit"), bu iş rafa kalktı. Ders: düz ekstrüzyon tasarımlar sticker gibi duruyor; 3D işlerde baştan hacim/kabartma ve yerel detay hedefle.
 - **kastamonuhaber.com haftalık haber videosu (4 Kasım 2026):** Tek video, 5 haber x ~11 sn, 1080x1920, ~71 sn.
   - Enes'in tercihleri: haberler tek videoda (ayrı ayrı değil), her biri ~10 sn; logo beyaz zemin üstünde OLMASIN (koyu zemin için beyaz+kırmızı logo versiyonu kullanıldı); "Kaynak: İHA/AA" yazmasın; bilgiler kastamonuhaber.com'dan alınsın; arka plan halkası ortalı olsun.
   - Yöntem: HTML/CSS şablon + Playwright ile kare kare render + ffmpeg; seslendirme edge-tts (tr-TR-AhmetNeural, +15%), müzik numpy ile üretildi. Betikler bu oturumun geçici klasöründeydi, repoya alınmadı.
