@@ -31,4 +31,10 @@ Yeni bir Claude oturumu bu dosyayı okuyarak kaldığımız yerden devam edebili
 - İsteğe bağlı: `PEXELS_API_KEY` (stok video).
 - Ağ erişimi geniş seviyeye çevrilecek ya da gerekli siteler Allowed domains'e eklenecek.
 - Anahtarları asla ekrana yazdırma; sadece var olup olmadıklarını ve çalıştıklarını kontrol et.
-- Ayarlar yapıldıktan sonra ilk iş: 3–4 Türkçe ses örneği hazırlayıp Enes'e seçtirmek.
+- ✅ Azure anahtarı çalışıyor (2026-11-04 test edildi: ses listesi, seslendirme ve konuşma tanıma).
+
+## Seslendirme
+- `ses-ornekleri/ses.py`: `seslendir(metin, "cikti.mp3", ses=..., stil=...)` fonksiyonu; videolarda bunu kullan.
+- 5 örnek hazırlandı (`ses-ornekleri/*.mp3`): Ahmet, Emel (klasik), Aydın, Elif (samimi stil, MAI-Voice-2.1-Flash), Grant (anlatıcı).
+- HD sesler (MAI-Voice-2.1, Flash olmayan) Free F0'da denenmedi.
+- **Sıradaki adım:** Enes'in seçtiği sesi buraya yaz, sonra videolarda kullan.
