@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arabacı Reklam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Taşköprü / Kastamonu'da dijital baskı, branda, mesh, folyo baskı ve kesim, kanvas ve kumaş baskı, 3D baskı, tişört baskı. Araç cam filmi ve PPF boya koruma.">
+<link rel="canonical" href="https://arabacireklam.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Arabacı Reklam · Taşköprü">
+<meta property="og:description" content="Dijital baskı, branda, folyo baskı ve kesim. Araç cam filmi ve PPF kaplama.">
+<meta property="og:image" content="https://arabacireklam.com/assets/img/dukkan-cephe.jpg">
+<meta property="og:locale" content="tr_TR">
+<meta name="theme-color" content="#0b8f88">
+<link rel="icon" type="image/svg+xml" href="assets/logo/amblem-renkli.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@500;600;700;800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Arabacı Reklam",
+  "url": "https://arabacireklam.com/",
+  "image": "https://arabacireklam.com/assets/img/dukkan-cephe.jpg",
+  "logo": "https://arabacireklam.com/assets/logo/dikey-renkli.svg",
+  "telephone": "+90 534 080 26 79",
+  "foundingDate": "2017-01-21",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Tabakhane Mah., Taş Cami Sk. No: 11/A",
+    "addressLocality": "Taşköprü",
+    "addressRegion": "Kastamonu",
+    "postalCode": "37400",
+    "addressCountry": "TR"
+  },
+  "areaServed": ["Taşköprü", "Kastamonu"],
+  "sameAs": [
+    "https://www.instagram.com/arabacireklam/",
+    "https://www.facebook.com/arabacireklam"
+  ]
+}
+</script>
+<style>
+/* Layout: matbaa iş kâğıdı. Kesim işaretli fotoğraflar, logonun üç renginden bir baskı renk şeridi, makine bilgileri mono yazıyla. */
+:root {
+  --bg: #f4f7f7;
+  --surface: #ffffff;
+  --fg: #22303a;
+  --muted: #5b6b75;
+  --line: #d6dfe1;
+  --teal: #0b8f88;
+  --teal-ink: #ffffff;
+  --red: #e94443;
+  --green: #9cb628;
+  --cyan: #0badA4;
+  --night: #15191c;
+  --night-fg: #eef1f2;
+  --night-muted: #9aa6ad;
+  --night-line: #2c3338;
+  --wa: #128c4b;
+  --font-display: "Saira Semi Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(2rem, 1.4rem + 2.6vw, 3.2rem);
+  --step-4: clamp(2.5rem, 1.6rem + 4vw, 4.6rem);
+  --radius: 6px;
+  --wrap: 1180px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171a; --surface: #1a2125; --fg: #e8eef0; --muted: #a3b1b8; --line: #2b353b;
+    --teal: #19b3aa; --teal-ink: #062524; --night: #0b0e10; --night-fg: #eef1f2; --night-muted: #9aa6ad; --night-line: #262d32;
+    --wa: #1fa45d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171a; --surface: #1a2125; --fg: #e8eef0; --muted: #a3b1b8; --line: #2b353b;
+  --teal: #19b3aa; --teal-ink: #062524; --night: #0b0e10; --night-fg: #eef1f2; --night-muted: #9aa6ad; --night-line: #262d32;
+  --wa: #1fa45d; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+
+.wrap {
+  max-width: var(--wrap); margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.eyebrow {
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  display: flex; align-items: center; gap: 10px;
+}
+/* baskı renk şeridi: logonun üç rengi */
+.colorbar { display: inline-flex; height: 10px; }
+.colorbar i { width: 14px; height: 10px; display: block; }
+.colorbar i:nth-child(1) { background: var(--red); }
+.colorbar i:nth-child(2) { background: var(--green); }
+.colorbar i:nth-child(3) { background: var(--cyan); }
+.colorbar i:nth-child(4) { background: var(--fg); }
+
+/* butonlar */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em;
+  padding: 12px 20px; border-radius: var(--radius); text-decoration: none; border: 2px solid transparent;
+  transition: transform .15s ease, background-color .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn-wa { background: var(--wa); color: #fff; }
+.btn-line { border-color: currentColor; }
+
+/* üst bar */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 10px; }
+.brand img { height: 40px; width: auto; }
+.brand .logo-dark { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand .logo-light { display: none; } :root:not([data-theme="light"]) .brand .logo-dark { display: block; } }
+:root[data-theme="dark"] .brand .logo-light { display: none; }
+:root[data-theme="dark"] .brand .logo-dark { display: block; }
+.nav { display: flex; align-items: center; gap: 22px; }
+.nav a { text-decoration: none; font-weight: 500; color: var(--muted); }
+.nav a:hover { color: var(--fg); }
+.nav .btn { padding: 8px 14px; font-size: 0.95rem; color: #fff; }
+@media (max-width: 760px) { .nav a:not(.btn) { display: none; } .brand img { height: 34px; } }
+
+/* hero */
+.hero .wrap { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(28px, 5vw, 64px); align-items: center; padding-block: clamp(32px, 6vw, 72px); }
+.hero-text { display: grid; gap: 22px; min-width: 0; }
+.hero h1 { font-size: var(--step-4); font-weight: 800; }
+.hero h1 em { font-style: normal; color: var(--teal); }
+.hero .lead { font-size: var(--step-1); color: var(--muted); max-width: 34ch; }
+.hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.phone-num { font-family: var(--font-mono); font-size: 0.95rem; color: var(--muted); }
+.phone-num b { color: var(--fg); font-weight: 500; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 14px 0 0; border-top: 1px dashed var(--line); font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+.specs span b { color: var(--fg); font-weight: 500; }
+
+/* kesim işaretli fotoğraf */
+.cropmarks { position: relative; padding: 14px; }
+.cropmarks::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(var(--fg), var(--fg)) left 0 top 14px / 10px 1px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) left 14px top 0 / 1px 10px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) right 0 top 14px / 10px 1px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) right 14px top 0 / 1px 10px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) left 0 bottom 14px / 10px 1px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) left 14px bottom 0 / 1px 10px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) right 0 bottom 14px / 10px 1px no-repeat,
+    linear-gradient(var(--fg), var(--fg)) right 14px bottom 0 / 1px 10px no-repeat;
+  opacity: .55;
+}
+.cropmarks img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; }
+.hero .cropmarks img { object-position: 50% 62%; }
+.hero figcaption { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 8px; display: flex; justify-content: space-between; gap: 8px; }
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .hero .cropmarks img { aspect-ratio: 4 / 3; }
+}
+
+section { scroll-margin-top: 70px; }
+.sec { padding-block: clamp(48px, 8vw, 96px); }
+.sec-head { display: grid; gap: 12px; margin-bottom: 32px; max-width: 60ch; }
+.sec-head h2 { font-size: var(--step-3); font-weight: 800; }
+.sec-head p { color: var(--muted); }
+
+/* hizmetler */
+.svc-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.svc-group { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: grid; gap: 16px; align-content: start; }
+.svc-group h3 { font-size: var(--step-2); font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.svc-group h3 .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.svc-group > p { color: var(--muted); font-size: var(--step--1); }
+.svc-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.svc-list li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); font-weight: 500; }
+.svc-list li small { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); font-weight: 500; text-align: right; white-space: nowrap; }
+@media (max-width: 960px) { .svc-groups { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .svc-groups { grid-template-columns: 1fr; } }
+
+/* galeri */
+.gallery { position: relative; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.chip { font: 600 0.9rem var(--font-body); padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.rail {
+  display: grid; grid-auto-flow: column; grid-auto-columns: clamp(220px, 26vw, 300px); gap: 14px;
+  overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.rail figure { margin: 0; scroll-snap-align: start; display: grid; gap: 8px; }
+.rail img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 72%; border-radius: var(--radius); background: var(--line); }
+.rail figcaption { font-size: var(--step--1); color: var(--muted); }
+.rail figcaption b { color: var(--fg); font-weight: 600; display: block; }
+.rail-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+.rail-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; font-size: 1.2rem; }
+
+/* atölye */
+.shop { background: var(--surface); border-block: 1px solid var(--line); }
+.machines { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.machine { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.machine img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 60%; border-radius: var(--radius); }
+.machine h3 { font-size: var(--step-1); font-weight: 700; }
+.ticket { font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); display: grid; gap: 3px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.ticket span { display: flex; justify-content: space-between; gap: 10px; }
+.ticket b { color: var(--fg); font-weight: 500; text-align: right; }
+@media (max-width: 960px) { .machines { grid-template-columns: 1fr 1fr; } }
+
+/* oto film: arabacı alt marka */
+.oto { background: var(--night); color: var(--night-fg); }
+.oto .wrap { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.oto-text { display: grid; gap: 22px; min-width: 0; }
+.oto-mark { width: min(340px, 80%); height: auto; }
+.oto h2 { font-size: var(--step-3); font-weight: 700; }
+.oto p { color: var(--night-muted); max-width: 46ch; }
+.oto .eyebrow { color: var(--night-muted); }
+.oto-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--night-line); }
+.oto-list li { padding: 14px 0; border-bottom: 1px solid var(--night-line); display: grid; gap: 2px; }
+.oto-list strong { font-family: var(--font-display); font-size: var(--step-1); font-weight: 700; }
+.oto-list span { color: var(--night-muted); font-size: var(--step--1); }
+.oto-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.oto-photos img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 72%; border-radius: var(--radius); }
+.oto-photos img:first-child { grid-row: span 2; aspect-ratio: auto; height: 100%; }
+.oto .btn-line { color: var(--night-fg); }
+@media (max-width: 860px) { .oto .wrap { grid-template-columns: 1fr; } }
+
+/* yorum */
+.review { display: grid; grid-template-columns: auto 1fr; gap: clamp(20px, 5vw, 56px); align-items: center; }
+.score { font-family: var(--font-display); font-weight: 800; font-size: clamp(4rem, 3rem + 5vw, 7rem); line-height: .9; }
+.score small { display: block; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-top: 8px; }
+.stars { color: #f2b01e; letter-spacing: 2px; font-size: 1.1rem; }
+blockquote { margin: 0; display: grid; gap: 12px; }
+blockquote p { font-family: var(--font-display); font-size: var(--step-2); font-weight: 600; line-height: 1.2; max-width: 30ch; }
+blockquote cite { font-style: normal; color: var(--muted); }
+@media (max-width: 640px) { .review { grid-template-columns: 1fr; } }
+
+/* iletişim */
+.contact .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.contact-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 4vw, 32px); display: grid; gap: 18px; align-content: start; min-width: 0; }
+.contact dl { margin: 0; display: grid; gap: 14px; }
+.contact dt { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.contact dd { margin: 2px 0 0; font-size: var(--step-1); font-weight: 500; overflow-wrap: anywhere; }
+.contact dd a { text-decoration-color: var(--line); text-underline-offset: 4px; }
+.contact .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+.map { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); min-height: 320px; background: var(--line); }
+.map iframe { width: 100%; height: 100%; min-height: 320px; border: 0; display: block; }
+@media (max-width: 860px) { .contact .wrap { grid-template-columns: 1fr; } }
+
+footer { background: var(--night); color: var(--night-muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; padding-block: 32px; font-size: var(--step--1); }
+footer img { height: 38px; width: auto; }
+footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
+footer a { color: var(--night-fg); text-decoration: none; }
+
+/* mobil WhatsApp */
+.fab {
+  position: fixed; z-index: 8;
+  right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: 58px; height: 58px; border-radius: 50%; background: var(--wa); color: #fff;
+  display: none; place-items: center; box-shadow: 0 6px 20px rgb(0 0 0 / .25);
+}
+.fab svg { width: 30px; height: 30px; }
+@media (max-width: 760px) { .fab { display: grid; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Arabacı Reklam ana sayfa">
+      <img class="logo-light" src="assets/logo/yatay-renkli.svg" alt="Arabacı Reklam" width="190" height="52">
+      <img class="logo-dark" src="assets/logo/yatay-beyaz.svg" alt="Arabacı Reklam" width="190" height="52">
+    </a>
+    <nav class="nav" aria-label="Ana menü">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#isler">İşlerimiz</a>
+      <a href="#oto-film">Oto Film</a>
+      <a href="#iletisim">İletişim</a>
+      <a class="btn btn-wa" href="https://wa.me/905340802679" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3Z"/></svg>
+        WhatsApp
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow"><span class="colorbar" aria-hidden="true"><i></i><i></i><i></i><i></i></span> Taşköprü · Kastamonu · 2017'den beri</p>
+        <h1>Branda, folyo ve dijital baskı. <em>Kendi atölyemizde.</em></h1>
+        <p class="lead">3,2 metreye kadar solvent baskı, plotter kesim, kanvas ve kumaş baskı. Araçlar için cam filmi ve PPF boya koruma.</p>
+        <div class="ctas">
+          <a class="btn btn-wa" href="https://wa.me/905340802679?text=Merhaba%2C%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3Z"/></svg>
+            WhatsApp'tan fiyat al
+          </a>
+          <a class="btn btn-line" href="tel:+905340802679">Ara</a>
+        </div>
+        <p class="phone-num">Telefon: <b>0534 080 26 79</b></p>
+        <div class="specs" aria-label="Atölye bilgileri">
+          <span>Baskı eni <b>320 cm</b></span>
+          <span>Solvent <b>4 kafa</b></span>
+          <span>Kesim <b>Summa D120</b></span>
+          <span>3D <b>Bambu Lab X2D</b></span>
+        </div>
+      </div>
+      <figure class="cropmarks" style="margin:0">
+        <img src="assets/img/dukkan-cephe.jpg" srcset="assets/img/dukkan-cephe-sm.jpg 700w, assets/img/dukkan-cephe.jpg 1400w" sizes="(max-width: 860px) 100vw, 40vw" alt="Taşköprü'deki Arabacı Reklam dükkanının dış cephesi ve tabelası" width="1400" height="2489">
+        <figcaption><span>Tabakhane Mah., Taş Cami Sk. 11/A</span><span>Taşköprü</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="hizmetler">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Hizmetler</p>
+        <h2>Ne yapıyoruz?</h2>
+        <p>Baskı ve kesimi kendi makinelerimizle yapıyoruz. Ölçünüzü ve adedinizi WhatsApp'tan yazın, aynı gün fiyat verelim.</p>
+      </div>
+      <div class="svc-groups">
+        <div class="svc-group">
+          <h3><span class="dot" style="background:var(--cyan)"></span>Baskı</h3>
+          <p>Solvent dijital baskı, 3,2 metre ene kadar tek parça.</p>
+          <ul class="svc-list">
+            <li>Branda Baskı <small>320 cm'e kadar</small></li>
+            <li>Mesh Baskı <small>file branda</small></li>
+            <li>Folyo Baskı <small>vinil</small></li>
+            <li>Kanvas Baskı <small>tablo</small></li>
+            <li>Kumaş Baskı</li>
+          </ul>
+        </div>
+        <div class="svc-group">
+          <h3><span class="dot" style="background:var(--green)"></span>Kesim</h3>
+          <p>Summa D120 plotter ile hassas folyo kesim.</p>
+          <ul class="svc-list">
+            <li>Folyo Baskı + Kesim <small>sticker, etiket</small></li>
+            <li>Folyo Kesim</li>
+            <li>Renkli Folyo Kesim <small>cam, vitrin</small></li>
+            <li>Araç Yazıları</li>
+          </ul>
+        </div>
+        <div class="svc-group">
+          <h3><span class="dot" style="background:var(--red)"></span>Özel Üretim</h3>
+          <p>Tasarımdan ürüne, küçük adetli işler.</p>
+          <ul class="svc-list">
+            <li>3D Baskı <small>parça, figür, isim</small></li>
+            <li>Tişört Baskı <small>en az 10 adet</small></li>
+            <li>Grafik Tasarım <small>logo, baskıya hazırlık</small></li>
+            <li><a href="#oto-film">Cam Filmi ve PPF</a> <small>arabacı</small></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="isler" style="padding-top:0">
+    <div class="wrap gallery">
+      <div class="sec-head">
+        <p class="eyebrow">İşlerimiz</p>
+        <h2>Atölyeden çıkanlar</h2>
+        <p>Daha fazlası Instagram'da: <a href="https://www.instagram.com/arabacireklam/" target="_blank" rel="noopener">@arabacireklam</a></p>
+      </div>
+      <div class="filters" role="group" aria-label="İşleri filtrele">
+        <button class="chip" type="button" id="f-all" data-f="all" aria-pressed="true">Tümü</button>
+        <button class="chip" type="button" id="f-oto" data-f="oto" aria-pressed="false">Cam filmi &amp; PPF</button>
+        <button class="chip" type="button" id="f-3d" data-f="3d" aria-pressed="false">3D baskı</button>
+        <button class="chip" type="button" id="f-atolye" data-f="atolye" aria-pressed="false">Atölye</button>
+      </div>
+      <div class="rail" id="rail" tabindex="0" aria-label="İş fotoğrafları, yana kaydırın">
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-mercedes-e-on-sm.jpg" alt="Mercedes E serisi, cam filmi ve PPF sonrası showroomda" width="700" height="1244"><figcaption><b>Mercedes E</b>Cam filmi &amp; PPF</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-hyundai-tucson-sm.jpg" alt="Hyundai Tucson, uygulama sonrası" width="700" height="1244"><figcaption><b>Hyundai Tucson</b>Cam filmi &amp; PPF</figcaption></figure>
+        <figure data-c="3d"><img loading="lazy" src="assets/img/3d-baski-bust-sm.jpg" alt="3D yazıcıda basılmış beyaz büst ve renkli parçalar" width="700" height="1244"><figcaption><b>Büst figür</b>3D baskı</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-mercedes-s-arka-sm.jpg" alt="Mercedes, arka cam filmi" width="700" height="1244"><figcaption><b>Mercedes</b>Cam filmi</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-uygulama-sm.jpg" alt="Araç üzerinde film uygulaması yapılırken" width="700" height="1244"><figcaption><b>Uygulama</b>Isı tabancası ile film</figcaption></figure>
+        <figure data-c="3d"><img loading="lazy" src="assets/img/3d-baski-vazo-sm.jpg" alt="3D yazıcının içinde basılan beyaz vazo" width="700" height="1244"><figcaption><b>Vazo</b>3D baskı</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-renault-megane-sm.jpg" alt="Mavi Renault Megane, showroomda" width="700" height="1244"><figcaption><b>Renault Megane</b>Cam filmi &amp; PPF</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-vw-touareg-sm.jpg" alt="Volkswagen Touareg, koyu cam filmi" width="700" height="1244"><figcaption><b>VW Touareg</b>Cam filmi</figcaption></figure>
+        <figure data-c="3d"><img loading="lazy" src="assets/img/3d-baski-saksi-sm.jpg" alt="Renkli katmanlı 3D baskı saksılar" width="700" height="1244"><figcaption><b>Saksılar</b>3D baskı</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-mercedes-e-sm.jpg" alt="Siyah Mercedes E, showroomda" width="700" height="1244"><figcaption><b>Mercedes E</b>Cam filmi &amp; PPF</figcaption></figure>
+        <figure data-c="3d"><img loading="lazy" src="assets/img/3d-baski-isim-sm.jpg" alt="3D baskı isim yazısı" width="700" height="1244"><figcaption><b>İsim tabelası</b>3D baskı</figcaption></figure>
+        <figure data-c="oto"><img loading="lazy" src="assets/img/oto-mercedes-e-arka-sm.jpg" alt="Mercedes E 250, arka cam filmi" width="700" height="1244"><figcaption><b>Mercedes E 250</b>Cam filmi</figcaption></figure>
+        <figure data-c="3d"><img loading="lazy" src="assets/img/3d-baski-parca-sm.jpg" alt="Pembe 3D baskı parça" width="700" height="1244"><figcaption><b>Özel parça</b>3D baskı</figcaption></figure>
+        <figure data-c="3d"><img loading="lazy" src="assets/img/3d-baski-tutucu-sm.jpg" alt="3D baskı telefon şarj tutucu" width="700" height="1244"><figcaption><b>Şarj tutucu</b>3D baskı</figcaption></figure>
+        <figure data-c="atolye"><img loading="lazy" src="assets/img/showroom-sm.jpg" alt="Folyo ruloları ve zeminde arabacı logosu olan uygulama alanı" width="700" height="1244"><figcaption><b>Uygulama alanı</b>Atölye</figcaption></figure>
+        <figure data-c="atolye"><img loading="lazy" src="assets/img/atolye-solvent-baski-sm.jpg" alt="3,2 metrelik solvent baskı makinesi" width="700" height="1244"><figcaption><b>Solvent baskı</b>Atölye</figcaption></figure>
+      </div>
+      <div class="rail-nav">
+        <button type="button" id="rail-prev" aria-label="Önceki fotoğraflar">←</button>
+        <button type="button" id="rail-next" aria-label="Sonraki fotoğraflar">→</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec shop" id="atolye">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Atölye</p>
+        <h2>Makine parkurumuz</h2>
+        <p>İşin dışarıda değil, burada üretilir. Böylece hem fiyat hem teslim süresi elimizde.</p>
+      </div>
+      <div class="machines">
+        <div class="machine">
+          <img loading="lazy" src="assets/img/solvent-baski-kafalar-sm.jpg" alt="Partner solvent baskı makinesi, Konica kafalar" width="700" height="1244">
+          <h3>Solvent baskı</h3>
+          <div class="ticket"><span>Marka <b>Partner</b></span><span>Kafa <b>4 × Konica</b></span><span>En <b>320 cm</b></span></div>
+        </div>
+        <div class="machine">
+          <img loading="lazy" src="assets/img/summa-plotter-sm.jpg" alt="Summa D120 kesim plotteri" width="700" height="1244">
+          <h3>Plotter kesim</h3>
+          <div class="ticket"><span>Marka <b>Summa</b></span><span>Model <b>D120</b></span><span>İş <b>folyo, sticker</b></span></div>
+        </div>
+        <div class="machine">
+          <img loading="lazy" src="assets/img/bambu-3d-yazici-sm.jpg" alt="Bambu Lab X2D 3D yazıcı" width="700" height="1244">
+          <h3>3D yazıcı</h3>
+          <div class="ticket"><span>Marka <b>Bambu Lab</b></span><span>Model <b>X2D</b></span><span>İş <b>parça, figür</b></span></div>
+        </div>
+        <div class="machine">
+          <img loading="lazy" src="assets/img/tisort-pres-sm.jpg" alt="Tişört baskı transfer presi" width="700" height="1244">
+          <h3>Transfer pres</h3>
+          <div class="ticket"><span>İş <b>tişört baskı</b></span><span>Adet <b>en az 10</b></span><span>Baskı <b>transfer</b></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec oto" id="oto-film">
+    <div class="wrap">
+      <div class="oto-text">
+        <img class="oto-mark" src="assets/logo/arabaci-oto/arabaci-beyaz-aciklamali.svg" alt="arabacı, Paint Protection Films, Window Films" width="340" height="77">
+        <h2>Cam filmi ve PPF boya koruma</h2>
+        <p>Araç işlerimizi arabacı markasıyla yapıyoruz. Aracınızı kapalı uygulama alanımıza alıyor, filmi temiz ve tozsuz ortamda uyguluyoruz.</p>
+        <ul class="oto-list">
+          <li><strong>Cam filmi</strong><span>Isı ve güneş kontrolü, mahremiyet, UV koruması</span></li>
+          <li><strong>PPF boya koruma</strong><span>Taş izi, çizik ve güneşe karşı şeffaf koruma filmi</span></li>
+        </ul>
+        <div class="ctas" style="display:flex;flex-wrap:wrap;gap:12px">
+          <a class="btn btn-wa" href="https://wa.me/905340802679?text=Merhaba%2C%20arac%C4%B1m%20i%C3%A7in%20cam%20filmi%20%2F%20PPF%20fiyat%C4%B1%20almak%20istiyorum." target="_blank" rel="noopener">Aracım için fiyat al</a>
+        </div>
+      </div>
+      <div class="oto-photos">
+        <img loading="lazy" src="assets/img/oto-mercedes-s-arka-sm.jpg" alt="Mercedes, arka görünüm, cam filmi" width="700" height="1244">
+        <img loading="lazy" src="assets/img/oto-hyundai-tucson-sm.jpg" alt="Hyundai Tucson ön görünüm" width="700" height="1244">
+        <img loading="lazy" src="assets/img/oto-uygulama-sm.jpg" alt="Film uygulaması sırasında" width="700" height="1244">
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap review">
+      <div class="score">5,0<small><span class="stars" aria-label="5 üzerinden 5 yıldız">★★★★★</span><br>Google · 7 yorum</small></div>
+      <blockquote>
+        <p>“Mükemmel işçiliğin adresi, araç kaplama ve araç filminde uzman.”</p>
+        <cite>Murat Okcu, Google yorumu</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="sec contact" id="iletisim" style="padding-top:0">
+    <div class="wrap">
+      <div class="contact-card">
+        <div class="sec-head" style="margin:0">
+          <p class="eyebrow">İletişim</p>
+          <h2>Uğrayın ya da yazın</h2>
+        </div>
+        <dl>
+          <div><dt>Telefon · WhatsApp</dt><dd><a href="tel:+905340802679">0534 080 26 79</a></dd></div>
+          <div><dt>Adres</dt><dd>Tabakhane Mah., Taş Cami Sk. No: 11/A<br>37400 Taşköprü / Kastamonu</dd></div>
+          <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/arabacireklam/" target="_blank" rel="noopener">@arabacireklam</a></dd></div>
+        </dl>
+        <div class="ctas">
+          <a class="btn btn-wa" href="https://wa.me/905340802679" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-line" href="https://www.google.com/maps/search/?api=1&amp;query=ARABACI+REKLAM+Ta%C5%9Fk%C3%B6pr%C3%BC" target="_blank" rel="noopener">Yol tarifi</a>
+        </div>
+      </div>
+      <div class="map">
+        <iframe title="Arabacı Reklam konumu" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=ARABACI+REKLAM,+Ta%C5%9F+Cami+Sk.+11,+Ta%C5%9Fk%C3%B6pr%C3%BC&amp;output=embed"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="assets/logo/yatay-beyaz.svg" alt="Arabacı Reklam" width="140" height="38">
+    <nav aria-label="Alt menü">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#isler">İşlerimiz</a>
+      <a href="#oto-film">Oto Film</a>
+      <a href="https://www.instagram.com/arabacireklam/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/arabacireklam" target="_blank" rel="noopener">Facebook</a>
+    </nav>
+    <p>© <span id="yil">2026</span> Arabacı Reklam · Taşköprü</p>
+  </div>
+</footer>
+
+<a class="fab" href="https://wa.me/905340802679" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3Z"/></svg>
+</a>
+
+<script>
+(function () {
+  var y = document.getElementById('yil'); if (y) y.textContent = new Date().getFullYear();
+  var rail = document.getElementById('rail');
+  function step() { var f = rail.querySelector('figure:not([hidden])'); return f ? f.getBoundingClientRect().width + 14 : 300; }
+  document.getElementById('rail-prev').addEventListener('click', function () { rail.scrollBy({ left: -step() * 2, behavior: 'smooth' }); });
+  document.getElementById('rail-next').addEventListener('click', function () { rail.scrollBy({ left: step() * 2, behavior: 'smooth' }); });
+  var chips = document.querySelectorAll('.chip');
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var f = c.getAttribute('data-f');
+      chips.forEach(function (o) { o.setAttribute('aria-pressed', o === c ? 'true' : 'false'); });
+      rail.querySelectorAll('figure').forEach(function (fig) { fig.hidden = !(f === 'all' || fig.getAttribute('data-c') === f); });
+      rail.scrollTo({ left: 0 });
+    });
+  });
+})();
+</script>
+</body>
+</html>
