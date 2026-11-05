@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Arabacı Reklam · Taşköprü">
 <meta property="og:description" content="Dijital baskı, branda, folyo baskı ve kesim. Araç cam filmi ve PPF kaplama.">
-<meta property="og:image" content="https://arabacireklam.com/assets/img/dukkan-cephe.jpg">
+<meta property="og:image" content="https://arabacireklam.com/assets/img/dukkan-drone.jpg">
 <meta property="og:locale" content="tr_TR">
 <meta name="theme-color" content="#0f1215">
 <link rel="icon" type="image/svg+xml" href="assets/logo/amblem-renkli.svg">
@@ -23,7 +23,7 @@
   "@type": "LocalBusiness",
   "name": "Arabacı Reklam",
   "url": "https://arabacireklam.com/",
-  "image": "https://arabacireklam.com/assets/img/dukkan-cephe.jpg",
+  "image": "https://arabacireklam.com/assets/img/dukkan-drone.jpg",
   "logo": "https://arabacireklam.com/assets/logo/dikey-renkli.svg",
   "telephone": "+90 534 080 26 79",
   "foundingDate": "2017-01-21",
@@ -256,6 +256,25 @@ section { scroll-margin-top: 80px; }
 .ticket span { display: flex; justify-content: space-between; gap: 10px; }
 .ticket b { color: var(--fg); font-weight: 500; text-align: right; }
 @media (max-width: 960px) { .machines { grid-template-columns: 1fr 1fr; } }
+
+/* dükkan */
+.shopfront .wrap { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(20px, 3vw, 36px); align-items: stretch; }
+.shop-video { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--surface); border: 1px solid var(--line); aspect-ratio: 9 / 16; max-height: 720px; width: 100%; justify-self: center; }
+.shop-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shop-video .badge { position: absolute; left: 14px; top: 14px; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: rgb(10 12 14 / .7); color: var(--fg); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.shop-side { display: grid; gap: 22px; align-content: start; min-width: 0; }
+.shop-side h2 { font-size: var(--step-3); font-weight: 800; }
+.shop-side > p { color: var(--muted); max-width: 52ch; }
+.shop-photos { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px; }
+.shop-photos img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); aspect-ratio: 16 / 10; }
+.shop-photos img.bina { aspect-ratio: auto; object-position: 50% 40%; }
+@media (max-width: 900px) {
+  .shopfront .wrap { grid-template-columns: 1fr; }
+  .shop-video { aspect-ratio: 4 / 5; max-height: none; }
+  .shop-video video { object-position: 50% 45%; }
+  .shop-side { order: -1; }
+}
+@media (max-width: 520px) { .shop-photos { grid-template-columns: 1fr 1fr; } .shop-photos img, .shop-photos img.bina { aspect-ratio: 3 / 4; } }
 
 /* yorum + çağrı */
 .cta-band { position: relative; isolation: isolate; overflow: hidden; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); }
@@ -506,6 +525,29 @@ footer .bottom { border-top: 1px solid var(--line); padding-block: 18px; display
           <img loading="lazy" src="assets/img/tisort-pres-sm.jpg" alt="Tişört transfer presi" width="700" height="1244">
           <h3>Transfer pres</h3>
           <div class="ticket"><span>İş <b>tişört baskı</b></span><span>Adet <b>en az 10</b></span><span>Baskı <b>transfer</b></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec shopfront" id="dukkan" style="padding-top:0">
+    <div class="wrap">
+      <div class="shop-video">
+        <video autoplay muted playsinline preload="metadata" poster="assets/video/dukkan-drone-poster.jpg" aria-label="Dükkanın drone ile çekilmiş görüntüsü">
+          <source src="assets/video/dukkan-drone.mp4" type="video/mp4">
+        </video>
+        <span class="badge">Taşköprü · Drone</span>
+      </div>
+      <div class="shop-side">
+        <span class="eyebrow">Dükkanımız</span>
+        <h2>Taşköprü merkezde, Taş Cami Sokak'ta</h2>
+        <p>Atölyemiz ve araç uygulama alanımız aynı binada. Baskınızı yerinde görebilir, aracınızı doğrudan kapalı alana bırakabilirsiniz.</p>
+        <div class="shop-photos">
+          <img loading="lazy" src="assets/img/dukkan-drone-sm.jpg" srcset="assets/img/dukkan-drone-sm.jpg 1000w, assets/img/dukkan-drone.jpg 2000w" sizes="(max-width: 900px) 100vw, 40vw" alt="Arabacı Reklam dükkanının havadan çekilmiş ön cephesi" width="1000" height="563">
+          <img class="bina" loading="lazy" src="assets/img/dukkan-bina-sm.jpg" alt="Arabacı Reklam'ın bulunduğu bina" width="700" height="1244">
+        </div>
+        <div class="ctas">
+          <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=ARABACI+REKLAM+Ta%C5%9Fk%C3%B6pr%C3%BC" target="_blank" rel="noopener">Yol tarifi al</a>
         </div>
       </div>
     </div>
