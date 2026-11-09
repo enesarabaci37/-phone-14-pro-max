@@ -21,7 +21,7 @@ jobs:
           python-version: "3.12"
 
       - name: PyInstaller kur
-        run: python -m pip install pyinstaller
+        run: python -m pip install pyinstaller reportlab
 
       - name: Programi derle
         working-directory: m2-hesaplama
@@ -31,6 +31,8 @@ jobs:
           --icon icon.ico
           --add-data "icon.ico;."
           --add-data "icon.png;."
+          --add-data "logo.png;."
+          --add-data "fonts;fonts"
 
       - uses: actions/upload-artifact@v4
         with:

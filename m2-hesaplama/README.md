@@ -4,16 +4,21 @@ Windows için m² fiyat, malzeme maliyeti, kazanç, KDV ve indirim hesaplama pro
 
 ## İndirme
 GitHub deposunun **Releases** bölümünden en son `Arabaci-M2-Hesaplama.exe` dosyasını indirin ve çift tıklayın. Kurulum gerekmez.
+İlk açılışta "Windows bilgisayarınızı korudu" uyarısı çıkarsa **Ek bilgi → Yine de çalıştır** deyin.
 
-İlk açılışta "Windows bilgisayarınızı korudu" uyarısı çıkarsa **Ek bilgi → Yine de çalıştır** deyin (imzasız küçük programlarda normaldir).
+## Ekranlar
+- **m² Fiyat Hesaplama (müşteri ekranı):** müşteri adı, malzeme, ölçü birimi (cm / mm / m), en, boy, adet, KDV → toplam m², KDV hariç, KDV, KDV dahil fiyat. Alış fiyatı ve kâr bu ekranda görünmez.
+  - **PDF Teklif:** logolu müşteri teklifi oluşturur, `Belgeler\Arabaci Reklam` klasörüne kaydeder ve kaydı yönetime ekler.
+  - **WhatsApp için kopyala:** teklif özetini panoya kopyalar.
+- **KDV ve İndirim:** KDV (hariç / dahil fiyattan) ve indirim hesapları (indirimli fiyat, normal fiyat, indirim oranı).
+- **🔒 Yönetim (şifreli):**
+  - **Malzemeler:** malzeme ekle / düzenle / sil; alış fiyatı TL, Dolar ya da Euro; satış fiyatı; fire payı. Dolar ve Euro fiyatlar TCMB kuruyla otomatik TL'ye çevrilir.
+  - **Bu Hesabın Kârı:** müşteri ekranındaki hesabın maliyeti ve kazancı.
+  - **Kayıtlar ve Kâr Raporu:** verilen teklifler, toplam satış / maliyet / kâr, PDF kâr raporu.
+  - **Ayarlar:** alış KDV oranı, şifre değiştirme.
 
-## Özellikler
-- **m² Fiyat ve Kâr:** ölçü birimi (cm / mm / m), en, boy, adet → toplam m²; müşteri fiyatı (KDV hariç, KDV, KDV dahil); malzeme maliyeti TL / Dolar / Euro (TCMB kuru otomatik), fire payı; kazanç, kâr oranı, m² başına kazanç; müşteri teklifini panoya kopyalama (WhatsApp için).
-- **KDV Hesaplama:** KDV hariç ya da dahil fiyattan hesap.
-- **İndirim / İskonto Hesaplama**
-
-Son kullanılan fiyatlar, KDV oranları ve kur `%APPDATA%\ArabaciM2\ayarlar.json` dosyasında saklanır.
+Veriler `%APPDATA%\ArabaciM2\veriler.json` dosyasında saklanır. Şifre bu dosyada özet (hash) olarak tutulur. Bu, ekranı müşteriden gizlemek içindir; bilgisayara erişen biri veri dosyasını yine de açabilir.
 
 ## Geliştirme
-Sadece Python standart kütüphanesi (tkinter) kullanılır: `python m2_hesaplama.py`.
-`.exe` dosyası her değişiklikte GitHub Actions ile otomatik derlenir (`.github/workflows/m2-hesaplama.yml`).
+`python m2_hesaplama.py` (Python 3, tkinter, reportlab). `.exe` her değişiklikte GitHub Actions ile derlenir (`.github/workflows/m2-hesaplama.yml`).
+PDF yazı tipi: DejaVu Sans (`fonts/`, serbest lisans).

@@ -1,37 +1,68 @@
 """Arabacı Reklam - m² Hesaplama programı.
 
-Müşteri fiyatı, malzeme maliyeti (TL / Dolar / Euro), kâr, KDV ve indirim hesapları.
-Sadece Python standart kütüphanesi kullanılır (tkinter).
+- Müşteri ekranı: malzeme, ölçü, adet, KDV -> müşteri fiyatı, PDF teklif.
+- KDV ve İndirim ekranı.
+- Şifreli Yönetim: malzeme listesi ve alış fiyatları (TL / Dolar / Euro, TCMB kuru),
+  anlık kâr, kayıtlar ve kâr raporu (PDF).
 """
 
+import datetime
+import hashlib
 import json
 import os
+import subprocess
 import sys
 import threading
 import tkinter as tk
 import tkinter.font as tkfont
 import urllib.request
 import xml.etree.ElementTree as ET
-from tkinter import ttk
+from tkinter import messagebox, simpledialog, ttk
+
+try:
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm
+    from reportlab.lib.utils import ImageReader
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    from reportlab.pdfgen import canvas as pdf_canvas
+    PDF_VAR = True
+except ImportError:  # pragma: no cover
+    PDF_VAR = False
 
 UYGULAMA_ADI = "Arabacı Reklam - m² Hesaplama"
-SURUM = "1.0"
+SURUM = "2.0"
+
+FIRMA = {
+    "ad": "ARABACI REKLAM",
+    "adres": "Tabakhane Mah., Taş Camii Sk. No: 11/A, 37400 Taşköprü / Kastamonu",
+    "tel": "0534 080 26 79",
+    "web": "arabacireklam.com",
+}
 
 BIRIMLER = {"cm": 0.01, "mm": 0.001, "m": 1.0}
 KDV_ORANLARI = ["0", "1", "5", "10", "15", "20"]
 PARA_BIRIMLERI = ["TL", "Dolar", "Euro"]
 TCMB_URL = "https://www.tcmb.gov.tr/kurlar/today.xml"
+VARSAYILAN_MALZEMELER = [
+    "Baskı Folyo", "Branda Avrupa", "Branda Çin", "Kesim Folyo", "Şeffaf Baskı Folyosu",
+    "Dekoratif Folyo", "Kanvas Baskı", "Cam Filmi", "PPF",
+]
+SIFRE_TUZ = "arabaci-m2::"
+VARSAYILAN_SIFRE_OZET = "4decd5cf9cef26010be4613ac64dba6d98d921c7a93c905cd479b746ece3fa3b"
 
 KIRMIZI = "#d62828"
 YESIL = "#1e8e3e"
+MAVI = "#1f5fbf"
 GRI = "#666666"
 
 
-# ---------------------------------------------------------------- hesap yardımcıları
+# ================================================================ yardımcılar
 
 def sayi_oku(metin):
     """'1.234,5', '1234,5', '1234.5' gibi girişleri sayıya çevirir. Boş/hatalıysa None."""
-    s = (metin or "").strip().replace(" ", "").replace("%", "")
+    s = (str(metin) if metin is not None else "").strip().replace(" ", "").replace("%", "")
     if not s:
         return None
     if "," in s and "." in s:
@@ -44,24 +75,22 @@ def sayi_oku(metin):
         return None
 
 
-def para(x, birim="TL"):
-    s = f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    return f"{s} {birim}"
-
-
 def sayi_yaz(x, basamak=2):
-    s = f"{x:,.{basamak}f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    return s
+    return f"{x:,.{basamak}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def para(x, birim="TL"):
+    return f"{sayi_yaz(x)} {birim}"
 
 
 def kisa(x):
-    """Tam sayıysa küsuratsız, değilse virgüllü yazar: 120 -> '120', 10.5 -> '10,5'."""
+    """120 -> '120', 10.5 -> '10,5'."""
     return sayi_yaz(x, 0) if float(x).is_integer() else sayi_yaz(x, 2).rstrip("0").rstrip(",")
 
 
 def m2_hesapla(en, boy, birim, adet):
-    carpan = BIRIMLER[birim]
-    tek = (en * carpan) * (boy * carpan)
+    c = BIRIMLER[birim]
+    tek = (en * c) * (boy * c)
     return tek, tek * adet
 
 
@@ -70,29 +99,24 @@ def kdv_hesapla(haric, oran):
     return kdv, haric + kdv
 
 
-# ---------------------------------------------------------------- ayarlar
-
-def ayar_dosyasi():
-    taban = os.environ.get("APPDATA") or os.path.expanduser("~")
-    klasor = os.path.join(taban, "ArabaciM2")
-    os.makedirs(klasor, exist_ok=True)
-    return os.path.join(klasor, "ayarlar.json")
-
-
-def ayarlari_oku():
+def indirim_hesapla(islem, normal=None, indirimli=None, oran=None):
+    """Üç işlem: 'indirimli', 'normal', 'oran'. (normal, indirimli, oran, tutar) ya da None döner."""
     try:
-        with open(ayar_dosyasi(), encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
+        if islem == "indirimli" and normal is not None and oran is not None:
+            indirimli = normal * (1 - oran / 100)
+        elif islem == "normal" and indirimli is not None and oran is not None and oran < 100:
+            normal = indirimli / (1 - oran / 100)
+        elif islem == "oran" and normal and indirimli is not None:
+            oran = (normal - indirimli) / normal * 100
+        else:
+            return None
+    except ZeroDivisionError:
+        return None
+    return normal, indirimli, oran, normal - indirimli
 
 
-def ayarlari_yaz(veri):
-    try:
-        with open(ayar_dosyasi(), "w", encoding="utf-8") as f:
-            json.dump(veri, f, ensure_ascii=False, indent=2)
-    except Exception:
-        pass
+def sifre_ozet(sifre):
+    return hashlib.sha256((SIFRE_TUZ + sifre).encode("utf-8")).hexdigest()
 
 
 def kaynak_yolu(ad):
@@ -100,30 +124,308 @@ def kaynak_yolu(ad):
     return os.path.join(taban, ad)
 
 
+def dosya_ac(yol):
+    try:
+        if sys.platform.startswith("win"):
+            os.startfile(yol)  # noqa: S606
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", yol])
+        else:
+            subprocess.Popen(["xdg-open", yol], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception:
+        pass
+
+
 def tcmb_kurlari():
-    """TCMB'den güncel döviz satış kurlarını döndürür: {'Dolar': .., 'Euro': .., 'tarih': ..}"""
-    istek = urllib.request.Request(TCMB_URL, headers={"User-Agent": "ArabaciM2/1.0"})
+    istek = urllib.request.Request(TCMB_URL, headers={"User-Agent": "ArabaciM2/2.0"})
     with urllib.request.urlopen(istek, timeout=10) as yanit:
         kok = ET.fromstring(yanit.read())
     sonuc = {"tarih": kok.get("Tarih", "")}
     for cur in kok.findall("Currency"):
-        kod = cur.get("Kod")
         satis = cur.findtext("ForexSelling")
-        if kod == "USD" and satis:
+        if cur.get("Kod") == "USD" and satis:
             sonuc["Dolar"] = float(satis)
-        elif kod == "EUR" and satis:
+        elif cur.get("Kod") == "EUR" and satis:
             sonuc["Euro"] = float(satis)
     return sonuc
 
 
-# ---------------------------------------------------------------- arayüz
+# ================================================================ veri
+
+class Veri:
+    """Malzemeler, kayıtlar, kurlar ve ayarlar: %APPDATA%\\ArabaciM2\\veriler.json"""
+
+    def __init__(self, klasor=None):
+        taban = klasor or os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "ArabaciM2")
+        os.makedirs(taban, exist_ok=True)
+        self.yol = os.path.join(taban, "veriler.json")
+        try:
+            with open(self.yol, encoding="utf-8") as f:
+                self.d = json.load(f)
+        except Exception:
+            self.d = {}
+        self.d.setdefault("malzemeler", [
+            {"ad": ad, "alis": "", "para": "Euro", "satis": "", "fire": "0"} for ad in VARSAYILAN_MALZEMELER
+        ])
+        self.d.setdefault("kayitlar", [])
+        self.d.setdefault("kurlar", {})
+        self.d.setdefault("son_teklif_no", 0)
+        self.d.setdefault("sifre", VARSAYILAN_SIFRE_OZET)
+        self.d.setdefault("alis_kdv", "20")
+        self.d.setdefault("ekran", {})
+
+    def kaydet(self):
+        gecici = self.yol + ".tmp"
+        with open(gecici, "w", encoding="utf-8") as f:
+            json.dump(self.d, f, ensure_ascii=False, indent=2)
+        os.replace(gecici, self.yol)
+
+    @property
+    def malzemeler(self):
+        return self.d["malzemeler"]
+
+    def malzeme(self, ad):
+        return next((m for m in self.malzemeler if m["ad"] == ad), None)
+
+    def kur(self, para_birimi):
+        if para_birimi == "TL":
+            return 1.0
+        return self.d["kurlar"].get(para_birimi)
+
+    def alis_tl_m2(self, m):
+        """Malzemenin bugünkü kurla TL m² alış fiyatı (KDV hariç). Fiyat ya da kur yoksa None."""
+        if not m:
+            return None
+        fiyat, kur = sayi_oku(m.get("alis")), self.kur(m.get("para", "TL"))
+        if fiyat is None or not kur:
+            return None
+        return fiyat * kur
+
+
+# ================================================================ PDF
+
+_FONTLAR = None
+
+
+def pdf_fontlari():
+    global _FONTLAR
+    if _FONTLAR:
+        return _FONTLAR
+    adaylar = [
+        (kaynak_yolu(os.path.join("fonts", "DejaVuSans.ttf")), kaynak_yolu(os.path.join("fonts", "DejaVuSans-Bold.ttf"))),
+        (r"C:\Windows\Fonts\arial.ttf", r"C:\Windows\Fonts\arialbd.ttf"),
+    ]
+    for normal, kalin in adaylar:
+        if os.path.exists(normal) and os.path.exists(kalin):
+            pdfmetrics.registerFont(TTFont("TR", normal))
+            pdfmetrics.registerFont(TTFont("TR-B", kalin))
+            _FONTLAR = ("TR", "TR-B")
+            return _FONTLAR
+    _FONTLAR = ("Helvetica", "Helvetica-Bold")
+    return _FONTLAR
+
+
+def pdf_klasoru():
+    k = os.path.join(os.path.expanduser("~"), "Documents", "Arabaci Reklam")
+    os.makedirs(k, exist_ok=True)
+    return k
+
+
+def _pdf_baslik(c, baslik, sag_satirlar):
+    F, FB = pdf_fontlari()
+    gen, yuk = A4
+    logo = kaynak_yolu("logo.png")
+    if os.path.exists(logo):
+        c.drawImage(ImageReader(logo), 18 * mm, yuk - 38 * mm, width=62 * mm, height=17 * mm, mask="auto",
+                    preserveAspectRatio=True, anchor="w")
+    c.setFont(FB, 18)
+    c.setFillColor(colors.HexColor(KIRMIZI))
+    c.drawRightString(gen - 18 * mm, yuk - 26 * mm, baslik)
+    c.setFillColor(colors.black)
+    c.setFont(F, 9.5)
+    y = yuk - 32 * mm
+    for s in sag_satirlar:
+        c.drawRightString(gen - 18 * mm, y, s)
+        y -= 5 * mm
+    c.setStrokeColor(colors.HexColor("#cccccc"))
+    c.line(18 * mm, yuk - 46 * mm, gen - 18 * mm, yuk - 46 * mm)
+    return yuk - 54 * mm
+
+
+def _pdf_alt(c):
+    F, _ = pdf_fontlari()
+    gen, _ = A4
+    c.setStrokeColor(colors.HexColor("#cccccc"))
+    c.line(18 * mm, 22 * mm, gen - 18 * mm, 22 * mm)
+    c.setFont(F, 8.5)
+    c.setFillColor(colors.HexColor(GRI))
+    c.drawCentredString(gen / 2, 16 * mm, f"{FIRMA['ad']}  •  {FIRMA['adres']}")
+    c.drawCentredString(gen / 2, 11.5 * mm, f"Tel / WhatsApp: {FIRMA['tel']}  •  {FIRMA['web']}")
+    c.setFillColor(colors.black)
+
+
+def _tablo(c, x, y, sutunlar, satirlar, hizalar, genislikler, kalin_son=False):
+    """Basit tablo çizer, yeni y döner. Sayfa taşarsa yeni sayfa açar."""
+    F, FB = pdf_fontlari()
+    gen, _ = A4
+    sat_yuk = 7.5 * mm
+
+    def baslik_ciz(yy):
+        c.setFillColor(colors.HexColor("#f1f1f1"))
+        c.rect(x, yy - sat_yuk + 2 * mm, sum(genislikler), sat_yuk, stroke=0, fill=1)
+        c.setFillColor(colors.black)
+        c.setFont(FB, 9)
+        xx = x
+        for s, h, g in zip(sutunlar, hizalar, genislikler):
+            _hucre(c, xx, yy, g, s, h)
+            xx += g
+        return yy - sat_yuk
+
+    y = baslik_ciz(y)
+    for i, satir in enumerate(satirlar):
+        if y < 35 * mm:
+            _pdf_alt(c)
+            c.showPage()
+            y = baslik_ciz(A4[1] - 25 * mm)
+        son = kalin_son and i == len(satirlar) - 1
+        c.setFont(FB if son else F, 9)
+        xx = x
+        for s, h, g in zip(satir, hizalar, genislikler):
+            _hucre(c, xx, y, g, s, h)
+            xx += g
+        c.setStrokeColor(colors.HexColor("#e2e2e2"))
+        c.line(x, y - 2.5 * mm, x + sum(genislikler), y - 2.5 * mm)
+        y -= sat_yuk
+    return y
+
+
+def _hucre(c, x, y, g, metin, hiza):
+    metin = str(metin)
+    if hiza == "r":
+        c.drawRightString(x + g - 2 * mm, y - 1 * mm, metin)
+    elif hiza == "c":
+        c.drawCentredString(x + g / 2, y - 1 * mm, metin)
+    else:
+        c.drawString(x + 2 * mm, y - 1 * mm, metin)
+
+
+def musteri_pdf(kayit, yol):
+    F, FB = pdf_fontlari()
+    gen, _ = A4
+    c = pdf_canvas.Canvas(yol, pagesize=A4)
+    c.setTitle(f"Fiyat Teklifi {kayit['no']}")
+    y = _pdf_baslik(c, "FİYAT TEKLİFİ", [f"Teklif No: {kayit['no']}", f"Tarih: {kayit['tarih']}"])
+    if kayit.get("musteri"):
+        c.setFont(F, 10)
+        c.drawString(18 * mm, y, "Sayın")
+        c.setFont(FB, 12)
+        c.drawString(18 * mm, y - 6 * mm, kayit["musteri"])
+        y -= 16 * mm
+    gen_ic = gen - 36 * mm
+    gens = [gen_ic * o for o in (0.27, 0.21, 0.09, 0.13, 0.15, 0.15)]
+    y = _tablo(c, 18 * mm, y,
+               ["Malzeme / Ürün", "Ölçü", "Adet", "Toplam m²", "m² Fiyatı", "Tutar"],
+               [[kayit["malzeme"] or "-", kayit["olcu"], kisa(kayit["adet"]), sayi_yaz(kayit["m2"], 2),
+                 para(kayit["satis_m2"]), para(kayit["satis_haric"])]],
+               ["l", "c", "c", "r", "r", "r"], gens)
+    y -= 6 * mm
+    sx = gen - 18 * mm
+    for etiket, deger, kalin in (
+        ("Ara Toplam (KDV hariç)", para(kayit["satis_haric"]), False),
+        (f"KDV (%{kisa(kayit['kdv_orani'])})", para(kayit["satis_kdv"]), False),
+        ("GENEL TOPLAM", para(kayit["satis_dahil"]), True),
+    ):
+        c.setFont(FB if kalin else F, 12 if kalin else 10)
+        if kalin:
+            c.setFillColor(colors.HexColor(KIRMIZI))
+        c.drawRightString(sx - 45 * mm, y, etiket)
+        c.drawRightString(sx, y, deger)
+        c.setFillColor(colors.black)
+        y -= 7.5 * mm
+    y -= 8 * mm
+    c.setFont(F, 9.5)
+    c.setFillColor(colors.HexColor(GRI))
+    c.drawString(18 * mm, y, "Bilgi ve sipariş için bizi arayabilir ya da WhatsApp'tan yazabilirsiniz.")
+    c.setFillColor(colors.black)
+    _pdf_alt(c)
+    c.save()
+
+
+def kar_pdf(kayitlar, yol, baslik="KÂR RAPORU"):
+    F, FB = pdf_fontlari()
+    gen, _ = A4
+    c = pdf_canvas.Canvas(yol, pagesize=A4)
+    c.setTitle(baslik)
+    simdi = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+    y = _pdf_baslik(c, baslik, [f"Kayıt sayısı: {len(kayitlar)}", f"Rapor tarihi: {simdi}", "FİRMA İÇİ - GİZLİ"])
+
+    if len(kayitlar) == 1:
+        k = kayitlar[0]
+        satirlar = [
+            ("Teklif No / Tarih", f"{k['no']}  •  {k['tarih']}"),
+            ("Müşteri", k.get("musteri") or "-"),
+            ("Malzeme", k.get("malzeme") or "-"),
+            ("Ölçü", f"{k['olcu']}  ×  {kisa(k['adet'])} adet  =  {sayi_yaz(k['m2'], 3)} m²"),
+            ("Alış fiyatı", (f"{k['alis_fiyat']} {k['alis_para']} / m²" + (f"  (kur {sayi_yaz(k['kur'], 4)})" if k.get("alis_para") != "TL" and k.get("kur") else "")) if k.get("alis_fiyat") else "-"),
+            ("m² maliyeti (TL)", para(k["alis_tl_m2"]) if k.get("alis_tl_m2") is not None else "-"),
+            ("Fire payı", f"% {kisa(k.get('fire') or 0)}"),
+            ("Toplam maliyet (KDV hariç)", para(k["maliyet_haric"]) if k.get("maliyet_haric") is not None else "-"),
+            ("m² satış fiyatı", para(k["satis_m2"])),
+            ("Satış (KDV hariç)", para(k["satis_haric"])),
+            ("Satış (KDV dahil)", para(k["satis_dahil"])),
+            ("KAZANÇ (KDV hariç)", para(k["kar"]) if k.get("kar") is not None else "-"),
+            ("Kâr oranı (satışa göre)", f"% {sayi_yaz(k['kar'] / k['satis_haric'] * 100, 1)}" if k.get("kar") is not None and k["satis_haric"] else "-"),
+        ]
+        for etiket, deger in satirlar:
+            vurgu = etiket.startswith("KAZANÇ")
+            c.setFont(FB if vurgu else F, 12 if vurgu else 10.5)
+            if vurgu:
+                c.setFillColor(colors.HexColor(YESIL if (k.get("kar") or 0) >= 0 else KIRMIZI))
+            c.drawString(18 * mm, y, etiket)
+            c.drawRightString(gen - 18 * mm, y, deger)
+            c.setFillColor(colors.black)
+            c.setStrokeColor(colors.HexColor("#e2e2e2"))
+            c.line(18 * mm, y - 2.5 * mm, gen - 18 * mm, y - 2.5 * mm)
+            y -= 8 * mm
+    else:
+        gen_ic = gen - 36 * mm
+        gens = [gen_ic * o for o in (0.08, 0.14, 0.16, 0.17, 0.09, 0.12, 0.12, 0.12)]
+        satirlar = []
+        t_satis = t_maliyet = t_kar = t_m2 = t_satis_maliyetli = 0.0
+        for k in kayitlar:
+            t_satis += k["satis_haric"]
+            t_m2 += k["m2"]
+            if k.get("maliyet_haric") is not None:
+                t_maliyet += k["maliyet_haric"]
+                t_satis_maliyetli += k["satis_haric"]
+            if k.get("kar") is not None:
+                t_kar += k["kar"]
+            satirlar.append([k["no"], k["tarih"][:10], (k.get("musteri") or "-")[:18], (k.get("malzeme") or "-")[:20],
+                             sayi_yaz(k["m2"], 2), sayi_yaz(k["satis_haric"]),
+                             sayi_yaz(k["maliyet_haric"]) if k.get("maliyet_haric") is not None else "-",
+                             sayi_yaz(k["kar"]) if k.get("kar") is not None else "-"])
+        satirlar.append(["", "", "TOPLAM", "", sayi_yaz(t_m2, 2), sayi_yaz(t_satis), sayi_yaz(t_maliyet), sayi_yaz(t_kar)])
+        y = _tablo(c, 18 * mm, y, ["No", "Tarih", "Müşteri", "Malzeme", "m²", "Satış TL", "Maliyet TL", "Kâr TL"],
+                   satirlar, ["c", "l", "l", "l", "r", "r", "r", "r"], gens, kalin_son=True)
+        y -= 4 * mm
+        c.setFont(F, 8.5)
+        c.setFillColor(colors.HexColor(GRI))
+        c.drawString(18 * mm, y, "Tutarlar KDV hariçtir. Kâr oranı: " +
+                     (f"% {sayi_yaz(t_kar / t_satis_maliyetli * 100, 1)}" if t_satis_maliyetli else "-")
+                     + ("   (Maliyeti bilinmeyen kayıtlar kâra ve orana katılmadı.)" if t_satis_maliyetli != t_satis else ""))
+        c.setFillColor(colors.black)
+    _pdf_alt(c)
+    c.save()
+
+
+# ================================================================ arayüz
 
 class Uygulama(tk.Tk):
-    def __init__(self):
+    def __init__(self, veri=None):
         super().__init__()
         self.title(f"{UYGULAMA_ADI}  (v{SURUM})")
-        self.minsize(1000, 800)
-        self.geometry("1060x820")
+        self.minsize(900, 680)
+        self.geometry("980x720")
         try:
             self.iconbitmap(kaynak_yolu("icon.ico"))
         except Exception:
@@ -132,314 +434,351 @@ class Uygulama(tk.Tk):
             except Exception:
                 pass
 
-        self.ayarlar = ayarlari_oku()
-        self.kurlar = {"Dolar": self.ayarlar.get("kur_Dolar", ""), "Euro": self.ayarlar.get("kur_Euro", "")}
+        self.veri = veri or Veri()
+        self.hesap = None
+        self.yonetim = None
         self._stil()
 
         defter = ttk.Notebook(self)
         defter.pack(fill="both", expand=True, padx=10, pady=10)
-
         self.sayfa_fiyat = ttk.Frame(defter, padding=10)
         self.sayfa_kdv = ttk.Frame(defter, padding=10)
-        self.sayfa_indirim = ttk.Frame(defter, padding=10)
-        defter.add(self.sayfa_fiyat, text="  m² Fiyat ve Kâr  ")
-        defter.add(self.sayfa_kdv, text="  KDV Hesaplama  ")
-        defter.add(self.sayfa_indirim, text="  İndirim / İskonto  ")
+        defter.add(self.sayfa_fiyat, text="  m² Fiyat Hesaplama  ")
+        defter.add(self.sayfa_kdv, text="  KDV ve İndirim  ")
 
         self._fiyat_sayfasi()
-        self._kdv_sayfasi()
-        self._indirim_sayfasi()
+        self._kdv_indirim_sayfasi()
 
         self.protocol("WM_DELETE_WINDOW", self._kapat)
         self.after(200, self.kuru_guncelle)
 
     # ------------------------------------------------------------ görünüm
     def _stil(self):
-        font_ad = "Segoe UI" if sys.platform.startswith("win") else "DejaVu Sans"
-        for ad in ("TkDefaultFont", "TkTextFont", "TkMenuFont"):
+        fa = "Segoe UI" if sys.platform.startswith("win") else "DejaVu Sans"
+        self.fa = fa
+        for ad in ("TkDefaultFont", "TkTextFont", "TkMenuFont", "TkHeadingFont"):
             try:
-                tkfont.nametofont(ad).configure(family=font_ad, size=11)
+                tkfont.nametofont(ad).configure(family=fa, size=11)
             except tk.TclError:
                 pass
         s = ttk.Style(self)
-        if "vista" in s.theme_names():
-            s.theme_use("vista")
-        elif "clam" in s.theme_names():
-            s.theme_use("clam")
-        s.configure("TNotebook.Tab", font=(font_ad, 11, "bold"), padding=(10, 6))
-        s.configure("TLabel", font=(font_ad, 11))
-        s.configure("Baslik.TLabel", font=(font_ad, 15, "bold"), foreground=KIRMIZI)
-        s.configure("Not.TLabel", font=(font_ad, 9), foreground=GRI)
-        s.configure("Sonuc.TLabel", font=(font_ad, 12, "bold"))
-        s.configure("Buyuk.TLabel", font=(font_ad, 14, "bold"))
-        s.configure("Kar.TLabel", font=(font_ad, 16, "bold"), foreground=YESIL)
-        s.configure("Zarar.TLabel", font=(font_ad, 16, "bold"), foreground=KIRMIZI)
-        s.configure("TLabelframe.Label", font=(font_ad, 12, "bold"), foreground=KIRMIZI)
-        s.configure("TEntry", padding=4)
-        s.configure("TButton", font=(font_ad, 11, "bold"), padding=(10, 5))
-        self.font_ad = font_ad
+        for tema in ("vista", "clam"):
+            if tema in s.theme_names():
+                s.theme_use(tema)
+                break
+        s.configure("TNotebook.Tab", font=(fa, 11, "bold"), padding=(10, 6))
+        s.configure("Baslik.TLabel", font=(fa, 15, "bold"), foreground=KIRMIZI)
+        s.configure("Not.TLabel", font=(fa, 9), foreground=GRI)
+        s.configure("Sonuc.TLabel", font=(fa, 12, "bold"))
+        s.configure("Buyuk.TLabel", font=(fa, 15, "bold"))
+        s.configure("BuyukK.TLabel", font=(fa, 15, "bold"), foreground=KIRMIZI)
+        s.configure("Kar.TLabel", font=(fa, 15, "bold"), foreground=YESIL)
+        s.configure("Zarar.TLabel", font=(fa, 15, "bold"), foreground=KIRMIZI)
+        s.configure("TLabelframe.Label", font=(fa, 12, "bold"), foreground=KIRMIZI)
+        s.configure("TButton", font=(fa, 10, "bold"), padding=(8, 4))
+        s.configure("Treeview", rowheight=26, font=(fa, 10))
+        s.configure("Treeview.Heading", font=(fa, 10, "bold"))
 
-    def _giris(self, ust, satir, etiket, degisken, genislik=14, sutun=0, ipucu=None):
+    def _giris(self, ust, satir, etiket, degisken, genislik=14, sutun=0, show=None):
         ttk.Label(ust, text=etiket).grid(row=satir, column=sutun, sticky="w", pady=4, padx=(16 if sutun else 0, 8))
-        e = ttk.Entry(ust, textvariable=degisken, width=genislik, font=(self.font_ad, 12), justify="right")
+        e = ttk.Entry(ust, textvariable=degisken, width=genislik, font=(self.fa, 12), justify="right", show=show)
         e.grid(row=satir, column=sutun + 1, sticky="we", pady=4)
-        if ipucu:
-            ttk.Label(ust, text=ipucu, style="Not.TLabel").grid(row=satir, column=sutun + 2, sticky="w", padx=6)
         return e
 
     def _secim(self, ust, satir, etiket, degisken, degerler, sutun=0, genislik=12, serbest=False):
         ttk.Label(ust, text=etiket).grid(row=satir, column=sutun, sticky="w", pady=4, padx=(16 if sutun else 0, 8))
         c = ttk.Combobox(ust, textvariable=degisken, values=degerler, width=genislik,
-                         state="normal" if serbest else "readonly", font=(self.font_ad, 12))
+                         state="normal" if serbest else "readonly", font=(self.fa, 12))
         c.grid(row=satir, column=sutun + 1, sticky="we", pady=4)
         return c
 
-    def _sonuc(self, ust, satir, etiket, stil="Sonuc.TLabel", sutun=0):
+    def _sonuc(self, ust, satir, etiket, stil="Sonuc.TLabel", sutun=0, span=1):
         ttk.Label(ust, text=etiket).grid(row=satir, column=sutun, sticky="w", pady=3, padx=(0, 8))
         v = tk.StringVar(value="—")
         lbl = ttk.Label(ust, textvariable=v, style=stil, anchor="e")
-        lbl.grid(row=satir, column=sutun + 1, columnspan=2, sticky="e", pady=3)
+        lbl.grid(row=satir, column=sutun + 1, columnspan=span, sticky="e", pady=3)
         return v, lbl
 
-    def _izle(self, fonk, *degiskenler):
+    def _dugme(self, ust, metin, renk, komut, koyu):
+        return tk.Button(ust, text=metin, bg=renk, fg="white", activebackground=koyu, activeforeground="white",
+                         relief="flat", font=(self.fa, 11, "bold"), padx=12, pady=6, cursor="hand2", command=komut)
+
+    @staticmethod
+    def _izle(fonk, *degiskenler):
         for d in degiskenler:
             d.trace_add("write", lambda *_: fonk())
 
-    # ------------------------------------------------------------ sayfa 1: fiyat ve kâr
+    # ------------------------------------------------------------ sayfa 1: müşteri fiyatı
     def _fiyat_sayfasi(self):
-        a = self.ayarlar
+        e = self.veri.d["ekran"]
         p = self.sayfa_fiyat
-        p.columnconfigure(0, weight=1, uniform="k")
-        p.columnconfigure(1, weight=1, uniform="k")
+        p.columnconfigure(0, weight=1)
 
-        # --- ölçü
-        olcu = ttk.LabelFrame(p, text=" 1) Ölçü ", padding=10)
-        olcu.grid(row=0, column=0, columnspan=2, sticky="we", pady=(0, 8))
-        for i in range(8):
-            olcu.columnconfigure(i, weight=1 if i in (1, 3, 5, 7) else 0)
-        self.v_birim = tk.StringVar(value=a.get("birim", "cm"))
-        self.v_en = tk.StringVar()
-        self.v_boy = tk.StringVar()
-        self.v_adet = tk.StringVar(value="1")
-        self._secim(olcu, 0, "Ölçü birimi", self.v_birim, list(BIRIMLER), sutun=0, genislik=6)
-        self.e_en = self._giris(olcu, 0, "En (soldan sağa)", self.v_en, sutun=2, genislik=10)
-        self._giris(olcu, 0, "Boy (yukarıdan aşağı)", self.v_boy, sutun=4, genislik=10)
-        self._giris(olcu, 0, "Adet", self.v_adet, sutun=6, genislik=6)
-        sat2 = ttk.Frame(olcu)
-        sat2.grid(row=1, column=0, columnspan=8, sticky="we", pady=(6, 0))
-        self.r_tek_m2 = tk.StringVar(value="—")
-        self.r_top_m2 = tk.StringVar(value="—")
-        ttk.Label(sat2, text="Bir parça:").pack(side="left")
-        ttk.Label(sat2, textvariable=self.r_tek_m2, style="Sonuc.TLabel").pack(side="left", padx=(4, 24))
-        ttk.Label(sat2, text="Toplam:").pack(side="left")
-        ttk.Label(sat2, textvariable=self.r_top_m2, style="Buyuk.TLabel", foreground=KIRMIZI).pack(side="left", padx=4)
+        ust = ttk.Frame(p)
+        ust.grid(row=0, column=0, sticky="we", pady=(0, 6))
+        ust.columnconfigure(1, weight=1)
+        self.v_musteri = tk.StringVar()
+        ttk.Label(ust, text="Müşteri adı (isteğe bağlı)").grid(row=0, column=0, sticky="w", padx=(0, 8))
+        ttk.Entry(ust, textvariable=self.v_musteri, font=(self.fa, 12)).grid(row=0, column=1, sticky="we")
 
-        # --- satış
-        satis = ttk.LabelFrame(p, text=" 2) Müşteri Fiyatı (Satış) ", padding=10)
-        satis.grid(row=1, column=0, sticky="nsew", padx=(0, 5))
-        satis.columnconfigure(1, weight=1)
-        self.v_satis_m2 = tk.StringVar(value=a.get("satis_m2", ""))
-        self.v_satis_kdv = tk.StringVar(value=a.get("satis_kdv", "20"))
-        self._giris(satis, 0, "m² satış fiyatı (TL, KDV hariç)", self.v_satis_m2)
-        self._secim(satis, 1, "KDV oranı (%)", self.v_satis_kdv, KDV_ORANLARI, serbest=True)
-        ttk.Separator(satis).grid(row=2, column=0, columnspan=2, sticky="we", pady=8)
-        self.r_satis_haric, _ = self._sonuc(satis, 3, "Toplam fiyat (KDV hariç)")
-        self.r_satis_kdv, _ = self._sonuc(satis, 4, "KDV tutarı")
-        self.r_satis_dahil, _ = self._sonuc(satis, 5, "KDV dahil toplam", stil="Buyuk.TLabel")
+        # --- malzeme ve ölçü
+        olcu = ttk.LabelFrame(p, text=" 1) Malzeme ve Ölçü ", padding=10)
+        olcu.grid(row=1, column=0, sticky="we", pady=(0, 8))
+        for i in (1, 3, 5, 7):
+            olcu.columnconfigure(i, weight=1)
+        self.v_malzeme = tk.StringVar(value=e.get("malzeme", ""))
+        self.v_birim = tk.StringVar(value=e.get("birim", "cm"))
+        self.v_en, self.v_boy, self.v_adet = tk.StringVar(), tk.StringVar(), tk.StringVar(value="1")
+        self.c_malzeme = self._secim(olcu, 0, "Malzeme", self.v_malzeme, [], sutun=0, genislik=22)
+        self.c_malzeme.grid(columnspan=3)
+        self._secim(olcu, 0, "Ölçü birimi", self.v_birim, list(BIRIMLER), sutun=4, genislik=6)
+        self.e_en = self._giris(olcu, 1, "En (soldan sağa)", self.v_en, sutun=0, genislik=10)
+        self._giris(olcu, 1, "Boy (yukarıdan aşağı)", self.v_boy, sutun=2, genislik=10)
+        self._giris(olcu, 1, "Adet", self.v_adet, sutun=4, genislik=6)
+        sat = ttk.Frame(olcu)
+        sat.grid(row=2, column=0, columnspan=8, sticky="w", pady=(6, 0))
+        self.r_tek_m2, self.r_top_m2 = tk.StringVar(value="—"), tk.StringVar(value="—")
+        ttk.Label(sat, text="Bir parça:").pack(side="left")
+        ttk.Label(sat, textvariable=self.r_tek_m2, style="Sonuc.TLabel").pack(side="left", padx=(4, 24))
+        ttk.Label(sat, text="Toplam:").pack(side="left")
+        ttk.Label(sat, textvariable=self.r_top_m2, style="BuyukK.TLabel").pack(side="left", padx=4)
 
-        # --- alış / maliyet
-        alis = ttk.LabelFrame(p, text=" 3) Malzeme Maliyeti (Alış) ", padding=10)
-        alis.grid(row=1, column=1, sticky="nsew", padx=(5, 0))
-        alis.columnconfigure(1, weight=1)
-        self.v_alis_m2 = tk.StringVar(value=a.get("alis_m2", ""))
-        self.v_alis_para = tk.StringVar(value=a.get("alis_para", "Euro"))
-        self.v_kur = tk.StringVar()
-        self.v_fire = tk.StringVar(value=a.get("fire", "0"))
-        self.v_alis_kdv = tk.StringVar(value=a.get("alis_kdv", "20"))
-        self._giris(alis, 0, "m² alış fiyatı (KDV hariç)", self.v_alis_m2)
-        self._secim(alis, 1, "Para birimi", self.v_alis_para, PARA_BIRIMLERI)
-        self._giris(alis, 2, "Kur (1 birim = ? TL)", self.v_kur)
-        ttk.Button(alis, text="↻ Güncelle", command=self.kuru_guncelle).grid(row=2, column=2, padx=(6, 0))
-        self.v_kur_bilgi = tk.StringVar(value="")
-        ttk.Label(alis, textvariable=self.v_kur_bilgi, style="Not.TLabel").grid(row=3, column=0, columnspan=3, sticky="w")
-        self._giris(alis, 4, "Fire / kayıp payı (%)", self.v_fire)
-        self._secim(alis, 5, "Alış KDV oranı (%)", self.v_alis_kdv, KDV_ORANLARI, serbest=True)
-        ttk.Separator(alis).grid(row=6, column=0, columnspan=3, sticky="we", pady=8)
-        self.r_alis_tl_m2, _ = self._sonuc(alis, 7, "m² maliyeti (TL)")
-        self.r_alis_haric, _ = self._sonuc(alis, 8, "Toplam maliyet (KDV hariç)")
-        self.r_alis_kdv, _ = self._sonuc(alis, 9, "KDV tutarı")
-        self.r_alis_dahil, _ = self._sonuc(alis, 10, "KDV dahil maliyet", stil="Buyuk.TLabel")
+        # --- fiyat
+        fiyat = ttk.LabelFrame(p, text=" 2) Müşteri Fiyatı ", padding=10)
+        fiyat.grid(row=2, column=0, sticky="we")
+        fiyat.columnconfigure(1, weight=1)
+        fiyat.columnconfigure(3, weight=1)
+        self.v_satis_m2 = tk.StringVar()
+        self.v_kdv = tk.StringVar(value=e.get("kdv", "20"))
+        self._giris(fiyat, 0, "m² fiyatı (TL, KDV hariç)", self.v_satis_m2, sutun=0)
+        self._secim(fiyat, 0, "KDV oranı (%)", self.v_kdv, KDV_ORANLARI, sutun=2, serbest=True, genislik=6)
+        ttk.Separator(fiyat).grid(row=1, column=0, columnspan=4, sticky="we", pady=8)
+        self.r_haric, _ = self._sonuc(fiyat, 2, "Toplam fiyat (KDV hariç)", span=3)
+        self.r_kdv, _ = self._sonuc(fiyat, 3, "KDV tutarı", span=3)
+        self.r_dahil, _ = self._sonuc(fiyat, 4, "KDV dahil toplam", stil="BuyukK.TLabel", span=3)
 
-        # --- kâr
-        kar = ttk.LabelFrame(p, text=" 4) Kazanç ", padding=10)
-        kar.grid(row=2, column=0, columnspan=2, sticky="we", pady=(8, 0))
-        for i in range(6):
-            kar.columnconfigure(i, weight=1)
-        self.r_kar = tk.StringVar(value="—")
-        self.r_marj = tk.StringVar(value="—")
-        self.r_kar_m2 = tk.StringVar(value="—")
-        ttk.Label(kar, text="Kazancınız (KDV hariç):").grid(row=0, column=0, sticky="w")
-        self.l_kar = ttk.Label(kar, textvariable=self.r_kar, style="Kar.TLabel")
-        self.l_kar.grid(row=0, column=1, sticky="w")
-        ttk.Label(kar, text="Kâr oranı (satışa göre):").grid(row=0, column=2, sticky="w")
-        ttk.Label(kar, textvariable=self.r_marj, style="Sonuc.TLabel").grid(row=0, column=3, sticky="w")
-        ttk.Label(kar, text="m² başına kazanç:").grid(row=0, column=4, sticky="w")
-        ttk.Label(kar, textvariable=self.r_kar_m2, style="Sonuc.TLabel").grid(row=0, column=5, sticky="w")
-
-        # --- alt düğmeler ve notlar
+        # --- düğmeler
         alt = ttk.Frame(p)
-        alt.grid(row=3, column=0, columnspan=2, sticky="we", pady=(10, 0))
-        tk.Button(alt, text="✖  Temizle", bg=KIRMIZI, fg="white", activebackground="#a61e1e",
-                  activeforeground="white", relief="flat", font=(self.font_ad, 12, "bold"),
-                  padx=14, pady=6, command=self.fiyat_temizle).pack(side="left")
-        tk.Button(alt, text="📋  Müşteri teklifini kopyala", bg=YESIL, fg="white", activebackground="#166b2e",
-                  activeforeground="white", relief="flat", font=(self.font_ad, 12, "bold"),
-                  padx=14, pady=6, command=self.teklif_kopyala).pack(side="left", padx=10)
-        self.v_durum = tk.StringVar(value="")
-        ttk.Label(alt, textvariable=self.v_durum, foreground=YESIL).pack(side="left", padx=6)
+        alt.grid(row=3, column=0, sticky="we", pady=(12, 0))
+        self._dugme(alt, "✖  Temizle", KIRMIZI, self.fiyat_temizle, "#a61e1e").pack(side="left")
+        self._dugme(alt, "📄  PDF Teklif", MAVI, self.pdf_teklif, "#174a94").pack(side="left", padx=(10, 0))
+        self._dugme(alt, "📋  WhatsApp için kopyala", YESIL, self.teklif_kopyala, "#166b2e").pack(side="left", padx=10)
+        ttk.Button(alt, text="🔒 Yönetim", command=self.yonetim_ac).pack(side="right")
+        self.v_durum = tk.StringVar()
+        ttk.Label(p, textvariable=self.v_durum, foreground=YESIL).grid(row=4, column=0, sticky="w", pady=(6, 0))
+        ttk.Label(p, style="Not.TLabel", text=(
+            "Sonuçlar siz yazdıkça hesaplanır. Ondalık için virgül ya da nokta kullanabilirsiniz (10,5 veya 10.5). "
+            "Malzeme seçince kayıtlı m² fiyatı gelir; bu iş için değiştirebilirsiniz."
+        ), wraplength=900).grid(row=5, column=0, sticky="w", pady=(4, 0))
 
-        ttk.Label(p, style="Not.TLabel", justify="left", text=(
-            "• Sonuçlar siz yazdıkça otomatik hesaplanır. Ondalık için virgül ya da nokta kullanabilirsiniz (10,5 veya 10.5).\n"
-            "• Kazanç KDV hariç tutarlar üzerinden hesaplanır; KDV devlete gider, kazancınıza dahil değildir.\n"
-            "• Kur, Merkez Bankası (TCMB) döviz satış kurudur. İnternet yoksa son kur kullanılır; kutuya elle de yazabilirsiniz."
-        )).grid(row=4, column=0, columnspan=2, sticky="w", pady=(10, 0))
-
-        self._izle(self.fiyat_hesapla, self.v_birim, self.v_en, self.v_boy, self.v_adet, self.v_satis_m2,
-                   self.v_satis_kdv, self.v_alis_m2, self.v_alis_para, self.v_kur, self.v_fire, self.v_alis_kdv)
-        self.v_alis_para.trace_add("write", lambda *_: self._kuru_yaz())
-        self._kuru_yaz()
+        self.malzeme_listesini_yenile()
+        self.c_malzeme.bind("<<ComboboxSelected>>", lambda _e: self.malzeme_secildi())
+        self._izle(self.fiyat_hesapla, self.v_malzeme, self.v_birim, self.v_en, self.v_boy, self.v_adet,
+                   self.v_satis_m2, self.v_kdv)
+        self.malzeme_secildi()
         self.e_en.focus_set()
 
-    def _kuru_yaz(self):
-        para_b = self.v_alis_para.get()
-        if para_b == "TL":
-            self.v_kur.set("1")
-        else:
-            kur = self.kurlar.get(para_b)
-            self.v_kur.set(sayi_yaz(kur, 4) if isinstance(kur, (int, float)) and kur else "")
+    def malzeme_listesini_yenile(self):
+        adlar = [m["ad"] for m in self.veri.malzemeler]
+        self.c_malzeme.configure(values=adlar)
+        if self.v_malzeme.get() not in adlar:
+            self.v_malzeme.set(adlar[0] if adlar else "")
 
-    def kuru_guncelle(self):
-        self.v_kur_bilgi.set("Kur alınıyor…")
-
-        def is_parcacigi():
-            try:
-                k = tcmb_kurlari()
-                self.after(0, lambda: self._kur_geldi(k))
-            except Exception:
-                self.after(0, self._kur_hata)
-
-        threading.Thread(target=is_parcacigi, daemon=True).start()
-
-    def _kur_geldi(self, k):
-        for ad in ("Dolar", "Euro"):
-            if k.get(ad):
-                self.kurlar[ad] = k[ad]
-                self.ayarlar[f"kur_{ad}"] = k[ad]
-        self.ayarlar["kur_tarih"] = k.get("tarih", "")
-        self.v_kur_bilgi.set(f"TCMB {k.get('tarih', '')}  •  $ {sayi_yaz(k.get('Dolar', 0), 4)}  •  € {sayi_yaz(k.get('Euro', 0), 4)}")
-        self._kuru_yaz()
-
-    def _kur_hata(self):
-        tarih = self.ayarlar.get("kur_tarih")
-        self.v_kur_bilgi.set(f"Kur alınamadı. Son kayıtlı kur ({tarih}) kullanılıyor." if tarih
-                             else "Kur alınamadı (internet yok?). Kuru elle yazın.")
+    def malzeme_secildi(self):
+        m = self.veri.malzeme(self.v_malzeme.get())
+        self.v_satis_m2.set(m.get("satis", "") if m else "")
+        self.fiyat_hesapla()
 
     def fiyat_hesapla(self):
-        en, boy, adet = sayi_oku(self.v_en.get()), sayi_oku(self.v_boy.get()), sayi_oku(self.v_adet.get())
-        if adet is None:
-            adet = 1
-        sonuc_yok = [self.r_tek_m2, self.r_top_m2, self.r_satis_haric, self.r_satis_kdv, self.r_satis_dahil,
-                     self.r_alis_tl_m2, self.r_alis_haric, self.r_alis_kdv, self.r_alis_dahil,
-                     self.r_kar, self.r_marj, self.r_kar_m2]
-        for v in sonuc_yok:
+        for v in (self.r_tek_m2, self.r_top_m2, self.r_haric, self.r_kdv, self.r_dahil):
             v.set("—")
         self.v_durum.set("")
-
-        top_m2 = None
+        self.hesap = None
+        en, boy = sayi_oku(self.v_en.get()), sayi_oku(self.v_boy.get())
+        adet = sayi_oku(self.v_adet.get()) or 1
         if en is not None and boy is not None:
-            tek, top_m2 = m2_hesapla(en, boy, self.v_birim.get(), adet)
+            tek, top = m2_hesapla(en, boy, self.v_birim.get(), adet)
             self.r_tek_m2.set(f"{sayi_yaz(tek, 3)} m²")
-            self.r_top_m2.set(f"{sayi_yaz(top_m2, 3)} m²")
-
-        satis_haric = None
-        s_m2, s_kdv = sayi_oku(self.v_satis_m2.get()), sayi_oku(self.v_satis_kdv.get()) or 0
-        if top_m2 is not None and s_m2 is not None:
-            satis_haric = top_m2 * s_m2
-            kdv, dahil = kdv_hesapla(satis_haric, s_kdv)
-            self.r_satis_haric.set(para(satis_haric))
-            self.r_satis_kdv.set(para(kdv))
-            self.r_satis_dahil.set(para(dahil))
-
-        maliyet_haric = None
-        a_m2, kur = sayi_oku(self.v_alis_m2.get()), sayi_oku(self.v_kur.get())
-        fire, a_kdv = sayi_oku(self.v_fire.get()) or 0, sayi_oku(self.v_alis_kdv.get()) or 0
-        if a_m2 is not None and kur:
-            tl_m2 = a_m2 * kur
-            self.r_alis_tl_m2.set(para(tl_m2))
-            if top_m2 is not None:
-                maliyet_haric = top_m2 * (1 + fire / 100) * tl_m2
-                kdv, dahil = kdv_hesapla(maliyet_haric, a_kdv)
-                self.r_alis_haric.set(para(maliyet_haric))
-                self.r_alis_kdv.set(para(kdv))
-                self.r_alis_dahil.set(para(dahil))
-
-        if satis_haric is not None and maliyet_haric is not None:
-            kar = satis_haric - maliyet_haric
-            self.r_kar.set(para(kar))
-            self.l_kar.configure(style="Kar.TLabel" if kar >= 0 else "Zarar.TLabel")
-            self.r_marj.set(f"% {sayi_yaz(kar / satis_haric * 100, 1)}" if satis_haric else "—")
-            self.r_kar_m2.set(para(kar / top_m2) if top_m2 else "—")
+            self.r_top_m2.set(f"{sayi_yaz(top, 3)} m²")
+            s_m2, oran = sayi_oku(self.v_satis_m2.get()), sayi_oku(self.v_kdv.get()) or 0
+            if s_m2 is not None:
+                haric = top * s_m2
+                kdv, dahil = kdv_hesapla(haric, oran)
+                self.r_haric.set(para(haric))
+                self.r_kdv.set(para(kdv))
+                self.r_dahil.set(para(dahil))
+                m = self.veri.malzeme(self.v_malzeme.get())
+                alis_tl_m2 = self.veri.alis_tl_m2(m)
+                fire = sayi_oku(m.get("fire")) or 0 if m else 0
+                maliyet = top * (1 + fire / 100) * alis_tl_m2 if alis_tl_m2 is not None else None
+                self.hesap = {
+                    "musteri": self.v_musteri.get().strip(), "malzeme": self.v_malzeme.get(),
+                    "olcu": f"{kisa(en)} x {kisa(boy)} {self.v_birim.get()}", "adet": adet, "m2": top,
+                    "satis_m2": s_m2, "kdv_orani": oran, "satis_haric": haric, "satis_kdv": kdv, "satis_dahil": dahil,
+                    "alis_fiyat": m.get("alis") if m else "", "alis_para": m.get("para") if m else "",
+                    "kur": self.veri.kur(m.get("para")) if m else None, "alis_tl_m2": alis_tl_m2, "fire": fire,
+                    "maliyet_haric": maliyet, "kar": haric - maliyet if maliyet is not None else None,
+                }
+        if self.yonetim and self.yonetim.winfo_exists():
+            self.yonetim.anlik_yenile()
 
     def fiyat_temizle(self):
-        for v in (self.v_en, self.v_boy):
+        for v in (self.v_en, self.v_boy, self.v_musteri):
             v.set("")
         self.v_adet.set("1")
+        self.malzeme_secildi()
         self.e_en.focus_set()
 
-    def teklif_kopyala(self):
-        en, boy, adet = sayi_oku(self.v_en.get()), sayi_oku(self.v_boy.get()), sayi_oku(self.v_adet.get()) or 1
-        s_m2, s_kdv = sayi_oku(self.v_satis_m2.get()), sayi_oku(self.v_satis_kdv.get()) or 0
-        if en is None or boy is None or s_m2 is None:
-            self.v_durum.set("Önce ölçü ve m² satış fiyatını girin.")
+    def _kayit_olustur(self):
+        if not self.hesap:
+            messagebox.showwarning("Eksik bilgi", "Önce ölçüyü ve m² fiyatını girin.", parent=self)
+            return None
+        self.veri.d["son_teklif_no"] += 1
+        k = dict(self.hesap)
+        k["musteri"] = self.v_musteri.get().strip()
+        k["no"] = self.veri.d["son_teklif_no"]
+        k["tarih"] = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+        self.veri.d["kayitlar"].append(k)
+        self.veri.kaydet()
+        return k
+
+    def pdf_teklif(self):
+        if not PDF_VAR:
+            messagebox.showerror("PDF", "PDF kütüphanesi bulunamadı.", parent=self)
             return
-        birim = self.v_birim.get()
-        _, top = m2_hesapla(en, boy, birim, adet)
-        haric = top * s_m2
-        kdv, dahil = kdv_hesapla(haric, s_kdv)
-        adet_yazi = f" × {kisa(adet)} adet" if adet != 1 else ""
+        k = self._kayit_olustur()
+        if not k:
+            return
+        ad = "".join(ch for ch in (k["musteri"] or "musteri") if ch.isalnum() or ch in " -_").strip().replace(" ", "_")
+        yol = os.path.join(pdf_klasoru(), f"Teklif_{k['no']}_{ad}_{datetime.date.today():%Y-%m-%d}.pdf")
+        try:
+            musteri_pdf(k, yol)
+        except Exception as hata:
+            messagebox.showerror("PDF oluşturulamadı", str(hata), parent=self)
+            return
+        self.v_durum.set(f"Teklif No {k['no']} kaydedildi ve PDF açılıyor: {yol}")
+        dosya_ac(yol)
+        if self.yonetim and self.yonetim.winfo_exists():
+            self.yonetim.kayitlari_yenile()
+
+    def teklif_kopyala(self):
+        h = self.hesap
+        if not h:
+            self.v_durum.set("Önce ölçüyü ve m² fiyatını girin.")
+            return
+        adet = f" × {kisa(h['adet'])} adet" if h["adet"] != 1 else ""
         metin = (
             "ARABACI REKLAM - Fiyat Teklifi\n"
-            f"Ölçü: {kisa(en)} x {kisa(boy)} {birim}{adet_yazi} = {sayi_yaz(top, 2)} m²\n"
-            f"m² fiyatı: {para(s_m2)} + KDV\n"
-            f"Ara toplam: {para(haric)}\n"
-            f"KDV (%{sayi_yaz(s_kdv, 0)}): {para(kdv)}\n"
-            f"Genel toplam: {para(dahil)}\n"
-            "Tel / WhatsApp: 0534 080 26 79"
+            + (f"Sayın {self.v_musteri.get().strip()}\n" if self.v_musteri.get().strip() else "")
+            + (f"Malzeme: {h['malzeme']}\n" if h["malzeme"] else "")
+            + f"Ölçü: {h['olcu']}{adet} = {sayi_yaz(h['m2'], 2)} m²\n"
+            f"m² fiyatı: {para(h['satis_m2'])} + KDV\n"
+            f"Ara toplam: {para(h['satis_haric'])}\n"
+            f"KDV (%{kisa(h['kdv_orani'])}): {para(h['satis_kdv'])}\n"
+            f"Genel toplam: {para(h['satis_dahil'])}\n"
+            f"Tel / WhatsApp: {FIRMA['tel']}"
         )
         self.clipboard_clear()
         self.clipboard_append(metin)
         self.v_durum.set("Kopyalandı ✓  WhatsApp'a yapıştırabilirsiniz.")
 
-    # ------------------------------------------------------------ sayfa 2: KDV
-    def _kdv_sayfasi(self):
+    # ------------------------------------------------------------ kur
+    def kuru_guncelle(self, sonra=None):
+        def is_parcacigi():
+            try:
+                k = tcmb_kurlari()
+            except Exception:
+                k = None
+            self.after(0, lambda: self._kur_geldi(k, sonra))
+
+        threading.Thread(target=is_parcacigi, daemon=True).start()
+
+    def _kur_geldi(self, k, sonra=None):
+        if k:
+            for ad in ("Dolar", "Euro"):
+                if k.get(ad):
+                    self.veri.d["kurlar"][ad] = k[ad]
+            self.veri.d["kurlar"]["tarih"] = k.get("tarih", "")
+            self.veri.d["kurlar"]["kaynak"] = "TCMB"
+            self.veri.kaydet()
+        self.fiyat_hesapla()
+        if self.yonetim and self.yonetim.winfo_exists():
+            self.yonetim.malz_yenile()
+        if sonra:
+            sonra(bool(k))
+
+    def kur_bilgisi(self):
+        k = self.veri.d["kurlar"]
+        if not k.get("Dolar") and not k.get("Euro"):
+            return "Kur yok. İnternet bağlantısını kontrol edin ya da kuru elle yazın."
+        return (f"{k.get('kaynak', 'Elle')} {k.get('tarih', '')}  •  $ {sayi_yaz(k.get('Dolar') or 0, 4)}"
+                f"  •  € {sayi_yaz(k.get('Euro') or 0, 4)}")
+
+    # ------------------------------------------------------------ yönetim
+    def yonetim_ac(self):
+        if self.yonetim and self.yonetim.winfo_exists():
+            self.yonetim.lift()
+            return
+        sifre = simpledialog.askstring("Yönetim", "Şifre:", show="•", parent=self)
+        if sifre is None:
+            return
+        if sifre_ozet(sifre) != self.veri.d["sifre"]:
+            messagebox.showerror("Yönetim", "Şifre yanlış.", parent=self)
+            return
+        self.yonetim = Yonetim(self)
+
+    # ------------------------------------------------------------ sayfa 2: KDV ve indirim
+    def _kdv_indirim_sayfasi(self):
         p = self.sayfa_kdv
-        p.columnconfigure(1, weight=1)
-        ttk.Label(p, text="KDV Hesaplama", style="Baslik.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 10))
-        self.k_fiyat = tk.StringVar()
-        self.k_oran = tk.StringVar(value="20")
-        self.k_tur = tk.StringVar(value="haric")
-        self._giris(p, 1, "Fiyat (TL)", self.k_fiyat, genislik=16)
-        self._secim(p, 2, "KDV oranı (%)", self.k_oran, KDV_ORANLARI, serbest=True)
-        tur = ttk.Frame(p)
-        tur.grid(row=3, column=0, columnspan=2, sticky="w", pady=6)
-        ttk.Label(tur, text="Girdiğim fiyat:").pack(side="left", padx=(0, 10))
-        ttk.Radiobutton(tur, text="KDV hariç", value="haric", variable=self.k_tur).pack(side="left", padx=6)
-        ttk.Radiobutton(tur, text="KDV dahil", value="dahil", variable=self.k_tur).pack(side="left", padx=6)
-        ttk.Separator(p).grid(row=4, column=0, columnspan=2, sticky="we", pady=10)
-        self.k_haric, _ = self._sonuc(p, 5, "KDV hariç tutar")
-        self.k_kdv, _ = self._sonuc(p, 6, "KDV tutarı")
-        self.k_dahil, _ = self._sonuc(p, 7, "KDV dahil tutar", stil="Buyuk.TLabel")
+        p.columnconfigure(0, weight=1, uniform="k")
+        p.columnconfigure(1, weight=1, uniform="k")
+
+        kdv = ttk.LabelFrame(p, text=" KDV Hesaplama ", padding=12)
+        kdv.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
+        kdv.columnconfigure(1, weight=1)
+        self.k_fiyat, self.k_oran, self.k_tur = tk.StringVar(), tk.StringVar(value="20"), tk.StringVar(value="haric")
+        self._giris(kdv, 0, "Fiyat (TL)", self.k_fiyat)
+        self._secim(kdv, 1, "KDV oranı (%)", self.k_oran, KDV_ORANLARI, serbest=True)
+        tur = ttk.Frame(kdv)
+        tur.grid(row=2, column=0, columnspan=2, sticky="w", pady=6)
+        ttk.Label(tur, text="Girdiğim fiyat:").pack(side="left", padx=(0, 8))
+        ttk.Radiobutton(tur, text="KDV hariç", value="haric", variable=self.k_tur).pack(side="left", padx=4)
+        ttk.Radiobutton(tur, text="KDV dahil", value="dahil", variable=self.k_tur).pack(side="left", padx=4)
+        ttk.Separator(kdv).grid(row=3, column=0, columnspan=2, sticky="we", pady=10)
+        self.k_haric, _ = self._sonuc(kdv, 4, "KDV hariç tutar")
+        self.k_kdv, _ = self._sonuc(kdv, 5, "KDV tutarı")
+        self.k_dahil, _ = self._sonuc(kdv, 6, "KDV dahil tutar", stil="BuyukK.TLabel")
+        self._dugme(kdv, "✖  Temizle", KIRMIZI, lambda: self.k_fiyat.set(""), "#a61e1e").grid(
+            row=7, column=0, sticky="w", pady=(14, 0))
         self._izle(self.kdv_hesapla, self.k_fiyat, self.k_oran, self.k_tur)
+
+        ind = ttk.LabelFrame(p, text=" İndirim / İskonto Hesaplama ", padding=12)
+        ind.grid(row=0, column=1, sticky="nsew", padx=(6, 0))
+        ind.columnconfigure(1, weight=1)
+        self.i_islem = tk.StringVar(value="İndirimli fiyat hesaplama")
+        self.i_islemler = {"İndirimli fiyat hesaplama": "indirimli", "Normal fiyat hesaplama": "normal",
+                           "İndirim oranı hesaplama": "oran"}
+        self._secim(ind, 0, "İşlem", self.i_islem, list(self.i_islemler), genislik=24)
+        self.i_a, self.i_b = tk.StringVar(), tk.StringVar()
+        self.i_la = ttk.Label(ind)
+        self.i_la.grid(row=1, column=0, sticky="w", pady=4, padx=(0, 8))
+        ttk.Entry(ind, textvariable=self.i_a, font=(self.fa, 12), justify="right").grid(row=1, column=1, sticky="we", pady=4)
+        self.i_lb = ttk.Label(ind)
+        self.i_lb.grid(row=2, column=0, sticky="w", pady=4, padx=(0, 8))
+        ttk.Entry(ind, textvariable=self.i_b, font=(self.fa, 12), justify="right").grid(row=2, column=1, sticky="we", pady=4)
+        ttk.Separator(ind).grid(row=3, column=0, columnspan=2, sticky="we", pady=10)
+        self.i_l1 = ttk.Label(ind)
+        self.i_l1.grid(row=4, column=0, sticky="w", pady=3)
+        self.i_r1 = tk.StringVar(value="—")
+        ttk.Label(ind, textvariable=self.i_r1, style="BuyukK.TLabel").grid(row=4, column=1, sticky="e")
+        ttk.Label(ind, text="Yapılan indirim (TL)").grid(row=5, column=0, sticky="w", pady=3)
+        self.i_r2 = tk.StringVar(value="—")
+        ttk.Label(ind, textvariable=self.i_r2, style="Sonuc.TLabel").grid(row=5, column=1, sticky="e")
+        self._dugme(ind, "✖  Temizle", KIRMIZI, lambda: (self.i_a.set(""), self.i_b.set("")), "#a61e1e").grid(
+            row=6, column=0, sticky="w", pady=(14, 0))
+        self.i_islem.trace_add("write", lambda *_: self._indirim_etiketleri())
+        self._izle(self.indirim_hesapla, self.i_a, self.i_b)
+        self._indirim_etiketleri()
 
     def kdv_hesapla(self):
         f, o = sayi_oku(self.k_fiyat.get()), sayi_oku(self.k_oran.get()) or 0
@@ -453,43 +792,402 @@ class Uygulama(tk.Tk):
         self.k_kdv.set(para(kdv))
         self.k_dahil.set(para(dahil))
 
-    # ------------------------------------------------------------ sayfa 3: indirim
-    def _indirim_sayfasi(self):
-        p = self.sayfa_indirim
-        p.columnconfigure(1, weight=1)
-        ttk.Label(p, text="İndirim / İskonto Hesaplama", style="Baslik.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 10))
-        self.i_fiyat = tk.StringVar()
-        self.i_oran = tk.StringVar()
-        self._giris(p, 1, "Fiyat (TL)", self.i_fiyat, genislik=16)
-        self._giris(p, 2, "İndirim oranı (%)", self.i_oran, genislik=16)
-        ttk.Separator(p).grid(row=3, column=0, columnspan=2, sticky="we", pady=10)
-        self.i_tutar, _ = self._sonuc(p, 4, "Yapılan indirim")
-        self.i_sonuc, _ = self._sonuc(p, 5, "İndirimli fiyat", stil="Buyuk.TLabel")
-        self._izle(self.indirim_hesapla, self.i_fiyat, self.i_oran)
+    def _indirim_etiketleri(self):
+        islem = self.i_islemler[self.i_islem.get()]
+        etiketler = {
+            "indirimli": ("Normal fiyat (TL)", "İndirim oranı (%)", "İndirimli fiyat"),
+            "normal": ("İndirimli fiyat (TL)", "İndirim oranı (%)", "Normal fiyat"),
+            "oran": ("Normal fiyat (TL)", "İndirimli fiyat (TL)", "İndirim oranı"),
+        }[islem]
+        self.i_la.configure(text=etiketler[0])
+        self.i_lb.configure(text=etiketler[1])
+        self.i_l1.configure(text=etiketler[2])
+        self.i_a.set("")
+        self.i_b.set("")
+        self.indirim_hesapla()
 
     def indirim_hesapla(self):
-        f, o = sayi_oku(self.i_fiyat.get()), sayi_oku(self.i_oran.get())
-        if f is None or o is None:
-            self.i_tutar.set("—")
-            self.i_sonuc.set("—")
+        islem = self.i_islemler[self.i_islem.get()]
+        a, b = sayi_oku(self.i_a.get()), sayi_oku(self.i_b.get())
+        if islem == "indirimli":
+            r = indirim_hesapla(islem, normal=a, oran=b)
+        elif islem == "normal":
+            r = indirim_hesapla(islem, indirimli=a, oran=b)
+        else:
+            r = indirim_hesapla(islem, normal=a, indirimli=b)
+        if not r:
+            self.i_r1.set("—")
+            self.i_r2.set("—")
             return
-        ind = f * o / 100
-        self.i_tutar.set(para(ind))
-        self.i_sonuc.set(para(f - ind))
+        normal, indirimli, oran, tutar = r
+        self.i_r1.set({"indirimli": para(indirimli), "normal": para(normal), "oran": f"% {sayi_yaz(oran, 2)}"}[islem])
+        self.i_r2.set(para(tutar))
 
     # ------------------------------------------------------------ kapanış
     def _kapat(self):
-        self.ayarlar.update({
-            "birim": self.v_birim.get(),
-            "satis_m2": self.v_satis_m2.get(),
-            "satis_kdv": self.v_satis_kdv.get(),
-            "alis_m2": self.v_alis_m2.get(),
-            "alis_para": self.v_alis_para.get(),
-            "fire": self.v_fire.get(),
-            "alis_kdv": self.v_alis_kdv.get(),
-        })
-        ayarlari_yaz(self.ayarlar)
+        self.veri.d["ekran"] = {"malzeme": self.v_malzeme.get(), "birim": self.v_birim.get(), "kdv": self.v_kdv.get()}
+        try:
+            self.veri.kaydet()
+        except Exception:
+            pass
         self.destroy()
+
+
+class Yonetim(tk.Toplevel):
+    """Şifreli yönetim penceresi: malzemeler, anlık kâr, kayıtlar, ayarlar."""
+
+    def __init__(self, ana):
+        super().__init__(ana)
+        self.ana = ana
+        self.veri = ana.veri
+        self.title("Yönetim - Malzemeler, Kâr ve Kayıtlar")
+        self.geometry("1040x660")
+        self.minsize(900, 560)
+        try:
+            self.iconbitmap(kaynak_yolu("icon.ico"))
+        except Exception:
+            pass
+        d = ttk.Notebook(self)
+        d.pack(fill="both", expand=True, padx=10, pady=10)
+        self.s_malz, self.s_anlik, self.s_kayit, self.s_ayar = (ttk.Frame(d, padding=10) for _ in range(4))
+        d.add(self.s_malz, text="  Malzemeler ve Alış Fiyatları  ")
+        d.add(self.s_anlik, text="  Bu Hesabın Kârı  ")
+        d.add(self.s_kayit, text="  Kayıtlar ve Kâr Raporu  ")
+        d.add(self.s_ayar, text="  Ayarlar  ")
+        self._malzemeler()
+        self._anlik()
+        self._kayitlar()
+        self._ayarlar()
+
+    # ------------------------------------------------------------ malzemeler
+    def _malzemeler(self):
+        p = self.s_malz
+        p.columnconfigure(0, weight=1)
+        p.rowconfigure(1, weight=1)
+        kur = ttk.Frame(p)
+        kur.grid(row=0, column=0, sticky="we", pady=(0, 8))
+        self.v_kur = tk.StringVar(value=self.ana.kur_bilgisi())
+        ttk.Label(kur, textvariable=self.v_kur).pack(side="left")
+        ttk.Button(kur, text="Kuru elle gir", command=self.kur_elle).pack(side="right")
+        ttk.Button(kur, text="↻ Kuru güncelle (TCMB)", command=self.kur_guncelle).pack(side="right", padx=6)
+
+        sut = ("ad", "alis", "para", "tl", "satis", "fire", "kar")
+        self.t_malz = ttk.Treeview(p, columns=sut, show="headings", selectmode="browse", height=10)
+        for s, b, g, h in (("ad", "Malzeme", 200, "w"), ("alis", "Alış fiyatı / m²", 120, "e"), ("para", "Birim", 70, "center"),
+                           ("tl", "Bugün TL / m²", 120, "e"), ("satis", "Satış TL / m²", 120, "e"),
+                           ("fire", "Fire %", 70, "e"), ("kar", "m² kâr (fire dahil)", 150, "e")):
+            self.t_malz.heading(s, text=b)
+            self.t_malz.column(s, width=g, anchor=h)
+        self.t_malz.grid(row=1, column=0, sticky="nsew")
+        self.t_malz.bind("<<TreeviewSelect>>", lambda _e: self._malz_secildi())
+
+        form = ttk.LabelFrame(p, text=" Malzeme ekle / düzenle ", padding=10)
+        form.grid(row=2, column=0, sticky="we", pady=(8, 0))
+        for i in (1, 3, 5):
+            form.columnconfigure(i, weight=1)
+        self.f_ad, self.f_alis, self.f_para, self.f_satis, self.f_fire = (tk.StringVar() for _ in range(5))
+        self.f_para.set("Euro")
+        self.f_fire.set("0")
+        ana = self.ana
+        e = ttk.Entry(form, textvariable=self.f_ad, font=(ana.fa, 12))
+        ttk.Label(form, text="Malzeme adı").grid(row=0, column=0, sticky="w", padx=(0, 8))
+        e.grid(row=0, column=1, columnspan=3, sticky="we", pady=4)
+        ana._giris(form, 1, "Alış fiyatı / m² (KDV hariç)", self.f_alis, sutun=0)
+        ana._secim(form, 1, "Para birimi", self.f_para, PARA_BIRIMLERI, sutun=2, genislik=7)
+        ana._giris(form, 2, "Satış fiyatı / m² (TL, KDV hariç)", self.f_satis, sutun=0)
+        ana._giris(form, 2, "Fire / kayıp payı (%)", self.f_fire, sutun=2)
+        dug = ttk.Frame(form)
+        dug.grid(row=3, column=0, columnspan=6, sticky="w", pady=(8, 0))
+        ttk.Button(dug, text="➕ Yeni malzeme olarak ekle", command=self.malz_ekle).pack(side="left")
+        ttk.Button(dug, text="💾 Seçili malzemeyi güncelle", command=self.malz_guncelle).pack(side="left", padx=6)
+        ttk.Button(dug, text="🗑 Seçili malzemeyi sil", command=self.malz_sil).pack(side="left")
+        ttk.Label(form, style="Not.TLabel", text=(
+            "Dolar / Euro fiyatlar her açılışta güncel TCMB kuruyla TL'ye çevrilir. TL fiyatlar değişmez. "
+            "Satış fiyatı müşteri ekranına otomatik gelir."), wraplength=950).grid(row=4, column=0, columnspan=6, sticky="w", pady=(6, 0))
+        self.malz_yenile()
+
+    def malz_yenile(self, sec=None):
+        self.t_malz.delete(*self.t_malz.get_children())
+        for i, m in enumerate(self.veri.malzemeler):
+            tl = self.veri.alis_tl_m2(m)
+            satis = sayi_oku(m.get("satis"))
+            fire = sayi_oku(m.get("fire")) or 0
+            kar = satis - tl * (1 + fire / 100) if tl is not None and satis is not None else None
+            alis = sayi_oku(m.get("alis"))
+            self.t_malz.insert("", "end", iid=str(i), values=(
+                m["ad"], sayi_yaz(alis) if alis is not None else "-", m.get("para", "TL"),
+                sayi_yaz(tl) if tl is not None else "-", sayi_yaz(satis) if satis is not None else "-",
+                kisa(fire), sayi_yaz(kar) if kar is not None else "-"))
+        if sec is not None and str(sec) in self.t_malz.get_children():
+            self.t_malz.selection_set(str(sec))
+        self.v_kur.set(self.ana.kur_bilgisi())
+
+    def _malz_secildi(self):
+        s = self.t_malz.selection()
+        if not s:
+            return
+        m = self.veri.malzemeler[int(s[0])]
+        self.f_ad.set(m["ad"])
+        self.f_alis.set(m.get("alis", ""))
+        self.f_para.set(m.get("para", "TL"))
+        self.f_satis.set(m.get("satis", ""))
+        self.f_fire.set(m.get("fire", "0"))
+
+    def _form(self):
+        ad = self.f_ad.get().strip()
+        if not ad:
+            messagebox.showwarning("Malzeme", "Malzeme adını yazın.", parent=self)
+            return None
+        for etiket, v in (("Alış fiyatı", self.f_alis), ("Satış fiyatı", self.f_satis), ("Fire", self.f_fire)):
+            if v.get().strip() and sayi_oku(v.get()) is None:
+                messagebox.showwarning("Malzeme", f"{etiket} sayı olmalı.", parent=self)
+                return None
+        return {"ad": ad, "alis": self.f_alis.get().strip(), "para": self.f_para.get(),
+                "satis": self.f_satis.get().strip(), "fire": self.f_fire.get().strip() or "0"}
+
+    def _malz_kaydet(self, sec):
+        self.veri.kaydet()
+        self.malz_yenile(sec)
+        self.ana.malzeme_listesini_yenile()
+        self.ana.malzeme_secildi()
+
+    def malz_ekle(self):
+        m = self._form()
+        if not m:
+            return
+        if self.veri.malzeme(m["ad"]):
+            messagebox.showwarning("Malzeme", "Bu adda bir malzeme zaten var. Güncellemek için listeden seçin.", parent=self)
+            return
+        self.veri.malzemeler.append(m)
+        self._malz_kaydet(len(self.veri.malzemeler) - 1)
+
+    def malz_guncelle(self):
+        s = self.t_malz.selection()
+        m = self._form()
+        if not s or not m:
+            if not s:
+                messagebox.showinfo("Malzeme", "Önce listeden bir malzeme seçin.", parent=self)
+            return
+        i = int(s[0])
+        eski = self.veri.malzemeler[i]["ad"]
+        if m["ad"] != eski and self.veri.malzeme(m["ad"]):
+            messagebox.showwarning("Malzeme", "Bu adda bir malzeme zaten var.", parent=self)
+            return
+        if self.ana.v_malzeme.get() == eski:
+            self.ana.v_malzeme.set(m["ad"])
+        self.veri.malzemeler[i] = m
+        self._malz_kaydet(i)
+
+    def malz_sil(self):
+        s = self.t_malz.selection()
+        if not s:
+            return
+        m = self.veri.malzemeler[int(s[0])]
+        if messagebox.askyesno("Malzeme sil", f"“{m['ad']}” silinsin mi?", parent=self):
+            del self.veri.malzemeler[int(s[0])]
+            self._malz_kaydet(None)
+
+    def kur_guncelle(self):
+        self.v_kur.set("Kur alınıyor…")
+
+        def bitti(basarili):
+            if not self.winfo_exists():
+                return
+            self.malz_yenile()
+            if not basarili:
+                self.v_kur.set("Kur alınamadı (internet?). " + self.ana.kur_bilgisi())
+            self.anlik_yenile()
+
+        self.ana.kuru_guncelle(sonra=bitti)
+
+    def kur_elle(self):
+        k = self.veri.d["kurlar"]
+        for ad in ("Dolar", "Euro"):
+            girdi = simpledialog.askstring("Kuru elle gir", f"1 {ad} = kaç TL?",
+                                           initialvalue=sayi_yaz(k.get(ad) or 0, 4), parent=self)
+            if girdi is None:
+                return
+            deger = sayi_oku(girdi)
+            if deger:
+                k[ad] = deger
+        k["tarih"] = datetime.date.today().strftime("%d.%m.%Y")
+        k["kaynak"] = "Elle"
+        self.veri.kaydet()
+        self.malz_yenile()
+        self.ana.fiyat_hesapla()
+
+    # ------------------------------------------------------------ anlık kâr
+    def _anlik(self):
+        p = self.s_anlik
+        p.columnconfigure(1, weight=1)
+        ttk.Label(p, text="Müşteri ekranındaki hesabın maliyeti ve kârı", style="Baslik.TLabel").grid(
+            row=0, column=0, columnspan=2, sticky="w", pady=(0, 10))
+        self.anlik_v = {}
+        for i, (anahtar, etiket) in enumerate((
+            ("malzeme", "Malzeme"), ("olcu", "Ölçü / adet / m²"), ("alis", "Alış fiyatı"),
+            ("alis_tl", "m² maliyeti (TL, bugünkü kur)"), ("fire", "Fire payı"),
+            ("maliyet", "Toplam maliyet (KDV hariç)"), ("maliyet_kdv", "Maliyet KDV / KDV dahil"),
+            ("satis", "Satış (KDV hariç)"), ("satis_dahil", "Satış (KDV dahil)"),
+            ("kar", "KAZANÇ (KDV hariç)"), ("oran", "Kâr oranı (satışa göre)"), ("kar_m2", "m² başına kazanç"),
+        ), start=1):
+            ttk.Label(p, text=etiket).grid(row=i, column=0, sticky="w", pady=3, padx=(0, 12))
+            v = tk.StringVar(value="—")
+            lbl = ttk.Label(p, textvariable=v, style="Kar.TLabel" if anahtar == "kar" else "Sonuc.TLabel")
+            lbl.grid(row=i, column=1, sticky="w", pady=3)
+            self.anlik_v[anahtar] = (v, lbl)
+        ttk.Label(p, style="Not.TLabel", text="Kazanç KDV hariç tutarlarla hesaplanır (KDV devlete gider). "
+                  "Bu sayfa müşteri ekranında yazdıkça kendini günceller.").grid(row=20, column=0, columnspan=2, sticky="w", pady=(12, 0))
+        self.anlik_yenile()
+
+    def anlik_yenile(self):
+        if not hasattr(self, "anlik_v"):
+            return
+        for v, _ in self.anlik_v.values():
+            v.set("—")
+        h = self.ana.hesap
+        if not h:
+            self.anlik_v["malzeme"][0].set("Müşteri ekranında ölçü ve m² fiyatı girilmedi.")
+            return
+        a = self.anlik_v
+        a["malzeme"][0].set(h["malzeme"] or "-")
+        a["olcu"][0].set(f"{h['olcu']} × {kisa(h['adet'])} adet = {sayi_yaz(h['m2'], 3)} m²")
+        if h.get("alis_fiyat"):
+            kur = f"  (kur {sayi_yaz(h['kur'], 4)})" if h["alis_para"] != "TL" and h.get("kur") else ""
+            a["alis"][0].set(f"{h['alis_fiyat']} {h['alis_para']} / m²{kur}")
+        else:
+            a["alis"][0].set("Bu malzemenin alış fiyatı girilmemiş (Malzemeler sekmesi).")
+        if h.get("alis_tl_m2") is not None:
+            a["alis_tl"][0].set(para(h["alis_tl_m2"]))
+        a["fire"][0].set(f"% {kisa(h['fire'])}")
+        a["satis"][0].set(para(h["satis_haric"]))
+        a["satis_dahil"][0].set(para(h["satis_dahil"]))
+        if h.get("maliyet_haric") is not None:
+            kdv, dahil = kdv_hesapla(h["maliyet_haric"], sayi_oku(self.veri.d.get("alis_kdv")) or 0)
+            a["maliyet"][0].set(para(h["maliyet_haric"]))
+            a["maliyet_kdv"][0].set(f"{para(kdv)}  /  {para(dahil)}")
+            kar = h["kar"]
+            a["kar"][0].set(para(kar))
+            a["kar"][1].configure(style="Kar.TLabel" if kar >= 0 else "Zarar.TLabel")
+            a["oran"][0].set(f"% {sayi_yaz(kar / h['satis_haric'] * 100, 1)}" if h["satis_haric"] else "—")
+            a["kar_m2"][0].set(para(kar / h["m2"]) if h["m2"] else "—")
+
+    # ------------------------------------------------------------ kayıtlar
+    def _kayitlar(self):
+        p = self.s_kayit
+        p.columnconfigure(0, weight=1)
+        p.rowconfigure(0, weight=1)
+        sut = ("no", "tarih", "musteri", "malzeme", "olcu", "m2", "satis", "maliyet", "kar")
+        self.t_kayit = ttk.Treeview(p, columns=sut, show="headings", selectmode="extended")
+        for s, b, g, h in (("no", "No", 50, "center"), ("tarih", "Tarih", 145, "w"), ("musteri", "Müşteri", 150, "w"),
+                           ("malzeme", "Malzeme", 140, "w"), ("olcu", "Ölçü", 140, "w"), ("m2", "m²", 70, "e"),
+                           ("satis", "Satış TL", 100, "e"), ("maliyet", "Maliyet TL", 100, "e"), ("kar", "Kâr TL", 100, "e")):
+            self.t_kayit.heading(s, text=b)
+            self.t_kayit.column(s, width=g, anchor=h)
+        kay = ttk.Scrollbar(p, orient="vertical", command=self.t_kayit.yview)
+        self.t_kayit.configure(yscrollcommand=kay.set)
+        self.t_kayit.grid(row=0, column=0, sticky="nsew")
+        kay.grid(row=0, column=1, sticky="ns")
+        self.v_toplam = tk.StringVar()
+        ttk.Label(p, textvariable=self.v_toplam, style="Sonuc.TLabel").grid(row=1, column=0, sticky="w", pady=6)
+        dug = ttk.Frame(p)
+        dug.grid(row=2, column=0, sticky="w")
+        ttk.Button(dug, text="📄 Seçili kayıtların kâr raporu (PDF)", command=lambda: self.rapor(True)).pack(side="left")
+        ttk.Button(dug, text="📄 Tüm kayıtların raporu (PDF)", command=lambda: self.rapor(False)).pack(side="left", padx=6)
+        ttk.Button(dug, text="📄 Teklifi yeniden yazdır", command=self.teklif_tekrar).pack(side="left")
+        ttk.Button(dug, text="🗑 Kaydı sil", command=self.kayit_sil).pack(side="left", padx=6)
+        ttk.Label(p, style="Not.TLabel", text="Müşteri ekranında “PDF Teklif” her basıldığında buraya bir kayıt eklenir. "
+                  "Tutarlar KDV hariçtir. Birden fazla kayıt seçmek için Ctrl tuşuna basılı tutun.").grid(
+            row=3, column=0, sticky="w", pady=(6, 0))
+        self.kayitlari_yenile()
+
+    def kayitlari_yenile(self):
+        self.t_kayit.delete(*self.t_kayit.get_children())
+        ts = tm = tk_ = 0.0
+        for i, k in enumerate(reversed(self.veri.d["kayitlar"])):
+            gercek = len(self.veri.d["kayitlar"]) - 1 - i
+            ts += k["satis_haric"]
+            tm += k.get("maliyet_haric") or 0
+            tk_ += k.get("kar") or 0
+            self.t_kayit.insert("", "end", iid=str(gercek), values=(
+                k["no"], k["tarih"], k.get("musteri") or "-", k.get("malzeme") or "-",
+                f"{k['olcu']} ×{kisa(k['adet'])}", sayi_yaz(k["m2"], 2), sayi_yaz(k["satis_haric"]),
+                sayi_yaz(k["maliyet_haric"]) if k.get("maliyet_haric") is not None else "-",
+                sayi_yaz(k["kar"]) if k.get("kar") is not None else "-"))
+        n = len(self.veri.d["kayitlar"])
+        self.v_toplam.set(f"{n} kayıt  •  Satış: {para(ts)}  •  Maliyet: {para(tm)}  •  Kâr: {para(tk_)}")
+
+    def _secili(self):
+        return [self.veri.d["kayitlar"][int(i)] for i in sorted(self.t_kayit.selection(), key=int)]
+
+    def rapor(self, secili):
+        kayitlar = self._secili() if secili else list(self.veri.d["kayitlar"])
+        if not kayitlar:
+            messagebox.showinfo("Rapor", "Rapor için kayıt seçin." if secili else "Henüz kayıt yok.", parent=self)
+            return
+        ek = f"No{kayitlar[0]['no']}" if len(kayitlar) == 1 else f"{len(kayitlar)}_kayit"
+        yol = os.path.join(pdf_klasoru(), f"Kar_Raporu_{ek}_{datetime.datetime.now():%Y-%m-%d_%H%M}.pdf")
+        try:
+            kar_pdf(kayitlar, yol)
+        except Exception as hata:
+            messagebox.showerror("PDF oluşturulamadı", str(hata), parent=self)
+            return
+        dosya_ac(yol)
+
+    def teklif_tekrar(self):
+        s = self._secili()
+        if len(s) != 1:
+            messagebox.showinfo("Teklif", "Bir kayıt seçin.", parent=self)
+            return
+        k = s[0]
+        yol = os.path.join(pdf_klasoru(), f"Teklif_{k['no']}_tekrar.pdf")
+        musteri_pdf(k, yol)
+        dosya_ac(yol)
+
+    def kayit_sil(self):
+        secim = sorted((int(i) for i in self.t_kayit.selection()), reverse=True)
+        if secim and messagebox.askyesno("Kayıt sil", f"{len(secim)} kayıt silinsin mi?", parent=self):
+            for i in secim:
+                del self.veri.d["kayitlar"][i]
+            self.veri.kaydet()
+            self.kayitlari_yenile()
+
+    # ------------------------------------------------------------ ayarlar
+    def _ayarlar(self):
+        p = self.s_ayar
+        ttk.Label(p, text="Ayarlar", style="Baslik.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 10))
+        self.v_alis_kdv = tk.StringVar(value=self.veri.d.get("alis_kdv", "20"))
+        self.ana._secim(p, 1, "Malzeme alış KDV oranı (%)", self.v_alis_kdv, KDV_ORANLARI, serbest=True, genislik=6)
+        self.v_alis_kdv.trace_add("write", lambda *_: self._alis_kdv())
+        ttk.Separator(p).grid(row=2, column=0, columnspan=2, sticky="we", pady=12)
+        ttk.Label(p, text="Şifre değiştir", style="Sonuc.TLabel").grid(row=3, column=0, sticky="w")
+        self.s1, self.s2, self.s3 = tk.StringVar(), tk.StringVar(), tk.StringVar()
+        self.ana._giris(p, 4, "Mevcut şifre", self.s1, show="•", genislik=20)
+        self.ana._giris(p, 5, "Yeni şifre", self.s2, show="•", genislik=20)
+        self.ana._giris(p, 6, "Yeni şifre (tekrar)", self.s3, show="•", genislik=20)
+        ttk.Button(p, text="Şifreyi değiştir", command=self.sifre_degistir).grid(row=7, column=1, sticky="e", pady=6)
+        ttk.Separator(p).grid(row=8, column=0, columnspan=2, sticky="we", pady=12)
+        ttk.Label(p, style="Not.TLabel", justify="left", text=(
+            f"Veri dosyası: {self.veri.yol}\nPDF klasörü: {pdf_klasoru()}\n"
+            "Bilgisayarı değiştirirken veri dosyasını yeni bilgisayarda aynı yere kopyalamanız yeterli.")).grid(
+            row=9, column=0, columnspan=2, sticky="w")
+
+    def _alis_kdv(self):
+        self.veri.d["alis_kdv"] = self.v_alis_kdv.get()
+        self.veri.kaydet()
+        self.anlik_yenile()
+
+    def sifre_degistir(self):
+        if sifre_ozet(self.s1.get()) != self.veri.d["sifre"]:
+            messagebox.showerror("Şifre", "Mevcut şifre yanlış.", parent=self)
+            return
+        if len(self.s2.get()) < 4 or self.s2.get() != self.s3.get():
+            messagebox.showerror("Şifre", "Yeni şifreler aynı değil ya da çok kısa (en az 4 karakter).", parent=self)
+            return
+        self.veri.d["sifre"] = sifre_ozet(self.s2.get())
+        self.veri.kaydet()
+        for v in (self.s1, self.s2, self.s3):
+            v.set("")
+        messagebox.showinfo("Şifre", "Şifre değiştirildi.", parent=self)
 
 
 if __name__ == "__main__":
