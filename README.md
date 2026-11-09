@@ -4,26 +4,26 @@ Bitmap görselleri (PNG, JPG, GIF, WebP…) **tam otomatik** olarak temiz vektö
 (SVG, PDF, EPS) yeniden oluşturan, Vector Magic tarzı bir dönüştürücü.
 Tamamen tarayıcıda çalışır: görseller hiçbir sunucuya yüklenmez. iPhone'da da çalışır.
 
-## Kullanım
+## Kullanım (bilgisayar)
 
-**Tarayıcı:** `index.html` dosyasını bir web sunucusundan açın, görseli sürükleyip bırakın
-(veya dokunup seçin / yapıştırın), sonra SVG / PDF / EPS / PNG olarak indirin.
+1. **`VektorSihirbazi.html`** dosyasını indirin.
+2. Çift tıklayın; Chrome, Edge veya Firefox'ta açılır. Kurulum ve internet gerekmez.
+3. JPG/PNG görseli pencereye sürükleyin (ya da **Görsel aç** düğmesine basın veya Ctrl+V ile yapıştırın).
+4. **İndir** bölümünden SVG, PDF, EPS veya PNG olarak kaydedin.
 
-```bash
-python3 -m http.server 8000
-```
+Logo, çizim ve ikon için **Logo / Çizim** türü en iyi sonucu verir. Fotoğraflar için
+**Fotoğraf** türünü seçin; fotoğraflar az renkli, afiş tarzı bir vektöre dönüşür.
 
-Ardından tarayıcıda `http://localhost:8000` adresini açın. GitHub Pages açılırsa
-(Settings → Pages → `main` dalı) telefondan doğrudan bağlantıyla da kullanılabilir.
-
-**Komut satırı (PNG):**
+**Komut satırı (yalnızca PNG):**
 
 ```bash
 node cli.js logo.png -o logo.svg
 ```
 
+Kaynak dosyalar değiştirilirse tek dosya sürümü yeniden üretilir:
+
 ```bash
-node cli.js logo.png -o logo.pdf --mode bw --tolerance 0.4
+python3 build.py
 ```
 
 ## Nasıl çalışır (Vector Magic'e benzer yaklaşım)
@@ -49,5 +49,7 @@ node cli.js logo.png -o logo.pdf --mode bw --tolerance 0.4
 ## Dosyalar
 
 - `vectorizer.js` – dönüştürme motoru (tarayıcı, Web Worker ve Node.js'te çalışır, bağımlılık yok)
-- `index.html`, `app.js` – arayüz
+- `VektorSihirbazi.html` – her şey tek dosyada (çift tıklayıp kullanın)
+- `index.html`, `app.js` – arayüz kaynakları
+- `build.py` – tek dosya sürümünü üretir
 - `cli.js` – komut satırı aracı

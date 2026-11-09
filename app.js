@@ -21,7 +21,10 @@
   // ------------------------------------------------------------ worker
   var worker = null, workerOK = true;
   try {
-    worker = new Worker('vectorizer.js');
+    // Tek dosya sürümünde motor kaynağı sayfanın içinde: Blob işçisi (çift tıklayınca da çalışır)
+    var inl = document.getElementById('vec-src');
+    worker = inl ? new Worker(URL.createObjectURL(new Blob([inl.textContent], { type: 'text/javascript' })))
+                 : new Worker('vectorizer.js');
     worker.onmessage = onWorkerMsg;
     worker.onerror = function (e) { e.preventDefault && e.preventDefault(); workerOK = false; worker = null; if (state.img) run(); };
   } catch (e) { workerOK = false; }
@@ -81,6 +84,7 @@
     var s = res.stats;
     $('stats').textContent = res.width + '×' + res.height + ' px · ' + s.colors + ' renk · ' + s.shapes + ' şekil · ' + s.nodes +
       ' düğüm · ' + (s.scale > 1 ? s.scale.toFixed(0) + '× alt-piksel · ' : '') + (s.time / 1000).toFixed(2) + ' sn';
+    $('photoHint').hidden = !(state.mode === 'auto' && s.colors >= 40);
     ['dlSvg', 'dlPdf', 'dlEps', 'dlPng'].forEach(function (b) { $(b).disabled = false; });
   }
 
