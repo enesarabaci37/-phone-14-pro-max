@@ -15,9 +15,16 @@ GitHub deposunun **Releases** bölümünden en son `Arabaci-M2-Hesaplama.exe` do
   - **Malzemeler:** malzeme ekle / düzenle / sil; alış fiyatı TL, Dolar ya da Euro; satış fiyatı; fire payı. Dolar ve Euro fiyatlar TCMB kuruyla otomatik TL'ye çevrilir.
   - **Bu Hesabın Kârı:** müşteri ekranındaki hesabın maliyeti ve kazancı.
   - **Kayıtlar ve Kâr Raporu:** verilen teklifler, toplam satış / maliyet / kâr, PDF kâr raporu.
-  - **Ayarlar:** alış KDV oranı, şifre değiştirme.
+  - **Ayarlar:** alış KDV oranı, şifre değiştirme, veri klasörü.
 
-Veriler `%APPDATA%\ArabaciM2\veriler.json` dosyasında saklanır. Şifre bu dosyada özet (hash) olarak tutulur. Bu, ekranı müşteriden gizlemek içindir; bilgisayara erişen biri veri dosyasını yine de açabilir.
+Yönetim şifresi ilk girişte belirlenir ve veri dosyasında özet (hash) olarak tutulur. Bu, ekranı müşteriden gizlemek içindir; bilgisayara erişen biri veri dosyasını yine de açabilir.
+
+## Veriler ve birden fazla bilgisayar
+Varsayılan olarak veriler `%APPDATA%\ArabaciM2\veriler.json` dosyasındadır (sadece o bilgisayar).
+Birden fazla bilgisayarda ortak kullanmak için her bilgisayara Google Drive masaüstü uygulamasını aynı hesapla kurun,
+sonra **Yönetim → Ayarlar → Ortak klasör seç** ile Google Drive'daki aynı klasörü seçin. Program içinde `ArabaciM2` klasörünü oluşturur.
+Teklif kayıtları bilgisayarlar arasında birleştirilir; malzeme ve fiyat değişiklikleri birkaç saniye içinde diğer bilgisayara geçer.
+Her bilgisayarın ekran tercihleri ve seçtiği klasör `%APPDATA%\ArabaciM2\bu_bilgisayar.json` dosyasında durur.
 
 ## Geliştirme
 `python m2_hesaplama.py` (Python 3, tkinter, reportlab). `.exe` her değişiklikte GitHub Actions ile derlenir (`.github/workflows/m2-hesaplama.yml`).

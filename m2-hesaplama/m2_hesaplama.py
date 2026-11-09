@@ -13,11 +13,13 @@ import os
 import subprocess
 import sys
 import threading
+import time
+import uuid
 import tkinter as tk
 import tkinter.font as tkfont
 import urllib.request
 import xml.etree.ElementTree as ET
-from tkinter import messagebox, simpledialog, ttk
+from tkinter import filedialog, messagebox, simpledialog, ttk
 
 try:
     from reportlab.lib import colors
@@ -32,7 +34,7 @@ except ImportError:  # pragma: no cover
     PDF_VAR = False
 
 UYGULAMA_ADI = "Arabacı Reklam - m² Hesaplama"
-SURUM = "2.0"
+SURUM = "3.0"
 
 FIRMA = {
     "ad": "ARABACI REKLAM",
@@ -50,7 +52,6 @@ VARSAYILAN_MALZEMELER = [
     "Dekoratif Folyo", "Kanvas Baskı", "Cam Filmi", "PPF",
 ]
 SIFRE_TUZ = "arabaci-m2::"
-VARSAYILAN_SIFRE_OZET = "4decd5cf9cef26010be4613ac64dba6d98d921c7a93c905cd479b746ece3fa3b"
 
 KIRMIZI = "#d62828"
 YESIL = "#1e8e3e"
@@ -152,33 +153,136 @@ def tcmb_kurlari():
 
 # ================================================================ veri
 
+def yerel_klasor():
+    k = os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "ArabaciM2")
+    os.makedirs(k, exist_ok=True)
+    return k
+
+
+def yerel_ayar_oku():
+    """Bu bilgisayara özel ayarlar (veri klasörü, ekran seçimleri)."""
+    try:
+        with open(os.path.join(yerel_klasor(), "bu_bilgisayar.json"), encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def yerel_ayar_yaz(ayar):
+    try:
+        with open(os.path.join(yerel_klasor(), "bu_bilgisayar.json"), "w", encoding="utf-8") as f:
+            json.dump(ayar, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+
+
+def kayitlari_birlestir(a, b, silinen=()):
+    """İki kayıt listesini kimliğe göre birleştirir, silinenleri çıkarır, numaraya göre sıralar."""
+    silinen = set(silinen)
+    hepsi = {}
+    for k in list(a) + list(b):
+        if k.get("id") and k["id"] not in silinen:
+            hepsi.setdefault(k["id"], k)
+    return sorted(hepsi.values(), key=lambda k: (k.get("no", 0), k.get("tarih", "")))
+
+
 class Veri:
-    """Malzemeler, kayıtlar, kurlar ve ayarlar: %APPDATA%\\ArabaciM2\\veriler.json"""
+    """Malzemeler, kayıtlar, kurlar, şifre: <veri klasörü>\\veriler.json
+
+    Veri klasörü Google Drive içinde olabilir; birden fazla bilgisayar aynı dosyayı kullanır.
+    Kaydederken diskteki dosya yeniden okunur ve teklif kayıtları birleştirilir.
+    """
 
     def __init__(self, klasor=None):
-        taban = klasor or os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "ArabaciM2")
-        os.makedirs(taban, exist_ok=True)
-        self.yol = os.path.join(taban, "veriler.json")
-        try:
-            with open(self.yol, encoding="utf-8") as f:
-                self.d = json.load(f)
-        except Exception:
-            self.d = {}
-        self.d.setdefault("malzemeler", [
+        self.klasor = klasor or yerel_klasor()
+        os.makedirs(self.klasor, exist_ok=True)
+        self.yol = os.path.join(self.klasor, "veriler.json")
+        d = self._oku()
+        if d is None:  # bozuk dosya: yedekle, boş başla
+            try:
+                os.replace(self.yol, self.yol + f".bozuk-{datetime.datetime.now():%Y%m%d%H%M%S}")
+            except Exception:
+                pass
+            d = {}
+        self.d = self._varsayilanlar(d)
+        self._zaman = self._dosya_zamani()
+
+    @staticmethod
+    def _varsayilanlar(d):
+        d.setdefault("malzemeler", [
             {"ad": ad, "alis": "", "para": "Euro", "satis": "", "fire": "0"} for ad in VARSAYILAN_MALZEMELER
         ])
-        self.d.setdefault("kayitlar", [])
-        self.d.setdefault("kurlar", {})
-        self.d.setdefault("son_teklif_no", 0)
-        self.d.setdefault("sifre", VARSAYILAN_SIFRE_OZET)
-        self.d.setdefault("alis_kdv", "20")
-        self.d.setdefault("ekran", {})
+        d.setdefault("kayitlar", [])
+        d.setdefault("silinen_kayitlar", [])
+        d.setdefault("kurlar", {})
+        d.setdefault("son_teklif_no", 0)
+        d.setdefault("sifre", None)
+        d.setdefault("alis_kdv", "20")
+        d.pop("ekran", None)
+        for k in d["kayitlar"]:
+            k.setdefault("id", f"eski-{k.get('no')}-{k.get('tarih')}")
+        return d
+
+    def _oku(self):
+        """Dosyayı okur. Yoksa {}, okunamıyorsa (yarım senkron vb.) None döner."""
+        if not os.path.exists(self.yol):
+            return {}
+        for _ in range(3):
+            try:
+                with open(self.yol, encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                time.sleep(0.3)
+        return None
+
+    def _dosya_zamani(self):
+        try:
+            return os.path.getmtime(self.yol)
+        except OSError:
+            return None
+
+    def yenile(self):
+        """Dosya başka bir bilgisayarda değiştiyse yeniden yükler. Değiştiyse True."""
+        z = self._dosya_zamani()
+        if z is None or z == self._zaman:
+            return False
+        d = self._oku()
+        if not d:
+            return False
+        self.d = self._varsayilanlar(d)
+        self._zaman = z
+        return True
 
     def kaydet(self):
+        disk = self._oku()
+        if disk:
+            disk = self._varsayilanlar(disk)
+            silinen = sorted(set(self.d["silinen_kayitlar"]) | set(disk["silinen_kayitlar"]))
+            self.d["silinen_kayitlar"] = silinen
+            self.d["kayitlar"] = kayitlari_birlestir(self.d["kayitlar"], disk["kayitlar"], silinen)
+            self.d["son_teklif_no"] = max(self.d["son_teklif_no"], disk["son_teklif_no"])
+        metin = json.dumps(self.d, ensure_ascii=False, indent=2)
         gecici = self.yol + ".tmp"
-        with open(gecici, "w", encoding="utf-8") as f:
-            json.dump(self.d, f, ensure_ascii=False, indent=2)
-        os.replace(gecici, self.yol)
+        try:
+            with open(gecici, "w", encoding="utf-8") as f:
+                f.write(metin)
+            os.replace(gecici, self.yol)
+        except OSError:
+            with open(self.yol, "w", encoding="utf-8") as f:
+                f.write(metin)
+        self._zaman = self._dosya_zamani()
+
+    def yeni_teklif_no(self):
+        self.yenile()
+        enbuyuk = max([self.d["son_teklif_no"]] + [k.get("no", 0) for k in self.d["kayitlar"]])
+        self.d["son_teklif_no"] = enbuyuk + 1
+        return enbuyuk + 1
+
+    def kayitlari_sil(self, kimlikler):
+        kimlikler = set(kimlikler)
+        self.d["silinen_kayitlar"] = sorted(set(self.d["silinen_kayitlar"]) | kimlikler)
+        self.d["kayitlar"] = [k for k in self.d["kayitlar"] if k["id"] not in kimlikler]
+        self.kaydet()
 
     @property
     def malzemeler(self):
@@ -434,7 +538,8 @@ class Uygulama(tk.Tk):
             except Exception:
                 pass
 
-        self.veri = veri or Veri()
+        self.yerel = yerel_ayar_oku()
+        self.veri = veri or self._veri_ac()
         self.hesap = None
         self.yonetim = None
         self._stil()
@@ -451,6 +556,35 @@ class Uygulama(tk.Tk):
 
         self.protocol("WM_DELETE_WINDOW", self._kapat)
         self.after(200, self.kuru_guncelle)
+        self.after(5000, self._senkron_dongu)
+
+    def _veri_ac(self):
+        k = self.yerel.get("klasor")
+        while k and not os.path.isdir(k):
+            self.withdraw()
+            if not messagebox.askretrycancel(
+                    "Veri klasörü", f"Ortak veri klasörüne ulaşılamıyor:\n{k}\n\n"
+                    "Google Drive açık ve oturum açılmış mı? Açtıktan sonra “Yeniden dene”ye basın.\n\n"
+                    "“İptal” derseniz bu seferlik bu bilgisayardaki yerel veriler kullanılır.", parent=self):
+                k = None
+        self.deiconify()
+        return Veri(k)
+
+    def _senkron_dongu(self):
+        try:
+            if self.veri.yenile():
+                self.veri_degisti()
+        except Exception:
+            pass
+        self.after(5000, self._senkron_dongu)
+
+    def veri_degisti(self):
+        """Veri başka bir bilgisayarda ya da klasör değişince ekranları tazeler."""
+        self.malzeme_listesini_yenile()
+        self.fiyat_hesapla()
+        if self.yonetim and self.yonetim.winfo_exists():
+            self.yonetim.malz_yenile()
+            self.yonetim.kayitlari_yenile()
 
     # ------------------------------------------------------------ görünüm
     def _stil(self):
@@ -510,7 +644,7 @@ class Uygulama(tk.Tk):
 
     # ------------------------------------------------------------ sayfa 1: müşteri fiyatı
     def _fiyat_sayfasi(self):
-        e = self.veri.d["ekran"]
+        e = self.yerel.get("ekran", {})
         p = self.sayfa_fiyat
         p.columnconfigure(0, weight=1)
 
@@ -633,10 +767,10 @@ class Uygulama(tk.Tk):
         if not self.hesap:
             messagebox.showwarning("Eksik bilgi", "Önce ölçüyü ve m² fiyatını girin.", parent=self)
             return None
-        self.veri.d["son_teklif_no"] += 1
         k = dict(self.hesap)
         k["musteri"] = self.v_musteri.get().strip()
-        k["no"] = self.veri.d["son_teklif_no"]
+        k["no"] = self.veri.yeni_teklif_no()
+        k["id"] = uuid.uuid4().hex
         k["tarih"] = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
         self.veri.d["kayitlar"].append(k)
         self.veri.kaydet()
@@ -718,6 +852,19 @@ class Uygulama(tk.Tk):
     def yonetim_ac(self):
         if self.yonetim and self.yonetim.winfo_exists():
             self.yonetim.lift()
+            return
+        if not self.veri.d.get("sifre"):
+            s1 = simpledialog.askstring("Yönetim - şifre belirleyin",
+                                        "Yönetim ekranı için bir şifre belirleyin (en az 4 karakter):", show="•", parent=self)
+            if s1 is None:
+                return
+            s2 = simpledialog.askstring("Yönetim - şifre belirleyin", "Şifreyi tekrar yazın:", show="•", parent=self)
+            if len(s1) < 4 or s1 != s2:
+                messagebox.showerror("Yönetim", "Şifreler aynı değil ya da çok kısa.", parent=self)
+                return
+            self.veri.d["sifre"] = sifre_ozet(s1)
+            self.veri.kaydet()
+            self.yonetim = Yonetim(self)
             return
         sifre = simpledialog.askstring("Yönetim", "Şifre:", show="•", parent=self)
         if sifre is None:
@@ -825,21 +972,21 @@ class Uygulama(tk.Tk):
 
     # ------------------------------------------------------------ kapanış
     def _kapat(self):
-        self.veri.d["ekran"] = {"malzeme": self.v_malzeme.get(), "birim": self.v_birim.get(), "kdv": self.v_kdv.get()}
-        try:
-            self.veri.kaydet()
-        except Exception:
-            pass
+        self.yerel["ekran"] = {"malzeme": self.v_malzeme.get(), "birim": self.v_birim.get(), "kdv": self.v_kdv.get()}
+        yerel_ayar_yaz(self.yerel)
         self.destroy()
 
 
 class Yonetim(tk.Toplevel):
     """Şifreli yönetim penceresi: malzemeler, anlık kâr, kayıtlar, ayarlar."""
 
+    @property
+    def veri(self):
+        return self.ana.veri
+
     def __init__(self, ana):
         super().__init__(ana)
         self.ana = ana
-        self.veri = ana.veri
         self.title("Yönetim - Malzemeler, Kâr ve Kayıtlar")
         self.geometry("1040x660")
         self.minsize(900, 560)
@@ -1144,11 +1291,9 @@ class Yonetim(tk.Toplevel):
         dosya_ac(yol)
 
     def kayit_sil(self):
-        secim = sorted((int(i) for i in self.t_kayit.selection()), reverse=True)
+        secim = self._secili()
         if secim and messagebox.askyesno("Kayıt sil", f"{len(secim)} kayıt silinsin mi?", parent=self):
-            for i in secim:
-                del self.veri.d["kayitlar"][i]
-            self.veri.kaydet()
+            self.veri.kayitlari_sil([k["id"] for k in secim])
             self.kayitlari_yenile()
 
     # ------------------------------------------------------------ ayarlar
@@ -1166,10 +1311,74 @@ class Yonetim(tk.Toplevel):
         self.ana._giris(p, 6, "Yeni şifre (tekrar)", self.s3, show="•", genislik=20)
         ttk.Button(p, text="Şifreyi değiştir", command=self.sifre_degistir).grid(row=7, column=1, sticky="e", pady=6)
         ttk.Separator(p).grid(row=8, column=0, columnspan=2, sticky="we", pady=12)
-        ttk.Label(p, style="Not.TLabel", justify="left", text=(
-            f"Veri dosyası: {self.veri.yol}\nPDF klasörü: {pdf_klasoru()}\n"
-            "Bilgisayarı değiştirirken veri dosyasını yeni bilgisayarda aynı yere kopyalamanız yeterli.")).grid(
+        ttk.Label(p, text="Veri klasörü (Google Drive ile bilgisayarlar arası ortak kullanım)", style="Sonuc.TLabel").grid(
             row=9, column=0, columnspan=2, sticky="w")
+        self.v_klasor = tk.StringVar()
+        ttk.Label(p, textvariable=self.v_klasor, justify="left").grid(row=10, column=0, columnspan=2, sticky="w", pady=4)
+        dug = ttk.Frame(p)
+        dug.grid(row=11, column=0, columnspan=2, sticky="w")
+        ttk.Button(dug, text="📁 Ortak klasör seç (Google Drive)…", command=self.klasor_sec).pack(side="left")
+        ttk.Button(dug, text="💻 Bu bilgisayarın kendi klasörüne dön", command=self.yerele_don).pack(side="left", padx=6)
+        ttk.Label(p, style="Not.TLabel", justify="left", wraplength=950, text=(
+            "Her bilgisayarda Google Drive masaüstü uygulamasını aynı hesapla açın, sonra burada Google Drive'daki aynı klasörü seçin "
+            "(örn. G:\\Drive'ım). Program içinde “ArabaciM2” klasörünü kendisi oluşturur. Malzemeler, fiyatlar, kayıtlar ve şifre "
+            "ortak olur; değişiklikler birkaç saniye ile 1 dakika içinde diğer bilgisayara geçer.\n"
+            f"PDF klasörü (her bilgisayarda ayrı): {pdf_klasoru()}")).grid(row=12, column=0, columnspan=2, sticky="w", pady=(6, 0))
+        self._klasor_yaz()
+
+    def _klasor_yaz(self):
+        ortak = bool(self.ana.yerel.get("klasor")) and os.path.normcase(self.veri.klasor) == os.path.normcase(self.ana.yerel["klasor"])
+        self.v_klasor.set(("Ortak klasör: " if ortak else "Sadece bu bilgisayar: ") + self.veri.klasor)
+
+    def _klasore_gec(self, hedef, ortak):
+        eski = self.veri
+        eski.kaydet()
+        vardi = os.path.exists(os.path.join(hedef, "veriler.json"))
+        yeni = Veri(hedef)
+        if vardi and ortak:
+            silinen = sorted(set(yeni.d["silinen_kayitlar"]) | set(eski.d["silinen_kayitlar"]))
+            yeni.d["kayitlar"] = kayitlari_birlestir(yeni.d["kayitlar"], eski.d["kayitlar"], silinen)
+            yeni.d["silinen_kayitlar"] = silinen
+            yeni.d["son_teklif_no"] = max(yeni.d["son_teklif_no"], eski.d["son_teklif_no"])
+            if not yeni.d.get("sifre"):
+                yeni.d["sifre"] = eski.d.get("sifre")
+            if not yeni.d["kurlar"]:
+                yeni.d["kurlar"] = eski.d["kurlar"]
+            mesaj = ("Bu klasörde zaten veri vardı; malzemeler, fiyatlar ve şifre oradan kullanılıyor.\n"
+                     "Bu bilgisayardaki teklif kayıtları da ona eklendi.")
+        else:
+            yeni.d = json.loads(json.dumps(eski.d))
+            mesaj = "Bu bilgisayardaki malzemeler, fiyatlar ve kayıtlar yeni klasöre kopyalandı."
+        yeni.kaydet()
+        self.ana.yerel["klasor"] = hedef if ortak else None
+        yerel_ayar_yaz(self.ana.yerel)
+        self.ana.veri = yeni
+        self.ana.veri_degisti()
+        self._klasor_yaz()
+        messagebox.showinfo("Veri klasörü", mesaj, parent=self)
+
+    def klasor_sec(self):
+        secim = filedialog.askdirectory(parent=self, title="Google Drive'daki klasörü seçin (örn. Drive'ım)")
+        if not secim:
+            return
+        hedef = secim if (os.path.basename(os.path.normpath(secim)).lower() == "arabacim2"
+                          or os.path.exists(os.path.join(secim, "veriler.json"))) else os.path.join(secim, "ArabaciM2")
+        hedef = os.path.normpath(hedef)
+        if os.path.normcase(hedef) == os.path.normcase(self.veri.klasor):
+            messagebox.showinfo("Veri klasörü", "Bu klasör zaten kullanılıyor.", parent=self)
+            return
+        try:
+            self._klasore_gec(hedef, ortak=True)
+        except Exception as hata:
+            messagebox.showerror("Veri klasörü", f"Klasör kullanılamadı:\n{hata}", parent=self)
+
+    def yerele_don(self):
+        if not self.ana.yerel.get("klasor"):
+            messagebox.showinfo("Veri klasörü", "Zaten bu bilgisayarın kendi klasörü kullanılıyor.", parent=self)
+            return
+        if messagebox.askyesno("Veri klasörü", "Bu bilgisayar ortak klasörü bırakıp kendi klasörünü kullansın mı?\n"
+                               "Ortak klasördeki güncel veriler bu bilgisayara kopyalanır.", parent=self):
+            self._klasore_gec(yerel_klasor(), ortak=False)
 
     def _alis_kdv(self):
         self.veri.d["alis_kdv"] = self.v_alis_kdv.get()
