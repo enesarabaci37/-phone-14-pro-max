@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Apartman Yönetimi</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --kart: #ffffff; --yazi: #1d2330; --soluk: #6b7280; --cizgi: #e3e6eb;
+    --ana: #1f5fbf; --ana-koyu: #174a94; --yesil: #1e8e3e; --kirmizi: #d62828; --turuncu: #c76a00;
+    --yesil-acik: #e7f5ec; --kirmizi-acik: #fdecec; --mavi-acik: #e8f0fb; --turuncu-acik: #fff3e0;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--yazi);
+    font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  .gizli { display: none !important; }
+
+  header { position: sticky; top: 0; z-index: 5; background: var(--ana); color: #fff;
+    display: flex; align-items: center; gap: 8px; padding: 12px 16px; }
+  header h1 { font-size: 18px; margin: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  header button { background: rgba(255,255,255,.18); border: 0; color: #fff; border-radius: 10px;
+    padding: 6px 10px; font-size: 18px; cursor: pointer; }
+
+  main { padding: 14px 14px 96px; max-width: 760px; margin: 0 auto; }
+  nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5; background: #fff; border-top: 1px solid var(--cizgi);
+    display: flex; padding: 4px 4px calc(4px + env(safe-area-inset-bottom)); }
+  nav button { flex: 1; background: none; border: 0; padding: 6px 2px; font-size: 11.5px; color: var(--soluk);
+    display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+  nav button span { font-size: 21px; line-height: 1; }
+  nav button.secili { color: var(--ana); font-weight: 600; }
+
+  h2 { font-size: 20px; margin: 4px 0 12px; }
+  h3 { font-size: 16px; margin: 18px 0 8px; color: var(--soluk); text-transform: uppercase; letter-spacing: .03em; }
+  .kart { background: var(--kart); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .satir { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .satir + .satir { margin-top: 6px; }
+  .buyuk { font-size: 28px; font-weight: 700; }
+  .orta { font-size: 20px; font-weight: 700; }
+  .soluk { color: var(--soluk); font-size: 14px; }
+  .kucuk { font-size: 13px; }
+  .yesil { color: var(--yesil); } .kirmizi { color: var(--kirmizi); } .turuncu { color: var(--turuncu); }
+  .etiket { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .etiket.borc { background: var(--kirmizi-acik); color: var(--kirmizi); }
+  .etiket.alacak { background: var(--yesil-acik); color: var(--yesil); }
+  .etiket.tamam { background: #eef0f3; color: var(--soluk); }
+  .uyari { background: var(--turuncu-acik); border-left: 4px solid var(--turuncu); }
+  .bilgi { background: var(--mavi-acik); border-left: 4px solid var(--ana); }
+  .ilerleme { height: 10px; background: #eef0f3; border-radius: 99px; overflow: hidden; margin: 8px 0 4px; }
+  .ilerleme div { height: 100%; background: var(--yesil); }
+
+  .liste { background: var(--kart); border-radius: 14px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .liste > div { padding: 12px 16px; border-bottom: 1px solid var(--cizgi); }
+  .liste > div:last-child { border-bottom: 0; }
+  .liste .tikla { cursor: pointer; }
+  .liste .tikla:active { background: #f0f3f8; }
+  .bos { text-align: center; color: var(--soluk); padding: 22px 10px !important; }
+
+  .dugmeler { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .btn { border: 0; border-radius: 12px; padding: 11px 14px; font-weight: 600; cursor: pointer; background: #e9edf3;
+    text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--yazi); }
+  .btn.ana { background: var(--ana); color: #fff; }
+  .btn.yesil { background: var(--yesil); color: #fff; }
+  .btn.kirmizi { background: var(--kirmizi); color: #fff; }
+  .btn.cerceve { background: #fff; border: 1px solid var(--cizgi); }
+  .btn.tam { width: 100%; }
+  .btn.kucuk { padding: 7px 10px; font-size: 14px; border-radius: 10px; }
+  .btn:disabled { opacity: .5; }
+  .izgara2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  label.alan { display: block; margin-bottom: 12px; }
+  label.alan > span { display: block; font-size: 14px; color: var(--soluk); margin-bottom: 4px; }
+  input, select, textarea { width: 100%; padding: 11px 12px; border: 1px solid #cfd5de; border-radius: 10px; background: #fff; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--ana); border-color: transparent; }
+  textarea { min-height: 80px; resize: vertical; }
+  .secenekler { display: flex; gap: 6px; flex-wrap: wrap; }
+  .secenekler label { flex: 1; min-width: 90px; }
+  .secenekler input { display: none; }
+  .secenekler span { display: block; text-align: center; padding: 10px 6px; border: 1px solid #cfd5de; border-radius: 10px; cursor: pointer; font-size: 14px; }
+  .secenekler input:checked + span { background: var(--ana); color: #fff; border-color: var(--ana); }
+  .onay { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .onay input { width: 22px; height: 22px; }
+  .ipucu { font-size: 13px; color: var(--soluk); margin: -6px 0 12px; }
+
+  #perde { position: fixed; inset: 0; background: rgba(15,20,30,.45); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+  #pencere { background: var(--bg); width: 100%; max-width: 760px; max-height: 92vh; overflow-y: auto;
+    border-radius: 18px 18px 0 0; padding: 16px 16px calc(20px + env(safe-area-inset-bottom)); }
+  #pencere .ust { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: sticky; top: -16px;
+    background: var(--bg); padding: 4px 0 8px; z-index: 2; }
+  #pencere .ust h2 { margin: 0; }
+  #pencere .kapat { background: #e3e7ee; border: 0; border-radius: 99px; width: 34px; height: 34px; font-size: 18px; cursor: pointer; }
+  @media (min-width: 800px) { #perde { align-items: center; } #pencere { border-radius: 18px; } }
+
+  #bildirim { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); background: #1d2330; color: #fff;
+    padding: 10px 16px; border-radius: 12px; z-index: 40; max-width: 90%; font-size: 15px; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+  #yukleniyor { position: fixed; inset: 0; background: rgba(255,255,255,.55); z-index: 50; display: flex; align-items: center; justify-content: center; }
+  #yukleniyor div { background: #1d2330; color: #fff; padding: 12px 18px; border-radius: 12px; }
+
+  .giris { max-width: 420px; margin: 8vh auto 0; padding: 0 16px; }
+  .giris h1 { font-size: 24px; margin: 0 0 4px; }
+  iframe.onizleme { width: 100%; height: 60vh; border: 1px solid var(--cizgi); border-radius: 10px; background: #fff; }
+  .ay-sec { display: flex; align-items: center; justify-content: space-between; background: var(--kart); border-radius: 14px; padding: 6px; margin-bottom: 12px; }
+  .ay-sec button { background: #eef1f6; border: 0; border-radius: 10px; width: 44px; height: 38px; font-size: 18px; cursor: pointer; }
+  .ay-sec strong { font-size: 17px; }
+  .hareket-tutar { font-weight: 700; white-space: nowrap; }
+  a { color: var(--ana); }
+</style>
+</head>
+<body>
+
+<div id="girisEkrani" class="giris gizli"></div>
+
+<div id="uygulama" class="gizli">
+  <header>
+    <h1 id="baslik">Apartman Yönetimi</h1>
+    <button onclick="yenile()" title="Yenile">↻</button>
+    <button onclick="sayfa('ayarlar')" title="Ayarlar">⚙</button>
+  </header>
+  <main id="icerik"></main>
+  <nav>
+    <button data-s="ozet" onclick="sayfa('ozet')"><span>🏠</span>Özet</button>
+    <button data-s="daireler" onclick="sayfa('daireler')"><span>🚪</span>Daireler</button>
+    <button data-s="giderler" onclick="sayfa('giderler')"><span>🧾</span>Giderler</button>
+    <button data-s="aidat" onclick="sayfa('aidat')"><span>💰</span>Aidat</button>
+    <button data-s="raporlar" onclick="sayfa('raporlar')"><span>📄</span>Raporlar</button>
+  </nav>
+</div>
+
+<div id="perde" class="gizli" onclick="if (event.target === this) kapat()"><div id="pencere"></div></div>
+<div id="bildirim" class="gizli"></div>
+<div id="yukleniyor" class="gizli"><div>Lütfen bekleyin…</div></div>
+
+<script>
+// ================================================================ temel yardımcılar
+var D = null;            // bütün veriler
+var JETON = null;
+var AKTIF = 'ozet';
+var SECILI_DONEM = null; // giderler sayfası
+var AYLAR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, function (c) {
+  return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function sayi(v) {
+  if (typeof v === 'number') return v;
+  var s = String(v === undefined || v === null ? '' : v).trim().replace(/\s/g, '').replace(/TL/i, '');
+  if (!s) return NaN;
+  if (s.indexOf(',') >= 0 && s.indexOf('.') >= 0) s = s.replace(/\./g, '').replace(',', '.');
+  else s = s.replace(',', '.');
+  return Number(s);
+}
+function yuvarla(x) { return Math.round(x * 100) / 100; }
+function para(x) {
+  return (yuvarla(x) || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' TL';
+}
+function paraKisa(x) {
+  var y = yuvarla(x) || 0;
+  return y.toLocaleString('tr-TR', { minimumFractionDigits: y % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' TL';
+}
+function iki(n) { return (n < 10 ? '0' : '') + n; }
+function bugun() { var d = new Date(); return d.getFullYear() + '-' + iki(d.getMonth() + 1) + '-' + iki(d.getDate()); }
+function buDonem() { return bugun().slice(0, 7); }
+function donemAdi(d) { if (!d) return ''; var p = d.split('-'); return AYLAR[Number(p[1]) - 1] + ' ' + p[0]; }
+function donemKaydir(d, n) {
+  var p = d.split('-'), y = Number(p[0]), a = Number(p[1]) - 1 + n;
+  y += Math.floor(a / 12); a = ((a % 12) + 12) % 12;
+  return y + '-' + iki(a + 1);
+}
+function tarihYaz(t) { if (!t) return ''; var p = t.split('-'); return p[2] + '.' + p[1] + '.' + p[0]; }
+function uid() { return Math.random().toString(16).slice(2, 10); }
+function donemler(bas, son) { var r = []; for (var d = bas; d <= son; d = donemKaydir(d, 1)) r.push(d); return r; }
+
+function bildir(m, sure) {
+  var b = $('bildirim'); b.textContent = m; b.classList.remove('gizli');
+  clearTimeout(bildir.t); bildir.t = setTimeout(function () { b.classList.add('gizli'); }, sure || 2600);
+}
+function bekle(acik) { $('yukleniyor').classList.toggle('gizli', !acik); }
+
+function api(fonk) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return new Promise(function (tamam, hata) {
+    google.script.run.withSuccessHandler(tamam).withFailureHandler(function (e) {
+      var m = (e && e.message) || String(e);
+      if (m.indexOf('OTURUM:') >= 0) { JETON = null; try { sessionStorage.removeItem('jeton'); } catch (x) {} girisGoster(); }
+      hata(new Error(m.replace(/^.*?OTURUM:\s*/, '').replace(/^Error:\s*/, '').replace(/^Exception:\s*/, '')));
+    })[fonk].apply(null, args);
+  });
+}
+
+/** Sunucuya kayıt işlemleri gönderir, sonucu yerel veriye uygular. */
+function islem(islemler, mesaj) {
+  if (!islemler.length) return Promise.resolve();
+  bekle(true);
+  return api('islemYap', JETON, islemler).then(function (sonuc) {
+    sonuc.forEach(function (s) {
+      var t = D[s.tablo];
+      if (s.silindi) { D[s.tablo] = t.filter(function (k) { return k.id !== s.silindi; }); return; }
+      var i = t.findIndex(function (k) { return k.id === s.kayit.id; });
+      if (i >= 0) t[i] = s.kayit; else t.push(s.kayit);
+    });
+    bekle(false);
+    if (mesaj) bildir(mesaj);
+    ciz();
+  }).catch(function (e) { bekle(false); alert('Kaydedilemedi: ' + e.message); throw e; });
+}
+
+// ================================================================ hesaplar
+function ayar(a, v) { return D.ayarlar[a] !== undefined && D.ayarlar[a] !== '' ? D.ayarlar[a] : v; }
+function aktifDaireler() { return D.Daireler.filter(function (d) { return d.aktif; }).sort(daireSira); }
+function tumDaireler() { return D.Daireler.slice().sort(daireSira); }
+function daireSira(a, b) {
+  var x = Number(a.no), y = Number(b.no);
+  if (!isNaN(x) && !isNaN(y)) return x - y;
+  return String(a.no).localeCompare(String(b.no), 'tr');
+}
+function daire(id) { return D.Daireler.find(function (d) { return d.id === id; }); }
+function daireAdi(d) { return 'Daire ' + d.no; }
+function sakin(id) { return D.Sakinler.find(function (s) { return s.id === id; }); }
+function aktifSakin(daireId) {
+  var l = D.Sakinler.filter(function (s) { return s.daire_id === daireId && !s.cikis; });
+  l.sort(function (a, b) { return String(b.giris).localeCompare(String(a.giris)); });
+  return l[0] || null;
+}
+function odeyenAdi(sakinId, d) {
+  var s = sakin(sakinId);
+  if (s) return s.ad;
+  return d && d.ev_sahibi_ad ? d.ev_sahibi_ad + ' (ev sahibi)' : 'Boş daire / ev sahibi';
+}
+function oturanAdi(d) {
+  var s = aktifSakin(d.id);
+  if (s) return s.ad + (s.tip === 'Ev sahibi' ? '' : '');
+  return d.ev_sahibi_ad ? d.ev_sahibi_ad + ' (boş, ev sahibi)' : 'Boş';
+}
+function oturanTel(d) { var s = aktifSakin(d.id); return s ? s.tel : d.ev_sahibi_tel; }
+
+function tarifeTutari(donem) {
+  var hepsi = D.AidatTarifesi.slice().sort(function (a, b) { return a.baslangic_donem.localeCompare(b.baslangic_donem); });
+  var t = hepsi.filter(function (x) { return x.baslangic_donem <= donem; });
+  if (t.length) return t[t.length - 1].tutar;
+  return hepsi.length ? hepsi[0].tutar : 0; // ilk tarifeden önceki aylar için ilk tutar geçerli
+}
+function aidatTutari(donem, d) {
+  if (d.ozel_aidat !== '' && d.ozel_aidat !== null && d.ozel_aidat !== undefined && !isNaN(d.ozel_aidat)) return d.ozel_aidat;
+  return tarifeTutari(donem);
+}
+
+function borcSira(a, b) { return (a.donem + (a.tarih || '')).localeCompare(b.donem + (b.tarih || '')) || (a.tur === 'Aidat' ? -1 : 1); }
+
+/**
+ * Bir dairenin hesabı. Ödemeler, aynı kişinin (sakin) borçlarına eskiden yeniye doğru dağıtılır.
+ * bakiye > 0: alacaklı (fazla / ön ödeme), bakiye < 0: borçlu.
+ */
+function hesap(daireId) {
+  var borclar = D.Borclar.filter(function (b) { return b.daire_id === daireId; }).map(function (b) { return Object.assign({}, b, { kalan: b.tutar }); });
+  var odemeler = D.Odemeler.filter(function (o) { return o.daire_id === daireId; });
+  var kisiler = {};
+  borclar.forEach(function (b) { (kisiler[b.sakin_id] = kisiler[b.sakin_id] || { borc: 0, odeme: 0, borclar: [] }).borc += b.tutar; kisiler[b.sakin_id].borclar.push(b); });
+  odemeler.forEach(function (o) { (kisiler[o.sakin_id] = kisiler[o.sakin_id] || { borc: 0, odeme: 0, borclar: [] }).odeme += o.tutar; });
+  Object.keys(kisiler).forEach(function (k) {
+    var kisi = kisiler[k], kalanOdeme = kisi.odeme;
+    kisi.borclar.sort(borcSira);
+    kisi.borclar.forEach(function (b) { var p = Math.max(0, Math.min(b.kalan, kalanOdeme)); b.kalan = yuvarla(b.kalan - p); kalanOdeme -= p; });
+    kisi.bakiye = yuvarla(kisi.odeme - kisi.borc);
+    kisi.acik = kisi.borclar.filter(function (b) { return b.kalan > 0.004; });
+  });
+  var s = aktifSakin(daireId), aktifId = s ? s.id : '';
+  var ana = kisiler[aktifId] || { borc: 0, odeme: 0, borclar: [], bakiye: 0, acik: [] };
+  var eskiler = Object.keys(kisiler).filter(function (k) { return k !== aktifId && Math.abs(kisiler[k].bakiye) > 0.004; })
+    .map(function (k) { return { sakin_id: k, ad: odeyenAdi(k, daire(daireId)), bakiye: kisiler[k].bakiye, acik: kisiler[k].acik }; });
+  var toplam = yuvarla(odemeler.reduce(function (t, o) { return t + o.tutar; }, 0) - borclar.reduce(function (t, b) { return t + b.tutar; }, 0));
+  return { bakiye: ana.bakiye, acik: ana.acik, eskiler: eskiler, toplam: toplam, aktifSakinId: aktifId };
+}
+
+function durumEtiketi(bakiye) {
+  if (bakiye < -0.004) return '<span class="etiket borc">Borç ' + paraKisa(-bakiye) + '</span>';
+  if (bakiye > 0.004) return '<span class="etiket alacak">Alacak +' + paraKisa(bakiye) + '</span>';
+  return '<span class="etiket tamam">Borcu yok ✓</span>';
+}
+function durumYazi(bakiye) {
+  if (bakiye < -0.004) return 'Borç: ' + para(-bakiye);
+  if (bakiye > 0.004) return 'Alacak (ön ödeme): +' + para(bakiye);
+  return 'Borcu yok';
+}
+
+function kasa(sonTarih) {
+  var banka = sayi(ayar('acilis_banka', 0)) || 0, nakit = sayi(ayar('acilis_nakit', 0)) || 0;
+  D.Odemeler.forEach(function (o) { if (sonTarih && o.tarih > sonTarih) return; if (o.yontem === 'Nakit') nakit += o.tutar; else banka += o.tutar; });
+  D.Giderler.forEach(function (g) { if (sonTarih && g.tarih > sonTarih) return; if (g.odeme === 'Nakit') nakit -= g.tutar; else banka -= g.tutar; });
+  return { banka: yuvarla(banka), nakit: yuvarla(nakit), toplam: yuvarla(banka + nakit) };
+}
+function ayinSonGunu(donem) { var p = donem.split('-'); var g = new Date(Number(p[0]), Number(p[1]), 0).getDate(); return donem + '-' + iki(g); }
+function donemOzeti(donem) {
+  var istenen = D.Borclar.filter(function (b) { return b.donem === donem; });
+  var odemeler = D.Odemeler.filter(function (o) { return o.tarih && o.tarih.slice(0, 7) === donem; });
+  var giderler = D.Giderler.filter(function (g) { return g.donem === donem; });
+  return {
+    aidatIstenen: yuvarla(istenen.filter(function (b) { return b.tur === 'Aidat'; }).reduce(function (t, b) { return t + b.tutar; }, 0)),
+    ekIstenen: yuvarla(istenen.filter(function (b) { return b.tur !== 'Aidat'; }).reduce(function (t, b) { return t + b.tutar; }, 0)),
+    toplanan: yuvarla(odemeler.reduce(function (t, o) { return t + o.tutar; }, 0)),
+    harcanan: yuvarla(giderler.reduce(function (t, g) { return t + g.tutar; }, 0)),
+    odemeler: odemeler, giderler: giderler, borclar: istenen
+  };
+}
+/** Bir ayın aidat borcunun ne kadarı ödendi (FIFO dağıtımına göre). */
+function donemTahsilat(donem) {
+  var istenen = 0, kalan = 0;
+  aktifVeyaKayitli(donem).forEach(function (d) {
+    var h = hesap(d.id);
+    D.Borclar.filter(function (b) { return b.daire_id === d.id && b.donem === donem; }).forEach(function (b) {
+      istenen += b.tutar;
+      var ac = h.acik.concat([].concat.apply([], h.eskiler.map(function (e) { return e.acik; }))).find(function (x) { return x.id === b.id; });
+      kalan += ac ? ac.kalan : 0;
+    });
+  });
+  return { istenen: yuvarla(istenen), odenen: yuvarla(istenen - kalan), kalan: yuvarla(kalan) };
+}
+function aktifVeyaKayitli(donem) {
+  return tumDaireler().filter(function (d) { return d.aktif || D.Borclar.some(function (b) { return b.daire_id === d.id && b.donem === donem; }); });
+}
+
+// ================================================================ otomatik işlemler
+/** Başlangıçtan bu aya kadar yazılmamış aidatları yazar. */
+function aidatlariYaz() {
+  var bas = ayar('baslangic_donem', buDonem()), son = buDonem(), islemler = [], sayac = {};
+  aktifDaireler().forEach(function (d) {
+    var b = d.baslangic_donem && d.baslangic_donem > bas ? d.baslangic_donem : bas;
+    donemler(b, son).forEach(function (m) {
+      var var_ = D.Borclar.some(function (x) { return x.daire_id === d.id && x.donem === m && x.tur === 'Aidat'; });
+      var tutar = aidatTutari(m, d);
+      if (var_ || !(tutar > 0)) return;
+      var s = aktifSakin(d.id);
+      islemler.push({ tablo: 'Borclar', kayit: { id: uid(), daire_id: d.id, sakin_id: s ? s.id : '', donem: m, tur: 'Aidat',
+        baslik: donemAdi(m) + ' aidatı', tutar: tutar, tarih: m + '-01' } });
+      sayac[m] = 1;
+    });
+  });
+  if (!islemler.length) return Promise.resolve();
+  return islem(islemler, Object.keys(sayac).map(donemAdi).join(', ') + ' aidatları dairelere yazıldı.');
+}
+
+function bekleyenDuzenliGiderler() {
+  var m = buDonem(), gun = Number(bugun().slice(8));
+  return D.DuzenliGiderler.filter(function (z) {
+    return z.aktif && gun >= (z.gun || 1) && !D.Giderler.some(function (g) { return g.duzenli_id === z.id && g.donem === m; });
+  });
+}
+
+// ================================================================ giriş ve kurulum
+function baslat() {
+  try { JETON = sessionStorage.getItem('jeton'); } catch (e) { JETON = null; }
+  bekle(true);
+  api('durum').then(function (d) {
+    bekle(false);
+    if (!d.kurulu) return kurulumGoster();
+    if (JETON) return yukle().catch(function () { girisGoster(); });
+    girisGoster();
+  }).catch(function (e) { bekle(false); $('girisEkrani').classList.remove('gizli'); $('girisEkrani').innerHTML = '<p class="kirmizi">Bağlantı hatası: ' + esc(e.message) + '</p>'; });
+}
+
+function girisGoster() {
+  $('uygulama').classList.add('gizli');
+  var g = $('girisEkrani'); g.classList.remove('gizli');
+  g.innerHTML = '<h1>🏢 Apartman Yönetimi</h1><p class="soluk">Devam etmek için şifrenizi girin.</p>' +
+    '<div class="kart"><label class="alan"><span>Şifre</span><input id="gSifre" type="password" autocomplete="current-password"></label>' +
+    '<button class="btn ana tam" onclick="girisYap()">Giriş</button><p id="gHata" class="kirmizi kucuk"></p></div>';
+  $('gSifre').addEventListener('keydown', function (e) { if (e.key === 'Enter') girisYap(); });
+  setTimeout(function () { $('gSifre').focus(); }, 50);
+}
+
+function girisYap() {
+  bekle(true);
+  api('giris', $('gSifre').value).then(function (j) {
+    JETON = j; try { sessionStorage.setItem('jeton', j); } catch (e) {}
+    return yukle();
+  }).catch(function (e) { bekle(false); $('gHata').textContent = e.message; });
+}
+
+function kurulumGoster() {
+  var g = $('girisEkrani'); g.classList.remove('gizli');
+  g.innerHTML = '<h1>🏢 Apartman Yönetimi</h1><p class="soluk">İlk kurulum. Bu bilgilerin hepsini sonradan Ayarlar\'dan değiştirebilirsiniz.</p>' +
+    '<div class="kart">' +
+    alan('kAd', 'Apartman adı', '', 'örn. Arabacı Apartmanı') +
+    alan('kAdres', 'Adres', '') +
+    alan('kYonetici', 'Yönetici adı soyadı', '') +
+    alan('kTel', 'Yönetici telefonu', '', '05xx xxx xx xx', 'tel') +
+    alan('kIban', 'Aidatın yatırılacağı IBAN', '', 'TR..') +
+    alan('kIbanAd', 'IBAN hesap sahibi', '') +
+    alan('kDaire', 'Daire sayısı', '8', '', 'number') +
+    alan('kAidat', 'Aylık aidat (TL, her daire)', '', 'örn. 1000', 'decimal') +
+    '<label class="alan"><span>Aidat hangi aydan başlıyor?</span><input id="kDonem" type="month" value="' + buDonem() + '"></label>' +
+    alan('kGun', 'Son ödeme günü (her ayın kaçı)', '10', '', 'number') +
+    '<label class="alan"><span>Program şifresi (en az 4 karakter)</span><input id="kSifre" type="password" autocomplete="new-password"></label>' +
+    '<label class="alan"><span>Şifre (tekrar)</span><input id="kSifre2" type="password" autocomplete="new-password"></label>' +
+    '<button class="btn ana tam" onclick="kurulumYap()">Kurulumu tamamla</button><p id="kHata" class="kirmizi kucuk"></p></div>';
+}
+
+function alan(id, etiket, deger, ipucu, tur, ek) {
+  var t = tur === 'decimal' ? 'text" inputmode="decimal' : (tur === 'number' ? 'number" inputmode="numeric' : (tur || 'text'));
+  return '<label class="alan"><span>' + esc(etiket) + '</span><input id="' + id + '" type="' + t + '" value="' + esc(deger) +
+    '" placeholder="' + esc(ipucu || '') + '"' + (ek || '') + '></label>';
+}
+function deger(id) { var e = $(id); return e ? e.value.trim() : ''; }
+
+function kurulumYap() {
+  var v = { apartman_adi: deger('kAd'), adres: deger('kAdres'), yonetici_ad: deger('kYonetici'), yonetici_tel: deger('kTel'),
+    iban: deger('kIban'), iban_ad: deger('kIbanAd'), daire_sayisi: Number(deger('kDaire')), aidat: sayi(deger('kAidat')),
+    baslangic_donem: deger('kDonem') || buDonem(), son_odeme_gunu: deger('kGun') || '10', sifre: $('kSifre').value };
+  var h = '';
+  if (!v.apartman_adi) h = 'Apartman adını yazın.';
+  else if (!(v.daire_sayisi > 0)) h = 'Daire sayısını yazın.';
+  else if (!(v.aidat >= 0)) h = 'Aylık aidat tutarını yazın.';
+  else if (v.sifre.length < 4) h = 'Şifre en az 4 karakter olmalı.';
+  else if (v.sifre !== $('kSifre2').value) h = 'Şifreler aynı değil.';
+  if (h) { $('kHata').textContent = h; return; }
+  bekle(true);
+  api('kurulumYap', v).then(function (j) {
+    JETON = j; try { sessionStorage.setItem('jeton', j); } catch (e) {}
+    return yukle();
+  }).then(function () { sayfa('daireler'); bildir('Kurulum tamam. Şimdi daire bilgilerini doldurun.', 4000); })
+    .catch(function (e) { bekle(false); $('kHata').textContent = e.message; });
+}
+
+function yukle() {
+  bekle(true);
+  return api('hepsiniGetir', JETON).then(function (veri) {
+    D = veri; bekle(false);
+    $('girisEkrani').classList.add('gizli'); $('uygulama').classList.remove('gizli');
+    $('baslik').textContent = ayar('apartman_adi', 'Apartman Yönetimi');
+    ciz();
+    return aidatlariYaz();
+  }).catch(function (e) { bekle(false); throw e; });
+}
+function yenile() { yukle().then(function () { bildir('Güncellendi'); }).catch(function (e) { alert(e.message); }); }
+
+// ================================================================ sayfalar
+function sayfa(s) { AKTIF = s; window.scrollTo(0, 0); ciz(); }
+function ciz() {
+  if (!D) return;
+  document.querySelectorAll('nav button').forEach(function (b) { b.classList.toggle('secili', b.getAttribute('data-s') === AKTIF); });
+  $('icerik').innerHTML = (SAYFALAR[AKTIF] || SAYFALAR.ozet)();
+  if (ACIK_PENCERE) ACIK_PENCERE();
+}
+
+var SAYFALAR = {};
+
+SAYFALAR.ozet = function () {
+  var k = kasa(), m = buDonem(), t = donemTahsilat(m), o = donemOzeti(m);
+  var borclular = aktifDaireler().map(function (d) { return { d: d, h: hesap(d.id) }; }).filter(function (x) { return x.h.bakiye < -0.004; });
+  var yuzde = t.istenen ? Math.min(100, Math.round(t.odenen / t.istenen * 100)) : 0;
+  var h = '';
+  bekleyenDuzenliGiderler().forEach(function (z) {
+    h += '<div class="kart uyari"><div class="satir"><div><strong>' + esc(z.kategori) + '</strong> · ' + paraKisa(z.tutar) +
+      '<div class="soluk">Bu ayın düzenli gideri henüz eklenmedi.</div></div>' +
+      '<button class="btn kucuk ana" onclick="duzenliEkle(\'' + z.id + '\')">Ekle</button></div></div>';
+  });
+  h += '<div class="kart"><div class="soluk">Kasadaki toplam para</div><div class="buyuk ' + (k.toplam < 0 ? 'kirmizi' : '') + '">' + para(k.toplam) + '</div>' +
+    '<div class="satir soluk"><span>🏦 Banka: ' + para(k.banka) + '</span><span>💵 Nakit: ' + para(k.nakit) + '</span></div></div>';
+  h += '<div class="kart"><div class="satir"><strong>' + donemAdi(m) + ' tahsilatı</strong><span class="soluk">%' + yuzde + '</span></div>' +
+    '<div class="soluk kucuk">Bu ay dairelerden istenen aidat ve ek toplama payları</div><div class="ilerleme"><div style="width:' + yuzde + '%"></div></div>' +
+    '<div class="satir kucuk"><span>İstenen: <b>' + paraKisa(t.istenen) + '</b></span><span class="yesil">Ödenen: <b>' + paraKisa(t.odenen) + '</b></span>' +
+    '<span class="kirmizi">Kalan: <b>' + paraKisa(t.kalan) + '</b></span></div>' +
+    '<div class="satir kucuk" style="margin-top:8px"><span>Bu ay toplanan: <b>' + paraKisa(o.toplanan) + '</b></span><span>Bu ay harcanan: <b>' + paraKisa(o.harcanan) + '</b></span></div></div>';
+  h += '<div class="izgara2"><button class="btn ana" onclick="odemeFormu()">＋ Ödeme al</button><button class="btn cerceve" onclick="giderFormu()">＋ Gider ekle</button></div>';
+  h += '<h3>Borçlu daireler (' + borclular.length + ')</h3><div class="liste">';
+  if (!borclular.length) h += '<div class="bos">Borçlu daire yok 🎉</div>';
+  borclular.sort(function (a, b) { return a.h.bakiye - b.h.bakiye; }).forEach(function (x) {
+    h += '<div class="tikla" onclick="daireDetay(\'' + x.d.id + '\')"><div class="satir"><div><strong>' + esc(daireAdi(x.d)) + '</strong> · ' + esc(oturanAdi(x.d)) +
+      '<div class="soluk kucuk">' + esc(x.h.acik.map(function (b) { return b.baslik; }).join(', ')) + '</div></div>' + durumEtiketi(x.h.bakiye) + '</div></div>';
+  });
+  h += '</div><h3>Son hareketler</h3><div class="liste">' + sonHareketler(8) + '</div>';
+  return h;
+};
+
+function sonHareketler(n) {
+  var l = D.Odemeler.map(function (o) { return { t: o.tarih, h: '<div class="satir"><div>💰 ' + esc(daireAdi(daire(o.daire_id) || { no: '?' })) + ' · ' +
+    esc(odeyenAdi(o.sakin_id, daire(o.daire_id))) + '<div class="soluk kucuk">' + tarihYaz(o.tarih) + ' · ' + esc(o.yontem) + '</div></div><span class="hareket-tutar ' + (o.tutar < 0 ? 'kirmizi' : 'yesil') + '">' + (o.tutar < 0 ? '' : '+') + paraKisa(o.tutar) + '</span></div>' }; })
+    .concat(D.Giderler.map(function (g) { return { t: g.tarih, h: '<div class="satir"><div>🧾 ' + esc(g.kategori) + (g.aciklama ? ' · ' + esc(g.aciklama) : '') +
+      '<div class="soluk kucuk">' + tarihYaz(g.tarih) + ' · ' + esc(g.odeme) + '</div></div><span class="hareket-tutar kirmizi">-' + paraKisa(g.tutar) + '</span></div>' }; }));
+  l.sort(function (a, b) { return String(b.t).localeCompare(String(a.t)); });
+  if (!l.length) return '<div class="bos">Henüz hareket yok.</div>';
+  return l.slice(0, n).map(function (x) { return '<div>' + x.h + '</div>'; }).join('');
+}
+
+// ---------------------------------------------------------------- daireler
+SAYFALAR.daireler = function () {
+  var h = '<h2>Daireler</h2><div class="liste">';
+  var aktif = aktifDaireler();
+  if (!aktif.length) h += '<div class="bos">Daire yok.</div>';
+  aktif.forEach(function (d) {
+    var hs = hesap(d.id), s = aktifSakin(d.id);
+    h += '<div class="tikla" onclick="daireDetay(\'' + d.id + '\')"><div class="satir"><div><strong>' + esc(daireAdi(d)) + '</strong>' + (d.kat ? ' <span class="soluk">· ' + esc(d.kat) + '</span>' : '') +
+      '<div class="soluk kucuk">' + esc(oturanAdi(d)) + (s ? ' · ' + esc(s.tip) : '') + '</div></div>' + durumEtiketi(hs.bakiye) + '</div>' +
+      (hs.eskiler.length ? '<div class="turuncu kucuk">⚠ Eski oturan hesabı açık: ' + esc(hs.eskiler.map(function (e) { return e.ad + ' ' + durumYazi(e.bakiye); }).join(', ')) + '</div>' : '') + '</div>';
+  });
+  h += '</div><button class="btn ana tam" onclick="daireFormu()">＋ Daire ekle</button>';
+  var pasif = tumDaireler().filter(function (d) { return !d.aktif; });
+  if (pasif.length) {
+    h += '<h3>Çıkarılan daireler</h3><div class="liste">';
+    pasif.forEach(function (d) { h += '<div class="tikla" onclick="daireDetay(\'' + d.id + '\')"><div class="satir"><span>' + esc(daireAdi(d)) + '</span>' + durumEtiketi(hesap(d.id).toplam) + '</div></div>'; });
+    h += '</div>';
+  }
+  return h;
+};
+
+var ACIK_PENCERE = null;
+function pencere(baslik, html, yenileyici) {
+  $('pencere').innerHTML = '<div class="ust"><h2>' + esc(baslik) + '</h2><button class="kapat" onclick="kapat()">✕</button></div>' + html;
+  $('perde').classList.remove('gizli'); document.body.style.overflow = 'hidden';
+  ACIK_PENCERE = yenileyici || null;
+}
+function kapat() { $('perde').classList.add('gizli'); document.body.style.overflow = ''; ACIK_PENCERE = null; }
+
+function telNo(t) {
+  var s = String(t || '').replace(/\D/g, '');
+  if (!s) return '';
+  if (s.indexOf('90') === 0 && s.length === 12) return s;
+  if (s.indexOf('0') === 0) s = s.slice(1);
+  return s.length === 10 ? '90' + s : s;
+}
+function waLink(tel, metin) { return 'https://wa.me/' + telNo(tel) + '?text=' + encodeURIComponent(metin); }
+
+function daireDetay(id) {
+  var ciz_ = function () {
+    var d = daire(id); if (!d) return kapat();
+    var hs = hesap(id), s = aktifSakin(id), tel = oturanTel(d);
+    var h = '<div class="kart"><div class="soluk">' + (s ? esc(s.tip) : 'Oturan yok') + '</div><div class="orta">' + esc(oturanAdi(d)) + '</div>' +
+      (tel ? '<div class="soluk">' + esc(tel) + '</div>' : '') +
+      '<div style="margin-top:10px">' + durumEtiketi(hs.bakiye) + '</div>';
+    if (hs.acik.length) h += '<div class="kucuk" style="margin-top:8px">Ödenmemiş: ' + esc(hs.acik.map(function (b) { return b.baslik + (b.kalan < b.tutar ? ' (kalan ' + paraKisa(b.kalan) + ')' : ''); }).join(', ')) + '</div>';
+    if (hs.bakiye > 0.004) {
+      var a = aidatTutari(buDonem(), d);
+      if (a > 0) h += '<div class="kucuk yesil" style="margin-top:8px">Ön ödeme yaklaşık ' + Math.floor(hs.bakiye / a + 0.0001) + ' aylık aidata yetiyor; her ay aidat bundan düşülür.</div>';
+    }
+    h += '</div>';
+    hs.eskiler.forEach(function (e) {
+      h += '<div class="kart uyari"><strong>Eski oturan: ' + esc(e.ad) + '</strong><div>' + durumYazi(e.bakiye) + '</div>' +
+        '<div class="dugmeler"><button class="btn kucuk ana" onclick="odemeFormu(\'' + id + '\',\'' + e.sakin_id + '\')">' + (e.bakiye < 0 ? 'Ödeme al' : 'İade / mahsup kaydet') + '</button></div></div>';
+    });
+    h += '<div class="izgara2"><button class="btn ana" onclick="odemeFormu(\'' + id + '\')">💰 Ödeme al</button>' +
+      (tel ? '<a class="btn yesil" target="_blank" href="' + esc(waLink(tel, hatirlatmaMetni(d))) + '">💬 WhatsApp</a>' : '<button class="btn" disabled>💬 Telefon yok</button>') +
+      '<button class="btn cerceve" onclick="raporAc(\'dokum\', \'' + id + '\')">📄 Hesap dökümü</button>' +
+      '<button class="btn cerceve" onclick="sakinFormu(\'' + id + '\')">🔁 ' + (s ? 'Kiracı değiştir' : 'Oturan ekle') + '</button>' +
+      (s ? '<button class="btn cerceve" onclick="sakinDuzenle(\'' + s.id + '\')">✏ Oturan bilgisi</button>' : '') +
+      '<button class="btn cerceve" onclick="daireFormu(\'' + id + '\')">⚙ Daire bilgisi</button></div>';
+    if (tel) h += '<div class="soluk kucuk" style="margin:4px 0 0">WhatsApp düğmesi borç / ön ödeme durumunu içeren hazır mesajı açar.</div>';
+    h += '<h3>Hesap hareketleri</h3><div class="liste">' + hareketListesi(id) + '</div>';
+    if (d.aktif) h += '<button class="btn kirmizi tam" onclick="daireCikar(\'' + id + '\')">Daireyi listeden çıkar</button>';
+    else h += '<button class="btn yesil tam" onclick="daireGeriAl(\'' + id + '\')">Daireyi geri ekle</button>';
+    pencere(daireAdi(d), h, ciz_);
+  };
+  ciz_();
+}
+
+/** Bir dairenin bütün hareketleri, yürüyen bakiyeyle (en yeni üstte). */
+function dairehareketleri(id) {
+  var l = D.Borclar.filter(function (b) { return b.daire_id === id; }).map(function (b) {
+    return { tarih: b.tarih || (b.donem + '-01'), sira: 0, ad: b.baslik, tutar: -b.tutar, kisi: b.sakin_id, borc: b };
+  }).concat(D.Odemeler.filter(function (o) { return o.daire_id === id; }).map(function (o) {
+    return { tarih: o.tarih, sira: 1, ad: o.tutar < 0 ? 'İade' + (o.aciklama ? ' – ' + o.aciklama : '') : 'Ödeme (' + o.yontem + ')' + (o.aciklama ? ' – ' + o.aciklama : ''), tutar: o.tutar, kisi: o.sakin_id, odeme: o };
+  }));
+  l.sort(function (a, b) { return a.tarih.localeCompare(b.tarih) || a.sira - b.sira; });
+  var bakiye = 0;
+  l.forEach(function (x) { bakiye = yuvarla(bakiye + x.tutar); x.bakiye = bakiye; });
+  return l;
+}
+
+function hareketListesi(id) {
+  var l = dairehareketleri(id).reverse();
+  if (!l.length) return '<div class="bos">Hareket yok.</div>';
+  return l.map(function (x) {
+    var dz = x.odeme ? ' onclick="odemeDuzenle(\'' + x.odeme.id + '\')" class="tikla"' : '';
+    return '<div' + dz + '><div class="satir"><div>' + esc(x.ad) + '<div class="soluk kucuk">' + tarihYaz(x.tarih) + ' · ' + esc(odeyenAdi(x.kisi, daire(id))) + '</div></div>' +
+      '<div style="text-align:right"><div class="hareket-tutar ' + (x.tutar < 0 ? 'kirmizi' : 'yesil') + '">' + (x.tutar > 0 ? '+' : '') + paraKisa(x.tutar) + '</div>' +
+      '<div class="soluk kucuk">Bakiye ' + (x.bakiye > 0 ? '+' : '') + paraKisa(x.bakiye) + '</div></div></div></div>';
+  }).join('');
+}
+
+function hatirlatmaMetni(d) {
+  var hs = hesap(d.id), s = aktifSakin(d.id), ad = s ? s.ad : (d.ev_sahibi_ad || '');
+  var t = 'Merhaba' + (ad ? ' ' + ad : '') + ',\n' + ayar('apartman_adi', 'Apartman') + ' ' + daireAdi(d) + ' aidat bilginiz:\n\n';
+  if (hs.bakiye < -0.004) {
+    hs.acik.forEach(function (b) { t += '• ' + b.baslik + ': ' + paraKisa(b.kalan) + '\n'; });
+    t += '\nToplam ödenecek: ' + para(-hs.bakiye) + '\n';
+    if (ayar('iban', '')) t += '\nIBAN: ' + ayar('iban', '') + (ayar('iban_ad', '') ? '\nAlıcı: ' + ayar('iban_ad', '') : '') +
+      '\nAçıklamaya "' + daireAdi(d) + '" yazmanızı rica ederim.\n';
+  } else if (hs.bakiye > 0.004) {
+    var a = aidatTutari(buDonem(), d);
+    t += 'Ön ödeme bakiyeniz: +' + para(hs.bakiye) + (a > 0 ? ' (yaklaşık ' + Math.floor(hs.bakiye / a + 0.0001) + ' aylık aidat)' : '') + '.\nHer ay aidat bu bakiyeden düşülmektedir.\n';
+  } else {
+    t += 'Borcunuz bulunmamaktadır, teşekkür ederiz.\n';
+  }
+  t += '\nTeşekkürler,\n' + ayar('yonetici_ad', 'Apartman Yönetimi');
+  return t;
+}
+
+function daireFormu(id) {
+  var d = id ? daire(id) : { no: String((aktifDaireler().reduce(function (m, x) { return Math.max(m, Number(x.no) || 0); }, 0)) + 1), kat: '', ozel_aidat: '', pay_orani: 1, ev_sahibi_ad: '', ev_sahibi_tel: '', not: '', aktif: true, baslangic_donem: buDonem() };
+  var h = '<div class="kart">' + alan('fNo', 'Daire numarası / adı', d.no) + alan('fKat', 'Kat (isteğe bağlı)', d.kat, 'örn. 2. kat') +
+    alan('fSahip', 'Ev sahibi adı', d.ev_sahibi_ad) + alan('fSahipTel', 'Ev sahibi telefonu', d.ev_sahibi_tel, '05xx', 'tel') +
+    alan('fOzel', 'Bu daireye özel aylık aidat (TL)', d.ozel_aidat === '' ? '' : String(d.ozel_aidat).replace('.', ','), 'Boş = normal aidat (' + paraKisa(tarifeTutari(buDonem())) + ')', 'decimal') +
+    '<p class="ipucu">Sadece bu daire farklı aidat ödüyorsa yazın. 0 yazarsanız bu daireye aidat yazılmaz.</p>' +
+    alan('fPay', 'Ek toplamalarda pay oranı', String(d.pay_orani || 1).replace('.', ','), '1', 'decimal') +
+    '<p class="ipucu">Ek toplama "pay oranına göre" paylaştırılırsa kullanılır. Hepsi 1 ise eşit bölünür; 0,5 yazılan daire yarım pay öder.</p>' +
+    (id ? '' : '<label class="alan"><span>Aidat hangi aydan başlasın?</span><input id="fBas" type="month" value="' + buDonem() + '"></label>') +
+    '<label class="alan"><span>Not</span><textarea id="fNot">' + esc(d.not) + '</textarea></label>' +
+    '<button class="btn ana tam" onclick="daireKaydet(\'' + (id || '') + '\')">Kaydet</button></div>';
+  pencere(id ? daireAdi(d) + ' bilgisi' : 'Yeni daire', h);
+}
+function daireKaydet(id) {
+  var eski = id ? daire(id) : {};
+  var oz = deger('fOzel'), pay = sayi(deger('fPay'));
+  if (!deger('fNo')) return alert('Daire numarasını yazın.');
+  if (oz && isNaN(sayi(oz))) return alert('Özel aidat sayı olmalı.');
+  var k = Object.assign({}, eski, { id: id || uid(), no: deger('fNo'), kat: deger('fKat'), ev_sahibi_ad: deger('fSahip'), ev_sahibi_tel: deger('fSahipTel'),
+    ozel_aidat: oz ? sayi(oz) : '', pay_orani: isNaN(pay) ? 1 : pay, not: $('fNot').value, aktif: id ? eski.aktif : true,
+    baslangic_donem: id ? eski.baslangic_donem : (deger('fBas') || buDonem()) });
+  var islemler = [{ tablo: 'Daireler', kayit: k }];
+  // özel aidat değiştiyse bu ay ve sonraki aidat kayıtlarını güncelle
+  if (id && String(eski.ozel_aidat) !== String(k.ozel_aidat)) {
+    D.Borclar.filter(function (b) { return b.daire_id === id && b.tur === 'Aidat' && b.donem >= buDonem(); }).forEach(function (b) {
+      islemler.push({ tablo: 'Borclar', kayit: Object.assign({}, b, { tutar: aidatTutari(b.donem, k) }) });
+    });
+  }
+  islem(islemler, 'Kaydedildi').then(function () { if (id) daireDetay(id); else { kapat(); aidatlariYaz(); } });
+}
+function daireCikar(id) {
+  var d = daire(id), hs = hesap(id);
+  var odemeVar = D.Odemeler.some(function (o) { return o.daire_id === id; });
+  if (!odemeVar) {
+    if (!confirm(daireAdi(d) + ' tamamen silinsin mi?\n\nBu daireden hiç ödeme alınmamış; daire, oturan bilgisi ve yazılmış aidat / ek toplama payları silinir.')) return;
+    var isl = [{ tablo: 'Daireler', sil: id }]
+      .concat(D.Sakinler.filter(function (s) { return s.daire_id === id; }).map(function (s) { return { tablo: 'Sakinler', sil: s.id }; }))
+      .concat(D.Borclar.filter(function (b) { return b.daire_id === id; }).map(function (b) { return { tablo: 'Borclar', sil: b.id }; }));
+    return islem(isl, 'Daire silindi').then(kapat);
+  }
+  if (!confirm(daireAdi(d) + ' listeden çıkarılsın mı?\n\nGeçmiş kayıtları silinmez, raporlarda görünmeye devam eder. Bundan sonra aidat yazılmaz.' +
+    (Math.abs(hs.toplam) > 0.004 ? '\n\nDikkat: hesabında ' + durumYazi(hs.toplam) + ' var.' : ''))) return;
+  islem([{ tablo: 'Daireler', kayit: Object.assign({}, d, { aktif: false }) }], 'Daire çıkarıldı').then(kapat);
+}
+function daireGeriAl(id) {
+  islem([{ tablo: 'Daireler', kayit: Object.assign({}, daire(id), { aktif: true, baslangic_donem: buDonem() }) }], 'Daire geri eklendi').then(function () { kapat(); aidatlariYaz(); });
+}
+
+function sakinFormu(daireId) {
+  var d = daire(daireId), s = aktifSakin(daireId);
+  var h = (s ? '<div class="kart bilgi kucuk"><strong>' + esc(s.ad) + '</strong> çıkış yapmış olarak kaydedilecek. Eski hesabı (borç ya da ön ödeme) kendi adıyla ayrı görünmeye devam eder; yeni kiracı temiz başlar.</div>' : '') +
+    '<div class="kart"><label class="alan"><span>Oturan</span><div class="secenekler">' +
+    '<label><input type="radio" name="fTip" value="Kiracı" checked><span>Kiracı</span></label>' +
+    '<label><input type="radio" name="fTip" value="Ev sahibi"><span>Ev sahibi oturuyor</span></label>' +
+    '<label><input type="radio" name="fTip" value="Bos"><span>Daire boş</span></label></div></label>' +
+    alan('sAd', 'Ad soyad', '') + alan('sTel', 'Telefon (WhatsApp)', '', '05xx xxx xx xx', 'tel') +
+    '<label class="alan"><span>Taşınma tarihi</span><input id="sGiris" type="date" value="' + bugun() + '"></label>' +
+    '<label class="onay"><input type="checkbox" id="sAidat" checked> <span>Bu ayın aidatı yeni oturana yazılsın</span></label>' +
+    '<p class="ipucu">İşaretli değilse bu ayın aidatı eski oturanın hesabında kalır.</p>' +
+    '<button class="btn ana tam" onclick="sakinKaydet(\'' + daireId + '\')">Kaydet</button></div>';
+  pencere(daireAdi(d) + ' · ' + (s ? 'Kiracı değiştir' : 'Oturan ekle'), h);
+}
+function sakinKaydet(daireId) {
+  var tip = document.querySelector('input[name="fTip"]:checked').value;
+  var eski = aktifSakin(daireId), tarih = deger('sGiris') || bugun();
+  if (tip !== 'Bos' && !deger('sAd')) return alert('Ad soyad yazın.');
+  var islemler = [];
+  if (eski) islemler.push({ tablo: 'Sakinler', kayit: Object.assign({}, eski, { cikis: tarih }) });
+  var yeniId = '';
+  if (tip !== 'Bos') {
+    yeniId = uid();
+    islemler.push({ tablo: 'Sakinler', kayit: { id: yeniId, daire_id: daireId, tip: tip, ad: deger('sAd'), tel: deger('sTel'), giris: tarih, cikis: '' } });
+  }
+  if ($('sAidat').checked) {
+    D.Borclar.filter(function (b) { return b.daire_id === daireId && b.tur === 'Aidat' && b.donem >= tarih.slice(0, 7); }).forEach(function (b) {
+      islemler.push({ tablo: 'Borclar', kayit: Object.assign({}, b, { sakin_id: yeniId }) });
+    });
+  }
+  islem(islemler, 'Kaydedildi').then(function () { daireDetay(daireId); });
+}
+function sakinDuzenle(id) {
+  var s = sakin(id);
+  var h = '<div class="kart">' + alan('sAd', 'Ad soyad', s.ad) + alan('sTel', 'Telefon (WhatsApp)', s.tel, '05xx', 'tel') +
+    '<label class="alan"><span>Durum</span><select id="sTip"><option' + (s.tip === 'Kiracı' ? ' selected' : '') + '>Kiracı</option><option' + (s.tip === 'Ev sahibi' ? ' selected' : '') + '>Ev sahibi</option></select></label>' +
+    '<label class="alan"><span>Not</span><textarea id="sNot">' + esc(s.not) + '</textarea></label>' +
+    '<button class="btn ana tam" onclick="sakinGuncelle(\'' + id + '\')">Kaydet</button></div>';
+  pencere('Oturan bilgisi', h);
+}
+function sakinGuncelle(id) {
+  var s = sakin(id);
+  if (!deger('sAd')) return alert('Ad soyad yazın.');
+  islem([{ tablo: 'Sakinler', kayit: Object.assign({}, s, { ad: deger('sAd'), tel: deger('sTel'), tip: $('sTip').value, not: $('sNot').value }) }], 'Kaydedildi')
+    .then(function () { daireDetay(s.daire_id); });
+}
+
+// ---------------------------------------------------------------- ödeme
+function odemeFormu(daireId, sakinId, odemeId) {
+  var o = odemeId ? D.Odemeler.find(function (x) { return x.id === odemeId; }) : null;
+  daireId = o ? o.daire_id : daireId;
+  var secenek = tumDaireler().filter(function (d) { return d.aktif || d.id === daireId; }).map(function (d) {
+    return '<option value="' + d.id + '"' + (d.id === daireId ? ' selected' : '') + '>' + esc(daireAdi(d) + ' · ' + oturanAdi(d)) + '</option>';
+  }).join('');
+  var iade = o ? o.tutar < 0 : false;
+  var h = '<div class="kart"><label class="alan"><span>Daire</span><select id="oDaire" onchange="odemeOneri()">' + secenek + '</select></label>' +
+    '<div id="oDurum" class="kucuk" style="margin:-4px 0 12px"></div>' +
+    '<label class="alan"><span>İşlem</span><div class="secenekler"><label><input type="radio" name="oTur" value="odeme"' + (iade ? '' : ' checked') + '><span>Ödeme alındı</span></label>' +
+    '<label><input type="radio" name="oTur" value="iade"' + (iade ? ' checked' : '') + '><span>Para iade edildi</span></label></div></label>' +
+    alan('oTutar', 'Tutar (TL)', o ? String(Math.abs(o.tutar)).replace('.', ',') : '', '', 'decimal') +
+    '<div class="dugmeler" id="oHizli"></div>' +
+    '<label class="alan"><span>Nasıl?</span><div class="secenekler"><label><input type="radio" name="oYontem" value="Havale"' + (!o || o.yontem !== 'Nakit' ? ' checked' : '') + '><span>🏦 Havale / EFT</span></label>' +
+    '<label><input type="radio" name="oYontem" value="Nakit"' + (o && o.yontem === 'Nakit' ? ' checked' : '') + '><span>💵 Nakit</span></label></div></label>' +
+    '<label class="alan"><span>Tarih</span><input id="oTarih" type="date" value="' + (o ? o.tarih : bugun()) + '"></label>' +
+    alan('oAciklama', 'Açıklama (isteğe bağlı)', o ? o.aciklama : '', 'örn. 6 aylık peşin') +
+    '<input type="hidden" id="oSakin" value="' + esc(o ? o.sakin_id : (sakinId || '')) + '">' +
+    '<button class="btn ana tam" onclick="odemeKaydet(\'' + (odemeId || '') + '\')">Kaydet</button>' +
+    (o ? '<button class="btn kirmizi tam" style="margin-top:8px" onclick="odemeSil(\'' + odemeId + '\')">Bu ödemeyi sil</button>' : '') + '</div>';
+  pencere(o ? 'Ödemeyi düzenle' : 'Ödeme al', h);
+  odemeOneri(!!o);
+}
+function odemeOneri(duzenleme) {
+  var id = $('oDaire').value, d = daire(id), hs = hesap(id);
+  var sakinId = $('oSakin').value, bakiye = hs.bakiye;
+  var eski = hs.eskiler.find(function (e) { return e.sakin_id === sakinId; });
+  if (eski) bakiye = eski.bakiye;
+  $('oDurum').innerHTML = (eski ? 'Eski oturan <b>' + esc(eski.ad) + '</b> için · ' : 'Ödeyen: <b>' + esc(odeyenAdi(sakinId || hs.aktifSakinId, d)) + '</b> · ') + durumEtiketi(bakiye);
+  var a = aidatTutari(buDonem(), d), hizli = '';
+  if (bakiye < -0.004) hizli += '<button class="btn kucuk cerceve" onclick="$(\'oTutar\').value=\'' + String(-bakiye).replace('.', ',') + '\'">Borcun tamamı ' + paraKisa(-bakiye) + '</button>';
+  if (a > 0) [1, 3, 6, 12].forEach(function (n) { hizli += '<button class="btn kucuk cerceve" onclick="$(\'oTutar\').value=\'' + String(a * n).replace('.', ',') + '\'">' + n + ' aylık ' + paraKisa(a * n) + '</button>'; });
+  $('oHizli').innerHTML = hizli;
+  if (!duzenleme && !$('oTutar').value && bakiye < -0.004) $('oTutar').value = String(-bakiye).replace('.', ',');
+}
+function odemeKaydet(odemeId) {
+  var tutar = sayi(deger('oTutar'));
+  if (!(tutar > 0)) return alert('Tutarı yazın.');
+  var daireId = $('oDaire').value, iade = document.querySelector('input[name="oTur"]:checked').value === 'iade';
+  var eski = odemeId ? D.Odemeler.find(function (x) { return x.id === odemeId; }) : null;
+  var sakinId = $('oSakin').value || (eski && eski.daire_id === daireId ? eski.sakin_id : hesap(daireId).aktifSakinId);
+  var k = { id: odemeId || uid(), daire_id: daireId, sakin_id: sakinId, tarih: deger('oTarih') || bugun(), tutar: iade ? -tutar : tutar,
+    yontem: document.querySelector('input[name="oYontem"]:checked').value, aciklama: deger('oAciklama') };
+  islem([{ tablo: 'Odemeler', kayit: k }], 'Kaydedildi').then(function () { if (!odemeId && !iade) odemeSonrasi(k); else daireDetay(daireId); });
+}
+function odemeSonrasi(o) {
+  var d = daire(o.daire_id), hs = hesap(o.daire_id), tel = oturanTel(d), s = sakin(o.sakin_id);
+  var metin = 'Merhaba' + (s ? ' ' + s.ad : '') + ',\n' + ayar('apartman_adi', '') + ' ' + daireAdi(d) + ' için ' + tarihYaz(o.tarih) + ' tarihli ' + para(o.tutar) +
+    ' ödemeniz alınmıştır. Teşekkür ederiz.\nGüncel durum: ' + durumYazi(hs.bakiye) + '\n\n' + ayar('yonetici_ad', 'Apartman Yönetimi');
+  var h = '<div class="kart" style="text-align:center"><div style="font-size:42px">✅</div><div class="orta">' + para(o.tutar) + '</div><div class="soluk">' + esc(daireAdi(d)) + ' · ' + esc(odeyenAdi(o.sakin_id, d)) + '</div>' +
+    '<div style="margin-top:10px">' + durumEtiketi(hs.bakiye) + '</div></div>' +
+    '<div class="izgara2">' + (tel ? '<a class="btn yesil" target="_blank" href="' + esc(waLink(tel, metin)) + '">💬 Teşekkür mesajı</a>' : '') +
+    '<button class="btn cerceve" onclick="raporAc(\'makbuz\', \'' + o.id + '\')">🧾 Makbuz (PDF)</button>' +
+    '<button class="btn cerceve" onclick="daireDetay(\'' + o.daire_id + '\')">Daireye git</button><button class="btn ana" onclick="kapat()">Tamam</button></div>';
+  pencere('Ödeme kaydedildi', h);
+}
+function odemeDuzenle(id) { odemeFormu(null, null, id); }
+function odemeSil(id) {
+  var o = D.Odemeler.find(function (x) { return x.id === id; });
+  if (!confirm(para(Math.abs(o.tutar)) + ' tutarındaki kayıt silinsin mi?')) return;
+  islem([{ tablo: 'Odemeler', sil: id }], 'Silindi').then(function () { daireDetay(o.daire_id); });
+}
+
+// ---------------------------------------------------------------- giderler
+SAYFALAR.giderler = function () {
+  var m = SECILI_DONEM || buDonem(), o = donemOzeti(m);
+  var h = '<h2>Giderler</h2><div class="ay-sec"><button onclick="ayDegis(-1)">‹</button><strong>' + donemAdi(m) + '</strong><button onclick="ayDegis(1)">›</button></div>' +
+    '<div class="kart"><div class="satir"><span>Bu ay harcanan</span><span class="orta kirmizi">' + para(o.harcanan) + '</span></div>';
+  var kat = {};
+  o.giderler.forEach(function (g) { kat[g.kategori] = (kat[g.kategori] || 0) + g.tutar; });
+  Object.keys(kat).sort(function (a, b) { return kat[b] - kat[a]; }).forEach(function (k) {
+    h += '<div class="satir kucuk soluk"><span>' + esc(k) + '</span><span>' + paraKisa(kat[k]) + '</span></div>';
+  });
+  h += '</div><button class="btn ana tam" onclick="giderFormu()">＋ Gider ekle</button><h3>Kalemler</h3><div class="liste">';
+  var l = o.giderler.slice().sort(function (a, b) { return String(b.tarih).localeCompare(String(a.tarih)); });
+  if (!l.length) h += '<div class="bos">Bu ay gider yok.</div>';
+  l.forEach(function (g) {
+    h += '<div class="tikla" onclick="giderFormu(\'' + g.id + '\')"><div class="satir"><div><strong>' + esc(g.kategori) + '</strong>' + (g.aciklama ? ' · ' + esc(g.aciklama) : '') +
+      '<div class="soluk kucuk">' + tarihYaz(g.tarih) + ' · ' + esc(g.odeme) + (g.fis_url ? ' · 📎 fiş' : '') + '</div></div><span class="hareket-tutar kirmizi">' + paraKisa(g.tutar) + '</span></div></div>';
+  });
+  h += '</div><h3>Düzenli giderler</h3><div class="liste">';
+  if (!D.DuzenliGiderler.length) h += '<div class="bos">Temizlikçi, asansör bakımı gibi her ay tekrarlanan giderleri buraya ekleyin. Zamanı gelince Özet ekranında hatırlatılır.</div>';
+  D.DuzenliGiderler.forEach(function (z) {
+    h += '<div class="tikla" onclick="duzenliFormu(\'' + z.id + '\')"><div class="satir"><div><strong>' + esc(z.kategori) + '</strong>' + (z.aciklama ? ' · ' + esc(z.aciklama) : '') +
+      '<div class="soluk kucuk">Her ayın ' + (z.gun || 1) + '. günü · ' + esc(z.odeme) + (z.aktif ? '' : ' · durduruldu') + '</div></div><span class="hareket-tutar">' + paraKisa(z.tutar) + '</span></div></div>';
+  });
+  h += '</div><button class="btn cerceve tam" onclick="duzenliFormu()">＋ Düzenli gider ekle</button>';
+  return h;
+};
+function ayDegis(n) { SECILI_DONEM = donemKaydir(SECILI_DONEM || buDonem(), n); ciz(); }
+
+function kategoriSecenekleri(secili) {
+  var l = D.Kategoriler.map(function (k) { return k.ad; });
+  if (secili && l.indexOf(secili) < 0) l.push(secili);
+  return l.map(function (k) { return '<option' + (k === secili ? ' selected' : '') + '>' + esc(k) + '</option>'; }).join('');
+}
+function giderFormu(id) {
+  var g = id ? D.Giderler.find(function (x) { return x.id === id; }) : null;
+  var h = '<div class="kart"><label class="alan"><span>Ne için?</span><select id="gKat">' + kategoriSecenekleri(g ? g.kategori : '') + '</select></label>' +
+    alan('gAciklama', 'Açıklama', g ? g.aciklama : '', 'örn. Kasım temizlik ücreti') +
+    alan('gTutar', 'Tutar (TL)', g ? String(g.tutar).replace('.', ',') : '', '', 'decimal') +
+    '<label class="alan"><span>Nereden ödendi?</span><div class="secenekler"><label><input type="radio" name="gOdeme" value="Banka"' + (!g || g.odeme !== 'Nakit' ? ' checked' : '') + '><span>🏦 Banka</span></label>' +
+    '<label><input type="radio" name="gOdeme" value="Nakit"' + (g && g.odeme === 'Nakit' ? ' checked' : '') + '><span>💵 Nakit</span></label></div></label>' +
+    '<label class="alan"><span>Tarih</span><input id="gTarih" type="date" value="' + (g ? g.tarih : bugun()) + '"></label>' +
+    '<label class="alan"><span>Fiş / fatura fotoğrafı (isteğe bağlı)</span><input id="gFis" type="file" accept="image/*,application/pdf"></label>' +
+    (g && g.fis_url ? '<p class="kucuk"><a target="_blank" href="' + esc(g.fis_url) + '">📎 Kayıtlı fişi aç</a></p>' : '') +
+    '<button class="btn ana tam" onclick="giderKaydet(\'' + (id || '') + '\')">Kaydet</button>' +
+    (g ? '<button class="btn kirmizi tam" style="margin-top:8px" onclick="giderSil(\'' + id + '\')">Gideri sil</button>' : '') + '</div>';
+  pencere(g ? 'Gideri düzenle' : 'Gider ekle', h);
+}
+function dosyaOku(input) {
+  return new Promise(function (tamam) {
+    var f = input && input.files && input.files[0];
+    if (!f) return tamam(null);
+    var r = new FileReader();
+    r.onload = function () { tamam({ base64: String(r.result).split(',')[1], ad: f.name, tur: f.type }); };
+    r.readAsDataURL(f);
+  });
+}
+function giderKaydet(id) {
+  var tutar = sayi(deger('gTutar'));
+  if (!(tutar > 0)) return alert('Tutarı yazın.');
+  var g = id ? D.Giderler.find(function (x) { return x.id === id; }) : {};
+  var tarih = deger('gTarih') || bugun();
+  var k = Object.assign({}, g, { id: id || uid(), kategori: $('gKat').value, aciklama: deger('gAciklama'), tutar: tutar, tarih: tarih, donem: tarih.slice(0, 7),
+    odeme: document.querySelector('input[name="gOdeme"]:checked').value });
+  bekle(true);
+  dosyaOku($('gFis')).then(function (dosya) {
+    if (!dosya) return null;
+    return api('dosyaYukle', JETON, dosya.base64, tarih + '_' + k.kategori + '_' + dosya.ad, dosya.tur);
+  }).then(function (url) {
+    if (url) k.fis_url = url;
+    return islem([{ tablo: 'Giderler', kayit: k }], 'Gider kaydedildi');
+  }).then(function () { SECILI_DONEM = k.donem; kapat(); if (AKTIF !== 'giderler') sayfa('giderler'); })
+    .catch(function (e) { bekle(false); alert(e.message); });
+}
+function giderSil(id) {
+  if (!confirm('Bu gider silinsin mi?')) return;
+  islem([{ tablo: 'Giderler', sil: id }], 'Silindi').then(kapat);
+}
+function duzenliFormu(id) {
+  var z = id ? D.DuzenliGiderler.find(function (x) { return x.id === id; }) : null;
+  var h = '<div class="kart"><label class="alan"><span>Ne için?</span><select id="zKat">' + kategoriSecenekleri(z ? z.kategori : 'Temizlikçi') + '</select></label>' +
+    alan('zAciklama', 'Açıklama', z ? z.aciklama : '', 'örn. Temizlikçi Ayşe Hanım') +
+    alan('zTutar', 'Aylık tutar (TL)', z ? String(z.tutar).replace('.', ',') : '', '', 'decimal') +
+    alan('zGun', 'Her ayın kaçında ödeniyor?', z ? z.gun : '1', '', 'number') +
+    '<label class="alan"><span>Nereden ödeniyor?</span><div class="secenekler"><label><input type="radio" name="zOdeme" value="Banka"' + (!z || z.odeme !== 'Nakit' ? ' checked' : '') + '><span>🏦 Banka</span></label>' +
+    '<label><input type="radio" name="zOdeme" value="Nakit"' + (z && z.odeme === 'Nakit' ? ' checked' : '') + '><span>💵 Nakit</span></label></div></label>' +
+    '<label class="onay"><input type="checkbox" id="zAktif"' + (!z || z.aktif ? ' checked' : '') + '> <span>Aktif (her ay hatırlat)</span></label>' +
+    '<p class="ipucu">Zamanı gelince Özet ekranında "Ekle" düğmesiyle tek dokunuşla gider olarak eklenir. Tutar o ay farklıysa sonra düzenleyebilirsiniz.</p>' +
+    '<button class="btn ana tam" onclick="duzenliKaydet(\'' + (id || '') + '\')">Kaydet</button>' +
+    (z ? '<button class="btn kirmizi tam" style="margin-top:8px" onclick="duzenliSil(\'' + id + '\')">Sil</button>' : '') + '</div>';
+  pencere(z ? 'Düzenli gider' : 'Yeni düzenli gider', h);
+}
+function duzenliKaydet(id) {
+  var tutar = sayi(deger('zTutar'));
+  if (!(tutar > 0)) return alert('Tutarı yazın.');
+  var k = { id: id || uid(), kategori: $('zKat').value, aciklama: deger('zAciklama'), tutar: tutar,
+    gun: Math.min(28, Math.max(1, Number(deger('zGun')) || 1)), odeme: document.querySelector('input[name="zOdeme"]:checked').value, aktif: $('zAktif').checked };
+  islem([{ tablo: 'DuzenliGiderler', kayit: k }], 'Kaydedildi').then(kapat);
+}
+function duzenliSil(id) { if (confirm('Düzenli gider silinsin mi? (Daha önce eklenmiş giderler silinmez.)')) islem([{ tablo: 'DuzenliGiderler', sil: id }], 'Silindi').then(kapat); }
+function duzenliEkle(id) {
+  var z = D.DuzenliGiderler.find(function (x) { return x.id === id; }), t = bugun();
+  islem([{ tablo: 'Giderler', kayit: { id: uid(), kategori: z.kategori, aciklama: z.aciklama || (donemAdi(buDonem()) + ' ' + z.kategori.toLowerCase()), tutar: z.tutar,
+    tarih: t, donem: t.slice(0, 7), odeme: z.odeme, duzenli_id: z.id, fis_url: '' } }], z.kategori + ' gideri eklendi');
+}
+
+// ---------------------------------------------------------------- aidat ve ek toplamalar
+SAYFALAR.aidat = function () {
+  var simdi = tarifeTutari(buDonem());
+  var gelecek = D.AidatTarifesi.filter(function (t) { return t.baslangic_donem > buDonem(); }).sort(function (a, b) { return a.baslangic_donem.localeCompare(b.baslangic_donem); });
+  var ozel = aktifDaireler().filter(function (d) { return d.ozel_aidat !== '' && d.ozel_aidat !== null && !isNaN(d.ozel_aidat); });
+  var h = '<h2>Aidat</h2><div class="kart"><div class="soluk">Aylık aidat (her daire)</div><div class="buyuk">' + para(simdi) + '</div>' +
+    (gelecek.length ? '<div class="turuncu kucuk">' + donemAdi(gelecek[0].baslangic_donem) + ' itibarıyla ' + paraKisa(gelecek[0].tutar) + ' olacak.</div>' : '') +
+    (ozel.length ? '<div class="soluk kucuk">Özel aidatlı daireler: ' + esc(ozel.map(function (d) { return daireAdi(d) + ' ' + paraKisa(d.ozel_aidat); }).join(', ')) + '</div>' : '') +
+    '<div class="soluk kucuk" style="margin-top:6px">Aidatlar her ay başında, program ilk açıldığında bütün dairelere kendiliğinden yazılır. Ön ödemesi olan dairelerde bakiyeden düşer.</div>' +
+    '<div class="dugmeler"><button class="btn ana" onclick="tarifeFormu()">Aidatı değiştir</button></div></div>';
+  h += '<h3>Aidat geçmişi</h3><div class="liste">';
+  D.AidatTarifesi.slice().sort(function (a, b) { return b.baslangic_donem.localeCompare(a.baslangic_donem); }).forEach(function (t) {
+    h += '<div><div class="satir"><span>' + donemAdi(t.baslangic_donem) + ' itibarıyla' + (t.aciklama ? '<span class="soluk kucuk"> · ' + esc(t.aciklama) + '</span>' : '') + '</span><strong>' + paraKisa(t.tutar) + '</strong></div></div>';
+  });
+  h += '</div><h3>Ek toplamalar</h3><div class="kart bilgi kucuk">Asansör tamiri, boya, kapı değişimi gibi aidatın karşılamadığı işler için dairelerden ayrıca para toplamak için kullanın. Tutar dairelere bölünür ve hesaplarına borç olarak yazılır.</div>' +
+    '<button class="btn ana tam" onclick="ekFormu()">＋ Yeni ek toplama</button><div class="liste" style="margin-top:12px">';
+  var ekler = D.EkToplamalar.slice().sort(function (a, b) { return String(b.tarih).localeCompare(String(a.tarih)); });
+  if (!ekler.length) h += '<div class="bos">Ek toplama yok.</div>';
+  ekler.forEach(function (e) {
+    var bl = D.Borclar.filter(function (b) { return b.ek_id === e.id; });
+    h += '<div class="tikla" onclick="ekDetay(\'' + e.id + '\')"><div class="satir"><div><strong>' + esc(e.baslik) + '</strong><div class="soluk kucuk">' + donemAdi(e.donem) + ' · ' + bl.length + ' daire</div></div><span class="hareket-tutar">' + paraKisa(e.toplam) + '</span></div></div>';
+  });
+  return h + '</div>';
+};
+
+function tarifeFormu() {
+  var h = '<div class="kart">' + alan('tTutar', 'Yeni aylık aidat (TL)', '', String(tarifeTutari(buDonem())), 'decimal') +
+    '<label class="alan"><span>Hangi aydan itibaren?</span><input id="tDonem" type="month" value="' + donemKaydir(buDonem(), 1) + '"></label>' +
+    alan('tAciklama', 'Açıklama (isteğe bağlı)', '', 'örn. Toplantı kararı') +
+    '<p class="ipucu">Seçtiğiniz aydan önceki aidatlar değişmez. Seçilen ay zaten yazılmışsa o ayın aidatları da yeni tutara güncellenir (özel aidatlı daireler hariç).</p>' +
+    '<button class="btn ana tam" onclick="tarifeKaydet()">Kaydet</button></div>';
+  pencere('Aidatı değiştir', h);
+}
+function tarifeKaydet() {
+  var tutar = sayi(deger('tTutar')), donem = deger('tDonem');
+  if (!(tutar >= 0) || !donem) return alert('Tutarı ve ayı yazın.');
+  var islemler = [], ayni = D.AidatTarifesi.find(function (t) { return t.baslangic_donem === donem; });
+  islemler.push({ tablo: 'AidatTarifesi', kayit: { id: ayni ? ayni.id : uid(), baslangic_donem: donem, tutar: tutar, aciklama: deger('tAciklama') } });
+  var sonra = D.AidatTarifesi.filter(function (t) { return t.baslangic_donem > donem; }).map(function (t) { return t.baslangic_donem; }).sort()[0];
+  D.Borclar.filter(function (b) { return b.tur === 'Aidat' && b.donem >= donem && (!sonra || b.donem < sonra); }).forEach(function (b) {
+    var d = daire(b.daire_id);
+    if (d && (d.ozel_aidat === '' || d.ozel_aidat === null || isNaN(d.ozel_aidat))) islemler.push({ tablo: 'Borclar', kayit: Object.assign({}, b, { tutar: tutar }) });
+  });
+  islem(islemler, 'Aidat güncellendi').then(function () { kapat(); aidatlariYaz(); });
+}
+
+function ekFormu(id) {
+  var e = id ? D.EkToplamalar.find(function (x) { return x.id === id; }) : null;
+  var secili = e ? String(e.daireler).split(',') : aktifDaireler().map(function (d) { return d.id; });
+  var dl = tumDaireler().filter(function (d) { return d.aktif || secili.indexOf(d.id) >= 0; }).map(function (d) {
+    return '<label class="onay"><input type="checkbox" class="eDaire" value="' + d.id + '"' + (secili.indexOf(d.id) >= 0 ? ' checked' : '') + ' onchange="ekOnizle()"> <span>' + esc(daireAdi(d) + ' · ' + oturanAdi(d)) + '</span></label>';
+  }).join('');
+  var h = '<div class="kart">' + alan('eBaslik', 'Ne için?', e ? e.baslik : '', 'örn. Asansör motor tamiri') +
+    '<label class="alan"><span>Açıklama (raporda görünür)</span><textarea id="eAciklama" placeholder="örn. Asansör motoru arızalandı, 3 firmadan teklif alındı, en uygunu seçildi.">' + esc(e ? e.aciklama : '') + '</textarea></label>' +
+    '<label class="alan"><span>Tutar nasıl girilsin?</span><div class="secenekler"><label><input type="radio" name="eGiris" value="toplam" checked onchange="ekOnizle()"><span>Toplam tutar</span></label>' +
+    '<label><input type="radio" name="eGiris" value="daire" onchange="ekOnizle()"><span>Daire başı tutar</span></label></div></label>' +
+    alan('eTutar', 'Tutar (TL)', e ? String(e.toplam).replace('.', ',') : '', '', 'decimal', ' oninput="ekOnizle()"') +
+    '<label class="alan"><span>Nasıl bölünsün?</span><div class="secenekler"><label><input type="radio" name="eDagitim" value="esit"' + (!e || e.dagitim !== 'oran' ? ' checked' : '') + ' onchange="ekOnizle()"><span>Eşit</span></label>' +
+    '<label><input type="radio" name="eDagitim" value="oran"' + (e && e.dagitim === 'oran' ? ' checked' : '') + ' onchange="ekOnizle()"><span>Pay oranına göre</span></label></div></label>' +
+    '<label class="alan"><span>Hangi aya yazılsın?</span><input id="eDonem" type="month" value="' + (e ? e.donem : buDonem()) + '"></label>' +
+    '<label class="alan"><span>Katılan daireler</span></label>' + dl +
+    '<div id="eOnizleme" class="kart bilgi kucuk" style="margin-top:10px"></div>' +
+    '<button class="btn ana tam" onclick="ekKaydet(\'' + (id || '') + '\')">' + (e ? 'Güncelle' : 'Dairelere paylaştır') + '</button></div>';
+  pencere(e ? 'Ek toplamayı düzenle' : 'Yeni ek toplama', h);
+  ekOnizle();
+}
+function ekDagit() {
+  var secili = Array.prototype.slice.call(document.querySelectorAll('.eDaire:checked')).map(function (x) { return x.value; });
+  var tutar = sayi(deger('eTutar')), oran = document.querySelector('input[name="eDagitim"]:checked').value === 'oran';
+  var daireBasi = document.querySelector('input[name="eGiris"]:checked').value === 'daire';
+  if (!(tutar > 0) || !secili.length) return null;
+  var paylar = secili.map(function (id) { var d = daire(id); return oran ? (Number(d.pay_orani) >= 0 ? Number(d.pay_orani) : 1) : 1; });
+  var toplamPay = paylar.reduce(function (t, p) { return t + p; }, 0);
+  if (!(toplamPay > 0)) return null;
+  var toplam = daireBasi ? yuvarla(tutar * (oran ? toplamPay : secili.length)) : tutar;
+  var dagilim = [], dagitilan = 0;
+  secili.forEach(function (id, i) {
+    var t = i === secili.length - 1 ? yuvarla(toplam - dagitilan) : yuvarla(toplam * paylar[i] / toplamPay);
+    dagitilan = yuvarla(dagitilan + t);
+    dagilim.push({ daire_id: id, tutar: t });
+  });
+  return { toplam: toplam, dagilim: dagilim, oran: oran };
+}
+function ekOnizle() {
+  var r = ekDagit(), el = $('eOnizleme');
+  if (!el) return;
+  if (!r) { el.innerHTML = 'Tutarı yazın ve en az bir daire seçin.'; return; }
+  el.innerHTML = '<strong>Toplam ' + para(r.toplam) + '</strong><br>' + r.dagilim.map(function (x) { return esc(daireAdi(daire(x.daire_id))) + ': ' + paraKisa(x.tutar); }).join(' · ');
+}
+function ekKaydet(id) {
+  var r = ekDagit();
+  if (!deger('eBaslik')) return alert('Ne için toplandığını yazın.');
+  if (!r) return alert('Tutarı yazın ve en az bir daire seçin.');
+  var donem = deger('eDonem') || buDonem(), ekId = id || uid(), t = bugun();
+  var islemler = [{ tablo: 'EkToplamalar', kayit: { id: ekId, tarih: id ? (D.EkToplamalar.find(function (x) { return x.id === id; }).tarih) : t, donem: donem,
+    baslik: deger('eBaslik'), aciklama: $('eAciklama').value, toplam: r.toplam, dagitim: r.oran ? 'oran' : 'esit', daireler: r.dagilim.map(function (x) { return x.daire_id; }).join(',') } }];
+  var eskiler = D.Borclar.filter(function (b) { return b.ek_id === ekId; });
+  r.dagilim.forEach(function (x) {
+    var eski = eskiler.find(function (b) { return b.daire_id === x.daire_id; });
+    var s = aktifSakin(x.daire_id);
+    islemler.push({ tablo: 'Borclar', kayit: { id: eski ? eski.id : uid(), daire_id: x.daire_id, sakin_id: eski ? eski.sakin_id : (s ? s.id : ''), donem: donem,
+      tur: 'Ek toplama', baslik: deger('eBaslik'), tutar: x.tutar, ek_id: ekId, tarih: eski ? eski.tarih : t } });
+  });
+  eskiler.filter(function (b) { return !r.dagilim.some(function (x) { return x.daire_id === b.daire_id; }); }).forEach(function (b) { islemler.push({ tablo: 'Borclar', sil: b.id }); });
+  islem(islemler, id ? 'Ek toplama güncellendi' : 'Dairelere paylaştırıldı').then(function () { ekDetay(ekId); });
+}
+function ekDetay(id) {
+  var e = D.EkToplamalar.find(function (x) { return x.id === id; });
+  if (!e) return kapat();
+  var bl = D.Borclar.filter(function (b) { return b.ek_id === id; });
+  var h = '<div class="kart"><div class="orta">' + para(e.toplam) + '</div><div class="soluk">' + donemAdi(e.donem) + ' · ' + (e.dagitim === 'oran' ? 'pay oranına göre' : 'eşit') + ' bölündü</div>' +
+    (e.aciklama ? '<p>' + esc(e.aciklama) + '</p>' : '') + '</div><div class="liste">';
+  bl.forEach(function (b) {
+    var d = daire(b.daire_id), hs = hesap(b.daire_id);
+    var ac = hs.acik.concat([].concat.apply([], hs.eskiler.map(function (x) { return x.acik; }))).find(function (x) { return x.id === b.id; });
+    h += '<div><div class="satir"><span>' + esc(daireAdi(d)) + ' · ' + esc(odeyenAdi(b.sakin_id, d)) + '</span><span>' + paraKisa(b.tutar) + ' ' +
+      (ac ? '<span class="etiket borc">kalan ' + paraKisa(ac.kalan) + '</span>' : '<span class="etiket alacak">ödendi</span>') + '</span></div></div>';
+  });
+  h += '</div><div class="izgara2"><button class="btn cerceve" onclick="raporAc(\'ek\', \'' + id + '\')">📄 Duyuru PDF</button>' +
+    '<a class="btn yesil" target="_blank" href="' + esc('https://wa.me/?text=' + encodeURIComponent(ekDuyuruMetni(e))) + '">💬 Gruba duyur</a>' +
+    '<button class="btn cerceve" onclick="ekFormu(\'' + id + '\')">✏ Düzenle</button><button class="btn kirmizi" onclick="ekSil(\'' + id + '\')">Sil</button></div>';
+  pencere(e.baslik, h);
+}
+function ekDuyuruMetni(e) {
+  var bl = D.Borclar.filter(function (b) { return b.ek_id === e.id; });
+  var esit = bl.every(function (b) { return Math.abs(b.tutar - bl[0].tutar) < 0.01; });
+  var t = 'Sayın ' + ayar('apartman_adi', 'apartman') + ' sakinleri,\n\n' + e.baslik + ' için toplam ' + para(e.toplam) + ' gerekmektedir.\n';
+  if (e.aciklama) t += e.aciklama + '\n';
+  t += '\n' + (esit && bl.length ? 'Daire başına düşen pay: ' + para(bl[0].tutar) + '\n' : bl.map(function (b) { return daireAdi(daire(b.daire_id)) + ': ' + paraKisa(b.tutar); }).join('\n') + '\n');
+  t += 'Bu tutar ' + donemAdi(e.donem) + ' aidatıyla birlikte hesabınıza yazılmıştır.\n';
+  if (ayar('iban', '')) t += '\nIBAN: ' + ayar('iban', '') + (ayar('iban_ad', '') ? ' (' + ayar('iban_ad', '') + ')' : '') + '\n';
+  return t + '\nTeşekkürler,\n' + ayar('yonetici_ad', 'Apartman Yönetimi');
+}
+function ekSil(id) {
+  if (!confirm('Bu ek toplama ve dairelere yazılan payları silinsin mi? (Alınmış ödemeler silinmez, dairelerin bakiyesine alacak olarak geçer.)')) return;
+  islem([{ tablo: 'EkToplamalar', sil: id }].concat(D.Borclar.filter(function (b) { return b.ek_id === id; }).map(function (b) { return { tablo: 'Borclar', sil: b.id }; })), 'Silindi').then(kapat);
+}
+
+// ---------------------------------------------------------------- raporlar
+SAYFALAR.raporlar = function () {
+  var m = buDonem(), yil = m.slice(0, 4), aylar = '', yillar = {};
+  var bas = ayar('baslangic_donem', m);
+  donemler(bas < m ? bas : m, m).reverse().forEach(function (d) { aylar += '<option value="' + d + '">' + donemAdi(d) + '</option>'; yillar[d.slice(0, 4)] = 1; });
+  var daireler = tumDaireler().map(function (d) { return '<option value="' + d.id + '">' + esc(daireAdi(d) + ' · ' + oturanAdi(d)) + '</option>'; }).join('');
+  return '<h2>Raporlar</h2><div class="kart bilgi kucuk">Raporlar herkesin anlayacağı sade bir dille hazırlanır. Önce önizleyin, sonra PDF oluşturup WhatsApp grubuna gönderin.</div>' +
+    '<div class="kart"><strong>📅 Aylık rapor</strong><div class="soluk kucuk">O ay ne toplandı, ne harcandı, kasada ne kaldı, hangi daire ödedi.</div>' +
+    '<label class="alan" style="margin-top:10px"><select id="rAy">' + aylar + '</select></label><button class="btn ana tam" onclick="raporAc(\'aylik\', $(\'rAy\').value)">Önizle</button></div>' +
+    '<div class="kart"><strong>📆 Yıllık rapor</strong><div class="soluk kucuk">Ay ay gelir-gider, harcamaların dağılımı, daire bazında yıllık durum. Yıllık toplantı için.</div>' +
+    '<label class="alan" style="margin-top:10px"><select id="rYil">' + Object.keys(yillar).sort().reverse().map(function (y) { return '<option>' + y + '</option>'; }).join('') + '</select></label>' +
+    '<button class="btn ana tam" onclick="raporAc(\'yillik\', $(\'rYil\').value)">Önizle</button></div>' +
+    '<div class="kart"><strong>🚪 Daire hesap dökümü</strong><div class="soluk kucuk">Bir dairenin bütün aidat, ödeme ve bakiye geçmişi.</div>' +
+    '<label class="alan" style="margin-top:10px"><select id="rDaire">' + daireler + '</select></label><button class="btn ana tam" onclick="raporAc(\'dokum\', $(\'rDaire\').value)">Önizle</button></div>' +
+    '<div class="kart"><strong>⚠ Borç durumu</strong><div class="soluk kucuk">Bütün dairelerin güncel borç / ön ödeme durumu.</div>' +
+    '<button class="btn ana tam" style="margin-top:10px" onclick="raporAc(\'borclar\')">Önizle</button></div>' +
+    '<div class="kart"><strong>📢 Duyuru</strong><div class="soluk kucuk">Apartman grubuna gönderilecek hazır mesajlar.</div><button class="btn cerceve tam" style="margin-top:10px" onclick="duyuruFormu()">Duyuru hazırla</button></div>';
+};
+
+var RAPOR = null;
+function raporAc(tur, arg) {
+  var r = RAPORLAR[tur](arg);
+  RAPOR = r;
+  var h = '<iframe class="onizleme" id="rOnizleme"></iframe><div class="dugmeler"><button class="btn ana" onclick="raporPdf()">📄 PDF oluştur</button>' +
+    (r.wa ? '<a class="btn yesil" target="_blank" href="' + esc(r.wa) + '">💬 WhatsApp metni</a>' : '') + '</div><div id="rSonuc"></div>';
+  pencere(r.baslik, h);
+  $('rOnizleme').srcdoc = r.html;
+}
+function raporPdf() {
+  bekle(true);
+  api('pdfOlustur', JETON, RAPOR.html, RAPOR.dosya).then(function (f) {
+    bekle(false);
+    $('rSonuc').innerHTML = '<div class="kart bilgi"><strong>PDF hazır ✓</strong><div class="soluk kucuk">Google Drive\'da “Apartman Yönetimi / Raporlar” klasörüne kaydedildi. Açıp paylaş düğmesiyle WhatsApp\'a gönderebilirsiniz.</div>' +
+      '<div class="dugmeler"><a class="btn ana" target="_blank" href="' + esc(f.url) + '">PDF\'i aç</a><a class="btn cerceve" target="_blank" href="' + esc(f.indir) + '">İndir</a></div></div>';
+  }).catch(function (e) { bekle(false); alert('PDF oluşturulamadı: ' + e.message); });
+}
+
+// --- rapor HTML yardımcıları
+function rSablon(baslik, alt, govde) {
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' +
+    'body{font-family:Arial,Helvetica,sans-serif;color:#1d2330;font-size:12px;margin:24px;}' +
+    'h1{font-size:20px;margin:0 0 2px;color:#1f5fbf}h2{font-size:14px;margin:18px 0 6px;border-bottom:2px solid #1f5fbf;padding-bottom:3px}' +
+    '.alt{color:#6b7280;margin-bottom:12px}table{width:100%;border-collapse:collapse;margin:4px 0}' +
+    'th{background:#eef2f8;text-align:left;padding:6px;font-size:11px}td{padding:6px;border-bottom:1px solid #e3e6eb;vertical-align:top}' +
+    '.r{text-align:right;white-space:nowrap}.b{font-weight:bold}.k{color:#d62828}.y{color:#1e8e3e}.s{color:#6b7280}' +
+    '.kutu{background:#f4f7fb;border:1px solid #d9e2ef;padding:10px 12px;margin:8px 0;line-height:1.55}.toplam td{font-weight:bold;border-top:2px solid #1d2330}' +
+    '.alt-bilgi{margin-top:22px;color:#6b7280;font-size:10.5px;border-top:1px solid #e3e6eb;padding-top:8px}' +
+    '</style></head><body><h1>' + esc(baslik) + '</h1><div class="alt">' + esc(alt) + '</div>' + govde + rAlt() + '</body></html>';
+}
+function rAlt() {
+  var p = [];
+  if (ayar('yonetici_ad', '')) p.push('Yönetici: ' + esc(ayar('yonetici_ad', '')) + (ayar('yonetici_tel', '') ? ' · ' + esc(ayar('yonetici_tel', '')) : ''));
+  if (ayar('iban', '')) p.push('Aidat IBAN: ' + esc(ayar('iban', '')) + (ayar('iban_ad', '') ? ' (' + esc(ayar('iban_ad', '')) + ')' : ''));
+  p.push('Rapor tarihi: ' + tarihYaz(bugun()));
+  return '<div class="alt-bilgi">' + p.join('<br>') + '</div>';
+}
+function rTablo(basliklar, satirlar, hizalar, toplamSatiri) {
+  var h = '<table><tr>' + basliklar.map(function (b, i) { return '<th' + (hizalar[i] === 'r' ? ' class="r"' : '') + '>' + esc(b) + '</th>'; }).join('') + '</tr>';
+  satirlar.forEach(function (s) { h += '<tr>' + s.map(function (c, i) { return '<td' + (hizalar[i] === 'r' ? ' class="r"' : '') + '>' + c + '</td>'; }).join('') + '</tr>'; });
+  if (toplamSatiri) h += '<tr class="toplam">' + toplamSatiri.map(function (c, i) { return '<td' + (hizalar[i] === 'r' ? ' class="r"' : '') + '>' + c + '</td>'; }).join('') + '</tr>';
+  return h + '</table>';
+}
+function apAdi() { return ayar('apartman_adi', 'Apartman'); }
+
+var RAPORLAR = {};
+
+RAPORLAR.aylik = function (donem) {
+  var o = donemOzeti(donem), t = donemTahsilat(donem);
+  var onceki = kasa(ayinSonGunu(donemKaydir(donem, -1))), sonra = kasa(ayinSonGunu(donem));
+  var giren = yuvarla(o.odemeler.reduce(function (s, x) { return s + x.tutar; }, 0));
+  var aidat = aktifDaireler().length ? aidatTutari(donem, aktifDaireler()[0]) : 0;
+  var ekler = D.EkToplamalar.filter(function (e) { return e.donem === donem; });
+  var kat = {};
+  o.giderler.forEach(function (g) { kat[g.kategori] = (kat[g.kategori] || 0) + g.tutar; });
+  var enBuyuk = Object.keys(kat).sort(function (a, b) { return kat[b] - kat[a]; });
+
+  var g = '<div class="kutu"><b>Kısaca:</b> ' + donemAdi(donem) + ' ayında her daireden <b>' + para(aidat) + '</b> aidat istendi' +
+    (o.ekIstenen ? ', ayrıca ek toplama olarak toplam <b>' + para(o.ekIstenen) + '</b> paylaştırıldı' : '') + '. ' +
+    'Bu ay dairelerden istenen tutarın (aidat' + (o.ekIstenen ? ' ve ek toplama' : '') + ') <b>' + para(t.odenen) + '</b> kadarı ödendi' + (t.kalan > 0.004 ? ', <b class="k">' + para(t.kalan) + '</b> henüz ödenmedi' : ', tamamı ödendi') + '. ' +
+    'Ay içinde kasaya toplam <b>' + para(giren) + '</b> girdi, apartman için <b>' + para(o.harcanan) + '</b> harcandı' +
+    (enBuyuk.length ? ' (en büyük kalem: ' + esc(enBuyuk[0]) + ' ' + para(kat[enBuyuk[0]]) + ')' : '') + '. ' +
+    'Ay sonunda kasada <b>' + para(sonra.toplam) + '</b> bulunuyor.</div>';
+
+  g += '<h2>1. Kasa</h2>' + rTablo(['', 'Tutar'], [
+    ['Önceki aydan devreden', para(onceki.toplam)],
+    ['Bu ay kasaya giren (ödemeler)', '<span class="y">+' + para(giren) + '</span>'],
+    ['Bu ay harcanan (giderler)', '<span class="k">-' + para(o.harcanan) + '</span>']
+  ], ['', 'r'], ['Ay sonu kasa', para(sonra.toplam)]) +
+    '<div class="s">Ay sonu kasanın ' + para(sonra.banka) + ' tutarı bankada, ' + para(sonra.nakit) + ' tutarı nakit olarak duruyor.</div>';
+
+  g += '<h2>2. Harcamalar</h2>';
+  if (o.giderler.length) {
+    g += rTablo(['Tarih', 'Ne için', 'Açıklama', 'Tutar'], o.giderler.slice().sort(function (a, b) { return a.tarih.localeCompare(b.tarih); }).map(function (x) {
+      return [tarihYaz(x.tarih), esc(x.kategori), esc(x.aciklama), para(x.tutar)];
+    }), ['', '', '', 'r'], ['', 'Toplam', '', para(o.harcanan)]);
+    if (enBuyuk.length > 1) g += '<div class="s">Harcamaların dağılımı: ' + enBuyuk.map(function (k) { return esc(k) + ' ' + para(kat[k]) + ' (%' + Math.round(kat[k] / o.harcanan * 100) + ')'; }).join(' · ') + '</div>';
+  } else g += '<p class="s">Bu ay harcama yapılmadı.</p>';
+
+  if (ekler.length) {
+    g += '<h2>3. Ek toplamalar</h2>';
+    ekler.forEach(function (e) {
+      var bl = D.Borclar.filter(function (b) { return b.ek_id === e.id; });
+      g += '<p><b>' + esc(e.baslik) + '</b>: toplam ' + para(e.toplam) + ', ' + bl.length + ' daireye ' + (e.dagitim === 'oran' ? 'pay oranına göre' : 'eşit') + ' bölündü' +
+        (bl.length && bl.every(function (b) { return Math.abs(b.tutar - bl[0].tutar) < 0.01; }) ? ' (daire başı ' + para(bl[0].tutar) + ')' : '') + '.' + (e.aciklama ? '<br><span class="s">' + esc(e.aciklama) + '</span>' : '') + '</p>';
+    });
+  }
+
+  if (ayar('rapor_borc_tablosu', 'true') === 'true') {
+    g += '<h2>' + (ekler.length ? '4' : '3') + '. Dairelerin durumu</h2>';
+    var satirlar = aktifVeyaKayitli(donem).map(function (d) {
+      var bu = D.Borclar.filter(function (b) { return b.daire_id === d.id && b.donem === donem; }).reduce(function (s, b) { return s + b.tutar; }, 0);
+      var od = D.Odemeler.filter(function (x) { return x.daire_id === d.id && x.tarih.slice(0, 7) === donem; }).reduce(function (s, x) { return s + x.tutar; }, 0);
+      var hs = hesap(d.id), bk = hs.toplam;
+      return [esc(daireAdi(d)), esc(oturanAdi(d)), para(bu), od ? para(od) : '-',
+        bk < -0.004 ? '<span class="k">Borç ' + para(-bk) + '</span>' : (bk > 0.004 ? '<span class="y">Ön ödeme +' + para(bk) + '</span>' : '<span class="y">Borcu yok ✓</span>')];
+    });
+    g += rTablo(['Daire', 'Oturan', 'Bu ay istenen', 'Bu ay ödenen', 'Güncel durum'], satirlar, ['', '', 'r', 'r', 'r']) +
+      '<div class="s">"Ön ödeme" peşin ödenmiş ve sonraki aylardan düşülecek parayı gösterir. Durum bilgisi rapor tarihindeki günceldir.</div>';
+  }
+  return { baslik: donemAdi(donem) + ' raporu', dosya: apAdi() + ' - ' + donemAdi(donem) + ' Raporu',
+    html: rSablon(apAdi() + ' – ' + donemAdi(donem) + ' Gelir-Gider Raporu', ayar('adres', ''), g) };
+};
+
+RAPORLAR.yillik = function (yil) {
+  var aylar = [], top = { toplanan: 0, harcanan: 0 };
+  for (var i = 1; i <= 12; i++) {
+    var d = yil + '-' + iki(i);
+    if (d > buDonem()) break;
+    var o = donemOzeti(d);
+    top.toplanan += o.toplanan; top.harcanan += o.harcanan;
+    aylar.push([AYLAR[i - 1], para(o.aidatIstenen + o.ekIstenen), para(o.toplanan), para(o.harcanan), para(kasa(ayinSonGunu(d)).toplam)]);
+  }
+  var kat = {};
+  D.Giderler.filter(function (g) { return g.donem.slice(0, 4) === yil; }).forEach(function (g) { kat[g.kategori] = (kat[g.kategori] || 0) + g.tutar; });
+  var basKasa = kasa(ayinSonGunu(donemKaydir(yil + '-01', -1))), sonKasa = kasa(ayinSonGunu(aylar.length ? yil + '-' + iki(aylar.length) : yil + '-01'));
+  var g = '<div class="kutu"><b>Kısaca:</b> ' + yil + ' yılında kasaya toplam <b>' + para(top.toplanan) + '</b> girdi, apartman için <b>' + para(top.harcanan) + '</b> harcandı. ' +
+    'Yıl başında kasada ' + para(basKasa.toplam) + ' vardı, ' + (aylar.length < 12 ? 'bugün itibarıyla' : 'yıl sonunda') + ' kasada <b>' + para(sonKasa.toplam) + '</b> bulunuyor.</div>';
+  g += '<h2>1. Ay ay gelir ve gider</h2>' + rTablo(['Ay', 'İstenen (aidat + ek)', 'Toplanan', 'Harcanan', 'Ay sonu kasa'], aylar, ['', 'r', 'r', 'r', 'r'],
+    ['Toplam', '', para(top.toplanan), para(top.harcanan), '']);
+  var ks = Object.keys(kat).sort(function (a, b) { return kat[b] - kat[a]; });
+  g += '<h2>2. Paranın harcandığı yerler</h2>' + (ks.length ? rTablo(['Kalem', 'Tutar', 'Pay'], ks.map(function (k) { return [esc(k), para(kat[k]), '%' + Math.round(kat[k] / top.harcanan * 100)]; }), ['', 'r', 'r'],
+    ['Toplam', para(top.harcanan), '%100']) : '<p class="s">Harcama yok.</p>');
+  var ekler = D.EkToplamalar.filter(function (e) { return e.donem.slice(0, 4) === yil; });
+  if (ekler.length) g += '<h2>3. Ek toplamalar</h2>' + rTablo(['Ay', 'Ne için', 'Toplam'], ekler.map(function (e) { return [donemAdi(e.donem), esc(e.baslik) + (e.aciklama ? '<br><span class="s">' + esc(e.aciklama) + '</span>' : ''), para(e.toplam)]; }), ['', '', 'r']);
+  if (ayar('rapor_borc_tablosu', 'true') === 'true') {
+    g += '<h2>' + (ekler.length ? '4' : '3') + '. Daireler</h2>' + rTablo(['Daire', 'Oturan', 'Yıl içinde istenen', 'Yıl içinde ödenen', 'Güncel durum'], tumDaireler().filter(function (d) {
+      return d.aktif || D.Borclar.some(function (b) { return b.daire_id === d.id && b.donem.slice(0, 4) === yil; });
+    }).map(function (d) {
+      var ist = D.Borclar.filter(function (b) { return b.daire_id === d.id && b.donem.slice(0, 4) === yil; }).reduce(function (s, b) { return s + b.tutar; }, 0);
+      var od = D.Odemeler.filter(function (x) { return x.daire_id === d.id && x.tarih.slice(0, 4) === yil; }).reduce(function (s, x) { return s + x.tutar; }, 0);
+      var bk = hesap(d.id).toplam;
+      return [esc(daireAdi(d)), esc(oturanAdi(d)), para(ist), para(od), bk < -0.004 ? '<span class="k">Borç ' + para(-bk) + '</span>' : (bk > 0.004 ? '<span class="y">Ön ödeme +' + para(bk) + '</span>' : '<span class="y">Borcu yok ✓</span>')];
+    }), ['', '', 'r', 'r', 'r']);
+  }
+  return { baslik: yil + ' yıllık rapor', dosya: apAdi() + ' - ' + yil + ' Yıllık Rapor', html: rSablon(apAdi() + ' – ' + yil + ' Yıllık Gelir-Gider Raporu', ayar('adres', ''), g) };
+};
+
+RAPORLAR.dokum = function (id) {
+  var d = daire(id), hs = hesap(id), l = dairehareketleri(id);
+  var g = '<div class="kutu"><b>Oturan:</b> ' + esc(oturanAdi(d)) + '<br><b>Güncel durum:</b> ' +
+    (hs.toplam < -0.004 ? '<span class="k">' + para(-hs.toplam) + ' borç</span>' + (hs.acik.length ? ' (' + esc(hs.acik.map(function (b) { return b.baslik; }).join(', ')) + ')' : '')
+      : (hs.toplam > 0.004 ? '<span class="y">+' + para(hs.toplam) + ' ön ödeme</span> – sonraki aidatlar bu tutardan düşülecek.' : '<span class="y">Borç yok</span>')) + '</div>';
+  hs.eskiler.forEach(function (e) { g += '<p class="s">Eski oturan ' + esc(e.ad) + ': ' + esc(durumYazi(e.bakiye)) + '</p>'; });
+  g += '<h2>Hesap hareketleri</h2>' + rTablo(['Tarih', 'Açıklama', 'Kişi', 'Borç', 'Ödeme', 'Bakiye'], l.map(function (x) {
+    return [tarihYaz(x.tarih), esc(x.ad), esc(odeyenAdi(x.kisi, d)), x.tutar < 0 ? para(-x.tutar) : '', x.tutar > 0 ? para(x.tutar) : '',
+      '<span class="' + (x.bakiye < -0.004 ? 'k' : 'y') + '">' + (x.bakiye > 0 ? '+' : '') + para(x.bakiye) + '</span>'];
+  }), ['', '', '', 'r', 'r', 'r']) + '<div class="s">Bakiye: eksi (–) borcu, artı (+) peşin ödenmiş ve sonraki aylardan düşülecek tutarı gösterir.</div>';
+  var tel = oturanTel(d);
+  return { baslik: daireAdi(d) + ' hesap dökümü', dosya: apAdi() + ' - ' + daireAdi(d) + ' Hesap Dokumu ' + bugun(),
+    html: rSablon(apAdi() + ' – ' + daireAdi(d) + ' Hesap Dökümü', tarihYaz(bugun()) + ' itibarıyla', g), wa: tel ? waLink(tel, hatirlatmaMetni(d)) : null };
+};
+
+RAPORLAR.borclar = function () {
+  var satirlar = [], toplamBorc = 0;
+  aktifDaireler().forEach(function (d) {
+    var hs = hesap(d.id);
+    if (hs.toplam < 0) toplamBorc -= hs.toplam;
+    satirlar.push([esc(daireAdi(d)), esc(oturanAdi(d)), hs.acik.length ? esc(hs.acik.map(function (b) { return b.baslik; }).join(', ')) : '-',
+      hs.toplam < -0.004 ? '<span class="k">Borç ' + para(-hs.toplam) + '</span>' : (hs.toplam > 0.004 ? '<span class="y">Ön ödeme +' + para(hs.toplam) + '</span>' : '<span class="y">Borcu yok ✓</span>')]);
+  });
+  var g = '<div class="kutu">' + tarihYaz(bugun()) + ' itibarıyla dairelerin toplam ödenmemiş borcu <b>' + para(toplamBorc) + '</b>.</div>' +
+    rTablo(['Daire', 'Oturan', 'Ödenmeyenler', 'Durum'], satirlar, ['', '', '', 'r']);
+  return { baslik: 'Borç durumu', dosya: apAdi() + ' - Borc Durumu ' + bugun(), html: rSablon(apAdi() + ' – Aidat Borç Durumu', tarihYaz(bugun()), g) };
+};
+
+RAPORLAR.makbuz = function (odemeId) {
+  var o = D.Odemeler.find(function (x) { return x.id === odemeId; }), d = daire(o.daire_id), hs = hesap(o.daire_id);
+  var g = '<table><tr><td>Makbuz no</td><td class="r b">' + esc(o.id.toUpperCase()) + '</td></tr><tr><td>Tarih</td><td class="r">' + tarihYaz(o.tarih) + '</td></tr>' +
+    '<tr><td>Daire</td><td class="r">' + esc(daireAdi(d)) + '</td></tr><tr><td>Ödeyen</td><td class="r">' + esc(odeyenAdi(o.sakin_id, d)) + '</td></tr>' +
+    '<tr><td>Ödeme şekli</td><td class="r">' + esc(o.yontem) + '</td></tr>' + (o.aciklama ? '<tr><td>Açıklama</td><td class="r">' + esc(o.aciklama) + '</td></tr>' : '') +
+    '<tr class="toplam"><td>Alınan tutar</td><td class="r" style="font-size:16px">' + para(o.tutar) + '</td></tr></table>' +
+    '<div class="kutu">Yukarıdaki tutar ' + esc(apAdi()) + ' aidat / ortak gider ödemesi olarak teslim alınmıştır.<br>Güncel hesap durumu: <b>' + esc(durumYazi(hs.bakiye)) + '</b></div>' +
+    '<p style="margin-top:40px">Teslim alan: ' + esc(ayar('yonetici_ad', '')) + '<br><span class="s">İmza</span></p>';
+  return { baslik: 'Makbuz', dosya: apAdi() + ' - Makbuz ' + daireAdi(d) + ' ' + o.tarih, html: rSablon(apAdi() + ' – Tahsilat Makbuzu', ayar('adres', ''), g) };
+};
+
+RAPORLAR.ek = function (id) {
+  var e = D.EkToplamalar.find(function (x) { return x.id === id; });
+  var bl = D.Borclar.filter(function (b) { return b.ek_id === id; });
+  var g = '<div class="kutu"><b>' + esc(e.baslik) + '</b> için toplam <b>' + para(e.toplam) + '</b> gerekmektedir. Bu tutar ' + bl.length + ' daireye ' +
+    (e.dagitim === 'oran' ? 'pay oranına göre' : 'eşit olarak') + ' bölünmüş ve ' + donemAdi(e.donem) + ' ayında hesaplara yazılmıştır.' +
+    (e.aciklama ? '<br><br>' + esc(e.aciklama) : '') + '</div>' +
+    rTablo(['Daire', 'Oturan', 'Payı'], bl.map(function (b) { var d = daire(b.daire_id); return [esc(daireAdi(d)), esc(odeyenAdi(b.sakin_id, d)), para(b.tutar)]; }), ['', '', 'r'],
+      ['Toplam', '', para(e.toplam)]);
+  return { baslik: e.baslik, dosya: apAdi() + ' - ' + e.baslik, html: rSablon(apAdi() + ' – Ek Toplama Duyurusu', donemAdi(e.donem), g),
+    wa: 'https://wa.me/?text=' + encodeURIComponent(ekDuyuruMetni(e)) };
+};
+
+function duyuruFormu() {
+  var son = ayar('son_odeme_gunu', '10'), m = buDonem();
+  var sablonlar = {
+    'Aidat hatırlatma': 'Sayın ' + apAdi() + ' sakinleri,\n\n' + donemAdi(m) + ' aidatının (' + paraKisa(tarifeTutari(m)) + ') en geç ayın ' + son + '\'una kadar ödenmesini rica ederim.' +
+      (ayar('iban', '') ? '\n\nIBAN: ' + ayar('iban', '') + (ayar('iban_ad', '') ? ' (' + ayar('iban_ad', '') + ')' : '') + '\nAçıklamaya daire numaranızı yazmanızı rica ederim.' : '') + '\n\nTeşekkürler,\n' + ayar('yonetici_ad', ''),
+    'Aylık rapor yayınlandı': 'Sayın ' + apAdi() + ' sakinleri,\n\n' + donemAdi(donemKaydir(m, -1)) + ' ayı gelir-gider raporu ektedir. Sorularınız için bana ulaşabilirsiniz.\n\nTeşekkürler,\n' + ayar('yonetici_ad', ''),
+    'Su / elektrik kesintisi': 'Sayın ' + apAdi() + ' sakinleri,\n\n... tarihinde ... saatleri arasında ... kesintisi olacaktır. Bilginize sunarım.\n\n' + ayar('yonetici_ad', ''),
+    'Toplantı çağrısı': 'Sayın ' + apAdi() + ' sakinleri,\n\nApartman toplantısı ... tarihinde saat ...\'da ... yapılacaktır. Gündem: ...\nKatılımınızı rica ederim.\n\n' + ayar('yonetici_ad', ''),
+    'Boş mesaj': ''
+  };
+  var h = '<div class="kart"><label class="alan"><span>Hazır mesaj</span><select id="dSablon" onchange="$(\'dMetin\').value = DUYURU_SABLON[this.value]">' +
+    Object.keys(sablonlar).map(function (k) { return '<option>' + esc(k) + '</option>'; }).join('') + '</select></label>' +
+    '<label class="alan"><span>Mesaj</span><textarea id="dMetin" style="min-height:220px">' + esc(sablonlar['Aidat hatırlatma']) + '</textarea></label>' +
+    '<button class="btn yesil tam" onclick="window.open(\'https://wa.me/?text=\' + encodeURIComponent($(\'dMetin\').value), \'_blank\')">💬 WhatsApp\'ta gönder</button>' +
+    '<p class="ipucu" style="margin-top:8px">WhatsApp açılınca apartman grubunu seçin.</p></div>';
+  window.DUYURU_SABLON = sablonlar;
+  pencere('Duyuru', h);
+}
+
+// ---------------------------------------------------------------- ayarlar
+SAYFALAR.ayarlar = function () {
+  var a = D.ayarlar;
+  var h = '<h2>Ayarlar</h2><div class="kart"><strong>Apartman ve yönetici</strong><div style="margin-top:10px"></div>' +
+    alan('aAd', 'Apartman adı', a.apartman_adi) + alan('aAdres', 'Adres', a.adres) + alan('aYonetici', 'Yönetici adı soyadı', a.yonetici_ad) +
+    alan('aTel', 'Yönetici telefonu', a.yonetici_tel, '', 'tel') + alan('aIban', 'Aidat IBAN', a.iban) + alan('aIbanAd', 'IBAN hesap sahibi', a.iban_ad) +
+    alan('aGun', 'Son ödeme günü (her ayın kaçı)', a.son_odeme_gunu, '', 'number') +
+    '<label class="onay"><input type="checkbox" id="aBorcTablo"' + (a.rapor_borc_tablosu !== 'false' ? ' checked' : '') + '> <span>Raporlarda dairelerin borç durumu tablosu gösterilsin</span></label>' +
+    '<p class="ipucu">Kapalıysa raporlarda kimin ne kadar borçlu olduğu görünmez, sadece toplamlar görünür.</p></div>' +
+    '<div class="kart"><strong>Açılış kasası</strong><p class="ipucu" style="margin:4px 0 10px">Programa başlarken kasada / bankada para varsa yazın. Sıfırdan başlıyorsanız 0 bırakın.</p>' +
+    alan('aBanka', 'Banka (TL)', String(a.acilis_banka || '0').replace('.', ','), '', 'decimal') + alan('aNakit', 'Nakit (TL)', String(a.acilis_nakit || '0').replace('.', ','), '', 'decimal') +
+    '<label class="alan"><span>Aidatların başladığı ay</span><input id="aBas" type="month" value="' + esc(a.baslangic_donem || buDonem()) + '"></label></div>' +
+    '<button class="btn ana tam" onclick="ayarKaydet()">Kaydet</button>' +
+    '<h3>Gider kategorileri</h3><div class="liste">' + D.Kategoriler.map(function (k) {
+      return '<div><div class="satir"><span>' + esc(k.ad) + '</span><button class="btn kucuk cerceve" onclick="kategoriSil(\'' + k.id + '\')">Sil</button></div></div>';
+    }).join('') + '<div><div class="satir"><input id="yeniKat" placeholder="Yeni kategori"><button class="btn kucuk ana" onclick="kategoriEkle()">Ekle</button></div></div></div>' +
+    '<h3>Şifre</h3><div class="kart"><label class="alan"><span>Mevcut şifre</span><input id="s1" type="password"></label><label class="alan"><span>Yeni şifre</span><input id="s2" type="password"></label>' +
+    '<label class="alan"><span>Yeni şifre (tekrar)</span><input id="s3" type="password"></label><button class="btn cerceve tam" onclick="sifreDegistir()">Şifreyi değiştir</button></div>' +
+    '<h3>Veriler</h3><div class="kart kucuk">Bütün kayıtlar Google Drive\'ınızdaki E-Tablo\'da durur. Yedek almanıza gerek yok; isterseniz E-Tablo\'yu açıp Dosya → İndir ile Excel olarak da indirebilirsiniz.' +
+    '<div class="dugmeler"><a class="btn cerceve" target="_blank" href="' + esc(D.tablo_adresi) + '">E-Tablo\'yu aç</a><button class="btn cerceve" onclick="cikis()">Çıkış yap</button></div>' +
+    '<div class="soluk">Sürüm ' + esc(D.surum) + '</div></div>';
+  return h;
+};
+function ayarKaydet() {
+  var b = sayi(deger('aBanka')), n = sayi(deger('aNakit'));
+  var v = { apartman_adi: deger('aAd'), adres: deger('aAdres'), yonetici_ad: deger('aYonetici'), yonetici_tel: deger('aTel'), iban: deger('aIban'),
+    iban_ad: deger('aIbanAd'), son_odeme_gunu: deger('aGun'), rapor_borc_tablosu: $('aBorcTablo').checked ? 'true' : 'false',
+    acilis_banka: isNaN(b) ? 0 : b, acilis_nakit: isNaN(n) ? 0 : n, baslangic_donem: deger('aBas') || buDonem() };
+  var eskiBas = ayar('baslangic_donem', buDonem());
+  if (v.baslangic_donem > eskiBas && D.Borclar.some(function (b) { return b.tur === 'Aidat' && b.donem < v.baslangic_donem; }) &&
+      !confirm('Başlangıç ayını ileri aldınız. Daha önce yazılmış aidatlar silinmez; gerekirse daire hesabından düzeltin. Devam edilsin mi?')) return;
+  bekle(true);
+  api('ayarKaydet', JETON, v).then(function (a) {
+    D.ayarlar = a; bekle(false); $('baslik').textContent = ayar('apartman_adi', 'Apartman Yönetimi'); bildir('Ayarlar kaydedildi');
+    // başlangıç geri alındıysa, kurulumla birlikte açılan dairelerin başlangıcı da geri alınır
+    var isl = [];
+    if (v.baslangic_donem < eskiBas) {
+      D.Daireler.filter(function (d) { return d.baslangic_donem === eskiBas; }).forEach(function (d) {
+        isl.push({ tablo: 'Daireler', kayit: Object.assign({}, d, { baslangic_donem: v.baslangic_donem }) });
+      });
+    }
+    return islem(isl).then(function () { ciz(); return aidatlariYaz(); });
+  }).catch(function (e) { bekle(false); alert(e.message); });
+}
+function kategoriEkle() { var ad = deger('yeniKat'); if (ad) islem([{ tablo: 'Kategoriler', kayit: { id: uid(), ad: ad } }], 'Eklendi'); }
+function kategoriSil(id) { if (confirm('Kategori silinsin mi? (Bu kategorideki eski giderler silinmez.)')) islem([{ tablo: 'Kategoriler', sil: id }], 'Silindi'); }
+function sifreDegistir() {
+  if (deger('s2').length < 4 || $('s2').value !== $('s3').value) return alert('Yeni şifreler aynı değil ya da çok kısa (en az 4 karakter).');
+  bekle(true);
+  api('sifreDegistir', JETON, $('s1').value, $('s2').value).then(function () { bekle(false); bildir('Şifre değiştirildi'); ['s1', 's2', 's3'].forEach(function (i) { $(i).value = ''; }); })
+    .catch(function (e) { bekle(false); alert(e.message); });
+}
+function cikis() { JETON = null; D = null; try { sessionStorage.removeItem('jeton'); } catch (e) {} girisGoster(); }
+
+baslat();
+</script>
+</body>
+</html>
