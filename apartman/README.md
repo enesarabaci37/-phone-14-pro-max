@@ -3,7 +3,7 @@
 Tek yöneticinin kullandığı apartman aidat / gider takip programı. Şifreli giriş.
 
 ## İndirme
-GitHub deposunun **Releases** bölümünden en son `Apartman-Yonetimi.exe` dosyasını indirip çift tıklayın. Kurulum gerekmez.
+GitHub deposunun **Releases** bölümünden en son `Apartman-Yonetimi.zip` dosyasını indirin, "Tümünü ayıkla" ile açın ve klasördeki `Apartman-Yonetimi.exe` dosyasını çalıştırın. (Virüs programlarının yanlış alarmını azaltmak için tek dosya yerine klasör olarak paketlenir.)
 İlk açılışta kurulum ekranı gelir (apartman adı, IBAN, daire sayısı, aylık aidat, şifre).
 
 ## Neler var

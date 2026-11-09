@@ -26,17 +26,22 @@ jobs:
       - name: Programi derle
         working-directory: apartman
         run: >
-          pyinstaller apartman.py --onefile --windowed --noconfirm
+          pyinstaller apartman.py --onedir --windowed --noconfirm --noupx
+          --version-file version.txt
           --name Apartman-Yonetimi
           --icon icon.ico
           --add-data "icon.ico;."
           --add-data "icon.png;."
           --add-data "fonts;fonts"
 
+      - name: Zip olarak paketle
+        working-directory: apartman/dist
+        run: Compress-Archive -Path Apartman-Yonetimi -DestinationPath Apartman-Yonetimi.zip
+
       - uses: actions/upload-artifact@v4
         with:
           name: Apartman-Yonetimi
-          path: apartman/dist/Apartman-Yonetimi.exe
+          path: apartman/dist/Apartman-Yonetimi.zip
 
       - name: Indirme sayfasina (Releases) yukle
         uses: softprops/action-gh-release@v2
@@ -44,7 +49,9 @@ jobs:
           tag_name: apartman-v${{ github.run_number }}
           name: Apartman Yönetimi v${{ github.run_number }}
           target_commitish: ${{ github.sha }}
-          files: apartman/dist/Apartman-Yonetimi.exe
+          files: apartman/dist/Apartman-Yonetimi.zip
           body: |
             Apartman Yönetimi programı (Windows).
-            Aşağıdaki **Apartman-Yonetimi.exe** dosyasını indirip çift tıklayın, kurulum gerekmez.
+            1. Aşağıdaki **Apartman-Yonetimi.zip** dosyasını indirin.
+            2. Zip dosyasına sağ tıklayıp **Tümünü ayıkla** deyin, çıkan **Apartman-Yonetimi** klasörünü Belgeler gibi kalıcı bir yere koyun.
+            3. Klasördeki **Apartman-Yonetimi.exe** dosyasına sağ tık → Gönder → Masaüstü (kısayol oluştur).
