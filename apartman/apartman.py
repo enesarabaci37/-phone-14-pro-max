@@ -19,7 +19,7 @@ import tkinter.font as tkfont
 import urllib.parse
 import uuid
 import webbrowser
-from tkinter import filedialog, messagebox, simpledialog, ttk
+from tkinter import filedialog, messagebox, ttk
 
 try:
     from reportlab.lib import colors
@@ -35,7 +35,7 @@ except ImportError:  # pragma: no cover
     PDF_VAR = False
 
 UYGULAMA_ADI = "Apartman Yönetimi"
-SURUM = "1.0"
+SURUM = "1.0.1"
 SIFRE_TUZ = "apartman-yonetimi::"
 APP_ID = "ArabaciReklam.ApartmanYonetimi"
 TABLOLAR = ["daireler", "sakinler", "tarifeler", "borclar", "odemeler", "giderler", "ekler", "duzenliler", "kategoriler"]
@@ -924,7 +924,8 @@ class Form(tk.Toplevel):
         super().__init__(ana)
         self.ana = ana
         self.title(baslik)
-        self.transient(ana)
+        if ana.winfo_viewable():
+            self.transient(ana)  # ana pencere gizliyken (giriş / kurulum) bağlanırsa Windows formu göstermez
         self.resizable(True, True)
         simge_uygula(self)
         self.govde = ttk.Frame(self, padding=16)
@@ -999,11 +1000,22 @@ class Form(tk.Toplevel):
 
     def ac(self):
         self.update_idletasks()
-        x = self.ana.winfo_rootx() + max(0, (self.ana.winfo_width() - self.winfo_width()) // 2)
-        y = self.ana.winfo_rooty() + 40
+        if self.ana.winfo_viewable():
+            x = self.ana.winfo_rootx() + max(0, (self.ana.winfo_width() - self.winfo_width()) // 2)
+            y = self.ana.winfo_rooty() + 40
+        else:
+            x = max(0, (self.winfo_screenwidth() - self.winfo_width()) // 2)
+            y = max(0, (self.winfo_screenheight() - self.winfo_height()) // 3)
         self.geometry(f"+{x}+{y}")
-        self.grab_set()
-        self.focus_set()
+        self.deiconify()
+        self.lift()
+        self.attributes("-topmost", True)
+        self.after(300, lambda: self.winfo_exists() and self.attributes("-topmost", False))
+        try:
+            self.grab_set()
+        except tk.TclError:
+            pass
+        self.focus_force()
 
 
 def sayi_al(v, etiket, bos_olabilir=False, pozitif=True, ebeveyn=None):
@@ -1059,14 +1071,31 @@ class Uygulama(tk.Tk):
         return Veri(k)
 
     def _giris(self):
-        for _ in range(5):
-            s = simpledialog.askstring(UYGULAMA_ADI, f"{self.v.ayar('apartman_adi', 'Apartman')}\n\nŞifre:", show="•", parent=self)
-            if s is None:
-                return False
-            if self.v.sifre_dogru(s):
-                return True
-            messagebox.showerror(UYGULAMA_ADI, "Şifre yanlış.", parent=self)
-        return False
+        f = Form(self, UYGULAMA_ADI, 380)
+        f.etiket(f"🏢 {self.v.ayar('apartman_adi', 'Apartman')}")
+        sifre = f.giris("Şifre", show="•", genislik=22)
+        v_hata = tk.StringVar()
+        ttk.Label(f.govde, textvariable=v_hata, foreground=KIRMIZI).grid(row=f.satir, column=0, columnspan=3, sticky="w")
+        f.satir += 1
+        sonuc = {"tamam": False, "deneme": 0}
+
+        def dene(_e=None):
+            if self.v.sifre_dogru(sifre.get()):
+                sonuc["tamam"] = True
+                f.destroy()
+                return
+            sonuc["deneme"] += 1
+            sifre.set("")
+            v_hata.set("Şifre yanlış.")
+            if sonuc["deneme"] >= 5:
+                f.destroy()
+
+        f.dugmeler(("Giriş", dene, MAVI), ("Çıkış", f.destroy, None))
+        sifre.entry.bind("<Return>", dene)
+        f.ac()
+        sifre.entry.focus_set()
+        self.wait_window(f)
+        return sonuc["tamam"]
 
     def _kurulum(self):
         f = Form(self, "Apartman Yönetimi – İlk kurulum", 560)
