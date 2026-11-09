@@ -1,0 +1,57 @@
+name: Kira Takip - Windows programi
+
+on:
+  push:
+    paths:
+      - "kira-takip/**"
+      - ".github/workflows/kira-takip.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: PyInstaller kur
+        run: python -m pip install pyinstaller reportlab
+
+      - name: Programi derle
+        working-directory: kira-takip
+        run: >
+          pyinstaller kira_takip.py --onedir --windowed --noconfirm --noupx
+          --version-file version.txt
+          --name Kira-Takip
+          --icon icon.ico
+          --add-data "icon.ico;."
+          --add-data "icon.png;."
+          --add-data "fonts;fonts"
+
+      - name: Zip olarak paketle
+        working-directory: kira-takip/dist
+        run: Compress-Archive -Path Kira-Takip -DestinationPath Kira-Takip.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Kira-Takip
+          path: kira-takip/dist/Kira-Takip.zip
+
+      - name: Indirme sayfasina (Releases) yukle
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: kira-takip-v${{ github.run_number }}
+          name: Kira Takip v${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          files: kira-takip/dist/Kira-Takip.zip
+          body: |
+            Kira Takip programı (Windows).
+            1. Aşağıdaki **Kira-Takip.zip** dosyasını indirin.
+            2. Zip dosyasına sağ tıklayıp **Tümünü ayıkla** deyin, çıkan **Kira-Takip** klasörünü Belgeler gibi kalıcı bir yere koyun.
+            3. Klasördeki **Kira-Takip.exe** dosyasına sağ tık → Gönder → Masaüstü (kısayol oluştur).
