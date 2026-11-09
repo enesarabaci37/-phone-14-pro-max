@@ -1,0 +1,49 @@
+name: m2 Hesaplama - Windows programi
+
+on:
+  push:
+    paths:
+      - "m2-hesaplama/**"
+      - ".github/workflows/m2-hesaplama.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: PyInstaller kur
+        run: python -m pip install pyinstaller
+
+      - name: Programi derle
+        working-directory: m2-hesaplama
+        run: >
+          pyinstaller m2_hesaplama.py --onefile --windowed --noconfirm
+          --name Arabaci-M2-Hesaplama
+          --icon icon.ico
+          --add-data "icon.ico;."
+          --add-data "icon.png;."
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Arabaci-M2-Hesaplama
+          path: m2-hesaplama/dist/Arabaci-M2-Hesaplama.exe
+
+      - name: Indirme sayfasina (Releases) yukle
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: m2-hesaplama-v${{ github.run_number }}
+          name: m² Hesaplama v${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          files: m2-hesaplama/dist/Arabaci-M2-Hesaplama.exe
+          body: |
+            Arabacı Reklam m² Hesaplama programı (Windows).
+            Aşağıdaki **Arabaci-M2-Hesaplama.exe** dosyasını indirip çift tıklayın, kurulum gerekmez.
