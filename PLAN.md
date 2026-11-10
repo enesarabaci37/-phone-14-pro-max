@@ -117,3 +117,12 @@ Her değişiklikte üç yer güncellenmeli:
 1. `ders-bahcesi.html` dosyasını düzenle, `python3 tools/build_index.py` çalıştır (bu depo, `claude/happy-feynman-ga17g5` dalı).
 2. Claude linkini güncelle: https://claude.ai/artifact/W2hwKHmJX7xmV5pv5S8Eaj
 3. Üretilen `index.html` dosyasını `enesarabaci37/ders-bahcesi` deposunun `main` dalına kopyala ve push et. Veli bunun için izin verdi; yeni oturumda depoyu `add_repo` ile ekle. Sayfa 1-2 dakikada güncellenir.
+
+## Uzun vadeli plan (veli istedi, 10 Kasım 2026)
+
+- Uygulama **zamanla geliştirilecek**: yeni konular, yeni oyunlar ve iyileştirmeler eklenecek. Bu süregelen bir proje; her oturumda bu dosyayı oku ve kaldığın yerden devam et.
+- Veli linki **kızının sınıf arkadaşlarıyla paylaşıyor**. Bu yüzden:
+  - Her değişiklik bütün sınıfı etkiler. Yayınlamadan önce mutlaka test et (iPad ve telefon genişliği, konsol hatası yok).
+  - Kayıt anahtarlarını (`ders-bahcesi-v1`) değiştirme ve mevcut ilerlemeyi silecek bir değişiklik yapma.
+  - Uygulamaya hiçbir kişisel bilgi (çocuk adı vb.) ekleme, hiçbir veriyi internete gönderme. Bu depo **herkese açık**, bu dosyaya da kişisel bilgi yazma.
+- Konuşulan ama henüz yapılmayan isteğe bağlı fikirler: yazı tiplerini sayfaya gömmek (Google Fonts bağlantısını kaldırmak), velilere bilgi notu, nötr isimli GitHub hesabına taşıma.
