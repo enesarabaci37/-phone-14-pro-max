@@ -85,6 +85,13 @@ Sayılar 1-20. Odak dinleyip tanıma; yazma çok az.
 - Test: Playwright ile 390 px ve iPad genişliğinde (~820 px) açıp her oyunu tıklayarak konsol hatasına bak.
 - Dal: `claude/happy-feynman-ga17g5`. Commit ve push sonrası veliye linki ver.
 
+## Durum (2. aşama)
+
+- **Ders Bahçesi yapıldı:** `ders-bahcesi.html` (Artifact) ve `index.html` (bağımsız, `tools/build_index.py` ile üretilir). 4 ders + Akıl Bahçesi, toplam 42 konu.
+- Veli ekranı eklendi (6-9 arası iki sayının çarpımı ile açılıyor).
+- Akıl Bahçesi'nin eski kayıtları (`akil-bahcesi-v1`) ilk açılışta yeni kayda taşınıyor.
+- Test: Playwright ile 390 px ve 820 px'te her konunun her seviyesi baştan sona oynandı (ipucu ve cevap gösterme dahil), konsol hatası yok.
+
 ## Akıl Bahçesi'ne eklenecek 4 yeni oyun (veli onayladı)
 
 **Aynı linke** eklenecek: `akil-bahcesi.html` dosyası güncellenip https://claude.ai/artifact/9bSS26YNrkhahnhHQLCTLX adresine yeniden yayınlanacak (yeni oturumda `url` parametresiyle; önce `action: "read"` ile oku). `index.html` de güncellenecek. Mevcut ilerleme (`localStorage` anahtarı `akil-bahcesi-v1`) korunmalı. Hepsi bölüm bölüm ilerleyecek ve 1-3 yıldız verecek.
@@ -94,7 +101,7 @@ Sayılar 1-20. Odak dinleyip tanıma; yazma çok az.
 3. **Terazi Bulmacası:** tek terazi (1 karpuz = 3 elma) → iki terazi zinciri → üç terazi ve sayılar. Sorular her seferinde yeniden üretilir.
 4. **Hanoi Kulesi:** 3 → 4 → 5 → 6 halka. 3 yıldız için en az hamle (2^n − 1). Sonraki bölümlerde karışık başlangıç ve farklı hedef direk.
 
-Not: Akıl Bahçesi'ndeki 9 oyunun hepsi ileride Ders Bahçesi'ne de taşınacak.
+✅ Bu 4 oyun hem Akıl Bahçesi linkine hem de **Ders Bahçesi**'nin Akıl Bahçesi bölümüne eklendi (Ders Bahçesi linki: https://claude.ai/artifact/W2hwKHmJX7xmV5pv5S8Eaj). Veli kızının iPad'inde **Ders Bahçesi**'ni kullanıyor; bundan sonraki değişiklikler öncelikle ders-bahcesi.html'e yapılmalı.
 
 ## Sıradaki adımlar
 
