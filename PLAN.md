@@ -98,7 +98,7 @@ Not: Akıl Bahçesi'ndeki 9 oyunun hepsi ileride Ders Bahçesi'ne de taşınacak
 
 ## Sıradaki adımlar
 
-0. Önce (veli istedi): Akıl Bahçesi'ne yukarıdaki 4 oyunu ekle, aynı linke yayınla.
+0. ✅ YAPILDI: Akıl Bahçesi'ne 4 yeni oyun (Labirent, Robot Yolu, Terazi, Hanoi Kulesi) eklendi ve aynı linke yayınlandı. Toplam 9 oyun.
 1. Veli "başla" deyince: tek dosyalık **Ders Bahçesi** uygulamasını yap (4 ders + Akıl Bahçesi + sesli okuma + iPad uyumu).
 2. Test et, commit ve push yap, Claude Artifact olarak yayınla, linki veliye gönder.
 3. Veli beğenince: GitHub'da herkese açık `ders-bahcesi` deposu, `index.html` ve Pages ayarı (adım adım). Ardından iPad'de Ana Ekrana Ekle.

@@ -24,7 +24,7 @@ body{
 }
 button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-.app{max-width:560px;margin:0 auto;padding-block:18px 40px;
+.app{max-width:880px;margin:0 auto;padding-block:18px 40px;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 
 /* home */
@@ -37,7 +37,7 @@ h1 span{color:var(--leaf)}
   box-shadow:0 3px 0 var(--well);font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
 .score .star{color:var(--sun);font-size:26px;line-height:1}
 .mute{background:var(--card);border:0;border-radius:999px;width:42px;height:42px;font-size:20px;box-shadow:0 3px 0 var(--well)}
-.games{display:grid;gap:14px}
+.games{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
 .gcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;border-radius:22px;padding:14px 16px;
   background:var(--c);color:#fff;box-shadow:0 6px 0 rgba(30,58,74,.22);transition:transform .12s}
 .gcard:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(30,58,74,.22)}
@@ -114,6 +114,53 @@ h2{font-family:var(--display);font-size:24px;margin:0;line-height:1.1}
 .pads.watch .pad{cursor:default}
 .big{display:block;margin:22px auto 0;border:0;border-radius:999px;padding:12px 30px;background:var(--ink);color:#fff;font-family:var(--display);font-size:22px;box-shadow:0 5px 0 rgba(30,58,74,.3)}
 
+.new{font-family:var(--body);font-size:11px;background:#fff;color:var(--ink);border-radius:6px;padding:1px 6px;margin-left:8px;vertical-align:middle;letter-spacing:.5px}
+
+/* maze */
+.maze{display:block;margin:0 auto;touch-action:none;background:var(--card);border-radius:18px;box-shadow:0 4px 0 var(--well);max-width:100%}
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin-top:12px}
+
+/* robot */
+.rgrid{display:grid;gap:4px;max-width:420px;margin:0 auto;background:var(--well);padding:6px;border-radius:18px}
+.rc{aspect-ratio:1;background:var(--card);border-radius:10px;display:grid;place-items:center;line-height:1}
+.rc.trail{background:#FFF1C9}
+.rc.hit{background:#FFE0DF;animation:shake .4s}
+.rc .got{opacity:.25}
+.prog{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:60px;background:var(--card);border-radius:16px;padding:8px;margin:14px auto 0;max-width:420px;box-shadow:0 4px 0 var(--well)}
+.prog .empty{color:var(--muted);font-size:14px;padding:0 6px}
+.blk{border:0;border-radius:12px;background:var(--sky);color:#fff;font-family:var(--display);font-size:24px;min-width:46px;height:44px;padding:0 8px;line-height:1}
+.blk small{font-size:15px;margin-left:2px}
+.blk.cur{background:var(--sun);color:var(--ink)}
+.ctrls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.cbtn{width:62px;height:62px;border:0;border-radius:16px;background:var(--card);font-family:var(--display);font-size:30px;box-shadow:0 4px 0 var(--well);line-height:1}
+.cbtn.rep{font-size:22px;color:var(--grape)}
+.cbtn.on{background:var(--grape);color:#fff}
+.cbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--well)}
+.cbtn:disabled{opacity:.4}
+.go{background:var(--leaf);color:#fff;width:auto;padding:0 22px;font-size:22px}
+
+/* scale */
+.scales{display:grid;gap:12px;max-width:520px;margin:0 auto}
+.scale{background:var(--card);border-radius:18px;padding:12px 12px 10px;box-shadow:0 4px 0 var(--well)}
+.scale.q{box-shadow:0 0 0 3px var(--grape),0 4px 0 var(--well)}
+.beam{display:flex;align-items:flex-end;gap:8px}
+.pan{flex:1;min-width:0;min-height:52px;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:2px;font-size:clamp(22px,6vw,30px);line-height:1.1;border-bottom:5px solid var(--ink);border-radius:0 0 40% 40%;padding:0 8px 6px}
+.pan .qm{font-family:var(--display);color:var(--grape);font-size:30px}
+.fulcrum{flex:none;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:24px solid var(--ink);margin-bottom:-5px}
+.eq{text-align:center;font-family:var(--display);color:var(--muted);font-size:14px;margin-top:4px}
+.opt.wide{width:auto;min-width:100px;padding:0 14px;font-size:28px;font-family:var(--display)}
+.tip{max-width:520px;margin:14px auto 0;background:#FFF1C9;border-radius:14px;padding:10px 14px;text-align:center;font-size:15px}
+
+/* hanoi */
+.hanoi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:600px;margin:0 auto}
+.peg{position:relative;border:0;background:var(--card);border-radius:18px;display:flex;flex-direction:column-reverse;align-items:center;padding:10px 4px 16px;box-shadow:0 4px 0 var(--well)}
+.peg::before{content:"";position:absolute;bottom:16px;top:34px;left:50%;width:8px;margin-left:-4px;background:var(--well);border-radius:4px}
+.peg.target{background:#E4F7EC}
+.peg.sel{box-shadow:0 0 0 3px var(--sun),0 4px 0 var(--well)}
+.peg .flag{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:18px}
+.ring{position:relative;height:26px;border-radius:13px;margin-top:4px;transition:transform .15s;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.ring.up{transform:translateY(-18px)}
+
 /* modal */
 #modal{position:fixed;inset:0;z-index:20;background:rgba(30,58,74,.45);display:grid;place-items:center;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
@@ -176,6 +223,10 @@ const GAMES=[
   {id:'sudoku', name:'Meyve Sudoku',   desc:'Her sırada bir kez', icon:'🍓', color:'var(--leaf)'},
   {id:'slide',  name:'Kaydır Diz',     desc:'Sayıları sıraya koy',icon:'🧩', color:'var(--sky)'},
   {id:'simon',  name:'Renk Sırası',    desc:'İzle ve tekrar et',  icon:'🎵', color:'var(--sun)', dark:true},
+  {id:'maze',   name:'Labirent',       desc:'Fareyi peynire ulaştır', icon:'🐭', color:'var(--sky)', isNew:true},
+  {id:'robot',  name:'Robot Yolu',     desc:'Komutlarla yıldıza git', icon:'🤖', color:'var(--coral)', isNew:true},
+  {id:'scale',  name:'Terazi',         desc:'Dengeyi çöz',        icon:'⚖️', color:'var(--leaf)', isNew:true},
+  {id:'hanoi',  name:'Hanoi Kulesi',   desc:'Halkaları taşı',     icon:'🗼', color:'var(--grape)', isNew:true},
 ];
 
 /* ---------- save ---------- */
@@ -220,7 +271,7 @@ function renderHome(){
   GAMES.forEach(g=>{
     const b=el('button','gcard'+(g.dark?' sun':''));
     b.style.setProperty('--c',g.color);
-    b.innerHTML=`<span class="gicon">${g.icon}</span><span class="gtext"><span class="gname">${g.name}</span><span class="gdesc">${g.desc}</span></span><span class="gmeta"><span class="lvl">Seviye ${lvl(g.id)}</span><span class="gst">★ ${gameStars(g.id)}</span></span>`;
+    b.innerHTML=`<span class="gicon">${g.icon}</span><span class="gtext"><span class="gname">${g.name}${g.isNew?'<span class="new">YENİ</span>':''}</span><span class="gdesc">${g.desc}</span></span><span class="gmeta"><span class="lvl">Seviye ${lvl(g.id)}</span><span class="gst">★ ${gameStars(g.id)}</span></span>`;
     b.onclick=()=>{sfx.tap();startGame(g.id,lvl(g.id))};
     list.append(b);
   });
@@ -486,6 +537,281 @@ RUN.simon=(stage,L,api)=>{
   go.onclick=()=>{go.remove();const start=Math.max(1,target-5);seq=[...Array(start)].map(()=>rnd(4));play()};
   stage.append(el('p','hint',`Renklerin yandığı sırayı aklında tut, sonra aynı sırayla bas. Hedef: ${target} renk.`),pads,go);
   api.status('Hazır olunca Başla\'ya dokun.');
+};
+
+/* ---------- 6. Labirent ---------- */
+RUN.maze=(stage,L,api)=>{
+  const N=Math.min(4+L,14),hasKey=L>=4,P=8;
+  const DIRS=[[0,-1,1,4],[1,0,2,8],[0,1,4,1],[-1,0,8,2]];
+  const W=new Array(N*N).fill(15),seen=new Array(N*N).fill(false),st=[0];seen[0]=true;
+  while(st.length){
+    const c=st[st.length-1],x=c%N,y=(c/N)|0;
+    const o=DIRS.filter(([dx,dy])=>{const nx=x+dx,ny=y+dy;return nx>=0&&ny>=0&&nx<N&&ny<N&&!seen[ny*N+nx]});
+    if(!o.length){st.pop();continue}
+    const [dx,dy,b,ob]=o[rnd(o.length)],n=(y+dy)*N+x+dx;W[c]&=~b;W[n]&=~ob;seen[n]=true;st.push(n);
+  }
+  const open=(a,b)=>{const ax=a%N,ay=(a/N)|0;for(const [dx,dy,bit] of DIRS)if((ay+dy)*N+ax+dx===b&&ax+dx>=0&&ax+dx<N)return !(W[a]&bit);return false};
+  const bfs=s=>{const d=new Array(N*N).fill(-1);d[s]=0;const q=[s];while(q.length){const c=q.shift(),x=c%N,y=(c/N)|0;for(const [dx,dy,bit] of DIRS){if(W[c]&bit)continue;const n=(y+dy)*N+x+dx;if(d[n]<0){d[n]=d[c]+1;q.push(n)}}}return d};
+  const START=0,EXIT=N*N-1,d0=bfs(START),dE=bfs(EXIT);
+  let KEY=-1,sol=d0[EXIT];
+  if(hasKey){
+    const cand=[...Array(N*N).keys()].filter(c=>c!==START&&c!==EXIT).sort((a,b)=>(d0[b]+dE[b])-(d0[a]+dE[a]));
+    KEY=cand[rnd(Math.max(1,Math.ceil(cand.length/4)))];sol=d0[KEY]+dE[KEY];
+  }
+  const cv=el('canvas','maze'),ctx=cv.getContext('2d');
+  let msg='',w=300,S=30,path=[START],done=[],gotKey=!hasKey,drawing=false,back=0,last=null,fin=false;
+  function size(){
+    w=Math.min(stage.clientWidth||320,600,Math.max(280,innerHeight-260));
+    const d=devicePixelRatio||1;cv.style.width=cv.style.height=w+'px';cv.width=cv.height=Math.round(w*d);
+    ctx.setTransform(d,0,0,d,0,0);S=(w-2*P)/N;draw();
+  }
+  const ctr=c=>[P+(c%N+.5)*S,P+(((c/N)|0)+.5)*S];
+  function line(cells,color,wd){
+    if(cells.length<2)return;ctx.strokeStyle=color;ctx.lineWidth=wd;ctx.lineCap=ctx.lineJoin='round';ctx.beginPath();
+    cells.forEach((c,i)=>{const [x,y]=ctr(c);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
+  }
+  function emo(e,c,k=.72){const [x,y]=ctr(c);ctx.font=`${S*k}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(e,x,y+S*.04)}
+  function draw(){
+    ctx.clearRect(0,0,w,w);
+    ctx.fillStyle='#E4F7EC';ctx.fillRect(P+(EXIT%N)*S,P+((EXIT/N)|0)*S,S,S);
+    line(done,'rgba(255,107,87,.35)',S*.34);line(path,'#FF6B57',S*.34);
+    ctx.strokeStyle='#1E3A4A';ctx.lineWidth=Math.max(2.5,S*.09);ctx.lineCap='round';ctx.beginPath();
+    for(let c=0;c<N*N;c++){
+      const x=P+(c%N)*S,y=P+((c/N)|0)*S;
+      if(W[c]&1){ctx.moveTo(x,y);ctx.lineTo(x+S,y)} if(W[c]&8){ctx.moveTo(x,y);ctx.lineTo(x,y+S)}
+      if(W[c]&2){ctx.moveTo(x+S,y);ctx.lineTo(x+S,y+S)} if(W[c]&4){ctx.moveTo(x,y+S);ctx.lineTo(x+S,y+S)}
+    }
+    ctx.stroke();
+    emo('🧀',EXIT);if(!gotKey){emo('🔒',EXIT,.4);emo('🔑',KEY)}
+    emo('🐭',path[path.length-1],.8);
+  }
+  const pt=e=>{const r=cv.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}};
+  const cellAt=(x,y)=>{const cx=Math.floor((x-P)/S),cy=Math.floor((y-P)/S);return cx<0||cy<0||cx>=N||cy>=N?-1:cy*N+cx};
+  const upd=()=>api.status(fin?'Başardın!':(msg?msg+'  ·  ':'')+`Geri dönüş: ${back}`);
+  function stepTo(c){
+    const end=path[path.length-1];if(c<0||c===end)return;
+    if(path.length>1&&c===path[path.length-2]){path.pop();back++;return}
+    if(!path.includes(c)&&open(end,c)){path.push(c);tone(500+path.length*6,.04,'sine',.04);check()}
+  }
+  function check(){
+    const end=path[path.length-1];
+    if(!gotKey&&end===KEY){gotKey=true;sfx.good();done=path.slice();path=[KEY];msg='Anahtarı aldın! Şimdi peynire git.'}
+    else if(end===EXIT){
+      if(!gotKey){msg='Kapı kilitli! Önce 🔑 anahtarı bul.';return}
+      fin=true;drawing=false;upd();
+      later(()=>api.win(back<=Math.ceil(sol*.25)?3:back<=sol?2:1),400);
+    }
+  }
+  cv.addEventListener('pointerdown',e=>{
+    if(fin)return;const p=pt(e),c=cellAt(p.x,p.y),i=path.indexOf(c);
+    if(i<0){msg='Çizmeye farenin 🐭 üstünden başla.';upd();return}
+    if(i<path.length-1){back+=path.length-1-i;path.length=i+1}
+    drawing=true;last=p;try{cv.setPointerCapture(e.pointerId)}catch(_){}
+    e.preventDefault();draw();upd();
+  });
+  cv.addEventListener('pointermove',e=>{
+    if(!drawing||fin)return;const p=pt(e),dx=p.x-last.x,dy=p.y-last.y,n=Math.max(1,Math.ceil(Math.hypot(dx,dy)/(S/5)));
+    for(let k=1;k<=n&&!fin;k++)stepTo(cellAt(last.x+dx*k/n,last.y+dy*k/n));
+    last=p;draw();if(!fin)upd();
+  });
+  const stop=()=>{drawing=false};
+  cv.addEventListener('pointerup',stop);cv.addEventListener('pointercancel',stop);
+  stage.append(el('p','hint',hasKey?'Önce 🔑 anahtarı al, sonra 🧀 peynire git. Kalemle ya da parmağınla fareden başlayıp yol çiz.':'Kalemle ya da parmağınla fareden 🐭 başlayıp peynire 🧀 kadar yol çiz. Duvarlardan geçemezsin.'),cv,
+    el('div','legend','<span>Yanlış yola girersen geri çiz</span><span>3 yıldız: az geri dönüş</span>'));
+  size();upd();
+  RUN.maze.dbg={N,P,get S(){return S},START,EXIT,get KEY(){return KEY},bfs,W,cv};
+  const g=gen,onR=()=>{if(g!==gen){removeEventListener('resize',onR);return}size()};addEventListener('resize',onR);
+};
+
+/* ---------- 7. Robot Yolu ---------- */
+RUN.robot=(stage,L,api)=>{
+  const N=L<3?4:L<7?5:6,nStars=L<4?1:L<7?2:3,nRocks=L<2?0:Math.min(L+1,Math.floor(N*N/3)),canRep=L>=5,MAX=14;
+  const D={U:[0,-1,'↑'],R:[1,0,'→'],D:[0,1,'↓'],L:[-1,0,'←']};
+  let start,stars,rocks,best=null;
+  function solve(){
+    const full=(1<<nStars)-1,key=(p,m)=>p*8+m,prev=new Map([[key(start,0),null]]),q=[[start,0]];
+    while(q.length){
+      const [p,m]=q.shift();
+      if(m===full){const mv=[];let k=key(p,m);while(prev.get(k)){const [pk,d]=prev.get(k);mv.push(d);k=pk}return mv.reverse()}
+      for(const d in D){
+        const x=p%N+D[d][0],y=((p/N)|0)+D[d][1];if(x<0||y<0||x>=N||y>=N)continue;
+        const np=y*N+x;if(rocks.has(np))continue;const si=stars.indexOf(np),nm=si>=0?m|(1<<si):m,k=key(np,nm);
+        if(prev.has(k))continue;prev.set(k,[key(p,m),d]);q.push([np,nm]);
+      }
+    }
+    return null;
+  }
+  const blocksOf=mv=>{if(!canRep)return mv.length;let b=0;for(let i=0;i<mv.length;){let j=i;while(j<mv.length&&mv[j]===mv[i])j++;b+=Math.ceil((j-i)/4);i=j}return b};
+  const minLen=Math.min(2+L,11);
+  for(let t=0;t<600;t++){
+    const cells=shuffle([...Array(N*N).keys()]);start=cells[0];stars=cells.slice(1,1+nStars);rocks=new Set(cells.slice(1+nStars,1+nStars+nRocks));
+    const mv=solve();if(!mv)continue;
+    const straight=mv.every(d=>d===mv[0]);
+    const ok=L===1?(straight&&mv.length>=2&&mv.length<=3):L===2?(!straight&&mv.length>=3&&mv.length<=5):mv.length>=minLen;
+    if(ok||!best)best={start,stars,rocks,mv};
+    if(ok)break;
+  }
+  ({start,stars,rocks}=best);const opt=blocksOf(best.mv);
+  let prog=[],mult=1,running=false,pos=start,got=new Set(),trail=new Set(),hit=-1;
+  const grid=el('div','rgrid');grid.style.gridTemplateColumns=`repeat(${N},1fr)`;grid.style.fontSize=N>=6?'clamp(22px,6.5vw,36px)':'clamp(26px,8vw,42px)';
+  const cells=[...Array(N*N)].map(()=>{const c=el('div','rc');grid.append(c);return c});
+  function render(){
+    cells.forEach((c,i)=>{
+      const si=stars.indexOf(i);
+      c.className='rc'+(trail.has(i)?' trail':'')+(i===hit?' hit':'');
+      c.innerHTML=i===pos?'🤖':rocks.has(i)?'🌳':si>=0?`<span class="${got.has(si)?'got':''}">⭐</span>`:'';
+    });
+  }
+  const progBox=el('div','prog');
+  function renderProg(cur=-1){
+    progBox.innerHTML='';
+    if(!prog.length)progBox.append(el('span','empty','Komutların burada dizilecek'));
+    prog.forEach((b,i)=>{
+      const x=el('button','blk'+(i===cur?' cur':''),D[b.d][2]+(b.n>1?`<small>×${b.n}</small>`:''));
+      x.setAttribute('aria-label','Komutu sil');x.onclick=()=>{if(running)return;prog.splice(i,1);sfx.tap();renderProg()};progBox.append(x);
+    });
+    api.status(`Komut: ${prog.length}  ·  3 yıldız için en fazla ${opt}`);
+  }
+  const ctrls=el('div','ctrls'),repRow=el('div','ctrls');
+  for(const d of ['L','U','D','R']){
+    const b=el('button','cbtn',D[d][2]);b.setAttribute('aria-label','Ok');
+    b.onclick=()=>{if(running||prog.length>=MAX)return;sfx.tap();prog.push({d,n:mult});mult=1;syncRep();renderProg()};ctrls.append(b);
+  }
+  const repBtns=[];
+  if(canRep)[2,3,4].forEach(n=>{
+    const b=el('button','cbtn rep','×'+n);b.setAttribute('aria-label',n+' kez tekrarla');
+    b.onclick=()=>{if(running)return;sfx.tap();mult=mult===n?1:n;syncRep()};repBtns.push([b,n]);repRow.append(b);
+  });
+  function syncRep(){repBtns.forEach(([b,n])=>b.classList.toggle('on',mult===n))}
+  const act=el('div','ctrls');
+  const del=el('button','cbtn','⌫');del.setAttribute('aria-label','Son komutu sil');del.onclick=()=>{if(running)return;prog.pop();sfx.tap();renderProg()};
+  const go=el('button','cbtn go','Çalıştır ▶');
+  go.onclick=()=>{
+    if(running||!prog.length)return;running=true;go.disabled=true;
+    const steps=prog.flatMap((b,i)=>Array(b.n).fill([b.d,i]));let i=0;
+    const tick=()=>{
+      if(i>=steps.length)return fail('Program bitti ama yıldızların hepsi toplanmadı.');
+      const [d,bi]=steps[i++];renderProg(bi);
+      const x=pos%N+D[d][0],y=((pos/N)|0)+D[d][1];
+      if(x<0||y<0||x>=N||y>=N)return fail('Robot tahtanın dışına çıkacaktı!');
+      if(rocks.has(y*N+x)){hit=y*N+x;render();return fail('Robot ağaca çarptı!')}
+      pos=y*N+x;trail.add(pos);const si=stars.indexOf(pos);
+      if(si>=0&&!got.has(si)){got.add(si);sfx.good()}else tone(420,.06,'square',.03);
+      render();
+      if(got.size===nStars){api.status('Yıldızların hepsi toplandı!');return later(()=>api.win(prog.length<=opt?3:prog.length<=opt+2?2:1),500)}
+      later(tick,400);
+    };
+    trail=new Set([start]);later(tick,250);
+  };
+  function fail(msg){
+    sfx.bad();api.status(msg+' Programı düzelt ve tekrar dene.');
+    later(()=>{pos=start;got.clear();trail.clear();hit=-1;running=false;go.disabled=false;render();renderProg()},1600);
+  }
+  act.append(del,go);
+  stage.append(el('p','hint',canRep?'Okları sırayla diz, robot ⭐ yıldızların hepsini toplasın. ×2, ×3, ×4 düğmeleri bir sonraki oku tekrarlar: ×3 ve → demek 3 kez sağa git demek.':'Okları sırayla diz, sonra Çalıştır\'a bas. Robot ⭐ yıldızların hepsini toplasın, 🌳 ağaçlara çarpmasın. Yanlış komuta dokunursan silinir.'),
+    grid,progBox,ctrls);
+  if(canRep)stage.append(repRow);
+  stage.append(act);render();renderProg();
+};
+
+/* ---------- 8. Terazi ---------- */
+const WITEMS=['🍉','🍍','🥥','🍐','🍎','🍋','🍓','🍒'];
+function genScale(L){
+  const T=L<=1?['one1']:L===2?['one']:L===3?['chain','one']:L===4?['chain','double']:L===5?['sub','chain','double']:L===6?['sub','sum','double','chain']:['sum','sub','chain3','double'];
+  const t=T[rnd(T.length)],[A,B,C,E]=shuffle([0,1,2,3,4,5,6,7]).slice(0,4).sort((a,b)=>a-b).map(i=>WITEMS[i]);
+  const R=(x,n)=>Array(n).fill(x);
+  let f,q=[A],u,ans,tip;
+  if(t==='one1'){const k=2+rnd(2);f=[[[A],R(B,k)]];u=B;ans=k;tip=`Terazide 1 ${A} karşısında kaç ${B} var? Say!`}
+  else if(t==='one'){const k=2+rnd(4),m=1+rnd(2);f=[[[A],R(B,k)]];q=R(A,m);u=B;ans=k*m;tip=m>1?`1 ${A} = ${k} ${B}. İki ${A} için ${k} + ${k} yap.`:`Terazide 1 ${A} karşısında kaç ${B} var? Say!`}
+  else if(t==='chain'){const k=2+rnd(2),m=2+rnd(3);f=[[[A],R(B,k)],[[B],R(C,m)]];u=C;ans=k*m;tip=`1 ${A} = ${k} ${B}. Her ${B} yerine ${m} ${C} koy: ${R(m,k).join(' + ')}`}
+  else if(t==='double'){const h=2+rnd(3);f=[[[B,B],[A]],[[A],R(C,2*h)]];q=[B];u=C;ans=h;tip=`2 ${B} = 1 ${A} = ${2*h} ${C}. Tek ${B} bunun yarısı.`}
+  else if(t==='sub'){const m=1+rnd(3),a=2+rnd(4);f=[[[A,B],R(C,a+m)],[[B],R(C,m)]];u=C;ans=a;tip=`${A} ve ${B} birlikte ${a+m} ${C}. ${B} tek başına ${m} ${C}. Çıkar: ${a+m} − ${m}`}
+  else if(t==='sum'){const m=2+rnd(3),p=1+rnd(3);f=[[[A],[B,C]],[[B],R(E,m)],[[C],R(E,p)]];u=E;ans=m+p;tip=`${A} = ${B} + ${C}. ${B} = ${m} ${E}, ${C} = ${p} ${E}. Topla!`}
+  else{const p=2+rnd(2);f=[[[A],R(B,2)],[[B],R(C,2)],[[C],R(E,p)]];u=E;ans=4*p;tip=`Adım adım git: 1 ${A} = 2 ${B} = 4 ${C}. Her ${C} = ${p} ${E}.`}
+  const n=L<3?3:4,o=new Set([ans]);
+  for(const c of shuffle([ans+1,ans-1,ans+2,ans-2,ans*2,ans+3]))if(o.size<n&&c>0)o.add(c);
+  for(let k=4;o.size<n;k++)o.add(ans+k);
+  return {f,q,u,ans,tip,opts:[...o].sort((a,b)=>a-b)};
+}
+function scaleEl(l,r,cls=''){
+  const s=el('div','scale '+cls),b=el('div','beam');
+  b.append(el('div','pan',l.join('')),el('div','fulcrum'),el('div','pan',Array.isArray(r)?r.join(''):r));
+  s.append(b);return s;
+}
+RUN.scale=(stage,L,api)=>{
+  const total=5;let qi=0,score=0;
+  const dots=el('div','dots');for(let i=0;i<total;i++)dots.append(el('span','dot'));
+  const box=el('div','scales'),optBox=el('div','opts'),tipBox=el('div','tip');tipBox.hidden=true;
+  stage.append(el('p','hint','Üstteki teraziler dengede. Onlara bakarak soru işaretli teraziyi dengele.'),dots,box,optBox,tipBox);
+  function show(){
+    const q=genScale(L);box.innerHTML='';optBox.innerHTML='';tipBox.hidden=true;
+    q.f.forEach(([l,r])=>box.append(scaleEl(l,r)));
+    const qs=scaleEl(q.q,`<span class="qm">?</span>&nbsp;${q.u}`,'q');box.append(qs);
+    dots.children[qi].className='dot now';
+    let tries=0,done=false;
+    q.opts.forEach(o=>{
+      const b=el('button','opt wide',`${o} <span style="font-size:24px">${q.u}</span>`);
+      b.onclick=()=>{
+        if(done||b.disabled)return;
+        if(o===q.ans){
+          done=true;score+=tries?.5:1;b.classList.add('ok');sfx.good();
+          qs.querySelectorAll('.pan')[1].innerHTML=Array(q.ans).fill(q.u).join('');
+          dots.children[qi].className='dot '+(tries?'now':'ok');if(tries)dots.children[qi].style.background='var(--sun)';
+          qi++;later(()=>qi<total?show():finish(),1300);
+        }else if(!tries){tries++;b.classList.add('no');b.disabled=true;sfx.bad();tipBox.innerHTML='💡 '+q.tip;tipBox.hidden=false}
+        else{
+          done=true;b.classList.add('no');sfx.bad();[...optBox.children].find(x=>x.textContent.startsWith(q.ans+' '))?.classList.add('ok');
+          qs.querySelectorAll('.pan')[1].innerHTML=Array(q.ans).fill(q.u).join('');
+          dots.children[qi].className='dot no';qi++;later(()=>qi<total?show():finish(),2200);
+        }
+      };
+      optBox.append(b);
+    });
+    api.status(`Soru ${qi+1} / ${total}`);
+  }
+  function finish(){
+    if(score>=3)api.win(score>=5?3:score>=4?2:1);
+    else api.lose('Biraz daha pratik yapalım. İpuçlarını dikkatle oku, terazileri adım adım düşün.');
+  }
+  show();
+};
+
+/* ---------- 9. Hanoi Kulesi ---------- */
+RUN.hanoi=(stage,L,api)=>{
+  const CFG=[[2,0],[3,0],[3,1],[4,0],[4,1],[5,0],[5,1],[6,0]];
+  let [n,mixed]=L<=CFG.length?CFG[L-1]:[6,L%2];
+  const COL=['#FF6B57','#FFC23C','#22A866','#3399E6','#8A5CD6','#FF9FBF'];
+  const optFrom=(pg,t)=>{const pos={};pg.forEach((p,i)=>p.forEach(s=>pos[s]=i));const f=(k,t)=>k===0?0:pos[k]===t?f(k-1,t):f(k-1,3-pos[k]-t)+1+(2**(k-1)-1);return f(n,t)};
+  let pegs,target;
+  if(!mixed){pegs=[[...Array(n)].map((_,i)=>n-i),[],[]];target=2}
+  else{
+    target=rnd(3);let t=0;
+    do{pegs=[[],[],[]];for(let s=n;s>=1;s--)pegs[rnd(3)].push(s);t++}while(optFrom(pegs,target)<2**(n-1)&&t<300);
+  }
+  const opt=optFrom(pegs,target);
+  let sel=-1,moves=0,fin=false;
+  const box=el('div','hanoi'),pegEls=[0,1,2].map(i=>{
+    const p=el('button','peg'+(i===target?' target':''));p.setAttribute('aria-label',`${i+1}. direk`);
+    p.style.height=(70+n*30)+'px';p.onclick=()=>tap(i);box.append(p);return p;
+  });
+  function render(){
+    pegEls.forEach((p,i)=>{
+      p.innerHTML=i===target?'<span class="flag">🏁</span>':'';p.classList.toggle('sel',i===sel);
+      pegs[i].forEach((s,j)=>{const r=el('span','ring'+(i===sel&&j===pegs[i].length-1?' up':''));r.style.width=(28+62*s/n)+'%';r.style.background=COL[s-1];p.append(r)});
+    });
+    api.status(`Hamle: ${moves}  ·  En az: ${opt}`);
+  }
+  function tap(i){
+    if(fin)return;
+    if(sel<0){if(!pegs[i].length)return;sel=i;sfx.tap();return render()}
+    if(i===sel){sel=-1;return render()}
+    const a=pegs[sel],b=pegs[i],s=a[a.length-1];
+    if(b.length&&b[b.length-1]<s){sfx.bad();sel=-1;render();api.status('Büyük halka küçüğün üstüne konamaz!');return}
+    b.push(a.pop());sel=-1;moves++;tone(300+s*60,.1,'triangle',.12);render();
+    if(pegs[target].length===n){fin=true;later(()=>api.win(moves<=opt?3:moves<=Math.ceil(opt*1.5)?2:1),400)}
+  }
+  stage.append(el('p','hint','Bütün halkaları 🏁 bayraklı direğe taşı. Önce halkanın olduğu direğe, sonra gideceği direğe dokun. Büyük halka küçüğün üstüne konamaz.'),box);
+  render();
 };
 
 syncMute();renderHome();

@@ -9,5 +9,9 @@
 3. **Meyve Sudoku** – 4×4 ile başlar, 6. seviyeden sonra 6×6
 4. **Kaydır Diz** – sayıları sıraya diz (3×3, sonra 4×4)
 5. **Renk Sırası** – yanan renkleri aynı sırayla tekrar et
+6. **Labirent** – Apple Pencil ya da parmakla yolu çiz; ileri bölümlerde önce anahtar
+7. **Robot Yolu** – oklarla robota komut ver (kodlama mantığı, tekrarla bloğu)
+8. **Terazi** – dengedeki terazilerden yola çıkarak soruyu çöz
+9. **Hanoi Kulesi** – halkaları kurala uyarak taşı
 
 Açmak için `index.html` dosyasını tarayıcıda aç. Yıldızlar ve seviyeler cihazda saklanır.
