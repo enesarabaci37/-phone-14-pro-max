@@ -85,8 +85,20 @@ Sayılar 1-20. Odak dinleyip tanıma; yazma çok az.
 - Test: Playwright ile 390 px ve iPad genişliğinde (~820 px) açıp her oyunu tıklayarak konsol hatasına bak.
 - Dal: `claude/happy-feynman-ga17g5`. Commit ve push sonrası veliye linki ver.
 
+## Akıl Bahçesi'ne eklenecek 4 yeni oyun (veli onayladı)
+
+**Aynı linke** eklenecek: `akil-bahcesi.html` dosyası güncellenip https://claude.ai/artifact/9bSS26YNrkhahnhHQLCTLX adresine yeniden yayınlanacak (yeni oturumda `url` parametresiyle; önce `action: "read"` ile oku). `index.html` de güncellenecek. Mevcut ilerleme (`localStorage` anahtarı `akil-bahcesi-v1`) korunmalı. Hepsi bölüm bölüm ilerleyecek ve 1-3 yıldız verecek.
+
+1. **Labirent:** Yol, **Apple Pencil veya parmakla çizilir** (Pointer Events, `touch-action:none`). Çizgi duvardan geçemez. Labirentler her seferinde yeni üretilir ve bölüm geçtikçe büyür. İleri bölümlerde önce anahtar, sonra kapı.
+2. **Robot Yolu (kodlama):** Ok komutlarını sıraya dizer, "Çalıştır" ile robotun hareketini izler. Zorluk sırası: düz yol → dönüşler → engeller → birden fazla yıldız → **"tekrarla" bloğu** (döngü). 3 yıldız için en az komut.
+3. **Terazi Bulmacası:** tek terazi (1 karpuz = 3 elma) → iki terazi zinciri → üç terazi ve sayılar. Sorular her seferinde yeniden üretilir.
+4. **Hanoi Kulesi:** 3 → 4 → 5 → 6 halka. 3 yıldız için en az hamle (2^n − 1). Sonraki bölümlerde karışık başlangıç ve farklı hedef direk.
+
+Not: Akıl Bahçesi'ndeki 9 oyunun hepsi ileride Ders Bahçesi'ne de taşınacak.
+
 ## Sıradaki adımlar
 
+0. Önce (veli istedi): Akıl Bahçesi'ne yukarıdaki 4 oyunu ekle, aynı linke yayınla.
 1. Veli "başla" deyince: tek dosyalık **Ders Bahçesi** uygulamasını yap (4 ders + Akıl Bahçesi + sesli okuma + iPad uyumu).
 2. Test et, commit ve push yap, Claude Artifact olarak yayınla, linki veliye gönder.
 3. Veli beğenince: GitHub'da herkese açık `ders-bahcesi` deposu, `index.html` ve Pages ayarı (adım adım). Ardından iPad'de Ana Ekrana Ekle.
