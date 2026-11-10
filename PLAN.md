@@ -85,6 +85,13 @@ Sayılar 1-20. Odak dinleyip tanıma; yazma çok az.
 - Test: Playwright ile 390 px ve iPad genişliğinde (~820 px) açıp her oyunu tıklayarak konsol hatasına bak.
 - Dal: `claude/happy-feynman-ga17g5`. Commit ve push sonrası veliye linki ver.
 
+## Durum (2. aşama)
+
+- **Ders Bahçesi yapıldı:** `ders-bahcesi.html` (Artifact) ve `index.html` (bağımsız, `tools/build_index.py` ile üretilir). 4 ders + Akıl Bahçesi, toplam 42 konu.
+- Veli ekranı eklendi (6-9 arası iki sayının çarpımı ile açılıyor).
+- Akıl Bahçesi'nin eski kayıtları (`akil-bahcesi-v1`) ilk açılışta yeni kayda taşınıyor.
+- Test: Playwright ile 390 px ve 820 px'te her konunun her seviyesi baştan sona oynandı (ipucu ve cevap gösterme dahil), konsol hatası yok.
+
 ## Sıradaki adımlar
 
 1. Veli "başla" deyince: tek dosyalık **Ders Bahçesi** uygulamasını yap (4 ders + Akıl Bahçesi + sesli okuma + iPad uyumu).
