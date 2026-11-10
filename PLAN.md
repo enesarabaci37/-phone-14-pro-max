@@ -109,3 +109,11 @@ Sayılar 1-20. Odak dinleyip tanıma; yazma çok az.
 1. Veli "başla" deyince: tek dosyalık **Ders Bahçesi** uygulamasını yap (4 ders + Akıl Bahçesi + sesli okuma + iPad uyumu).
 2. Test et, commit ve push yap, Claude Artifact olarak yayınla, linki veliye gönder.
 3. Veli beğenince: GitHub'da herkese açık `ders-bahcesi` deposu, `index.html` ve Pages ayarı (adım adım). Ardından iPad'de Ana Ekrana Ekle.
+
+## Yayın yerleri (ÖNEMLİ)
+
+Kızı iPad'de **GitHub Pages** adresini kullanıyor: `enesarabaci37.github.io/ders-bahcesi/`. Bu sayfa ayrı **`enesarabaci37/ders-bahcesi`** deposunun `main` dalındaki `index.html` dosyasından yayınlanıyor.
+Her değişiklikte üç yer güncellenmeli:
+1. `ders-bahcesi.html` dosyasını düzenle, `python3 tools/build_index.py` çalıştır (bu depo, `claude/happy-feynman-ga17g5` dalı).
+2. Claude linkini güncelle: https://claude.ai/artifact/W2hwKHmJX7xmV5pv5S8Eaj
+3. Üretilen `index.html` dosyasını `enesarabaci37/ders-bahcesi` deposunun `main` dalına kopyala ve push et. Veli bunun için izin verdi; yeni oturumda depoyu `add_repo` ile ekle. Sayfa 1-2 dakikada güncellenir.
