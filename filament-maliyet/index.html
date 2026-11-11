@@ -359,7 +359,14 @@ function colorDist(a,b){
 }
 const matNorm = m => String(m||'').toUpperCase().replace(/\s+/g,'');
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2600); }
-function download(name, text, type){
+async function download(name, text, type){
+  // Claude linki içinde açıldıysa platformun indirme penceresini kullan
+  if(window.claude && typeof window.claude.use==='function'){
+    try{
+      const dl=await window.claude.use('downloads');
+      if(dl){ await dl.save({filename:name, data:text}); return; }
+    }catch(e){ if(e && e.code==='declined') return; if(e && e.code){ toast('İndirme bu görünümde kullanılamıyor.'); return; } }
+  }
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name;
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},500);
 }
