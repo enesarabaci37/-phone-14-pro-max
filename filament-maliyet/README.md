@@ -5,7 +5,7 @@
 ## Kullanım
 1. **Filamentler:** Elindeki makaraları ekle: marka, seri, malzeme (PLA, PETG, ABS, ASA, TPU, PA, PC…), renk, makara fiyatı ve stokta kalan gram.
 2. **Projeler → + Yeni proje:** Projeye isim ve parça adedi ver.
-3. Her **tabla** için süreyi (saat/dakika) gir, ardından renkleri ve kaç gram kullanıldığını yaz. Tabla eklenebilir, çoğaltılabilir ve silinebilir.
+3. Her **tabla** içine renkleri ekle; her rengin kaç gram ve kaç saat/dakika basıldığını yaz. Tablanın süresi bu satırların toplamıdır. Tabla eklenebilir, çoğaltılabilir ve silinebilir.
 4. Tabla basılınca **“Basıldı · stoktan düş”** düğmesine bas; kullanılan gram stoktan düşer. Yanlışlıkla bastıysan **“Basılmadı yap”** ile gram stoğa geri eklenir.
 5. Sağdaki özette şunlar görünür: filament, elektrik, makine yıpranması, fire payı, ek masraf, toplam maliyet, parça başı maliyet ve önerilen satış fiyatı.
 
