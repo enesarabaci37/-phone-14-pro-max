@@ -1,19 +1,16 @@
 # Filament Maliyet
 
-Bambu Lab baskıları için maliyet hesaplayıcı ve filament stok takibi. Tek bir HTML dosyası; internet gerekmez.
+3D baskı projelerinin maliyetini hesaplayan ve filament stoğunu takip eden program. Tek bir HTML dosyasından oluşur ve internet olmadan çalışır.
 
-## Ne yapar?
-- **Hesapla:** Bambu Studio'dan dışa aktardığın `.gcode.3mf` (veya `.gcode`) dosyasını bırak. Her renk için kullanılan gram ve baskı süresi otomatik okunur, renkler stoktaki en yakın filamentle eşleşir. Maliyet şu kalemlerden oluşur: filament, elektrik, makine yıpranması/bakım, fire payı ve ek masraf. Parça başı maliyet ve önerilen satış fiyatı da hesaplanır.
-- **Filamentler:** Marka, seri, renk, fiyat ve kalan gram bilgileri. “+1 makara” ile stok eklenir.
-- **Geçmiş:** Kaydedilen baskılar ve aylık/toplam harcama. Excel'e (CSV) aktarılabilir.
-- **Ayarlar:** Elektrik fiyatı, güç, makine fiyatı, fire ve kâr oranı. Yedekleme (.json) de buradan yapılır.
+## Kullanım
+1. **Filamentler:** Elindeki makaraları ekle: marka, seri, malzeme (PLA, PETG, ABS, ASA, TPU, PA, PC…), renk, makara fiyatı ve stokta kalan gram.
+2. **Projeler → + Yeni proje:** Projeye isim ve parça adedi ver.
+3. Her **tabla** için süreyi (saat/dakika) gir, ardından renkleri ve kaç gram kullanıldığını yaz. Tabla eklenebilir, çoğaltılabilir ve silinebilir.
+4. Tabla basılınca **“Basıldı · stoktan düş”** düğmesine bas; kullanılan gram stoktan düşer. Yanlışlıkla bastıysan **“Basılmadı yap”** ile gram stoğa geri eklenir.
+5. Sağdaki özette şunlar görünür: filament, elektrik, makine yıpranması, fire payı, ek masraf, toplam maliyet, parça başı maliyet ve önerilen satış fiyatı.
 
-## .gcode.3mf nasıl alınır?
-Bambu Studio → **Dilimle** → sağ üstteki ok → **Dışa aktar → Plaka dilimlenmiş dosyasını dışa aktar**.
+## Ayarlar
+Burada elektrik fiyatı (vergiler dahil TL/kWh), makinenin gücü, makine fiyatı ve ömrü, bakım, fire payı ve kâr marjı ayarlanır. Ayarlar sekmesinden yedek indirip yükleyebilirsin; cihazlar arasında veri taşımak için yedeği Google Drive'a koy.
 
-## Kurulum
-- **Bilgisayarda program gibi:** GitHub Pages adresini Chrome veya Edge ile aç, adres çubuğundaki **“Uygulamayı yükle”** simgesine tıkla. Uygulama kendi penceresinde açılır, Başlat menüsüne ve masaüstüne eklenir, internet olmadan da çalışır.
-- **iPhone:** Safari ile aç → Paylaş → **Ana Ekrana Ekle**.
-- **İnternetsiz / Drive:** `index.html` dosyasını indirip çift tıklaman yeterli.
-
-Veriler her cihazın kendi tarayıcısında saklanır. Cihazlar arasında taşımak için Ayarlar → **Yedeği indir** ile aldığın dosyayı Drive'a koy, diğer cihazda **Yedeği yükle** de.
+## Windows
+GitHub Releases sayfasındaki `Filament-Maliyet.zip` dosyasını indir ve ayıkla, ardından `Filament-Maliyet.exe`'yi çalıştır. Program, Microsoft Edge ile kendi penceresinde açılır.

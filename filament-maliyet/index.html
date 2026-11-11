@@ -4,261 +4,250 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Filament Maliyet</title>
-<meta name="description" content="3D baskı maliyet hesaplayıcı ve filament stok takibi">
+<meta name="description" content="3D baskı proje maliyeti ve filament stok takibi">
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Filament">
 <style>
 :root{
-  --bg:#f4f5f7;--card:#fff;--text:#14171c;--muted:#5f6b7a;--line:#e3e6ea;
-  --accent:#0f766e;--accent-ink:#fff;--accent-soft:#e6f4f2;--danger:#b42318;--warn:#b54708;--ok:#067647;
-  --radius:14px;--shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+  --bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--field:#f9fafb;
+  --accent:#0f766e;--accent-ink:#fff;--accent-soft:#e6f4f2;--danger:#b42318;--danger-soft:#fef3f2;--warn:#b54708;--warn-soft:#fffaeb;--ok:#067647;--ok-soft:#ecfdf3;
+  --radius:14px;--shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.07);
 }
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#0e1014;--card:#171a20;--text:#e7e9ec;--muted:#98a2b0;--line:#2a2f38;
-    --accent:#2dd4bf;--accent-ink:#04201d;--accent-soft:#11302d;--danger:#f97066;--warn:#fdb022;--ok:#47cd89;--shadow:none}
+  :root:not([data-theme="light"]){--bg:#0d0f13;--card:#161a20;--text:#e8eaed;--muted:#9aa3af;--line:#2a2f38;--field:#1d222a;
+    --accent:#2dd4bf;--accent-ink:#04201d;--accent-soft:#12302d;--danger:#f97066;--danger-soft:#3a1a18;--warn:#fdb022;--warn-soft:#352a12;--ok:#47cd89;--ok-soft:#10301f;--shadow:none}
 }
-:root[data-theme="dark"]{--bg:#0e1014;--card:#171a20;--text:#e7e9ec;--muted:#98a2b0;--line:#2a2f38;
-  --accent:#2dd4bf;--accent-ink:#04201d;--accent-soft:#11302d;--danger:#f97066;--warn:#fdb022;--ok:#47cd89;--shadow:none}
+:root[data-theme="dark"]{--bg:#0d0f13;--card:#161a20;--text:#e8eaed;--muted:#9aa3af;--line:#2a2f38;--field:#1d222a;
+  --accent:#2dd4bf;--accent-ink:#04201d;--accent-soft:#12302d;--danger:#f97066;--danger-soft:#3a1a18;--warn:#fdb022;--warn-soft:#352a12;--ok:#47cd89;--ok-soft:#10301f;--shadow:none}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  padding-bottom:env(safe-area-inset-bottom)}
-header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
-.bar{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;margin-right:auto}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.bar{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:750;font-size:17px;margin-right:auto}
 .brand img{width:30px;height:30px;border-radius:8px}
-nav{display:flex;gap:4px;overflow-x:auto}
-nav button{border:0;background:none;color:var(--muted);font:inherit;font-weight:600;padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap}
+nav{display:flex;gap:4px}
+nav button{border:0;background:none;color:var(--muted);font:inherit;font-weight:650;padding:8px 14px;border-radius:10px;cursor:pointer}
 nav button[aria-selected=true]{background:var(--accent-soft);color:var(--accent)}
-main{max-width:1120px;margin:0 auto;padding:16px}
-section[hidden]{display:none}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
+main{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:22px;margin:0}
+.page-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.page-head .sp{flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
 .card h2{font-size:16px;margin:0 0 12px}
-.card h3{font-size:14px;margin:16px 0 8px;color:var(--muted);font-weight:600}
-.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
-@media (max-width:860px){.grid2{grid-template-columns:minmax(0,1fr)}}
-.sticky{position:sticky;top:76px}
-@media (max-width:860px){.sticky{position:static}}
-label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
-input,select,textarea{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;min-width:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.sticky{position:sticky;top:78px}
+@media (max-width:900px){.sticky{position:static}}
+label{display:block;font-size:12.5px;color:var(--muted);font-weight:650;margin-bottom:4px}
+input,select{font:inherit;color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;min-width:0}
 input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled,select:disabled{opacity:.7;cursor:not-allowed}
 input[type=color]{padding:2px;height:40px;cursor:pointer}
-input[type=checkbox]{width:auto;accent-color:var(--accent)}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.row>*{flex:1 1 140px}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.fgrid .full{grid-column:1/-1}
+.fgrid .two{grid-column:span 2}
+@media (max-width:600px){.fgrid{grid-template-columns:1fr 1fr}.fgrid .two{grid-column:1/-1}}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
-  font:inherit;font-weight:600;padding:9px 14px;border-radius:10px;cursor:pointer;text-decoration:none}
+  font:inherit;font-weight:650;padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap}
 .btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.danger{color:var(--danger)}
-.btn.sm{padding:5px 10px;font-size:13px}
+.btn.danger:hover{border-color:var(--danger)}
+.btn.sm{padding:6px 11px;font-size:13px}
 .btn.ghost{border-color:transparent;background:none}
-.drop{border:2px dashed var(--line);border-radius:var(--radius);padding:22px 16px;text-align:center;cursor:pointer;transition:.15s}
-.drop.over{border-color:var(--accent);background:var(--accent-soft)}
-.drop strong{display:block;font-size:16px;margin-bottom:4px}
-.drop small{color:var(--muted)}
+.btn.ghost:hover{background:var(--field)}
+.btn.block{width:100%}
+.btn.dashed{border-style:dashed;width:100%;padding:14px;color:var(--accent);background:transparent}
 .muted{color:var(--muted)}
 .small{font-size:13px}
-.sw{display:inline-block;width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.2);vertical-align:middle;flex:none}
-.sw.lg{width:34px;height:34px}
+.sw{display:inline-block;width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.18);flex:none;vertical-align:middle}
+.sw.lg{width:36px;height:36px}
+.sw.none{background:repeating-linear-gradient(45deg,var(--line) 0 3px,transparent 3px 6px)}
 table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
-th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11.5px;color:var(--muted);font-weight:650;text-transform:uppercase;letter-spacing:.04em}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.slot-g{width:90px}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.gray{background:var(--field);color:var(--muted);border:1px solid var(--line)}
+.note{font-size:13px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);margin:10px 0}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.empty{padding:36px 12px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--text);font-size:16px;margin-bottom:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow)}
+.kpi .k{font-size:12px;color:var(--muted);font-weight:650}
+.kpi .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
+
+/* proje listesi */
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;text-align:left;font:inherit;color:inherit}
+.pcard:hover{border-color:var(--accent)}
+.pcard .t{font-weight:750;font-size:16px;display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.pcard .m{font-size:13px;color:var(--muted)}
+.pcard .c{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.pcard .sws{display:flex;gap:3px;flex-wrap:wrap;min-height:18px}
+
+/* proje editörü */
+.plate{padding:0;overflow:hidden}
+.plate.printed{border-color:var(--ok)}
+.pl-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--field)}
+.pl-no{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-weight:800;flex:none}
+.plate.printed .pl-no{background:var(--ok)}
+.pl-head b{white-space:nowrap}
+.pl-head input{background:var(--card);padding:6px 9px}
+.pl-body{padding:12px 14px}
+.pl-time{display:grid;grid-template-columns:repeat(2,minmax(0,110px));gap:10px;margin-bottom:10px}
+.fsel{display:flex;align-items:center;gap:8px}
+.g{width:96px;text-align:right}
+.pl-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
+.pl-foot .sum{flex:1;min-width:200px;font-size:13px;color:var(--muted)}
+.pl-foot .sum b{color:var(--text);font-size:15px}
 .lines{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-variant-numeric:tabular-nums}
 .lines .v{text-align:right}
 .lines .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:4px 0}
 .total{font-size:26px;font-weight:800;color:var(--accent)}
-.big{font-size:18px;font-weight:700}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
-.kpi .k{font-size:12px;color:var(--muted);font-weight:600}
-.kpi .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
-.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.fil{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;flex-direction:column;gap:8px}
+.big{font-size:17px;font-weight:750}
+.ulist{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.ulist div{display:flex;align-items:center;gap:8px;font-size:13px}
+.ulist .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.progress i{display:block;height:100%;background:var(--ok)}
+
+/* filamentler */
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--muted);font:inherit;font-size:13px;font-weight:650;padding:5px 11px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.fil{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
 .fil .top{display:flex;gap:10px;align-items:center}
-.fil .nm{font-weight:700;line-height:1.25}
+.fil .nm{font-weight:750;line-height:1.25}
 .fil .sub{font-size:13px;color:var(--muted)}
 .meter{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--accent)}
 .meter i.low{background:var(--warn)}
 .meter i.empty{background:var(--danger)}
 .fil .acts{display:flex;gap:6px;flex-wrap:wrap}
-.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
-.tag.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}
-.note{font-size:13px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);margin:10px 0}
-.note.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}
-.hist-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
-.hist-item:last-child{border-bottom:0}
-.hist-item .main{flex:1;min-width:0}
-.hist-item .sws{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
-dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);color:var(--text);padding:0;width:min(520px,calc(100vw - 32px))}
+
+dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);color:var(--text);padding:0;width:min(560px,calc(100vw - 24px))}
 dialog::backdrop{background:rgba(0,0,0,.45)}
 dialog form{padding:18px}
 dialog h2{margin:0 0 14px;font-size:17px}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fgrid .full{grid-column:1/-1}
-.dlg-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120px);background:var(--text);color:var(--bg);
-  padding:10px 16px;border-radius:10px;font-weight:600;transition:transform .25s;z-index:100;max-width:calc(100vw - 32px)}
+.dlg-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(140px);background:var(--text);color:var(--bg);
+  padding:10px 16px;border-radius:10px;font-weight:650;transition:transform .25s;z-index:100;max-width:calc(100vw - 32px)}
 #toast.show{transform:translateX(-50%) translateY(0)}
-.empty{padding:30px 10px;text-align:center;color:var(--muted)}
-.chk{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500;margin:0}
-@media (max-width:560px){
-  .slot-g{width:70px}
+@media (max-width:600px){
   .hide-sm{display:none}
-  .fgrid{grid-template-columns:1fr}
+  .g{width:74px}
+  nav button{padding:8px 10px}
+  .brand span{display:none}
 }
 </style>
 </head>
 <body>
 <header>
   <div class="bar">
-    <div class="brand"><img src="icon.svg" alt="" onerror="this.remove()">Filament Maliyet</div>
+    <div class="brand"><img src="icon.svg" alt="" onerror="this.remove()"><span>Filament Maliyet</span></div>
     <nav role="tablist">
-      <button role="tab" data-tab="calc">Hesapla</button>
+      <button role="tab" data-tab="proj">Projeler</button>
       <button role="tab" data-tab="inv">Filamentler</button>
-      <button role="tab" data-tab="hist">Geçmiş</button>
       <button role="tab" data-tab="set">Ayarlar</button>
     </nav>
   </div>
 </header>
 
 <main>
-<!-- ================= HESAPLA ================= -->
-<section id="tab-calc">
-  <div class="grid2">
-    <div>
+  <section id="tab-proj"></section>
+
+  <section id="tab-inv" hidden>
+    <div class="page-head"><h1>Filamentler</h1><div class="sp"></div><button class="btn primary" id="addFil">+ Yeni filament</button></div>
+    <div class="kpis" id="invKpis"></div>
+    <div class="card" style="padding:12px;display:flex;flex-direction:column;gap:10px">
+      <input id="invSearch" placeholder="Ara: marka, renk, seri…">
+      <div class="chips" id="matChips"></div>
+    </div>
+    <div class="inv" id="invList"></div>
+  </section>
+
+  <section id="tab-set" hidden>
+    <div class="page-head"><h1>Ayarlar</h1></div>
+    <div class="grid2">
       <div class="card">
-        <div class="drop" id="drop" tabindex="0">
-          <strong>Bambu Studio dosyasını buraya bırak</strong>
-          <small>.gcode.3mf (önerilen) veya .gcode · tıklayıp da seçebilirsin</small>
-          <input type="file" id="fileIn" accept=".3mf,.gcode" hidden>
+        <h2>Maliyet ayarları</h2>
+        <div class="fgrid" style="grid-template-columns:1fr 1fr">
+          <div><label for="sKwh">Elektrik fiyatı, vergiler dahil (TL/kWh)</label><input id="sKwh" inputmode="decimal"></div>
+          <div><label for="sPow">Makinenin ortalama gücü (Watt)</label><input id="sPow" inputmode="decimal"></div>
+          <div><label for="sMach">Makine fiyatı (TL)</label><input id="sMach" inputmode="decimal"></div>
+          <div><label for="sLife">Makine ömrü (baskı saati)</label><input id="sLife" inputmode="decimal"></div>
+          <div><label for="sMaint">Bakım / yedek parça (TL/saat)</label><input id="sMaint" inputmode="decimal"></div>
+          <div><label for="sFail">Fire payı (%)</label><input id="sFail" inputmode="decimal"></div>
+          <div><label for="sProfit">Satış için kâr marjı (%)</label><input id="sProfit" inputmode="decimal"></div>
         </div>
-        <div id="fileInfo"></div>
-      </div>
-
-      <div class="card">
-        <h2>Baskı bilgileri</h2>
-        <div class="row">
-          <div style="flex:2 1 220px"><label for="cName">İş adı</label><input id="cName" placeholder="ör. Anahtarlık"></div>
-          <div><label for="cQty">Tablada kaç parça var?</label><input id="cQty" type="number" min="1" step="1" value="1"></div>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div><label for="cH">Süre (saat)</label><input id="cH" type="number" min="0" step="1" value="0"></div>
-          <div><label for="cM">Süre (dakika)</label><input id="cM" type="number" min="0" max="59" step="1" value="0"></div>
-          <div><label for="cLabor">Ek masraf / işçilik (TL)</label><input id="cLabor" type="number" min="0" step="0.01" value="0"></div>
-        </div>
-
-        <h3>Kullanılan filamentler</h3>
-        <table>
-          <thead><tr><th style="width:28px"></th><th>Filament</th><th class="num">Gram</th><th class="num hide-sm">Maliyet</th><th style="width:34px"></th></tr></thead>
-          <tbody id="slots"></tbody>
-        </table>
-        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn sm" id="addSlot">+ Filament ekle</button>
-          <button class="btn sm ghost" id="clearCalc">Temizle</button>
+        <div class="note small">
+          <b>Nasıl hesaplanıyor?</b><br>
+          Filament = gram × (makara fiyatı ÷ makara gramı)<br>
+          Elektrik = süre × güç × elektrik fiyatı<br>
+          Makine = süre × (makine fiyatı ÷ ömür + bakım)<br>
+          Fire = bunların toplamının %'si · Satış = toplam maliyet + kâr marjı
         </div>
       </div>
-    </div>
-
-    <div class="sticky">
-      <div class="card" id="result"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FİLAMENTLER ================= -->
-<section id="tab-inv" hidden>
-  <div class="kpis" id="invKpis"></div>
-  <div class="card" style="padding:12px">
-    <div class="row" style="align-items:center">
-      <input id="invSearch" placeholder="Ara: marka, renk, tür…" style="flex:3 1 220px">
-      <select id="invSort" style="flex:1 1 150px">
-        <option value="brand">Sırala: Marka</option>
-        <option value="remaining">Sırala: Kalan (az→çok)</option>
-        <option value="price">Sırala: TL/gram</option>
-      </select>
-      <button class="btn primary" id="addFil" style="flex:0 0 auto">+ Yeni filament</button>
-    </div>
-  </div>
-  <div class="inv" id="invList"></div>
-</section>
-
-<!-- ================= GEÇMİŞ ================= -->
-<section id="tab-hist" hidden>
-  <div class="kpis" id="histKpis"></div>
-  <div class="card">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <h2 style="margin:0;margin-right:auto">Baskı geçmişi</h2>
-      <button class="btn sm" id="csvBtn">Excel'e aktar (CSV)</button>
-    </div>
-    <div id="histList"></div>
-  </div>
-</section>
-
-<!-- ================= AYARLAR ================= -->
-<section id="tab-set" hidden>
-  <div class="grid2">
-    <div class="card">
-      <h2>Maliyet ayarları</h2>
-      <div class="fgrid">
-        <div><label for="sKwh">Elektrik birim fiyatı (TL/kWh)</label><input id="sKwh" type="number" step="0.01" min="0"></div>
-        <div><label for="sPow">Ortalama çekilen güç (Watt)</label><input id="sPow" type="number" step="1" min="0"></div>
-        <div><label for="sMach">Makine fiyatı (TL)</label><input id="sMach" type="number" step="1" min="0"></div>
-        <div><label for="sLife">Makine ömrü (baskı saati)</label><input id="sLife" type="number" step="100" min="1"></div>
-        <div><label for="sMaint">Bakım/yedek parça (TL/saat)</label><input id="sMaint" type="number" step="0.1" min="0"></div>
-        <div><label for="sFail">Fire payı (%)</label><input id="sFail" type="number" step="1" min="0"></div>
-        <div class="full"><label for="sProfit">Satış için kâr marjı (%)</label><input id="sProfit" type="number" step="1" min="0"></div>
-      </div>
-      <div class="note small">
-        <b>İpuçları:</b> Gücü en doğru akıllı prizle ölçersin (baskı boyunca ortalama Watt). Elektrik fiyatını faturandaki
-        <i>vergiler dahil</i> kWh bedelinden al. Makine fiyatını girmezsen amortisman 0 sayılır.
-      </div>
-    </div>
-    <div>
-      <div class="card">
-        <h2>Yedekleme ve senkron</h2>
-        <p class="small muted" style="margin-top:0">Veriler bu cihazdaki tarayıcıda saklanır. Bilgisayar ile telefon arasında taşımak ya da
-          yedeklemek için yedek dosyasını indirip Google Drive'a koy, öbür cihazda “Yedeği yükle” de.</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn primary" id="expBtn">Yedeği indir (.json)</button>
-          <button class="btn" id="impBtn">Yedeği yükle</button>
-          <input type="file" id="impIn" accept=".json,application/json" hidden>
+      <div>
+        <div class="card">
+          <h2>Yedekleme</h2>
+          <p class="small muted" style="margin-top:0">Veriler bu cihazda saklanır. Başka cihaza taşımak ya da yedeklemek için yedeği indirip Google Drive'a koy, diğer cihazda “Yedeği yükle” de.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn primary" id="expBtn">Yedeği indir</button>
+            <button class="btn" id="impBtn">Yedeği yükle</button>
+            <input type="file" id="impIn" accept=".json,application/json" hidden>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Her şeyi sil</h2>
+          <p class="small muted" style="margin-top:0">Tüm projeler, filamentler ve ayarlar silinir.</p>
+          <button class="btn danger" id="resetBtn">Her şeyi sil</button>
         </div>
       </div>
-      <div class="card">
-        <h2>Sıfırla</h2>
-        <p class="small muted" style="margin-top:0">Filament listesini başlangıç listesine döndürür, geçmişi ve ayarları siler.</p>
-        <button class="btn danger" id="resetBtn">Her şeyi sıfırla</button>
-      </div>
     </div>
-  </div>
-</section>
+  </section>
 </main>
 
-<dialog id="filDlg">
-  <form method="dialog" id="filForm">
-    <h2 id="filDlgTitle">Filament</h2>
-    <div class="fgrid">
-      <div><label for="fBrand">Marka</label><input id="fBrand" required placeholder="Bambu Lab"></div>
-      <div><label for="fSeries">Seri</label><input id="fSeries" placeholder="PLA Matte"></div>
-      <div><label for="fMat">Malzeme</label><input id="fMat" required placeholder="PLA" list="matList"></div>
-      <div><label for="fColorName">Renk adı</label><input id="fColorName" required placeholder="Charcoal"></div>
-      <div><label for="fColor">Renk</label><input id="fColor" type="color" value="#888888"></div>
-      <div><label for="fPrice">Makara fiyatı (TL)</label><input id="fPrice" type="number" step="0.01" min="0" required></div>
-      <div><label for="fSpool">Makara net ağırlığı (g)</label><input id="fSpool" type="number" step="1" min="1" value="1000" required></div>
-      <div><label for="fRem">Kalan (g)</label><input id="fRem" type="number" step="1" min="0" value="1000"></div>
-      <div class="full"><label for="fNote">Not</label><input id="fNote" placeholder="ör. Refill, kuru kutuda"></div>
+<dialog id="projDlg">
+  <form method="dialog">
+    <h2>Yeni proje</h2>
+    <div class="fgrid" style="grid-template-columns:2fr 1fr">
+      <div><label for="npName">Proje adı</label><input id="npName" required placeholder="ör. Anahtarlık siparişi"></div>
+      <div><label for="npQty">Parça adedi</label><input id="npQty" inputmode="numeric" value="1"></div>
     </div>
-    <datalist id="matList"><option>PLA</option><option>PETG</option><option>ABS</option><option>ASA</option><option>TPU</option><option>PLA-CF</option><option>PETG-CF</option><option>PA</option><option>PC</option><option>PVA</option></datalist>
+    <div class="dlg-acts">
+      <button class="btn" value="cancel" formnovalidate>Vazgeç</button>
+      <button class="btn primary" value="ok">Oluştur</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="filDlg">
+  <form method="dialog">
+    <h2 id="filDlgTitle">Filament</h2>
+    <div class="fgrid" style="grid-template-columns:1fr 1fr">
+      <div><label for="fBrand">Marka</label><input id="fBrand" required placeholder="ör. Bambu Lab"></div>
+      <div><label for="fSeries">Seri / ürün (isteğe bağlı)</label><input id="fSeries" placeholder="ör. Matte, Basic, Silk"></div>
+      <div><label for="fMat">Malzeme</label><select id="fMat"></select></div>
+      <div><label for="fColorName">Renk adı</label><input id="fColorName" required placeholder="ör. Kırmızı"></div>
+      <div><label for="fColor">Renk</label><input id="fColor" type="color" value="#888888"></div>
+      <div><label for="fPrice">Makara fiyatı (TL)</label><input id="fPrice" inputmode="decimal" required placeholder="ör. 895,49"></div>
+      <div><label for="fSpool">Makara ağırlığı (g)</label><input id="fSpool" inputmode="decimal" value="1000" required></div>
+      <div><label for="fRem">Stokta kalan (g)</label><input id="fRem" inputmode="decimal" value="1000"></div>
+      <div class="full" style="grid-column:1/-1"><label for="fNote">Not (isteğe bağlı)</label><input id="fNote" placeholder="ör. Refill, kuru kutuda"></div>
+    </div>
     <div class="dlg-acts">
       <button class="btn" value="cancel" formnovalidate>Vazgeç</button>
       <button class="btn primary" value="ok">Kaydet</button>
@@ -270,546 +259,435 @@ dialog h2{margin:0 0 14px;font-size:17px}
 
 <script>
 "use strict";
-/* ============================================================
-   Veri
-   ============================================================ */
-const LS_KEY = 'filamentMaliyet.v1';
+/* =================== Veri =================== */
+const LS_KEY = 'filamentMaliyet.v2';
 const DEFAULT_SETTINGS = {kwhPrice:6.6, powerW:200, machinePrice:0, lifetimeH:5000, maintPerH:0.5, failPct:10, profitPct:50};
+const MATERIALS = ['PLA','PLA+','PLA-CF','PETG','PETG-CF','ABS','ASA','TPU','PA (Naylon)','PA-CF','PC','PP','HIPS','PVA','Diğer'];
 
-// [marka, seri, malzeme, renk adı, renk kodu, makara fiyatı, not]
-const SEED = [
-  ['Bambu Lab','PLA Matte','PLA','Lilac Purple','#AE96D4',895.49],
-  ['Bambu Lab','PLA Matte','PLA','Dark Red','#BB3D43',895.49],
-  ['Bambu Lab','PLA Matte','PLA','Charcoal','#2B2B2D',898.14],
-  ['Bambu Lab','PLA Matte','PLA','Ivory White','#F2EFE6',898.14],
-  ['Bambu Lab','PLA Basic','PLA','Mistletoe Green','#3F8E43',895.49],
-  ['Bambu Lab','PLA Basic','PLA','Blue','#0A2989',895.49],
-  ['Bambu Lab','PLA Basic','PLA','Yellow','#F4EE2A',895.49],
-  ['Bambu Lab','PLA Basic','PLA','Orange','#FF6A13',895.49],
-  ['Bambu Lab','PLA Basic','PLA','Gray','#8E9089',895.49],
-  ['Bambu Lab','PLA Basic','PLA','Brown','#9D432C',895.49],
-  ['Bambu Lab','PLA Basic','PLA','Red','#C12E1F',761.17,'Refill'],
-  ['Bambu Lab','PLA Basic','PLA','Hot Pink','#F5547C',895.49],
-  ['Bambu Lab','PLA Pure','PLA','Apricot','#F2A65A',1077.76,'Reusable spool'],
-  ['Bambu Lab','PLA Pure','PLA','Baby Blue','#A9D8EE',1077.76,'Reusable spool'],
-  ['Bambu Lab','PLA Pure','PLA','Absolute Black','#111111',1077.76,'Reusable spool'],
-  ['Bambu Lab','PLA Pure','PLA','Milky Pink','#F4C3CC',1077.76,'Reusable spool'],
-  ['Bambu Lab','PLA Pure','PLA','Pure White','#FAFAFA',1077.76,'Reusable spool'],
-  ['Bambu Lab','TPU 95A HF','TPU','Black','#101010',1571.73],
-  ['Bambu Lab','TPU 95A HF','TPU','White','#F5F5F5',1571.73],
-  ['BIQU','PLA GO','PLA','Black','#1A1A1A',599],
-  ['BIQU','PLA GO','PLA','Avocado Green','#8CC63F',599],
-  ['BIQU','PLA GO','PLA','Apricot','#F1D7C1',599],
-  ['BIQU','PLA GO','PLA','Purple','#5B4CC4',599],
-  ['BIQU','PLA Translucent','PLA','Sakura Pink','#E9A3AE',699],
-];
-
-function seedFilaments(){
-  return SEED.map((s,i)=>({id:'f'+(i+1), brand:s[0], series:s[1], material:s[2], colorName:s[3], color:s[4],
-    price:s[5], spoolG:1000, remainingG:1000, note:s[6]||''}));
-}
 function normalizeData(d){
   d = d && typeof d==='object' ? d : {};
-  return {
-    version:1,
-    settings:{...DEFAULT_SETTINGS, ...(d.settings||{})},
-    filaments:Array.isArray(d.filaments) ? d.filaments : seedFilaments(),
-    history:Array.isArray(d.history) ? d.history : [],
-    mappings:(d.mappings && typeof d.mappings==='object') ? d.mappings : {},
-  };
+  return {version:2, settings:{...DEFAULT_SETTINGS, ...(d.settings||{})},
+    filaments:Array.isArray(d.filaments)?d.filaments:[], projects:Array.isArray(d.projects)?d.projects:[]};
 }
 function loadData(){
-  try{ const raw = localStorage.getItem(LS_KEY); if(raw) return normalizeData(JSON.parse(raw)); }catch(e){}
+  try{ localStorage.removeItem('filamentMaliyet.v1'); localStorage.removeItem('filamentMaliyet.v1.tab'); }catch(e){}
+  try{ const raw=localStorage.getItem(LS_KEY); if(raw) return normalizeData(JSON.parse(raw)); }catch(e){}
   return normalizeData(null);
 }
-let storageOk = true;
+let data = loadData();
+let storageWarned = false;
 function save(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(data)); }
-  catch(e){ if(storageOk) toast('Uyarı: tarayıcı veriyi kaydedemiyor. Yedeği indirmeyi unutma.'); storageOk=false; }
+  catch(e){ if(!storageWarned) toast('Uyarı: veriler kaydedilemiyor. Yedeği indir.'); storageWarned=true; }
 }
-let data = loadData();
+let saveTimer=null;
+function saveSoon(){ clearTimeout(saveTimer); saveTimer=setTimeout(save,300); }
+window.addEventListener('pagehide', save);
 
-/* ============================================================
-   Yardımcılar
-   ============================================================ */
+/* =================== Yardımcılar =================== */
 const $ = s => document.querySelector(s);
-const tl = new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',minimumFractionDigits:2,maximumFractionDigits:2});
+const tlFmt = new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',minimumFractionDigits:2,maximumFractionDigits:2});
 const n1 = new Intl.NumberFormat('tr-TR',{maximumFractionDigits:1});
 const n2 = new Intl.NumberFormat('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
-const money = v => tl.format(isFinite(v)?v:0);
-const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x)?x:def; };
-const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const byId = id => data.filaments.find(f=>f.id===id);
+const money = v => tlFmt.format(isFinite(v)?v:0);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function num(v,def=0){
+  let s=String(v??'').trim().replace(/\s/g,'');
+  if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.');
+  const x=parseFloat(s); return isFinite(x)?x:def;
+}
+const fmtIn = v => (v===0||v)? String(Math.round(v*100)/100).replace('.',',') : '';
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const fil = id => data.filaments.find(f=>f.id===id);
 const perGram = f => f && f.spoolG>0 ? f.price/f.spoolG : 0;
-const filLabel = f => f ? `${f.brand} ${f.series} · ${f.colorName}` : '';
-function fmtDur(sec){ sec=Math.round(sec||0); const h=Math.floor(sec/3600), m=Math.round((sec%3600)/60); return h? `${h} sa ${m} dk` : `${m} dk`; }
-function normHex(c){
-  if(!c) return '';
-  c = String(c).trim();
-  if(!c.startsWith('#')) c = '#'+c;
-  if(/^#[0-9a-f]{8}$/i.test(c)) c = c.slice(0,7);
-  if(/^#[0-9a-f]{3}$/i.test(c)) c = '#'+c.slice(1).split('').map(x=>x+x).join('');
-  return /^#[0-9a-f]{6}$/i.test(c) ? c.toUpperCase() : '';
-}
-function hexRgb(h){ h=normHex(h)||'#808080'; return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16)); }
-function colorDist(a,b){
-  const [r1,g1,b1]=hexRgb(a),[r2,g2,b2]=hexRgb(b), rm=(r1+r2)/2;
-  return Math.sqrt((2+rm/256)*(r1-r2)**2 + 4*(g1-g2)**2 + (2+(255-rm)/256)*(b1-b2)**2);
-}
-const matNorm = m => String(m||'').toUpperCase().replace(/\s+/g,'');
+const filName = f => f ? `${f.colorName} — ${f.brand}${f.series?' '+f.series:''} ${f.material}` : '';
+function fmtDur(min){ min=Math.round(min||0); const h=Math.floor(min/60), m=min%60; return h?`${h} sa ${m} dk`:`${m} dk`; }
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2600); }
+const fmtDate = iso => new Date(iso).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+const r2 = v => Math.round(v*100)/100;
+
 async function download(name, text, type){
-  // Claude linki içinde açıldıysa platformun indirme penceresini kullan
   if(window.claude && typeof window.claude.use==='function'){
-    try{
-      const dl=await window.claude.use('downloads');
-      if(dl){ await dl.save({filename:name, data:text}); return; }
-    }catch(e){ if(e && e.code==='declined') return; if(e && e.code){ toast('İndirme bu görünümde kullanılamıyor.'); return; } }
+    try{ const dl=await window.claude.use('downloads'); if(dl){ await dl.save({filename:name,data:text}); return; } }
+    catch(e){ if(e && e.code==='declined') return; if(e && e.code){ toast('İndirme bu görünümde kullanılamıyor.'); return; } }
   }
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name;
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},500);
 }
-const today = () => new Date().toISOString().slice(0,10);
 
-/* ============================================================
-   Sekmeler
-   ============================================================ */
+/* =================== Hesaplama =================== */
+function rowInfo(row){
+  const f=fil(row.filamentId);
+  if(f) row.snap={name:filName(f), color:f.color, ppg:perGram(f)};
+  const s=row.snap||null;
+  return {f, name:f?filName(f):(s?s.name+' (silinmiş)':''), color:f?f.color:(s?s.color:''), ppg:f?perGram(f):(s?s.ppg:0)};
+}
+function calcPlate(pl){
+  const S=data.settings, min=(pl.h||0)*60+(pl.m||0), hours=min/60;
+  let filament=0, grams=0;
+  const rows=pl.rows.map(r=>{ const i=rowInfo(r), cost=(r.grams||0)*i.ppg; filament+=cost; grams+=r.grams||0; return {...i,cost,grams:r.grams||0,row:r}; });
+  const electricity=hours*(S.powerW/1000)*S.kwhPrice;
+  const machine=hours*((S.lifetimeH>0?S.machinePrice/S.lifetimeH:0)+S.maintPerH);
+  const failure=(filament+electricity+machine)*S.failPct/100;
+  return {rows,min,grams,filament,electricity,machine,failure,total:filament+electricity+machine+failure};
+}
+function calcProject(p){
+  const plates=p.plates.map(calcPlate);
+  const sum=k=>plates.reduce((a,x)=>a+x[k],0);
+  const extra=p.extra||0, total=sum('total')+extra, qty=Math.max(1,p.qty||1);
+  const usage={};
+  plates.forEach(pc=>pc.rows.forEach(r=>{ if(!r.grams) return; const k=r.row.filamentId||('?'+r.name);
+    usage[k]=usage[k]||{name:r.name||'(filament seçilmedi)',color:r.color,grams:0,cost:0,f:r.f}; usage[k].grams+=r.grams; usage[k].cost+=r.cost; }));
+  const sale=total*(1+data.settings.profitPct/100);
+  return {plates,min:sum('min'),grams:sum('grams'),filament:sum('filament'),electricity:sum('electricity'),machine:sum('machine'),failure:sum('failure'),
+    extra,total,qty,perPiece:total/qty,sale,salePer:sale/qty,usage:Object.values(usage),printed:p.plates.filter(x=>x.printed).length};
+}
+
+/* =================== Sekmeler =================== */
+let view={tab:'proj', projectId:null};
 function showTab(name){
+  view.tab=name;
   document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   document.querySelectorAll('main>section').forEach(s=>s.hidden = s.id!=='tab-'+name);
-  try{ localStorage.setItem(LS_KEY+'.tab', name); }catch(e){}
+  if(name==='proj') renderProj();
   if(name==='inv') renderInv();
-  if(name==='hist') renderHist();
   if(name==='set') renderSettings();
-  if(name==='calc') renderSlots();
+  window.scrollTo(0,0);
 }
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.tab==='proj') view.projectId=null; showTab(b.dataset.tab); }));
 
-/* ============================================================
-   Dosya okuma (.gcode.3mf = zip, .gcode = metin)
-   ============================================================ */
-async function inflateRaw(bytes){
-  if(typeof DecompressionStream==='undefined') throw new Error('Tarayıcın sıkıştırılmış dosyaları açamıyor, güncel Chrome/Edge/Safari kullan.');
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
-  return new Uint8Array(await new Response(stream).arrayBuffer());
-}
-async function readZipText(buf, test){
-  const u8=new Uint8Array(buf), dv=new DataView(buf), dec=new TextDecoder();
-  let eocd=-1;
-  for(let i=u8.length-22; i>=0 && i>=u8.length-65557; i--){ if(dv.getUint32(i,true)===0x06054b50){eocd=i;break;} }
-  if(eocd<0) throw new Error('Dosya geçerli bir 3MF değil.');
-  let count=dv.getUint16(eocd+10,true), cdOff=dv.getUint32(eocd+16,true);
-  if(cdOff===0xFFFFFFFF || count===0xFFFF){
-    const loc=eocd-20;
-    if(loc>=0 && dv.getUint32(loc,true)===0x07064b50){
-      const z=Number(dv.getBigUint64(loc+8,true));
-      count=Number(dv.getBigUint64(z+32,true)); cdOff=Number(dv.getBigUint64(z+48,true));
-    }
-  }
-  let p=cdOff;
-  for(let k=0;k<count;k++){
-    if(dv.getUint32(p,true)!==0x02014b50) break;
-    const method=dv.getUint16(p+10,true);
-    let comp=dv.getUint32(p+20,true), uncomp=dv.getUint32(p+24,true);
-    const nl=dv.getUint16(p+28,true), el=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true);
-    let lho=dv.getUint32(p+42,true);
-    const name=dec.decode(u8.subarray(p+46,p+46+nl));
-    let e=p+46+nl; const eEnd=e+el;
-    while(e+4<=eEnd){
-      const id=dv.getUint16(e,true), sz=dv.getUint16(e+2,true);
-      if(id===1){ let q=e+4;
-        if(uncomp===0xFFFFFFFF){uncomp=Number(dv.getBigUint64(q,true));q+=8;}
-        if(comp===0xFFFFFFFF){comp=Number(dv.getBigUint64(q,true));q+=8;}
-        if(lho===0xFFFFFFFF){lho=Number(dv.getBigUint64(q,true));q+=8;} }
-      e+=4+sz;
-    }
-    if(test(name)){
-      const lnl=dv.getUint16(lho+26,true), lel=dv.getUint16(lho+28,true);
-      const start=lho+30+lnl+lel, raw=u8.subarray(start,start+comp);
-      if(method===0) return dec.decode(raw);
-      if(method===8) return dec.decode(await inflateRaw(raw));
-      throw new Error('Desteklenmeyen sıkıştırma yöntemi.');
-    }
-    p+=46+nl+el+cl;
-  }
-  return null;
-}
-function parseSliceInfo(xml){
-  const doc=new DOMParser().parseFromString(xml,'application/xml');
-  return [...doc.getElementsByTagName('plate')].map(pl=>{
-    const meta={};
-    for(const c of pl.children) if(c.tagName==='metadata') meta[c.getAttribute('key')]=c.getAttribute('value');
-    const fil=[...pl.children].filter(c=>c.tagName==='filament').map(f=>({
-      slot:f.getAttribute('id'), type:f.getAttribute('type')||'', color:normHex(f.getAttribute('color')),
-      grams:num(f.getAttribute('used_g'))
-    })).filter(f=>f.grams>0);
-    return {index:meta.index||'?', timeSec:num(meta.prediction), filaments:fil};
-  }).filter(p=>p.filaments.length);
-}
-function parseDuration(s){
-  if(!s) return 0; let t=0;
-  const m=(re,mul)=>{const x=s.match(re); if(x) t+=parseInt(x[1],10)*mul;};
-  m(/(\d+)\s*d/,86400); m(/(\d+)\s*h/,3600); m(/(\d+)\s*m(?!s)/,60); m(/(\d+)\s*s/,1);
-  return t;
-}
-function parseGcode(text){
-  const chunk = text.length>400000 ? text.slice(0,200000)+'\n'+text.slice(-200000) : text;
-  const g = chunk.match(/;\s*total filament weight \[g\]\s*:\s*([\d.,\s]+)/i) || chunk.match(/;\s*filament used \[g\]\s*=\s*([\d.,\s]+)/i);
-  if(!g) throw new Error('G-code içinde filament gram bilgisi bulunamadı.');
-  const weights=g[1].split(',').map(x=>num(x.trim()));
-  const colorsM=chunk.match(/;\s*filament_colou?r\s*=\s*([^\n]+)/i);
-  const typesM=chunk.match(/;\s*filament_type\s*=\s*([^\n]+)/i);
-  const colors=colorsM?colorsM[1].split(/[;,]/).map(normHex):[];
-  const types=typesM?typesM[1].split(/[;,]/).map(s=>s.trim()):[];
-  const tM=chunk.match(/total estimated time:\s*([^;\n]+)/i) || chunk.match(/estimated printing time[^=]*=\s*([^\n]+)/i);
-  const fil=weights.map((w,i)=>({slot:String(i+1), type:types[i]||'', color:colors[i]||'', grams:w})).filter(f=>f.grams>0);
-  return [{index:'1', timeSec:parseDuration(tM?tM[1]:''), filaments:fil}];
+/* =================== Projeler =================== */
+const projSec=$('#tab-proj');
+let projSearch='';
+function renderProj(){ const p=data.projects.find(x=>x.id===view.projectId); p ? renderEditor(p) : renderList(); }
+
+function renderList(){
+  const ps=data.projects.slice().sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));
+  const calcs=new Map(ps.map(p=>[p.id,calcProject(p)]));
+  const monthKey=new Date().toISOString().slice(0,7);
+  let printedG=0, totalAll=0, month=0;
+  for(const p of ps){ const c=calcs.get(p.id); totalAll+=c.total; if((p.createdAt||'').slice(0,7)===monthKey) month+=c.total;
+    p.plates.forEach(pl=>{ if(pl.printed) pl.rows.forEach(r=>printedG+=r.grams||0); }); }
+  const q=projSearch.toLocaleLowerCase('tr');
+  const shown=ps.filter(p=>!q||p.name.toLocaleLowerCase('tr').includes(q));
+  projSec.innerHTML=`
+    <div class="page-head"><h1>Projeler</h1><div class="sp"></div><button class="btn primary" data-a="newProj">+ Yeni proje</button></div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Proje</div><div class="v">${ps.length}</div></div>
+      <div class="kpi"><div class="k">Toplam maliyet</div><div class="v">${money(totalAll)}</div></div>
+      <div class="kpi"><div class="k">Bu ay açılan projeler</div><div class="v">${money(month)}</div></div>
+      <div class="kpi"><div class="k">Basılan filament</div><div class="v">${n1.format(printedG/1000)} kg</div></div>
+    </div>
+    ${ps.length?`<div class="card" style="padding:12px"><input id="projSearch" placeholder="Proje ara…" value="${esc(projSearch)}"></div>`:''}
+    ${ps.length ? `<div class="plist">${shown.map(p=>{ const c=calcs.get(p.id), n=p.plates.length;
+        const st = c.printed===0?'<span class="tag gray">Taslak</span>': c.printed===n?'<span class="tag ok">Basıldı</span>':`<span class="tag warn">${c.printed}/${n} basıldı</span>`;
+        return `<button class="pcard" data-open="${p.id}">
+          <div class="t"><span>${esc(p.name)}</span>${st}</div>
+          <div class="m">${fmtDate(p.createdAt)} · ${n} tabla · ${fmtDur(c.min)} · ${n1.format(c.grams)} g</div>
+          <div class="sws">${c.usage.map(u=>`<span class="sw ${u.color?'':'none'}" style="background:${esc(u.color)}" title="${esc(u.name)}"></span>`).join('')}</div>
+          <div class="c">${money(c.total)}${c.qty>1?` <span class="small muted" style="font-weight:600">· ${money(c.perPiece)}/adet</span>`:''}</div>
+        </button>`; }).join('')}</div>${shown.length?'':'<div class="empty">Aramaya uyan proje yok.</div>'}`
+      : `<div class="card empty"><b>Henüz proje yok</b>${data.filaments.length?'“+ Yeni proje” ile ilk projeni oluştur.':'Önce <a href="#" data-a="goInv">Filamentler</a> sekmesinden renklerini ekle, sonra “+ Yeni proje” ile başla.'}</div>`}`;
+  const s=$('#projSearch'); if(s){ s.addEventListener('input',()=>{projSearch=s.value; const pos=s.selectionStart; renderList(); const n=$('#projSearch'); n.focus(); n.setSelectionRange(pos,pos);}); }
 }
 
-/* ============================================================
-   Hesaplama
-   ============================================================ */
-let calc = {name:'', qty:1, timeSec:0, labor:0, slots:[], plates:null, plateSel:'', fileName:''};
+function newPlate(){ return {id:uid(), name:'', h:0, m:0, rows:[{id:uid(), filamentId:'', grams:0}], printed:false, deducted:{}}; }
 
-function autoMatch(type,color){
-  const key=matNorm(type)+'|'+normHex(color);
-  if(data.mappings[key] && byId(data.mappings[key])) return data.mappings[key];
-  let best=null, bd=Infinity;
-  for(const f of data.filaments){
-    let d = color ? colorDist(f.color,color) : 0;
-    if(type){ const a=matNorm(f.material), b=matNorm(type); if(a!==b) d += (b.startsWith(a)||a.startsWith(b)) ? 300 : 2000; }
-    if(f.remainingG<=0) d+=60;
-    if(d<bd){bd=d;best=f;}
-  }
-  return best ? best.id : '';
-}
-function rememberMapping(slot){
-  if(slot.fileType!==undefined && slot.filamentId){ data.mappings[matNorm(slot.fileType)+'|'+normHex(slot.fileColor)] = slot.filamentId; save(); }
-}
-
-function applyPlate(){
-  const plates=calc.plates; if(!plates) return;
-  let use = calc.plateSel==='all' ? plates : plates.filter(p=>p.index===calc.plateSel);
-  if(!use.length) use=[plates[0]];
-  const merged={}; let t=0;
-  for(const p of use){ t+=p.timeSec; for(const f of p.filaments){ const k=f.slot+'|'+f.color+'|'+f.type; merged[k]=merged[k]?{...merged[k],grams:merged[k].grams+f.grams}:{...f}; } }
-  calc.timeSec=t;
-  calc.slots=Object.values(merged).map(f=>({fileType:f.type, fileColor:f.color, slot:f.slot, grams:Math.round(f.grams*100)/100, filamentId:autoMatch(f.type,f.color)}));
-  syncCalcInputs(); renderSlots();
-}
-
-async function handleFile(file){
-  if(!file) return;
-  const lower=file.name.toLowerCase();
-  try{
-    let plates;
-    if(lower.endsWith('.gcode')){ plates=parseGcode(await file.text()); }
-    else if(lower.endsWith('.3mf')){
-      const xml=await readZipText(await file.arrayBuffer(), n=>/(^|\/)slice_info\.config$/i.test(n));
-      plates = xml ? parseSliceInfo(xml) : [];
-      if(!plates.length) throw Object.assign(new Error('NOSLICE'),{noslice:true});
-    } else throw new Error('Sadece .gcode.3mf, .3mf veya .gcode dosyası.');
-    calc.plates=plates; calc.fileName=file.name;
-    calc.plateSel = plates.length>1 ? 'all' : plates[0].index;
-    if(!calc.name) calc.name = file.name.replace(/\.gcode\.3mf$|\.3mf$|\.gcode$/i,'').replace(/[_-]+/g,' ').trim();
-    applyPlate(); renderFileInfo();
-    toast('Dosya okundu ✓');
-  }catch(e){
-    calc.plates=null; calc.fileName='';
-    $('#fileInfo').innerHTML = e.noslice
-      ? `<div class="note warn"><b>Bu dosyada dilimleme bilgisi yok.</b> Bambu Studio'da önce <b>Dilimle</b>, sonra
-         <b>Dışa aktar → Plaka dilimlenmiş dosyasını dışa aktar</b> (.gcode.3mf) seç ve o dosyayı bırak.
-         Ya da gram ve süreyi aşağıya elle gir.</div>`
-      : `<div class="note warn">${esc(e.message||e)}</div>`;
-  }
-}
-function renderFileInfo(){
-  const el=$('#fileInfo');
-  if(!calc.plates){ el.innerHTML=''; return; }
-  let html=`<div class="note small">📄 <b>${esc(calc.fileName)}</b> okundu.`;
-  if(calc.plates.length>1){
-    html+=` Bu dosyada ${calc.plates.length} plaka var: <select id="plateSel" style="width:auto;margin-left:6px;padding:4px 8px">
-      <option value="all"${calc.plateSel==='all'?' selected':''}>Hepsi (toplam)</option>
-      ${calc.plates.map(p=>`<option value="${esc(p.index)}"${calc.plateSel===p.index?' selected':''}>Plaka ${esc(p.index)}</option>`).join('')}
-    </select>`;
-  }
-  html+=` Her renk otomatik olarak listendeki en yakın filamentle eşleştirildi, yanlışsa açılır listeden değiştir (seçimin hatırlanır).</div>`;
-  el.innerHTML=html;
-  const ps=$('#plateSel'); if(ps) ps.addEventListener('change',()=>{calc.plateSel=ps.value; applyPlate();});
-}
-
-function filOptions(sel){
+function filOptions(sel, disabled){
+  if(!data.filaments.length) return `<option value="">— önce filament ekle —</option>`;
   const groups={};
-  for(const f of data.filaments){ (groups[f.material]=groups[f.material]||[]).push(f); }
-  let h=`<option value="">— filament seç —</option>`;
-  for(const m of Object.keys(groups).sort()){
-    h+=`<optgroup label="${esc(m)}">`+groups[m].slice().sort((a,b)=>filLabel(a).localeCompare(filLabel(b),'tr'))
-      .map(f=>`<option value="${f.id}"${f.id===sel?' selected':''}>${esc(f.colorName)} — ${esc(f.brand)} ${esc(f.series)} (${n1.format(f.remainingG)} g)</option>`).join('')+`</optgroup>`;
+  data.filaments.forEach(f=>(groups[f.material]=groups[f.material]||[]).push(f));
+  let h=`<option value="">— renk seç —</option>`;
+  if(sel && !fil(sel)) h+=`<option value="${esc(sel)}" selected>(silinmiş filament)</option>`;
+  for(const m of MATERIALS.filter(m=>groups[m]).concat(Object.keys(groups).filter(m=>!MATERIALS.includes(m)))){
+    h+=`<optgroup label="${esc(m)}">`+groups[m].slice().sort((a,b)=>a.colorName.localeCompare(b.colorName,'tr'))
+      .map(f=>`<option value="${f.id}"${f.id===sel?' selected':''}>${esc(f.colorName)} — ${esc(f.brand)}${f.series?' '+esc(f.series):''} (${n1.format(f.remainingG)} g)</option>`).join('')+`</optgroup>`;
   }
   return h;
 }
-function renderSlots(){
-  const tb=$('#slots');
-  if(!calc.slots.length){
-    tb.innerHTML=`<tr><td colspan="5" class="empty small">Dosya bırak ya da “+ Filament ekle” ile elle gir.</td></tr>`;
-  } else {
-    tb.innerHTML=calc.slots.map((s,i)=>{
-      const f=byId(s.filamentId);
-      const fileSw = s.fileColor ? `<span class="sw" title="Dosyadaki renk${s.fileType?' · '+esc(s.fileType):''}" style="background:${s.fileColor}"></span>` : `<span class="sw" style="background:${f?f.color:'transparent'}"></span>`;
-      const fileTxt = s.fileColor||s.fileType ? `<div class="small muted">Dosya: ${s.slot?'Slot '+esc(s.slot)+' · ':''}${esc(s.fileType)} ${esc(s.fileColor)}</div>` : '';
-      return `<tr data-i="${i}">
-        <td>${fileSw}</td>
-        <td><select data-k="filamentId">${filOptions(s.filamentId)}</select>${fileTxt}</td>
-        <td class="num"><input class="slot-g" data-k="grams" type="number" min="0" step="0.01" value="${s.grams}"></td>
-        <td class="num hide-sm" data-cost></td>
-        <td><button class="btn sm ghost" data-del title="Kaldır">✕</button></td>
-      </tr>`;
-    }).join('');
-  }
-  renderResult();
-}
-$('#slots').addEventListener('input',e=>{
-  const tr=e.target.closest('tr[data-i]'); if(!tr) return;
-  const s=calc.slots[+tr.dataset.i], k=e.target.dataset.k;
-  if(k==='grams'){ s.grams=num(e.target.value); renderResult(); }
-});
-$('#slots').addEventListener('change',e=>{
-  const tr=e.target.closest('tr[data-i]'); if(!tr) return;
-  const s=calc.slots[+tr.dataset.i];
-  if(e.target.dataset.k==='filamentId'){ s.filamentId=e.target.value; rememberMapping(s); renderSlots(); }
-});
-$('#slots').addEventListener('click',e=>{
-  const b=e.target.closest('[data-del]'); if(!b) return;
-  calc.slots.splice(+b.closest('tr').dataset.i,1); renderSlots();
-});
-$('#addSlot').addEventListener('click',()=>{ calc.slots.push({grams:0, filamentId:''}); renderSlots(); });
-$('#clearCalc').addEventListener('click',()=>{
-  calc={name:'',qty:1,timeSec:0,labor:0,slots:[],plates:null,plateSel:'',fileName:''};
-  syncCalcInputs(); renderFileInfo(); renderSlots();
-});
 
-function syncCalcInputs(){
-  $('#cName').value=calc.name; $('#cQty').value=calc.qty; $('#cLabor').value=calc.labor;
-  $('#cH').value=Math.floor(calc.timeSec/3600); $('#cM').value=Math.round((calc.timeSec%3600)/60);
-}
-function readCalcInputs(){
-  calc.name=$('#cName').value.trim();
-  calc.qty=Math.max(1,Math.round(num($('#cQty').value,1)));
-  calc.labor=Math.max(0,num($('#cLabor').value));
-  calc.timeSec=Math.max(0,num($('#cH').value))*3600+Math.max(0,num($('#cM').value))*60;
-}
-['#cName','#cQty','#cLabor','#cH','#cM'].forEach(s=>$(s).addEventListener('input',()=>{readCalcInputs(); renderResult();}));
-
-function compute(){
-  const S=data.settings, hours=calc.timeSec/3600;
-  const slots=calc.slots.map(s=>{ const f=byId(s.filamentId); return {...s, f, cost:(s.grams||0)*perGram(f)}; });
-  const filament=slots.reduce((a,s)=>a+s.cost,0);
-  const grams=slots.reduce((a,s)=>a+(s.grams||0),0);
-  const electricity=hours*(S.powerW/1000)*S.kwhPrice;
-  const machine=hours*((S.lifetimeH>0?S.machinePrice/S.lifetimeH:0)+S.maintPerH);
-  const base=filament+electricity+machine;
-  const failure=base*S.failPct/100;
-  const total=base+failure+calc.labor;
-  const qty=calc.qty||1;
-  const sale=total*(1+S.profitPct/100);
-  return {slots,filament,grams,electricity,machine,failure,labor:calc.labor,total,qty,perPiece:total/qty,sale,salePer:sale/qty,hours};
-}
-function renderResult(){
-  const r=compute();
-  document.querySelectorAll('#slots tr[data-i]').forEach(tr=>{ const s=r.slots[+tr.dataset.i]; const c=tr.querySelector('[data-cost]'); if(c&&s) c.textContent=s.f?money(s.cost):'—'; });
-  const missing=r.slots.some(s=>!s.f && s.grams>0);
-  const S=data.settings;
-  $('#result').innerHTML=`
-    <h2>Maliyet</h2>
-    <div class="lines">
-      <span>Filament <span class="muted small">(${n1.format(r.grams)} g)</span></span><span class="v">${money(r.filament)}</span>
-      <span>Elektrik <span class="muted small">(${fmtDur(calc.timeSec)} · ${S.powerW} W)</span></span><span class="v">${money(r.electricity)}</span>
-      <span>Makine yıpranması + bakım</span><span class="v">${money(r.machine)}</span>
-      <span>Fire payı <span class="muted small">(%${n1.format(S.failPct)})</span></span><span class="v">${money(r.failure)}</span>
-      ${r.labor?`<span>Ek masraf / işçilik</span><span class="v">${money(r.labor)}</span>`:''}
-      <span class="sep"></span>
-      <span class="big">Toplam maliyet</span><span class="v total">${money(r.total)}</span>
-      ${r.qty>1?`<span>Parça başı <span class="muted small">(${r.qty} adet)</span></span><span class="v big">${money(r.perPiece)}</span>`:''}
-      <span class="sep"></span>
-      <span>Önerilen satış <span class="muted small">(%${n1.format(S.profitPct)} kâr)</span></span><span class="v big">${money(r.qty>1?r.salePer:r.sale)}${r.qty>1?' <span class="small muted">/adet</span>':''}</span>
+function renderEditor(p){
+  const c=calcProject(p);
+  projSec.innerHTML=`
+    <div class="page-head">
+      <button class="btn ghost" data-a="back">← Projeler</button>
+      <div class="sp"></div>
+      <button class="btn sm" data-a="dupProj">Kopyala</button>
+      <button class="btn sm danger" data-a="delProj">Projeyi sil</button>
     </div>
-    ${missing?`<div class="note warn">Bazı satırlarda filament seçilmemiş, onlar hesaba girmedi.</div>`:''}
-    ${!S.machinePrice?`<div class="note small">Makine yıpranması için <a href="#" data-goset>Ayarlar</a>'dan makine fiyatını gir.</div>`:''}
-    <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
-      <label class="chk"><input type="checkbox" id="deduct" checked> Kullanılan gramı stoktan düş</label>
-      <button class="btn primary" id="saveHist" ${r.grams>0?'':'disabled'}>Geçmişe kaydet</button>
+    <div class="grid2">
+      <div>
+        <div class="card">
+          <div class="fgrid">
+            <div class="full"><label for="pName">Proje adı</label><input id="pName" data-pf="name" value="${esc(p.name)}"></div>
+            <div><label for="pQty">Toplam parça adedi</label><input id="pQty" data-pf="qty" inputmode="numeric" value="${p.qty}"></div>
+            <div class="two"><label for="pExtra">Ek masraf: kutu, halka, boya, işçilik… (TL)</label><input id="pExtra" data-pf="extra" inputmode="decimal" value="${fmtIn(p.extra)}" placeholder="0"></div>
+            <div class="full"><label for="pNote">Not</label><input id="pNote" data-pf="note" value="${esc(p.note)}" placeholder="ör. müşteri adı, teslim tarihi"></div>
+          </div>
+        </div>
+        ${!data.filaments.length?`<div class="note warn">Henüz filament eklemedin. Renk seçebilmek için önce <a href="#" data-a="goInv">Filamentler</a> sekmesinden ekle.</div>`:''}
+        ${p.plates.map((pl,i)=>plateHtml(pl,i,c.plates[i])).join('')}
+        <button class="btn dashed" data-a="addPlate">+ Tabla ekle</button>
+      </div>
+      <div class="sticky"><div class="card" id="summary"></div></div>
     </div>`;
-  const g=$('#result [data-goset]'); if(g) g.addEventListener('click',e=>{e.preventDefault();showTab('set');});
-  $('#saveHist').addEventListener('click',saveToHistory);
-}
-function saveToHistory(){
-  readCalcInputs();
-  const r=compute(); if(r.grams<=0) return;
-  const deduct=$('#deduct').checked;
-  const entry={id:uid(), date:new Date().toISOString(), name:calc.name||'İsimsiz baskı', qty:r.qty, timeSec:calc.timeSec,
-    grams:r.grams, deducted:deduct,
-    slots:r.slots.filter(s=>s.grams>0).map(s=>({filamentId:s.filamentId||'', label:s.f?filLabel(s.f):'(seçilmedi)', color:s.f?s.f.color:(s.fileColor||'#999999'), grams:s.grams, cost:s.cost})),
-    costs:{filament:r.filament, electricity:r.electricity, machine:r.machine, failure:r.failure, labor:r.labor, total:r.total, perPiece:r.perPiece, sale:r.sale}};
-  if(deduct) for(const s of entry.slots){ const f=byId(s.filamentId); if(f) f.remainingG=Math.max(0,Math.round((f.remainingG-s.grams)*100)/100); }
-  data.history.unshift(entry); save();
-  toast(deduct?'Kaydedildi, stoktan düşüldü ✓':'Kaydedildi ✓');
-  renderSlots();
+  renderSummary(p,c);
 }
 
-/* drop zone */
-const drop=$('#drop'), fileIn=$('#fileIn');
-drop.addEventListener('click',()=>fileIn.click());
-drop.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();fileIn.click();} });
-fileIn.addEventListener('change',()=>{ handleFile(fileIn.files[0]); fileIn.value=''; });
-['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over');}));
-['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over');}));
-drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
-window.addEventListener('dragover',e=>e.preventDefault());
-window.addEventListener('drop',e=>{ e.preventDefault(); if(e.dataTransfer.files[0]){ showTab('calc'); handleFile(e.dataTransfer.files[0]); } });
+function plateHtml(pl,i,pc){
+  const dis=pl.printed?'disabled':'';
+  return `<div class="card plate ${pl.printed?'printed':''}" data-plate="${pl.id}">
+    <div class="pl-head">
+      <span class="pl-no">${i+1}</span><b>${i+1}. Tabla</b>
+      <input data-plf="name" value="${esc(pl.name)}" placeholder="açıklama (isteğe bağlı)" ${dis}>
+      ${pl.printed?'<span class="tag ok">✓ Basıldı</span>':''}
+    </div>
+    <div class="pl-body">
+      <div class="pl-time">
+        <div><label>Süre (saat)</label><input data-plf="h" inputmode="numeric" value="${pl.h||''}" placeholder="0" ${dis}></div>
+        <div><label>Dakika</label><input data-plf="m" inputmode="numeric" value="${pl.m||''}" placeholder="0" ${dis}></div>
+      </div>
+      <table>
+        <thead><tr><th>Renk</th><th class="num">Gram</th><th class="num hide-sm">Maliyet</th><th style="width:36px"></th></tr></thead>
+        <tbody>${pl.rows.map((r,j)=>{ const ri=pc.rows[j]; return `<tr data-row="${r.id}">
+          <td><div class="fsel"><span class="sw ${ri.color?'':'none'}" style="background:${esc(ri.color)}"></span><select data-rf="filamentId" ${dis}>${filOptions(r.filamentId)}</select></div></td>
+          <td class="num"><input class="g" data-rf="grams" inputmode="decimal" value="${fmtIn(r.grams||'')}" placeholder="0" ${dis}></td>
+          <td class="num hide-sm" data-out="rowCost">${money(ri.cost)}</td>
+          <td>${pl.printed?'':`<button class="btn sm ghost" data-a="delRow" title="Satırı sil" aria-label="Satırı sil">✕</button>`}</td>
+        </tr>`; }).join('')}</tbody>
+      </table>
+      ${pl.printed?'':`<button class="btn sm" data-a="addRow" style="margin-top:10px">+ Renk ekle</button>`}
+    </div>
+    <div class="pl-foot">
+      <div class="sum" data-out="plateSum">${plateSumHtml(pc)}</div>
+      <button class="btn sm ${pl.printed?'':'primary'}" data-a="togglePrinted">${pl.printed?'Basılmadı yap':'Basıldı · stoktan düş'}</button>
+      <button class="btn sm ghost" data-a="dupPlate">Çoğalt</button>
+      ${pl.printed?'':`<button class="btn sm ghost danger" data-a="delPlate">Sil</button>`}
+    </div>
+  </div>`;
+}
+function plateSumHtml(pc){ return `<b>${money(pc.total)}</b> · ${n1.format(pc.grams)} g · ${fmtDur(pc.min)}`; }
 
-/* ============================================================
-   Filamentler
-   ============================================================ */
+function renderSummary(p,c){
+  const S=data.settings;
+  // stok kontrolü (basılmamış tablalar için)
+  const need={};
+  p.plates.forEach(pl=>{ if(!pl.printed) pl.rows.forEach(r=>{ if(r.filamentId&&r.grams) need[r.filamentId]=(need[r.filamentId]||0)+r.grams; }); });
+  const short=Object.entries(need).map(([id,g])=>({f:fil(id),g})).filter(x=>x.f && x.g>x.f.remainingG);
+  const missing=p.plates.some(pl=>pl.rows.some(r=>r.grams>0 && !r.filamentId));
+  const n=p.plates.length;
+  $('#summary').innerHTML=`
+    <h2>Proje özeti</h2>
+    <div class="small muted" style="margin-bottom:10px">${n} tabla · ${fmtDur(c.min)} · ${n1.format(c.grams)} g filament</div>
+    <div class="lines">
+      <span>Filament</span><span class="v">${money(c.filament)}</span>
+      <span>Elektrik</span><span class="v">${money(c.electricity)}</span>
+      <span>Makine yıpranması + bakım</span><span class="v">${money(c.machine)}</span>
+      <span>Fire payı <span class="muted small">(%${n1.format(S.failPct)})</span></span><span class="v">${money(c.failure)}</span>
+      ${c.extra?`<span>Ek masraf</span><span class="v">${money(c.extra)}</span>`:''}
+      <span class="sep"></span>
+      <span class="big">Toplam maliyet</span><span class="v total">${money(c.total)}</span>
+      ${c.qty>1?`<span>Parça başı <span class="muted small">(${c.qty} adet)</span></span><span class="v big">${money(c.perPiece)}</span>`:''}
+      <span class="sep"></span>
+      <span>Önerilen satış <span class="muted small">(%${n1.format(S.profitPct)} kâr)</span></span>
+      <span class="v big">${c.qty>1?`${money(c.salePer)}<span class="small muted">/adet</span>`:money(c.sale)}</span>
+      ${c.qty>1?`<span class="muted small">Toplam satış</span><span class="v small muted">${money(c.sale)}</span>`:''}
+    </div>
+    ${c.usage.length?`<h2 style="margin-top:18px;font-size:14px">Kullanılan filamentler</h2><div class="ulist">${c.usage.map(u=>`<div><span class="sw ${u.color?'':'none'}" style="background:${esc(u.color)}"></span><span class="n">${esc(u.name)}</span><span class="muted">${n1.format(u.grams)} g</span><b>${money(u.cost)}</b></div>`).join('')}</div>`:''}
+    <div style="margin-top:16px" class="small"><b>${c.printed}/${n}</b> tabla basıldı<div class="progress"><i style="width:${n?c.printed/n*100:0}%"></i></div></div>
+    ${short.map(x=>`<div class="note warn">Stok yetmiyor: <b>${esc(filName(x.f))}</b> için ${n1.format(x.g)} g gerekli, stokta ${n1.format(x.f.remainingG)} g var.</div>`).join('')}
+    ${missing?`<div class="note warn">Gram girilmiş ama rengi seçilmemiş satır var, maliyete girmedi.</div>`:''}
+    ${!S.machinePrice?`<div class="note small">Makine yıpranmasını da hesaplamak için <a href="#" data-a="goSet">Ayarlar</a>'dan makine fiyatını gir.</div>`:''}`;
+}
+
+function refreshOutputs(p){
+  const c=calcProject(p);
+  p.plates.forEach((pl,i)=>{
+    const el=projSec.querySelector(`[data-plate="${pl.id}"]`); if(!el) return;
+    el.querySelector('[data-out="plateSum"]').innerHTML=plateSumHtml(c.plates[i]);
+    pl.rows.forEach((r,j)=>{ const tr=el.querySelector(`[data-row="${r.id}"]`); if(!tr) return; const ri=c.plates[i].rows[j];
+      tr.querySelector('[data-out="rowCost"]').textContent=money(ri.cost);
+      const sw=tr.querySelector('.sw'); sw.style.background=ri.color||''; sw.classList.toggle('none',!ri.color); });
+  });
+  renderSummary(p,c);
+}
+
+function curProject(){ return data.projects.find(x=>x.id===view.projectId); }
+function touch(p){ p.updatedAt=new Date().toISOString(); saveSoon(); }
+function locate(e){
+  const p=curProject(); if(!p) return {};
+  const plEl=e.target.closest('[data-plate]'), pl=plEl?p.plates.find(x=>x.id===plEl.dataset.plate):null;
+  const rEl=e.target.closest('[data-row]'), row=(pl&&rEl)?pl.rows.find(x=>x.id===rEl.dataset.row):null;
+  return {p,pl,row};
+}
+
+projSec.addEventListener('input',e=>{
+  const t=e.target; if(t.id==='projSearch') return;
+  const {p,pl,row}=locate(e); if(!p) return;
+  if(t.dataset.pf){ const k=t.dataset.pf;
+    if(k==='name') p.name=t.value; else if(k==='note') p.note=t.value;
+    else if(k==='qty') p.qty=Math.max(1,Math.round(num(t.value,1))); else if(k==='extra') p.extra=Math.max(0,num(t.value)); }
+  else if(t.dataset.plf && pl){ const k=t.dataset.plf;
+    if(k==='name') pl.name=t.value; else pl[k]=Math.max(0,Math.round(num(t.value))); }
+  else if(t.dataset.rf==='grams' && row){ row.grams=Math.max(0,num(t.value)); }
+  else return;
+  touch(p); refreshOutputs(p);
+});
+projSec.addEventListener('change',e=>{
+  const t=e.target; if(t.dataset.rf!=='filamentId') return;
+  const {p,row}=locate(e); if(!row) return;
+  row.filamentId=t.value; touch(p); refreshOutputs(p);
+});
+projSec.addEventListener('click',e=>{
+  const open=e.target.closest('[data-open]');
+  if(open){ view.projectId=open.dataset.open; renderProj(); window.scrollTo(0,0); return; }
+  const b=e.target.closest('[data-a]'); if(!b) return;
+  const a=b.dataset.a;
+  if(b.tagName==='A') e.preventDefault();
+  if(a==='newProj'){ $('#npName').value=''; $('#npQty').value='1'; $('#projDlg').showModal(); return; }
+  if(a==='goInv'){ showTab('inv'); return; }
+  if(a==='goSet'){ showTab('set'); return; }
+  if(a==='back'){ save(); view.projectId=null; renderProj(); window.scrollTo(0,0); return; }
+  const {p,pl,row}=locate(e); if(!p) return;
+  if(a==='dupProj'){
+    const cp=JSON.parse(JSON.stringify(p)); cp.id=uid(); cp.name=p.name+' (kopya)'; cp.createdAt=cp.updatedAt=new Date().toISOString();
+    cp.plates.forEach(x=>{x.id=uid(); x.printed=false; x.deducted={}; x.rows.forEach(r=>r.id=uid());});
+    data.projects.push(cp); save(); view.projectId=cp.id; renderProj(); window.scrollTo(0,0); toast('Proje kopyalandı'); return;
+  }
+  if(a==='delProj'){
+    if(!confirm(`“${p.name}” projesi silinsin mi?`)) return;
+    if(p.plates.some(x=>x.printed) && confirm('Basıldı olarak işaretli tablalarda kullanılan filament stoğa geri eklensin mi?\n(Tamam = geri ekle, İptal = stok olduğu gibi kalsın)'))
+      p.plates.forEach(x=>{ if(x.printed) restock(x); });
+    data.projects=data.projects.filter(x=>x!==p); save(); view.projectId=null; renderProj(); toast('Proje silindi'); return;
+  }
+  if(a==='addPlate'){ p.plates.push(newPlate()); touch(p); renderProj();
+    const last=projSec.querySelectorAll('.plate'); last[last.length-1]?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if(!pl) return;
+  if(a==='addRow'){ pl.rows.push({id:uid(),filamentId:'',grams:0}); touch(p); renderProj(); return; }
+  if(a==='delRow' && row){ pl.rows=pl.rows.filter(x=>x!==row); touch(p); renderProj(); return; }
+  if(a==='dupPlate'){ const cp=JSON.parse(JSON.stringify(pl)); cp.id=uid(); cp.printed=false; cp.deducted={}; cp.rows.forEach(r=>r.id=uid());
+    p.plates.splice(p.plates.indexOf(pl)+1,0,cp); touch(p); renderProj(); toast('Tabla çoğaltıldı'); return; }
+  if(a==='delPlate'){ if(!confirm(`${p.plates.indexOf(pl)+1}. tabla silinsin mi?`)) return;
+    p.plates=p.plates.filter(x=>x!==pl); touch(p); renderProj(); return; }
+  if(a==='togglePrinted'){
+    if(pl.printed){ restock(pl); pl.printed=false; toast('Stoğa geri eklendi'); }
+    else{
+      const used=pl.rows.filter(r=>r.grams>0);
+      if(!used.length){ toast('Bu tablada gram girilmemiş.'); return; }
+      if(used.some(r=>!r.filamentId)){ toast('Önce tüm satırlarda renk seç.'); return; }
+      pl.deducted={};
+      used.forEach(r=>{ const f=fil(r.filamentId); if(!f) return; f.remainingG=r2(Math.max(0,f.remainingG-r.grams)); pl.deducted[f.id]=r2((pl.deducted[f.id]||0)+r.grams); });
+      pl.printed=true; toast('Basıldı, stoktan düşüldü ✓');
+    }
+    touch(p); save(); renderProj(); return;
+  }
+});
+function restock(pl){
+  for(const [id,g] of Object.entries(pl.deducted||{})){ const f=fil(id); if(f) f.remainingG=r2(f.remainingG+g); }
+  pl.deducted={};
+}
+$('#projDlg').addEventListener('close',()=>{
+  if($('#projDlg').returnValue!=='ok') return;
+  const name=$('#npName').value.trim()||'Yeni proje', now=new Date().toISOString();
+  const p={id:uid(), name, qty:Math.max(1,Math.round(num($('#npQty').value,1))), extra:0, note:'', createdAt:now, updatedAt:now, plates:[newPlate()]};
+  data.projects.push(p); save(); view.projectId=p.id; showTab('proj');
+});
+
+/* =================== Filamentler =================== */
+let matFilter='Tümü';
 function renderInv(){
   const fs=data.filaments;
-  const stockVal=fs.reduce((a,f)=>a+f.remainingG*perGram(f),0);
-  const stockG=fs.reduce((a,f)=>a+f.remainingG,0);
+  const stockVal=fs.reduce((a,f)=>a+f.remainingG*perGram(f),0), stockG=fs.reduce((a,f)=>a+f.remainingG,0);
   const low=fs.filter(f=>f.remainingG<150).length;
   $('#invKpis').innerHTML=`
-    <div class="kpi"><div class="k">Filament çeşidi</div><div class="v">${fs.length}</div></div>
+    <div class="kpi"><div class="k">Filament</div><div class="v">${fs.length}</div></div>
     <div class="kpi"><div class="k">Toplam stok</div><div class="v">${n1.format(stockG/1000)} kg</div></div>
     <div class="kpi"><div class="k">Stok değeri</div><div class="v">${money(stockVal)}</div></div>
     <div class="kpi"><div class="k">Azalan (&lt;150 g)</div><div class="v" style="color:${low?'var(--warn)':'inherit'}">${low}</div></div>`;
+  const mats=['Tümü',...MATERIALS.filter(m=>fs.some(f=>f.material===m)),...[...new Set(fs.map(f=>f.material))].filter(m=>!MATERIALS.includes(m))];
+  if(!mats.includes(matFilter)) matFilter='Tümü';
+  $('#matChips').innerHTML=mats.length>2?mats.map(m=>`<button class="chip" data-mat="${esc(m)}" aria-pressed="${m===matFilter}">${esc(m)}</button>`).join(''):'';
   const q=$('#invSearch').value.trim().toLocaleLowerCase('tr');
-  const sort=$('#invSort').value;
-  let list=fs.filter(f=>!q || [f.brand,f.series,f.material,f.colorName,f.note].join(' ').toLocaleLowerCase('tr').includes(q));
-  list.sort(sort==='remaining' ? (a,b)=>a.remainingG-b.remainingG
-          : sort==='price' ? (a,b)=>perGram(a)-perGram(b)
-          : (a,b)=>filLabel(a).localeCompare(filLabel(b),'tr'));
-  $('#invList').innerHTML = list.length ? list.map(f=>{
-    const pct=f.spoolG>0?Math.min(100,f.remainingG/f.spoolG*100):0;
-    const cls=f.remainingG<=0?'empty':f.remainingG<150?'low':'';
-    return `<div class="fil" data-id="${f.id}">
-      <div class="top"><span class="sw lg" style="background:${esc(f.color)}"></span>
-        <div style="min-width:0"><div class="nm">${esc(f.colorName)}</div><div class="sub">${esc(f.brand)} · ${esc(f.series)} <span class="tag">${esc(f.material)}</span>${f.note?` <span class="small">· ${esc(f.note)}</span>`:''}</div></div></div>
-      <div class="small"><b>${money(f.price)}</b> / ${n1.format(f.spoolG)} g · <b>${n2.format(perGram(f))} TL/g</b></div>
-      <div class="meter"><i class="${cls}" style="width:${pct}%"></i></div>
-      <div class="small muted">Kalan: <b style="color:var(--text)">${n1.format(f.remainingG)} g</b>${f.remainingG<=0?' <span class="tag warn">Bitti</span>':f.remainingG<150?' <span class="tag warn">Azaldı</span>':''}</div>
-      <div class="acts">
-        <button class="btn sm" data-act="edit">Düzenle</button>
-        <button class="btn sm" data-act="spool" title="Yeni makara aldım: stoğa bir makara ekler">+1 makara</button>
-        <button class="btn sm ghost danger" data-act="del">Sil</button>
-      </div></div>`;
-  }).join('') : `<div class="empty">Sonuç yok.</div>`;
+  const list=fs.filter(f=>(matFilter==='Tümü'||f.material===matFilter) && (!q||[f.brand,f.series,f.material,f.colorName,f.note].join(' ').toLocaleLowerCase('tr').includes(q)))
+    .sort((a,b)=>(MATERIALS.indexOf(a.material)-MATERIALS.indexOf(b.material)) || a.brand.localeCompare(b.brand,'tr') || a.colorName.localeCompare(b.colorName,'tr'));
+  $('#invList').innerHTML = !fs.length
+    ? `<div class="card empty" style="grid-column:1/-1"><b>Henüz filament yok</b>“+ Yeni filament” ile elindeki makaraları tek tek ekle.</div>`
+    : list.length ? list.map(f=>{
+      const pct=f.spoolG>0?Math.min(100,f.remainingG/f.spoolG*100):0, cls=f.remainingG<=0?'empty':f.remainingG<150?'low':'';
+      return `<div class="fil" data-id="${f.id}">
+        <div class="top"><span class="sw lg" style="background:${esc(f.color)}"></span>
+          <div style="min-width:0"><div class="nm">${esc(f.colorName)}</div><div class="sub">${esc(f.brand)}${f.series?' · '+esc(f.series):''} <span class="tag">${esc(f.material)}</span></div></div></div>
+        <div class="small"><b>${money(f.price)}</b> / ${n1.format(f.spoolG)} g · <b>${n2.format(perGram(f))} TL/g</b>${f.note?` · <span class="muted">${esc(f.note)}</span>`:''}</div>
+        <div class="meter"><i class="${cls}" style="width:${pct}%"></i></div>
+        <div class="small muted">Stokta: <b style="color:var(--text)">${n1.format(f.remainingG)} g</b>${f.remainingG<=0?' <span class="tag warn">Bitti</span>':f.remainingG<150?' <span class="tag warn">Azaldı</span>':''}</div>
+        <div class="acts">
+          <button class="btn sm" data-act="edit">Düzenle</button>
+          <button class="btn sm" data-act="spool" title="Aynı filamentten yeni makara aldım">+1 makara</button>
+          <button class="btn sm ghost danger" data-act="del">Sil</button>
+        </div></div>`; }).join('')
+    : `<div class="empty" style="grid-column:1/-1">Sonuç yok.</div>`;
 }
 $('#invSearch').addEventListener('input',renderInv);
-$('#invSort').addEventListener('change',renderInv);
+$('#matChips').addEventListener('click',e=>{ const c=e.target.closest('[data-mat]'); if(c){ matFilter=c.dataset.mat; renderInv(); } });
 $('#invList').addEventListener('click',e=>{
   const b=e.target.closest('[data-act]'); if(!b) return;
-  const f=byId(b.closest('[data-id]').dataset.id); if(!f) return;
+  const f=fil(b.closest('[data-id]').dataset.id); if(!f) return;
   if(b.dataset.act==='edit') openFil(f);
-  if(b.dataset.act==='spool'){ f.remainingG=Math.round((f.remainingG+f.spoolG)*100)/100; save(); renderInv(); toast(`${f.colorName}: +${f.spoolG} g eklendi`); }
-  if(b.dataset.act==='del' && confirm(`“${filLabel(f)}” silinsin mi?`)){ data.filaments=data.filaments.filter(x=>x!==f); save(); renderInv(); }
+  if(b.dataset.act==='spool'){ f.remainingG=r2(f.remainingG+f.spoolG); save(); renderInv(); toast(`${f.colorName}: +${n1.format(f.spoolG)} g eklendi`); }
+  if(b.dataset.act==='del'){
+    const used=data.projects.filter(p=>p.plates.some(pl=>pl.rows.some(r=>r.filamentId===f.id))).length;
+    if(confirm(`“${filName(f)}” silinsin mi?${used?`\n\n${used} projede kullanılıyor; o projelerdeki maliyet son fiyatla korunur.`:''}`)){
+      data.filaments=data.filaments.filter(x=>x!==f); save(); renderInv(); }
+  }
 });
-$('#addFil').addEventListener('click',()=>openFil(null));
-
+$('#fMat').innerHTML=MATERIALS.map(m=>`<option>${esc(m)}</option>`).join('');
 let editing=null;
 function openFil(f){
   editing=f;
   $('#filDlgTitle').textContent=f?'Filamenti düzenle':'Yeni filament';
-  $('#fBrand').value=f?f.brand:''; $('#fSeries').value=f?f.series:''; $('#fMat').value=f?f.material:'PLA';
-  $('#fColorName').value=f?f.colorName:''; $('#fColor').value=f?(normHex(f.color)||'#888888').toLowerCase():'#888888';
-  $('#fPrice').value=f?f.price:''; $('#fSpool').value=f?f.spoolG:1000; $('#fRem').value=f?f.remainingG:1000; $('#fNote').value=f?f.note:'';
+  const mat=f?f.material:'PLA';
+  if(![...$('#fMat').options].some(o=>o.value===mat)) $('#fMat').insertAdjacentHTML('beforeend',`<option>${esc(mat)}</option>`);
+  $('#fMat').value=mat;
+  $('#fBrand').value=f?f.brand:(data.filaments.at(-1)?.brand||''); $('#fSeries').value=f?f.series:'';
+  $('#fColorName').value=f?f.colorName:''; $('#fColor').value=f?f.color:'#888888';
+  $('#fPrice').value=f?fmtIn(f.price):''; $('#fSpool').value=f?fmtIn(f.spoolG):'1000'; $('#fRem').value=f?fmtIn(f.remainingG):'1000'; $('#fNote').value=f?f.note:'';
   $('#filDlg').showModal();
 }
+$('#addFil').addEventListener('click',()=>openFil(null));
 $('#filDlg').addEventListener('close',()=>{
   if($('#filDlg').returnValue!=='ok') return;
-  const v={brand:$('#fBrand').value.trim(), series:$('#fSeries').value.trim(), material:$('#fMat').value.trim().toUpperCase(),
-    colorName:$('#fColorName').value.trim(), color:normHex($('#fColor').value)||'#888888', price:num($('#fPrice').value),
-    spoolG:Math.max(1,num($('#fSpool').value,1000)), remainingG:Math.max(0,num($('#fRem').value)), note:$('#fNote').value.trim()};
+  const v={brand:$('#fBrand').value.trim(), series:$('#fSeries').value.trim(), material:$('#fMat').value, colorName:$('#fColorName').value.trim(),
+    color:$('#fColor').value, price:Math.max(0,num($('#fPrice').value)), spoolG:Math.max(1,num($('#fSpool').value,1000)),
+    remainingG:Math.max(0,num($('#fRem').value)), note:$('#fNote').value.trim()};
   if(editing) Object.assign(editing,v); else data.filaments.push({id:uid(),...v});
   save(); renderInv(); toast('Kaydedildi ✓');
 });
 
-/* ============================================================
-   Geçmiş
-   ============================================================ */
-function renderHist(){
-  const h=data.history;
-  const sum=k=>h.reduce((a,x)=>a+(x.costs[k]||0),0);
-  const now=new Date(), monthKey=now.toISOString().slice(0,7);
-  const month=h.filter(x=>x.date.slice(0,7)===monthKey).reduce((a,x)=>a+x.costs.total,0);
-  $('#histKpis').innerHTML=`
-    <div class="kpi"><div class="k">Toplam baskı</div><div class="v">${h.length}</div></div>
-    <div class="kpi"><div class="k">Toplam maliyet</div><div class="v">${money(sum('total'))}</div></div>
-    <div class="kpi"><div class="k">Bu ay</div><div class="v">${money(month)}</div></div>
-    <div class="kpi"><div class="k">Harcanan filament</div><div class="v">${n1.format(h.reduce((a,x)=>a+x.grams,0)/1000)} kg</div></div>`;
-  $('#histList').innerHTML = h.length ? h.map(x=>`
-    <div class="hist-item" data-id="${x.id}">
-      <div class="main">
-        <div style="font-weight:700">${esc(x.name)}${x.qty>1?` <span class="muted small">× ${x.qty}</span>`:''}</div>
-        <div class="small muted">${new Date(x.date).toLocaleString('tr-TR',{dateStyle:'medium',timeStyle:'short'})} · ${fmtDur(x.timeSec)} · ${n1.format(x.grams)} g${x.deducted?' · stoktan düşüldü':''}</div>
-        <div class="sws">${x.slots.map(s=>`<span class="sw" style="background:${esc(s.color)}" title="${esc(s.label)} · ${n1.format(s.grams)} g"></span>`).join('')}</div>
-      </div>
-      <div style="text-align:right">
-        <div class="big">${money(x.costs.total)}</div>
-        ${x.qty>1?`<div class="small muted">${money(x.costs.perPiece)} / adet</div>`:''}
-        <button class="btn sm ghost danger" data-del style="margin-top:4px">Sil</button>
-      </div>
-    </div>`).join('') : `<div class="empty">Henüz kayıt yok. Hesapla sekmesinde “Geçmişe kaydet” de.</div>`;
-}
-$('#histList').addEventListener('click',e=>{
-  if(!e.target.closest('[data-del]')) return;
-  const id=e.target.closest('[data-id]').dataset.id, x=data.history.find(h=>h.id===id); if(!x) return;
-  if(!confirm(`“${x.name}” kaydı silinsin mi?`)) return;
-  if(x.deducted && confirm('Bu baskıda kullanılan gram stoğa geri eklensin mi?')){
-    for(const s of x.slots){ const f=byId(s.filamentId); if(f) f.remainingG=Math.round((f.remainingG+s.grams)*100)/100; }
-  }
-  data.history=data.history.filter(h=>h!==x); save(); renderHist();
-});
-$('#csvBtn').addEventListener('click',()=>{
-  const rows=[['Tarih','İş','Adet','Süre (dk)','Gram','Filamentler','Filament TL','Elektrik TL','Makine TL','Fire TL','Ek masraf TL','Toplam TL','Adet başı TL']];
-  for(const x of data.history) rows.push([new Date(x.date).toLocaleString('tr-TR'), x.name, x.qty, Math.round(x.timeSec/60), n2.format(x.grams),
-    x.slots.map(s=>`${s.label} ${n1.format(s.grams)}g`).join(' + '),
-    ...['filament','electricity','machine','failure','labor','total','perPiece'].map(k=>n2.format(x.costs[k]||0))]);
-  const csv='﻿'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
-  download(`baski-gecmisi-${today()}.csv`, csv, 'text/csv;charset=utf-8');
-});
-
-/* ============================================================
-   Ayarlar
-   ============================================================ */
+/* =================== Ayarlar =================== */
 const SET_MAP={sKwh:'kwhPrice',sPow:'powerW',sMach:'machinePrice',sLife:'lifetimeH',sMaint:'maintPerH',sFail:'failPct',sProfit:'profitPct'};
-function renderSettings(){ for(const [id,k] of Object.entries(SET_MAP)) $('#'+id).value=data.settings[k]; }
-for(const [id,k] of Object.entries(SET_MAP)) $('#'+id).addEventListener('input',e=>{ data.settings[k]=Math.max(0,num(e.target.value)); save(); renderResult(); });
+function renderSettings(){ for(const [id,k] of Object.entries(SET_MAP)) $('#'+id).value=fmtIn(data.settings[k]); }
+for(const [id,k] of Object.entries(SET_MAP)) $('#'+id).addEventListener('input',e=>{ data.settings[k]=Math.max(0,num(e.target.value)); saveSoon(); });
 
+const today=()=>new Date().toISOString().slice(0,10);
 $('#expBtn').addEventListener('click',()=>download(`filament-yedek-${today()}.json`, JSON.stringify(data,null,1), 'application/json'));
 $('#impBtn').addEventListener('click',()=>$('#impIn').click());
 $('#impIn').addEventListener('change',async e=>{
   const f=e.target.files[0]; e.target.value=''; if(!f) return;
   try{
     const d=JSON.parse(await f.text());
-    if(!Array.isArray(d.filaments)) throw new Error();
-    if(!confirm(`Yedek yüklensin mi? Bu cihazdaki veriler yedektekiyle değiştirilecek.\n(${d.filaments.length} filament, ${(d.history||[]).length} baskı kaydı)`)) return;
+    if(!Array.isArray(d.filaments)||!Array.isArray(d.projects)) throw new Error();
+    if(!confirm(`Yedek yüklensin mi? Bu cihazdaki veriler yedektekiyle değiştirilecek.\n(${d.filaments.length} filament, ${d.projects.length} proje)`)) return;
     data=normalizeData(d); save(); renderSettings(); toast('Yedek yüklendi ✓');
   }catch(err){ toast('Bu dosya geçerli bir yedek değil.'); }
 });
 $('#resetBtn').addEventListener('click',()=>{
-  if(!confirm('Tüm veriler silinip başlangıç listesine dönülsün mü? Önce yedek indirmeni öneririm.')) return;
-  data=normalizeData(null); save(); renderSettings(); toast('Sıfırlandı');
+  if(!confirm('Tüm projeler, filamentler ve ayarlar silinsin mi? Bu geri alınamaz.')) return;
+  data=normalizeData(null); save(); view.projectId=null; renderSettings(); toast('Her şey silindi');
 });
 
-/* ============================================================
-   Başlat
-   ============================================================ */
-let startTab='calc'; try{ startTab=localStorage.getItem(LS_KEY+'.tab')||'calc'; }catch(e){}
-syncCalcInputs();
-showTab(['calc','inv','hist','set'].includes(startTab)?startTab:'calc');
-save();
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
+/* =================== Başlat =================== */
+showTab('proj');
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
