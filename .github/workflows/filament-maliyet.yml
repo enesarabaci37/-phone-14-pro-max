@@ -1,0 +1,60 @@
+name: Filament Maliyet - Windows programi
+
+on:
+  push:
+    paths:
+      - "filament-maliyet/**"
+      - ".github/workflows/filament-maliyet.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Paketleri kur
+        run: python -m pip install pyinstaller "pywebview==5.4"
+
+      - name: Programi derle
+        working-directory: filament-maliyet
+        run: >
+          pyinstaller windows/filament_maliyet.py --onedir --windowed --noconfirm --noupx
+          --version-file windows/version.txt
+          --name Filament-Maliyet
+          --icon windows/icon.ico
+          --collect-all webview
+          --add-data "index.html;app"
+          --add-data "icon.svg;app"
+          --add-data "icon-180.png;app"
+          --add-data "icon-512.png;app"
+
+      - name: Zip olarak paketle
+        working-directory: filament-maliyet/dist
+        run: Compress-Archive -Path Filament-Maliyet -DestinationPath Filament-Maliyet.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Filament-Maliyet
+          path: filament-maliyet/dist/Filament-Maliyet.zip
+
+      - name: Indirme sayfasina (Releases) yukle
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: filament-maliyet-v${{ github.run_number }}
+          name: Filament Maliyet v${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          files: filament-maliyet/dist/Filament-Maliyet.zip
+          body: |
+            Filament Maliyet programı (Windows 10/11).
+            1. Aşağıdaki **Filament-Maliyet.zip** dosyasını indirin.
+            2. Zip dosyasına sağ tıklayıp **Tümünü ayıkla** deyin, çıkan **Filament-Maliyet** klasörünü Belgeler gibi kalıcı bir yere koyun.
+            3. Klasördeki **Filament-Maliyet.exe** dosyasına sağ tık → Gönder → Masaüstü (kısayol oluştur).
+            Veriler bilgisayarda saklanır; yeni sürüme geçince kaybolmaz.
