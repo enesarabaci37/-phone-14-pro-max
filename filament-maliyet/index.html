@@ -213,6 +213,41 @@ dialog h2{margin:0 0 14px;font-size:17px}
   padding:10px 16px;border-radius:10px;font-weight:650;z-index:100;max-width:calc(100vw - 32px);opacity:0;pointer-events:none;transition:opacity .2s}
 #toast.show{opacity:1}
 @media (max-width:600px){ nav button{padding:8px 10px} .brand span{display:none} }
+.pos{color:var(--ok)} .neg{color:var(--danger)}
+.fgrid .s3{grid-column:span 3}
+@media (max-width:700px){.fgrid .s3{grid-column:1/-1}}
+
+/* PDF rapor (yazdırma) */
+#report{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  html,body{background:#fff!important;color:#111!important}
+  header,main,dialog,#toast,.picker{display:none!important}
+  #report{display:block;font:9.5pt/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #report *{box-shadow:none!important}
+}
+#report .rp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2.5px solid #0f766e;padding-bottom:8px;margin-bottom:12px}
+#report .rp-brand{color:#0f766e;font-weight:800;font-size:9pt;letter-spacing:.06em;text-transform:uppercase}
+#report h1{font-size:17pt;margin:2px 0 0;color:#111}
+#report .rp-sub{color:#555;margin-top:2px}
+#report .rp-meta{color:#555;font-size:8.5pt;text-align:right;white-space:nowrap}
+#report h2{font-size:11pt;margin:16px 0 6px;color:#0f766e;break-after:avoid}
+#report .rp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#report .rp-kpi{border:1px solid #d9dde3;border-radius:6px;padding:6px 9px}
+#report .rp-kpi .k{font-size:8pt;color:#666;font-weight:600}
+#report .rp-kpi .v{font-size:13pt;font-weight:800;font-variant-numeric:tabular-nums}
+#report .rp-kpi.hl{border-color:#0f766e;background:#eef8f6}
+#report table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+#report th{text-align:left;font-size:8pt;color:#555;font-weight:700;border-bottom:1.5px solid #999;padding:4px 5px;text-transform:uppercase;letter-spacing:.02em}
+#report td{border-bottom:1px solid #e3e6ea;padding:4px 5px;vertical-align:top}
+#report tr{break-inside:avoid}
+#report .n{text-align:right;white-space:nowrap}
+#report tfoot td{font-weight:800;border-top:1.5px solid #999;border-bottom:0}
+#report .sw{display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid #aaa;margin-right:4px;vertical-align:baseline}
+#report .pos{color:#067647} #report .neg{color:#b42318}
+#report .muted{color:#666}
+#report .rp-foot{margin-top:16px;padding-top:6px;border-top:1px solid #ccc;font-size:7.5pt;color:#666}
+#report .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 </style>
 </head>
 <body>
@@ -338,6 +373,26 @@ dialog h2{margin:0 0 14px;font-size:17px}
   </form>
 </dialog>
 
+<dialog id="repDlg">
+  <form method="dialog">
+    <h2>Genel rapor (PDF)</h2>
+    <label for="repPeriod">Dönem</label>
+    <select id="repPeriod">
+      <option value="all">Tüm zamanlar</option>
+      <option value="thisMonth">Bu ay</option>
+      <option value="lastMonth">Geçen ay</option>
+      <option value="last30">Son 30 gün</option>
+      <option value="thisYear">Bu yıl</option>
+    </select>
+    <p class="small muted">Projeler oluşturulma tarihine göre seçilir. Açılan pencerede yazıcı olarak <b>“PDF olarak kaydet”</b> seç.</p>
+    <div class="dlg-acts">
+      <button class="btn" value="cancel" formnovalidate>Vazgeç</button>
+      <button class="btn primary" value="ok">PDF oluştur</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="report"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -450,7 +505,8 @@ function calcProject(p){
   plates.forEach(pc=>pc.rows.forEach(r=>{ if(!r.grams && !r.min) return; const k=r.row.filamentId||('?'+r.name);
     usage[k]=usage[k]||{name:r.name||'(filament seçilmedi)',color:r.color,grams:0,cost:0,min:0}; usage[k].grams+=r.grams; usage[k].cost+=r.fcost; usage[k].min+=r.min; }));
   return {plates,min:sum('min'),grams:sum('grams'),filament:sum('filament'),electricity:sum('electricity'),machine:sum('machine'),failure:sum('failure'),
-    extra,total,sale:total*mult,usage:Object.values(usage),printed:p.plates.filter(x=>x.printed).length,pieces:plates.reduce((a,x)=>a+x.qty,0)};
+    extra,total,sale:total*mult,usage:Object.values(usage),printed:p.plates.filter(x=>x.printed).length,pieces:plates.reduce((a,x)=>a+x.qty,0),
+    revenue: p.price>0 ? p.price : total*mult, estimated: !(p.price>0), get profit(){ return this.revenue-this.total; }};
 }
 
 /* =================== Sekmeler =================== */
@@ -482,13 +538,14 @@ function renderList(){
   const inGroup=all.filter(p=> view.groupFilter==='all' ? true : view.groupFilter==='none' ? !grp(p.groupId) : p.groupId===view.groupFilter);
   const q=projSearch.toLocaleLowerCase('tr');
   const shown=inGroup.filter(p=>!q||p.name.toLocaleLowerCase('tr').includes(q)||(p.note||'').toLocaleLowerCase('tr').includes(q));
-  const sumOf=list=>list.reduce((a,p)=>{const c=calcs.get(p.id); a.cost+=c.total; a.sale+=c.sale; a.g+=c.grams; return a;},{cost:0,sale:0,g:0});
+  const sumOf=list=>list.reduce((a,p)=>{const c=calcs.get(p.id); a.cost+=c.total; a.rev+=c.revenue; a.g+=c.grams; if(c.estimated) a.est++; return a;},{cost:0,rev:0,g:0,est:0});
   const tot=sumOf(inGroup);
   const ungrouped=all.filter(p=>!grp(p.groupId)).length;
   const g=grp(view.groupFilter);
   const groupsSorted=data.groups.slice().sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   projSec.innerHTML=`
     <div class="page-head"><h1>Projeler</h1><div class="sp"></div>
+      ${all.length?`<button class="btn" data-a="repAll">📄 Genel rapor</button>`:''}
       <button class="btn" data-a="newGroup">+ Yeni grup</button>
       <button class="btn primary" data-a="newProj">+ Yeni proje</button></div>
     ${data.groups.length?`<div class="groups">
@@ -496,14 +553,17 @@ function renderList(){
       ${groupsSorted.map(x=>`<button class="chip" data-g="${x.id}" aria-pressed="${view.groupFilter===x.id}">📁 ${esc(x.name)}<span class="c">${all.filter(p=>p.groupId===x.id).length}</span></button>`).join('')}
       ${ungrouped?`<button class="chip" data-g="none" aria-pressed="${view.groupFilter==='none'}">Grupsuz<span class="c">${ungrouped}</span></button>`:''}
     </div>`:''}
+    ${view.groupFilter==='none'?`<div class="ghead"><h2>Grupsuz projeler</h2><div class="sp" style="flex:1"></div><button class="btn sm" data-a="repGroup">📄 Rapor</button></div>`:''}
     ${g?`<div class="ghead"><h2>📁 ${esc(g.name)}</h2><div class="sp" style="flex:1"></div>
       <button class="btn sm" data-a="newProjInGroup">+ Bu gruba proje</button>
+      <button class="btn sm" data-a="repGroup">📄 Grup raporu</button>
       <button class="btn sm ghost" data-a="renameGroup">Yeniden adlandır</button>
       <button class="btn sm ghost danger" data-a="delGroup">Grubu sil</button></div>`:''}
     <div class="kpis">
       <div class="kpi"><div class="k">Proje</div><div class="v">${inGroup.length}</div></div>
-      <div class="kpi"><div class="k">Toplam maliyet</div><div class="v">${money(tot.cost)}</div></div>
-      <div class="kpi"><div class="k">Önerilen satış toplamı</div><div class="v">${money(tot.sale)}</div></div>
+      <div class="kpi"><div class="k">Toplam maliyet (gider)</div><div class="v">${money(tot.cost)}</div></div>
+      <div class="kpi"><div class="k">Gelir${tot.est?' <span title="Alınan ücreti girilmemiş projelerde önerilen satış kullanıldı">*</span>':''}</div><div class="v">${money(tot.rev)}</div></div>
+      <div class="kpi"><div class="k">Kâr</div><div class="v ${tot.rev-tot.cost<0?'neg':'pos'}">${money(tot.rev-tot.cost)}</div></div>
       <div class="kpi"><div class="k">Kullanılan filament</div><div class="v">${n1.format(tot.g/1000)} kg</div></div>
     </div>
     ${inGroup.length?`<div class="card" style="padding:12px"><input id="projSearch" placeholder="Proje ara…" value="${esc(projSearch)}"></div>`:''}
@@ -512,7 +572,7 @@ function renderList(){
           <div class="t"><span>${esc(p.name)}</span>${statusTag(c,n)}</div>
           <div class="m">${pg && view.groupFilter!==pg.id?`📁 ${esc(pg.name)} · `:''}${fmtDate(p.createdAt)} · ${n} tabla · ${c.pieces} parça · ${fmtDur(c.min)} · ${n1.format(c.grams)} g</div>
           <div class="sws">${c.usage.map(u=>`<span class="sw ${u.color?'':'none'}" style="background:${esc(u.color)}" title="${esc(u.name)}"></span>`).join('')}</div>
-          <div class="c">${money(c.total)} <span class="small muted" style="font-weight:600">· satış ${money(c.sale)}</span></div>
+          <div class="c">${money(c.total)} <span class="small muted" style="font-weight:600">gider · ${c.estimated?'tahmini ':''}kâr <span class="${c.profit<0?'neg':'pos'}">${money(c.profit)}</span></span></div>
         </button>`; }).join('')}</div>${shown.length?'':'<div class="empty">Aramaya uyan proje yok.</div>'}`
       : `<div class="card empty"><b>${g?'Bu grupta proje yok':'Henüz proje yok'}</b>${data.filaments.length?(g?'“+ Bu gruba proje” ile ekle.':'“+ Yeni proje” ile ilk projeni oluştur.'):'Önce <a href="#" data-a="goInv">Filamentler</a> sekmesinden filamentlerini ekle, sonra “+ Yeni proje” ile başla.'}</div>`}`;
   const s=$('#projSearch'); if(s){ s.addEventListener('input',()=>{projSearch=s.value; const pos=s.selectionStart; renderList(); const n=$('#projSearch'); n.focus(); n.setSelectionRange(pos,pos);}); }
@@ -537,6 +597,7 @@ function renderEditor(p){
     <div class="page-head">
       <button class="btn ghost" data-a="back">← ${grp(p.groupId)?esc(grp(p.groupId).name):'Projeler'}</button>
       <div class="sp"></div>
+      <button class="btn sm primary" data-a="repProj">📄 PDF rapor</button>
       <button class="btn sm" data-a="dupProj">Kopyala</button>
       <button class="btn sm danger" data-a="delProj">Projeyi sil</button>
     </div>
@@ -547,7 +608,8 @@ function renderEditor(p){
             <div class="s2"><label for="pName">Proje adı</label><input id="pName" data-pf="name" value="${esc(p.name)}"></div>
             <div><label for="pGroup">Grup</label><select id="pGroup" data-pf="groupId">${groupOptions(p.groupId)}</select></div>
             <div><label for="pExtra">Ek masraf (TL)</label><input id="pExtra" data-pf="extra" inputmode="decimal" value="${fmtIn(p.extra)}" placeholder="kutu, halka, boya…"></div>
-            <div class="full"><label for="pNote">Not</label><input id="pNote" data-pf="note" value="${esc(p.note)}" placeholder="ör. teslim tarihi, ölçüler"></div>
+            <div><label for="pPrice">Alınan ücret (TL)</label><input id="pPrice" data-pf="price" inputmode="decimal" value="${p.price>0?fmtIn(p.price):''}" placeholder="boşsa önerilen satış"></div>
+            <div class="s3"><label for="pNote">Not</label><input id="pNote" data-pf="note" value="${esc(p.note)}" placeholder="ör. teslim tarihi, ölçüler"></div>
           </div>
         </div>
         ${!data.filaments.length?`<div class="note warn">Henüz filament eklemedin. Önce <a href="#" data-a="goInv">Filamentler</a> sekmesinden ekle.</div>`:''}
@@ -616,7 +678,10 @@ function renderSummary(p,c){
       ${c.extra?`<span>Ek masraf</span><span class="v">${money(c.extra)}</span>`:''}
       <span class="sep"></span>
       <span class="big">Toplam maliyet</span><span class="v total">${money(c.total)}</span>
-      <span>Önerilen satış <span class="muted small">(%${n1.format(S.profitPct)} kâr)</span></span><span class="v big">${money(c.sale)}</span>
+      <span>Önerilen satış <span class="muted small">(%${n1.format(S.profitPct)} kâr)</span></span><span class="v">${money(c.sale)}</span>
+      <span class="sep"></span>
+      <span>${c.estimated?'Gelir <span class="muted small">(tahmini, ücret girilmedi)</span>':'Alınan ücret'}</span><span class="v big">${money(c.revenue)}</span>
+      <span class="big">Kâr</span><span class="v big ${c.profit<0?'neg':'pos'}">${money(c.profit)}</span>
     </div>
     <div class="sh">Parça bazında fiyat</div>
     <div class="parts">${p.plates.map((pl,i)=>{ const pc=c.plates[i]; return `<div class="part">
@@ -661,7 +726,8 @@ projSec.addEventListener('input',e=>{
   const t=e.target; if(t.id==='projSearch' || t.tagName==='SELECT') return;
   const {p,pl,row}=locate(t); if(!p) return;
   if(t.dataset.pf){ const k=t.dataset.pf;
-    if(k==='name') p.name=t.value; else if(k==='note') p.note=t.value; else if(k==='extra') p.extra=Math.max(0,num(t.value)); }
+    if(k==='name') p.name=t.value; else if(k==='note') p.note=t.value; else if(k==='extra') p.extra=Math.max(0,num(t.value));
+    else if(k==='price') p.price=t.value.trim()?Math.max(0,num(t.value)):0; }
   else if(t.dataset.plf && pl){ const k=t.dataset.plf;
     if(k==='name') pl.name=t.value; else if(k==='qty') pl.qty=Math.max(1,Math.round(num(t.value,1))); }
   else if(t.dataset.rf && row){ const k=t.dataset.rf;
@@ -692,6 +758,11 @@ projSec.addEventListener('click',e=>{
     data.groups=data.groups.filter(x=>x!==g); view.groupFilter='all'; save(); renderList(); toast('Grup silindi'); return; }
   if(a==='goInv'){ showTab('inv'); return; }
   if(a==='goSet'){ showTab('set'); return; }
+  if(a==='repAll'){ $('#repPeriod').value='all'; $('#repDlg').showModal(); return; }
+  if(a==='repGroup'){ const g=grp(view.groupFilter);
+    const list=data.projects.filter(p=> g ? p.groupId===g.id : !grp(p.groupId));
+    printReport(listReport(g?g.name:'Grupsuz projeler', g?'Grup raporu':'Grupsuz projeler raporu', list, false), (g?g.name:'Grupsuz')+' raporu'); return; }
+  if(a==='repProj'){ const p=curProject(); if(p){ save(); printReport(projectReport(p), p.name+' raporu'); } return; }
   if(a==='back'){ save(); const p=curProject(); view.projectId=null; if(p && grp(p.groupId)) view.groupFilter=p.groupId; renderProj(); window.scrollTo(0,0); return; }
   const {p,pl,row}=locate(b); if(!p) return;
   if(a==='pick' && row){ openPicker(b,p,row); return; }
@@ -754,6 +825,115 @@ $('#grpDlg').addEventListener('close',()=>{
   else { const g={id:uid(), name, createdAt:new Date().toISOString()}; data.groups.push(g); view.groupFilter=g.id; }
   save(); view.projectId=null; showTab('proj'); toast(editingGroup?'Grup adı değişti':'Grup oluşturuldu');
 });
+
+/* =================== PDF raporlar =================== */
+const STATUS = (c,n) => c.printed===0?'Taslak':c.printed===n?'Basıldı':`${c.printed}/${n} basıldı`;
+const pct = (a,b) => b ? '%'+n1.format(a/b*100) : '—';
+function aggregate(list){
+  const a={count:list.length,cost:0,revenue:0,filament:0,electricity:0,machine:0,failure:0,extra:0,grams:0,min:0,pieces:0,est:0,usage:{}};
+  for(const p of list){ const c=calcProject(p);
+    ['filament','electricity','machine','failure','extra','grams','min','pieces','revenue'].forEach(k=>a[k]+=c[k]); a.cost+=c.total; if(c.estimated) a.est++;
+    c.plates.forEach(pc=>pc.rows.forEach(r=>{ if(!r.grams) return; const k=r.row.filamentId||('?'+r.name);
+      a.usage[k]=a.usage[k]||{name:r.name||'(seçilmedi)',color:r.color,grams:0,cost:0}; a.usage[k].grams+=r.grams; a.usage[k].cost+=r.fcost; })); }
+  a.profit=a.revenue-a.cost; return a;
+}
+const sw = c => `<span class="sw" style="background:${esc(c||'#fff')}"></span>`;
+const pm = v => `<span class="${v<0?'neg':'pos'}">${money(v)}</span>`;
+function kpiHtml(a, label){
+  return `<div class="rp-kpis">
+    <div class="rp-kpi"><div class="k">${label}</div><div class="v">${a.count}</div></div>
+    <div class="rp-kpi"><div class="k">Toplam gider (maliyet)</div><div class="v">${money(a.cost)}</div></div>
+    <div class="rp-kpi"><div class="k">Gelir${a.est?' *':''}</div><div class="v">${money(a.revenue)}</div></div>
+    <div class="rp-kpi hl"><div class="k">Kâr</div><div class="v">${pm(a.profit)}</div></div>
+    <div class="rp-kpi"><div class="k">Kâr oranı (gelire göre)</div><div class="v">${pct(a.profit,a.revenue)}</div></div>
+    <div class="rp-kpi"><div class="k">Filament · baskı süresi · parça</div><div class="v" style="font-size:11pt">${n1.format(a.grams/1000)} kg · ${fmtDur(a.min)} · ${a.pieces}</div></div>
+  </div>`;
+}
+function costHtml(a){
+  const row=(k,v)=>`<tr><td>${k}</td><td class="n">${money(v)}</td><td class="n muted">${pct(v,a.cost)}</td></tr>`;
+  return `<table><thead><tr><th>Gider kalemi</th><th class="n">Tutar</th><th class="n">Pay</th></tr></thead><tbody>
+    ${row('Filament',a.filament)}${row('Elektrik',a.electricity)}${row('Makine yıpranması + bakım',a.machine)}${row('Fire payı',a.failure)}${row('Ek masraf',a.extra)}
+    </tbody><tfoot><tr><td>Toplam gider</td><td class="n">${money(a.cost)}</td><td class="n">%100</td></tr></tfoot></table>`;
+}
+function usageHtml(a){
+  const u=Object.values(a.usage).sort((x,y)=>y.grams-x.grams); if(!u.length) return '';
+  return `<h2>Kullanılan filamentler</h2><table><thead><tr><th>Filament</th><th class="n">Gram</th><th class="n">Tutar</th></tr></thead><tbody>
+    ${u.map(x=>`<tr><td>${sw(x.color)}${esc(x.name)}</td><td class="n">${n1.format(x.grams)} g</td><td class="n">${money(x.cost)}</td></tr>`).join('')}</tbody></table>`;
+}
+function projTableHtml(list, showGroup){
+  const rows=list.slice().sort((a,b)=>(a.createdAt||'').localeCompare(b.createdAt||'')).map(p=>{ const c=calcProject(p), g=grp(p.groupId);
+    return `<tr><td><b>${esc(p.name)}</b>${p.note?`<div class="muted">${esc(p.note)}</div>`:''}</td>${showGroup?`<td>${g?esc(g.name):'—'}</td>`:''}
+      <td>${new Date(p.createdAt).toLocaleDateString('tr-TR')}</td><td>${STATUS(c,p.plates.length)}</td><td class="n">${c.pieces}</td><td class="n">${n1.format(c.grams)} g</td>
+      <td class="n">${fmtDur(c.min)}</td><td class="n">${money(c.total)}</td><td class="n">${money(c.revenue)}${c.estimated?' *':''}</td><td class="n">${pm(c.profit)}</td></tr>`; }).join('');
+  const a=aggregate(list);
+  return `<table><thead><tr><th>İş</th>${showGroup?'<th>Grup</th>':''}<th>Tarih</th><th>Durum</th><th class="n">Parça</th><th class="n">Filament</th><th class="n">Süre</th><th class="n">Gider</th><th class="n">Gelir</th><th class="n">Kâr</th></tr></thead>
+    <tbody>${rows}</tbody><tfoot><tr><td colspan="${showGroup?4:3}">Toplam (${list.length} iş)</td><td class="n">${a.pieces}</td><td class="n">${n1.format(a.grams)} g</td><td class="n">${fmtDur(a.min)}</td><td class="n">${money(a.cost)}</td><td class="n">${money(a.revenue)}</td><td class="n">${pm(a.profit)}</td></tr></tfoot></table>`;
+}
+function groupTableHtml(list){
+  const buckets=[...data.groups.slice().sort((a,b)=>a.name.localeCompare(b.name,'tr')).map(g=>({name:g.name,list:list.filter(p=>p.groupId===g.id)})),
+    {name:'Grupsuz',list:list.filter(p=>!grp(p.groupId))}].filter(b=>b.list.length);
+  if(buckets.length<2 && !data.groups.length) return '';
+  return `<h2>Gruplara göre</h2><table><thead><tr><th>Grup</th><th class="n">İş</th><th class="n">Filament</th><th class="n">Gider</th><th class="n">Gelir</th><th class="n">Kâr</th><th class="n">Kâr oranı</th></tr></thead><tbody>
+    ${buckets.map(b=>{ const a=aggregate(b.list); return `<tr><td><b>${esc(b.name)}</b></td><td class="n">${a.count}</td><td class="n">${n1.format(a.grams)} g</td><td class="n">${money(a.cost)}</td><td class="n">${money(a.revenue)}</td><td class="n">${pm(a.profit)}</td><td class="n">${pct(a.profit,a.revenue)}</td></tr>`; }).join('')}</tbody></table>`;
+}
+function footHtml(est){
+  const S=data.settings;
+  return `<div class="rp-foot">${est?'* Alınan ücret girilmemiş işlerde gelir olarak önerilen satış fiyatı (maliyet + %'+n1.format(S.profitPct)+' kâr) kullanılmıştır.<br>':''}
+    Hesap ayarları: elektrik ${n2.format(S.kwhPrice)} TL/kWh · güç ${n1.format(S.powerW)} W · makine ${money(S.machinePrice)} / ${n1.format(S.lifetimeH)} saat ömür · bakım ${n2.format(S.maintPerH)} TL/saat · fire %${n1.format(S.failPct)} · kâr marjı %${n1.format(S.profitPct)}</div>`;
+}
+function headHtml(kind,title,sub){
+  return `<div class="rp-head"><div><div class="rp-brand">Filament Maliyet · ${esc(kind)}</div><h1>${esc(title)}</h1>${sub?`<div class="rp-sub">${sub}</div>`:''}</div>
+    <div class="rp-meta">Rapor tarihi<br><b>${new Date().toLocaleString('tr-TR',{dateStyle:'long',timeStyle:'short'})}</b></div></div>`;
+}
+function listReport(title, kind, list, showGroup, sub){
+  const a=aggregate(list);
+  return headHtml(kind,title,sub||'')+kpiHtml(a,'İş sayısı')+
+    `<div class="two"><div><h2>Giderler</h2>${costHtml(a)}</div><div>${usageHtml(a)||''}</div></div>`+
+    (showGroup?groupTableHtml(list):'')+
+    `<h2>İşler</h2>${list.length?projTableHtml(list,showGroup):'<p class="muted">Bu dönemde iş yok.</p>'}`+footHtml(a.est);
+}
+function projectReport(p){
+  const c=calcProject(p), g=grp(p.groupId), a=aggregate([p]);
+  const parts=p.plates.map((pl,i)=>{ const pc=c.plates[i]; return `<tr><td>${i+1}</td><td><b>${esc(pl.name||'Tabla '+(i+1))}</b></td><td>${pl.printed?'Basıldı':'Basılmadı'}</td>
+    <td class="n">${pc.qty}</td><td class="n">${n1.format(pc.grams)} g</td><td class="n">${fmtDur(pc.min)}</td><td class="n">${money(pc.withExtra)}</td><td class="n">${money(pc.costPer)}</td><td class="n">${money(pc.salePer)}</td></tr>`; }).join('');
+  const detail=p.plates.map((pl,i)=>c.plates[i].rows.filter(r=>r.grams||r.min).map(r=>`<tr><td>${i+1}</td><td>${sw(r.color)}${esc(r.name||'(seçilmedi)')}</td>
+    <td class="n">${n1.format(r.grams)} g</td><td class="n">${fmtDur(r.min)}</td><td class="n">${money(r.fcost)}</td><td class="n">${money(r.ecost)}</td><td class="n">${money(r.mcost)}</td><td class="n">${money(r.cost)}</td></tr>`).join('')).join('');
+  const sub=[g?'Grup: '+esc(g.name):'', 'Oluşturma: '+fmtDate(p.createdAt), 'Durum: '+STATUS(c,p.plates.length), p.note?esc(p.note):''].filter(Boolean).join(' · ');
+  return headHtml('Proje raporu',p.name,sub)+
+    `<div class="rp-kpis">
+      <div class="rp-kpi"><div class="k">Toplam gider (maliyet)</div><div class="v">${money(c.total)}</div></div>
+      <div class="rp-kpi"><div class="k">${c.estimated?'Gelir (tahmini) *':'Alınan ücret'}</div><div class="v">${money(c.revenue)}</div></div>
+      <div class="rp-kpi hl"><div class="k">Kâr</div><div class="v">${pm(c.profit)}</div></div>
+      <div class="rp-kpi"><div class="k">Kâr oranı (gelire göre)</div><div class="v">${pct(c.profit,c.revenue)}</div></div>
+      <div class="rp-kpi"><div class="k">Önerilen satış (%${n1.format(data.settings.profitPct)} kâr)</div><div class="v">${money(c.sale)}</div></div>
+      <div class="rp-kpi"><div class="k">Filament · süre · parça</div><div class="v" style="font-size:11pt">${n1.format(c.grams)} g · ${fmtDur(c.min)} · ${c.pieces}</div></div>
+    </div>
+    <div class="two"><div><h2>Giderler</h2>${costHtml(a)}</div><div>${usageHtml(a)}</div></div>
+    <h2>Parçalar</h2><table><thead><tr><th>#</th><th>Parça</th><th>Durum</th><th class="n">Adet</th><th class="n">Filament</th><th class="n">Süre</th><th class="n">Maliyet</th><th class="n">Maliyet/adet</th><th class="n">Satış/adet</th></tr></thead><tbody>${parts}</tbody></table>
+    ${c.extra?'<div class="muted" style="margin-top:4px">Ek masraf parçalara maliyetleri oranında paylaştırılmıştır. Parça maliyetlerine fire payı dahildir.</div>':'<div class="muted" style="margin-top:4px">Parça maliyetlerine fire payı dahildir.</div>'}
+    ${detail?`<h2>Baskı detayı</h2><table><thead><tr><th>Tabla</th><th>Filament</th><th class="n">Gram</th><th class="n">Süre</th><th class="n">Filament</th><th class="n">Elektrik</th><th class="n">Makine</th><th class="n">Toplam</th></tr></thead><tbody>${detail}</tbody></table>`:''}`+
+    footHtml(c.estimated);
+}
+function periodFilter(kind){
+  const now=new Date(), y=now.getFullYear(), m=now.getMonth();
+  const ranges={all:[null,null,'Tüm zamanlar'], thisMonth:[new Date(y,m,1),new Date(y,m+1,1),now.toLocaleDateString('tr-TR',{month:'long',year:'numeric'})],
+    lastMonth:[new Date(y,m-1,1),new Date(y,m,1),new Date(y,m-1,1).toLocaleDateString('tr-TR',{month:'long',year:'numeric'})],
+    last30:[new Date(now-30*864e5),null,'Son 30 gün'], thisYear:[new Date(y,0,1),new Date(y+1,0,1),y+' yılı']};
+  const [from,to,label]=ranges[kind]||ranges.all;
+  return {label, list:data.projects.filter(p=>{ const d=new Date(p.createdAt); return (!from||d>=from)&&(!to||d<to); })};
+}
+$('#repDlg').addEventListener('close',()=>{
+  if($('#repDlg').returnValue!=='ok') return;
+  const {label,list}=periodFilter($('#repPeriod').value);
+  printReport(listReport('Genel rapor','Genel rapor',list,true,'Dönem: '+esc(label)), 'Genel rapor - '+label);
+});
+function printReport(html, name){
+  $('#report').innerHTML=html;
+  const old=document.title; document.title=name.replace(/[\\/:*?"<>|]+/g,'-');
+  const restore=()=>{ document.title=old; window.removeEventListener('afterprint',restore); };
+  window.addEventListener('afterprint',restore);
+  try{ window.print(); }catch(e){ toast('Bu görünümde yazdırma açılamadı. Bilgisayar programından dene.'); restore(); }
+}
 
 /* =================== Filament seçici =================== */
 const picker=$('#picker'), pickSearch=$('#pickSearch'), pickItems=$('#pickItems');
