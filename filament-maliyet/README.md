@@ -2,6 +2,12 @@
 
 3D baskı projelerinin maliyetini hesaplayan ve filament stoğunu takip eden program. Tek bir HTML dosyasından oluşur ve internet olmadan çalışır.
 
+## Müşteri modu ve yönetici modu
+- Program **müşteri modunda** açılır. Bu modda filamentler, gramlar, süreler ve parçalar görünür; fiyatlar, maliyetler, kâr, raporlar ve ayarlar gizlidir.
+- Sağ üstteki **🔒 Yönetici** düğmesine basıp şifreyi girince her şey görünür. Bu modda filament ekleme ve düzenleme de yapılabilir.
+- **🔓 Kilitle** düğmesine basınca ya da 15 dakika hiçbir işlem yapılmayınca program tekrar kilitlenir. Program her açılışta kilitli başlar.
+- Şifre, Ayarlar → **Yönetici şifresi** bölümünden değiştirilebilir. Şifre açık yazılmaz; tuzlanmış SHA-256 özeti olarak saklanır.
+
 ## Kullanım
 1. **Filamentler:** Elindeki makaraları ekle: marka, seri/ürün adı (ör. Matte-Dark Red), malzeme (PLA, PETG, ABS, ASA, TPU, PA, PC…), renk adı, renk, makara fiyatı ve stokta kalan gram. Liste kart ya da satır görünümünde gösterilebilir.
 2. **Gruplar:** Müşteri veya kurum için grup aç (ör. Taşköprü Belediyesi, Seda) ve projeleri içine koy. Her grubun toplam maliyeti ve satış tutarı ayrıca görünür.

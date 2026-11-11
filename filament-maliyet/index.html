@@ -214,6 +214,12 @@ dialog h2{margin:0 0 14px;font-size:17px}
 #toast.show{opacity:1}
 @media (max-width:600px){ nav button{padding:8px 10px} .brand span{display:none} }
 .pos{color:var(--ok)} .neg{color:var(--danger)}
+.lockbtn{border:1px solid var(--line);background:var(--card);color:var(--muted);font:inherit;font-size:13px;font-weight:700;padding:7px 11px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.lockbtn.on{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+.rg.nm{grid-template-columns:minmax(230px,1.6fr) 100px 80px 80px 34px}
+.rg.nm.tot .lbl{grid-column:1/-1}
+@media (max-width:760px){ .rg.nm{grid-template-columns:repeat(3,minmax(0,1fr)) 34px} }
+.part .pr.nmp{grid-template-columns:1fr auto}
 .fgrid .s3{grid-column:span 3}
 @media (max-width:700px){.fgrid .s3{grid-column:1/-1}}
 
@@ -257,8 +263,9 @@ dialog h2{margin:0 0 14px;font-size:17px}
     <nav role="tablist">
       <button role="tab" data-tab="proj">Projeler</button>
       <button role="tab" data-tab="inv">Filamentler</button>
-      <button role="tab" data-tab="set">Ayarlar</button>
+      <button role="tab" data-tab="set" id="setTab">Ayarlar</button>
     </nav>
+    <button class="lockbtn" id="lockBtn"></button>
   </div>
 </header>
 
@@ -311,6 +318,15 @@ dialog h2{margin:0 0 14px;font-size:17px}
             <button class="btn" id="impBtn">Yedeği yükle</button>
             <input type="file" id="impIn" accept=".json,application/json" hidden>
           </div>
+        </div>
+        <div class="card">
+          <h2>Yönetici şifresi</h2>
+          <div class="fgrid" style="grid-template-columns:1fr 1fr 1fr">
+            <div><label for="pwOld">Mevcut şifre</label><input id="pwOld" type="password" autocomplete="current-password"></div>
+            <div><label for="pwNew">Yeni şifre</label><input id="pwNew" type="password" autocomplete="new-password"></div>
+            <div><label for="pwNew2">Yeni şifre (tekrar)</label><input id="pwNew2" type="password" autocomplete="new-password"></div>
+          </div>
+          <div style="margin-top:10px"><button class="btn" id="pwChange">Şifreyi değiştir</button></div>
         </div>
         <div class="card">
           <h2>Her şeyi sil</h2>
@@ -392,6 +408,19 @@ dialog h2{margin:0 0 14px;font-size:17px}
   </form>
 </dialog>
 
+<dialog id="pwDlg">
+  <form method="dialog" id="pwForm">
+    <h2>🔒 Yönetici girişi</h2>
+    <p class="small muted" style="margin-top:0">Maliyetler, fiyatlar, kâr, raporlar ve ayarlar yalnızca yönetici modunda görünür.</p>
+    <label for="pwIn">Şifre</label><input id="pwIn" type="password" autocomplete="current-password" required>
+    <div class="small" id="pwErr" style="color:var(--danger);margin-top:6px" hidden>Şifre yanlış.</div>
+    <div class="dlg-acts">
+      <button class="btn" value="cancel" formnovalidate>Vazgeç</button>
+      <button class="btn primary" value="ok">Giriş</button>
+    </div>
+  </form>
+</dialog>
+
 <div id="report"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
@@ -436,6 +465,29 @@ function save(){
 let saveTimer=null;
 function saveSoon(){ clearTimeout(saveTimer); saveTimer=setTimeout(save,300); }
 window.addEventListener('pagehide', save);
+
+/* =================== Yönetici modu =================== */
+// Şifre açık yazılmaz; tuzlanmış SHA-256 özeti saklanır.
+const PW_SALT='filament-maliyet::';
+const DEFAULT_PW_HASH='14466ba34246ea742baf972f7c633bc9a69ad09f804ea50f49cab21a1ab75a5f';
+let admin=false, idleTimer=null;
+const IDLE_MS=15*60*1000;
+async function pwHash(pw){
+  if(!(window.crypto&&crypto.subtle)) throw new Error('nocrypto');
+  const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(PW_SALT+pw));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const currentHash=()=>data.settings.pwHash||DEFAULT_PW_HASH;
+function setAdmin(on){
+  admin=on; clearTimeout(idleTimer); if(on) bumpIdle();
+  const b=document.getElementById('lockBtn');
+  b.textContent=on?'🔓 Yönetici · Kilitle':'🔒 Yönetici'; b.classList.toggle('on',on);
+  document.getElementById('setTab').hidden=!on;
+  if(!on && view.tab==='set') view.tab='proj';
+  showTab(view.tab, true);
+}
+function bumpIdle(){ if(!admin) return; clearTimeout(idleTimer); idleTimer=setTimeout(()=>{ setAdmin(false); toast('15 dakika işlem yapılmadı, kilitlendi'); },IDLE_MS); }
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,bumpIdle,{passive:true}));
 
 /* =================== Yardımcılar =================== */
 const $ = s => document.querySelector(s);
@@ -511,15 +563,16 @@ function calcProject(p){
 
 /* =================== Sekmeler =================== */
 let view={tab:'proj', projectId:null, groupFilter:'all'};
-function showTab(name){
+function showTab(name, keepScroll){
   closePicker();
+  if(name==='set' && !admin) name='proj';
   view.tab=name;
   document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   document.querySelectorAll('main>section').forEach(s=>s.hidden = s.id!=='tab-'+name);
   if(name==='proj') renderProj();
   if(name==='inv') renderInv();
   if(name==='set') renderSettings();
-  window.scrollTo(0,0);
+  if(!keepScroll) window.scrollTo(0,0);
 }
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.tab==='proj') view.projectId=null; showTab(b.dataset.tab); }));
 
@@ -545,7 +598,7 @@ function renderList(){
   const groupsSorted=data.groups.slice().sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   projSec.innerHTML=`
     <div class="page-head"><h1>Projeler</h1><div class="sp"></div>
-      ${all.length?`<button class="btn" data-a="repAll">📄 Genel rapor</button>`:''}
+      ${all.length&&admin?`<button class="btn" data-a="repAll">📄 Genel rapor</button>`:''}
       <button class="btn" data-a="newGroup">+ Yeni grup</button>
       <button class="btn primary" data-a="newProj">+ Yeni proje</button></div>
     ${data.groups.length?`<div class="groups">
@@ -553,17 +606,19 @@ function renderList(){
       ${groupsSorted.map(x=>`<button class="chip" data-g="${x.id}" aria-pressed="${view.groupFilter===x.id}">📁 ${esc(x.name)}<span class="c">${all.filter(p=>p.groupId===x.id).length}</span></button>`).join('')}
       ${ungrouped?`<button class="chip" data-g="none" aria-pressed="${view.groupFilter==='none'}">Grupsuz<span class="c">${ungrouped}</span></button>`:''}
     </div>`:''}
-    ${view.groupFilter==='none'?`<div class="ghead"><h2>Grupsuz projeler</h2><div class="sp" style="flex:1"></div><button class="btn sm" data-a="repGroup">📄 Rapor</button></div>`:''}
+    ${view.groupFilter==='none'?`<div class="ghead"><h2>Grupsuz projeler</h2><div class="sp" style="flex:1"></div>${admin?`<button class="btn sm" data-a="repGroup">📄 Rapor</button>`:''}</div>`:''}
     ${g?`<div class="ghead"><h2>📁 ${esc(g.name)}</h2><div class="sp" style="flex:1"></div>
       <button class="btn sm" data-a="newProjInGroup">+ Bu gruba proje</button>
-      <button class="btn sm" data-a="repGroup">📄 Grup raporu</button>
+      ${admin?`<button class="btn sm" data-a="repGroup">📄 Grup raporu</button>`:''}
       <button class="btn sm ghost" data-a="renameGroup">Yeniden adlandır</button>
       <button class="btn sm ghost danger" data-a="delGroup">Grubu sil</button></div>`:''}
     <div class="kpis">
       <div class="kpi"><div class="k">Proje</div><div class="v">${inGroup.length}</div></div>
-      <div class="kpi"><div class="k">Toplam maliyet (gider)</div><div class="v">${money(tot.cost)}</div></div>
+      ${admin?`<div class="kpi"><div class="k">Toplam maliyet (gider)</div><div class="v">${money(tot.cost)}</div></div>
       <div class="kpi"><div class="k">Gelir${tot.est?' <span title="Alınan ücreti girilmemiş projelerde önerilen satış kullanıldı">*</span>':''}</div><div class="v">${money(tot.rev)}</div></div>
-      <div class="kpi"><div class="k">Kâr</div><div class="v ${tot.rev-tot.cost<0?'neg':'pos'}">${money(tot.rev-tot.cost)}</div></div>
+      <div class="kpi"><div class="k">Kâr</div><div class="v ${tot.rev-tot.cost<0?'neg':'pos'}">${money(tot.rev-tot.cost)}</div></div>`
+      :`<div class="kpi"><div class="k">Parça</div><div class="v">${inGroup.reduce((a,p)=>a+calcs.get(p.id).pieces,0)}</div></div>
+      <div class="kpi"><div class="k">Baskı süresi</div><div class="v">${fmtDur(inGroup.reduce((a,p)=>a+calcs.get(p.id).min,0))}</div></div>`}
       <div class="kpi"><div class="k">Kullanılan filament</div><div class="v">${n1.format(tot.g/1000)} kg</div></div>
     </div>
     ${inGroup.length?`<div class="card" style="padding:12px"><input id="projSearch" placeholder="Proje ara…" value="${esc(projSearch)}"></div>`:''}
@@ -572,7 +627,7 @@ function renderList(){
           <div class="t"><span>${esc(p.name)}</span>${statusTag(c,n)}</div>
           <div class="m">${pg && view.groupFilter!==pg.id?`📁 ${esc(pg.name)} · `:''}${fmtDate(p.createdAt)} · ${n} tabla · ${c.pieces} parça · ${fmtDur(c.min)} · ${n1.format(c.grams)} g</div>
           <div class="sws">${c.usage.map(u=>`<span class="sw ${u.color?'':'none'}" style="background:${esc(u.color)}" title="${esc(u.name)}"></span>`).join('')}</div>
-          <div class="c">${money(c.total)} <span class="small muted" style="font-weight:600">gider · ${c.estimated?'tahmini ':''}kâr <span class="${c.profit<0?'neg':'pos'}">${money(c.profit)}</span></span></div>
+          ${admin?`<div class="c">${money(c.total)} <span class="small muted" style="font-weight:600">gider · ${c.estimated?'tahmini ':''}kâr <span class="${c.profit<0?'neg':'pos'}">${money(c.profit)}</span></span></div>`:''}
         </button>`; }).join('')}</div>${shown.length?'':'<div class="empty">Aramaya uyan proje yok.</div>'}`
       : `<div class="card empty"><b>${g?'Bu grupta proje yok':'Henüz proje yok'}</b>${data.filaments.length?(g?'“+ Bu gruba proje” ile ekle.':'“+ Yeni proje” ile ilk projeni oluştur.'):'Önce <a href="#" data-a="goInv">Filamentler</a> sekmesinden filamentlerini ekle, sonra “+ Yeni proje” ile başla.'}</div>`}`;
   const s=$('#projSearch'); if(s){ s.addEventListener('input',()=>{projSearch=s.value; const pos=s.selectionStart; renderList(); const n=$('#projSearch'); n.focus(); n.setSelectionRange(pos,pos);}); }
@@ -597,7 +652,7 @@ function renderEditor(p){
     <div class="page-head">
       <button class="btn ghost" data-a="back">← ${grp(p.groupId)?esc(grp(p.groupId).name):'Projeler'}</button>
       <div class="sp"></div>
-      <button class="btn sm primary" data-a="repProj">📄 PDF rapor</button>
+      ${admin?`<button class="btn sm primary" data-a="repProj">📄 PDF rapor</button>`:''}
       <button class="btn sm" data-a="dupProj">Kopyala</button>
       <button class="btn sm danger" data-a="delProj">Projeyi sil</button>
     </div>
@@ -607,9 +662,9 @@ function renderEditor(p){
           <div class="fgrid">
             <div class="s2"><label for="pName">Proje adı</label><input id="pName" data-pf="name" value="${esc(p.name)}"></div>
             <div><label for="pGroup">Grup</label><select id="pGroup" data-pf="groupId">${groupOptions(p.groupId)}</select></div>
-            <div><label for="pExtra">Ek masraf (TL)</label><input id="pExtra" data-pf="extra" inputmode="decimal" value="${fmtIn(p.extra)}" placeholder="kutu, halka, boya…"></div>
-            <div><label for="pPrice">Alınan ücret (TL)</label><input id="pPrice" data-pf="price" inputmode="decimal" value="${p.price>0?fmtIn(p.price):''}" placeholder="boşsa önerilen satış"></div>
-            <div class="s3"><label for="pNote">Not</label><input id="pNote" data-pf="note" value="${esc(p.note)}" placeholder="ör. teslim tarihi, ölçüler"></div>
+            ${admin?`<div><label for="pExtra">Ek masraf (TL)</label><input id="pExtra" data-pf="extra" inputmode="decimal" value="${fmtIn(p.extra)}" placeholder="kutu, halka, boya…"></div>`:''}
+            ${admin?`<div><label for="pPrice">Alınan ücret (TL)</label><input id="pPrice" data-pf="price" inputmode="decimal" value="${p.price>0?fmtIn(p.price):''}" placeholder="boşsa önerilen satış"></div>`:''}
+            <div class="${admin?'s3':'full'}"><label for="pNote">Not</label><input id="pNote" data-pf="note" value="${esc(p.note)}" placeholder="ör. teslim tarihi, ölçüler"></div>
           </div>
         </div>
         ${!data.filaments.length?`<div class="note warn">Henüz filament eklemedin. Önce <a href="#" data-a="goInv">Filamentler</a> sekmesinden ekle.</div>`:''}
@@ -640,21 +695,21 @@ function plateHtml(pl,i,pc){
       </span>
     </div>
     <div class="pl-body">
-      <div class="rg rh"><span>Filament</span><span class="r">Gram</span><span class="r">Saat</span><span class="r">Dakika</span><span class="r">Maliyet</span><span>Açıklama</span><span></span></div>
-      ${pl.rows.map((r,j)=>{ const ri=pc.rows[j]; return `<div class="rg" data-row="${r.id}">
+      <div class="rg rh ${admin?'':'nm'}"><span>Filament</span><span class="r">Gram</span><span class="r">Saat</span><span class="r">Dakika</span>${admin?'<span class="r">Maliyet</span><span>Açıklama</span>':''}<span></span></div>
+      ${pl.rows.map((r,j)=>{ const ri=pc.rows[j]; return `<div class="rg ${admin?'':'nm'}" data-row="${r.id}">
           <div class="fcell">${pickBtnHtml(r,ri,dis)}</div>
           <div><span class="ml">Gram</span><input data-rf="grams" inputmode="decimal" aria-label="Gram" value="${fmtIn(r.grams||'')}" placeholder="0" ${dis}></div>
           <div><span class="ml">Saat</span><input data-rf="h" inputmode="numeric" aria-label="Saat" value="${r.h||''}" placeholder="0" ${dis}></div>
           <div><span class="ml">Dakika</span><input data-rf="m" inputmode="numeric" aria-label="Dakika" value="${r.m||''}" placeholder="0" ${dis}></div>
-          <div class="cost" data-out="rowCost">${money(ri.cost)}</div>
-          <div class="exp" data-out="rowExp">${rowExp(ri)}</div>
+          ${admin?`<div class="cost" data-out="rowCost">${money(ri.cost)}</div>
+          <div class="exp" data-out="rowExp">${rowExp(ri)}</div>`:''}
           <div class="xcell">${pl.printed?'':`<button class="btn sm ghost" data-a="delRow" title="Satırı sil" aria-label="Satırı sil">✕</button>`}</div>
         </div>`; }).join('')}
-      <div class="rg tot">
+      <div class="rg tot ${admin?'':'nm'}">
         <div class="lbl">${pl.printed?'<span></span>':`<button class="btn sm" data-a="addRow">+ Filament ekle</button>`}<span class="muted small" data-out="totLbl">${totLbl(pc)}</span></div>
-        <div class="cost" data-out="totCost">${money(pc.total)}</div>
+        ${admin?`<div class="cost" data-out="totCost">${money(pc.total)}</div>
         <div class="exp" data-out="totExp">${totExp(pc)}</div>
-        <div></div>
+        <div></div>`:''}
       </div>
     </div>
   </div>`;
@@ -667,6 +722,24 @@ function renderSummary(p,c){
   const short=Object.entries(need).map(([id,g])=>({f:fil(id),g})).filter(x=>x.f && x.g>x.f.remainingG);
   const missing=p.plates.some(pl=>pl.rows.some(r=>(r.grams>0||r.h||r.m) && !r.filamentId));
   const n=p.plates.length;
+  if(!admin){
+    $('#summary').innerHTML=`
+    <h2>Proje özeti</h2>
+    <div class="lines">
+      <span>Tabla</span><span class="v">${n}</span>
+      <span>Parça</span><span class="v">${c.pieces}</span>
+      <span>Baskı süresi</span><span class="v">${fmtDur(c.min)}</span>
+      <span class="big">Toplam filament</span><span class="v big">${n1.format(c.grams)} g</span>
+    </div>
+    <div class="sh">Parçalar</div>
+    <div class="parts">${p.plates.map((pl,i)=>{ const pc=c.plates[i]; return `<div class="part">
+      <div class="pn"><span>${i+1}. ${esc(pl.name||'Tabla')}</span><span class="muted small">${pc.qty} adet</span></div>
+      <div class="pr nmp"><span class="muted">Filament</span><span class="v">${n1.format(pc.grams)} g</span><span class="muted">Süre</span><span class="v">${fmtDur(pc.min)}</span></div></div>`; }).join('')}</div>
+    ${c.usage.length?`<div class="sh">Kullanılan filamentler</div><div class="ulist">${c.usage.map(u=>`<div><span class="sw ${u.color?'':'none'}" style="background:${esc(u.color)}"></span><span class="n" title="${esc(u.name)}">${esc(u.name)}</span><span class="muted">${fmtDur(u.min)}</span><b>${n1.format(u.grams)} g</b></div>`).join('')}</div>`:''}
+    <div style="margin-top:16px" class="small"><b>${c.printed}/${n}</b> tabla basıldı<div class="progress"><i style="width:${n?c.printed/n*100:0}%"></i></div></div>
+    ${short.map(x=>`<div class="note warn">Stok yetmiyor: <b>${esc(filName(x.f))}</b> için ${n1.format(x.g)} g gerekli, stokta ${n1.format(x.f.remainingG)} g var.</div>`).join('')}`;
+    return;
+  }
   $('#summary').innerHTML=`
     <h2>Proje özeti</h2>
     <div class="small muted" style="margin-bottom:10px">${n} tabla · ${c.pieces} parça · ${fmtDur(c.min)} · ${n1.format(c.grams)} g filament</div>
@@ -703,10 +776,11 @@ function refreshOutputs(p){
   const c=calcProject(p);
   p.plates.forEach((pl,i)=>{
     const el=projSec.querySelector(`[data-plate="${pl.id}"]`); if(!el) return; const pc=c.plates[i];
-    pl.rows.forEach((r,j)=>{ const tr=el.querySelector(`[data-row="${r.id}"]`); if(!tr) return; const ri=pc.rows[j];
+    if(admin) pl.rows.forEach((r,j)=>{ const tr=el.querySelector(`[data-row="${r.id}"]`); if(!tr) return; const ri=pc.rows[j];
       tr.querySelector('[data-out="rowCost"]').textContent=money(ri.cost);
       tr.querySelector('[data-out="rowExp"]').textContent=rowExp(ri); });
     el.querySelector('[data-out="totLbl"]').innerHTML=totLbl(pc);
+    if(!admin) return;
     el.querySelector('[data-out="totCost"]').textContent=money(pc.total);
     el.querySelector('[data-out="totExp"]').innerHTML=totExp(pc);
   });
@@ -758,6 +832,7 @@ projSec.addEventListener('click',e=>{
     data.groups=data.groups.filter(x=>x!==g); view.groupFilter='all'; save(); renderList(); toast('Grup silindi'); return; }
   if(a==='goInv'){ showTab('inv'); return; }
   if(a==='goSet'){ showTab('set'); return; }
+  if(a.startsWith('rep') && !admin) return;
   if(a==='repAll'){ $('#repPeriod').value='all'; $('#repDlg').showModal(); return; }
   if(a==='repGroup'){ const g=grp(view.groupFilter);
     const list=data.projects.filter(p=> g ? p.groupId===g.id : !grp(p.groupId));
@@ -997,10 +1072,11 @@ function renderInv(){
   const fs=data.filaments;
   const stockVal=fs.reduce((a,f)=>a+f.remainingG*perGram(f),0), stockG=fs.reduce((a,f)=>a+f.remainingG,0);
   const low=fs.filter(f=>f.remainingG<150).length;
+  $('#addFil').hidden=!admin;
   $('#invKpis').innerHTML=`
     <div class="kpi"><div class="k">Filament</div><div class="v">${fs.length}</div></div>
     <div class="kpi"><div class="k">Toplam stok</div><div class="v">${n1.format(stockG/1000)} kg</div></div>
-    <div class="kpi"><div class="k">Stok değeri</div><div class="v">${money(stockVal)}</div></div>
+    ${admin?`<div class="kpi"><div class="k">Stok değeri</div><div class="v">${money(stockVal)}</div></div>`:''}
     <div class="kpi"><div class="k">Azalan (&lt;150 g)</div><div class="v" style="color:${low?'var(--warn)':'inherit'}">${low}</div></div>`;
   document.querySelectorAll('.seg [data-view]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.view===data.ui.invView));
   const mats=['Tümü',...[...new Set(fs.map(f=>f.material))].sort(byMaterial)];
@@ -1015,16 +1091,16 @@ function renderInv(){
   if(!list.length){ el.className=''; el.innerHTML=`<div class="empty">Sonuç yok.</div>`; return; }
   const stockTag=f=>f.remainingG<=0?' <span class="tag warn">Bitti</span>':f.remainingG<150?' <span class="tag warn">Azaldı</span>':'';
   const meter=f=>{ const pct=f.spoolG>0?Math.min(100,f.remainingG/f.spoolG*100):0, cls=f.remainingG<=0?'empty':f.remainingG<150?'low':''; return `<div class="meter"><i class="${cls}" style="width:${pct}%"></i></div>`; };
-  const acts=`<div class="acts"><button class="btn sm" data-act="edit">Düzenle</button><button class="btn sm" data-act="spool" title="Aynı filamentten yeni makara aldım">+1 makara</button><button class="btn sm ghost danger" data-act="del">Sil</button></div>`;
+  const acts=!admin?'<span></span>':`<div class="acts"><button class="btn sm" data-act="edit">Düzenle</button><button class="btn sm" data-act="spool" title="Aynı filamentten yeni makara aldım">+1 makara</button><button class="btn sm ghost danger" data-act="del">Sil</button></div>`;
   if(data.ui.invView==='list'){
     el.className='invl';
-    el.innerHTML=`<div class="lrow lh"><span></span><span>Filament</span><span class="hm">Malzeme</span><span class="hm num">Fiyat</span><span class="hm num">TL/g</span><span>Stok</span><span></span></div>`+
+    el.innerHTML=`<div class="lrow lh"><span></span><span>Filament</span><span class="hm">Malzeme</span><span class="hm num">${admin?'Fiyat':''}</span><span class="hm num">${admin?'TL/g':''}</span><span>Stok</span><span></span></div>`+
       list.map(f=>`<div class="lrow" data-id="${f.id}">
         <span class="sw lg" style="background:${esc(f.color)};width:28px;height:28px"></span>
         <div style="min-width:0"><div class="nm">${esc(filTitle(f))}</div><div class="small muted">${esc(f.colorName)}${f.note?' · '+esc(f.note):''}</div></div>
         <span class="hm"><span class="tag">${esc(f.material)}</span></span>
-        <span class="hm num">${money(f.price)}</span>
-        <span class="hm num">${n2.format(perGram(f))}</span>
+        <span class="hm num">${admin?money(f.price):''}</span>
+        <span class="hm num">${admin?n2.format(perGram(f)):''}</span>
         <div class="stk"><span><b>${n1.format(f.remainingG)} g</b>${stockTag(f)}</span>${meter(f)}</div>
         ${acts}</div>`).join('');
   } else {
@@ -1032,7 +1108,7 @@ function renderInv(){
     el.innerHTML=list.map(f=>`<div class="fil" data-id="${f.id}">
         <div class="top"><span class="sw lg" style="background:${esc(f.color)}"></span>
           <div style="min-width:0"><div class="nm">${esc(filTitle(f))}</div><div class="sub">${esc(f.colorName)} <span class="tag">${esc(f.material)}</span></div></div></div>
-        <div class="small"><b>${money(f.price)}</b> / ${n1.format(f.spoolG)} g · <b>${n2.format(perGram(f))} TL/g</b>${f.note?` · <span class="muted">${esc(f.note)}</span>`:''}</div>
+        <div class="small">${admin?`<b>${money(f.price)}</b> / ${n1.format(f.spoolG)} g · <b>${n2.format(perGram(f))} TL/g</b>`:`Makara: ${n1.format(f.spoolG)} g`}${f.note?` · <span class="muted">${esc(f.note)}</span>`:''}</div>
         ${meter(f)}
         <div class="small muted">Stokta: <b style="color:var(--text)">${n1.format(f.remainingG)} g</b>${stockTag(f)}</div>
         ${acts}</div>`).join('');
@@ -1042,7 +1118,7 @@ $('#invSearch').addEventListener('input',renderInv);
 $('#matChips').addEventListener('click',e=>{ const c=e.target.closest('[data-mat]'); if(c){ matFilter=c.dataset.mat; renderInv(); } });
 document.querySelectorAll('.seg [data-view]').forEach(b=>b.addEventListener('click',()=>{ data.ui.invView=b.dataset.view; save(); renderInv(); }));
 $('#invList').addEventListener('click',e=>{
-  const b=e.target.closest('[data-act]'); if(!b) return;
+  const b=e.target.closest('[data-act]'); if(!b||!admin) return;
   const f=fil(b.closest('[data-id]').dataset.id); if(!f) return;
   if(b.dataset.act==='edit') openFil(f);
   if(b.dataset.act==='spool'){ f.remainingG=r2(f.remainingG+f.spoolG); save(); renderInv(); toast(`${f.colorName}: +${n1.format(f.spoolG)} g eklendi`); }
@@ -1065,7 +1141,7 @@ function openFil(f){
   $('#fPrice').value=f?fmtIn(f.price):''; $('#fSpool').value=f?fmtIn(f.spoolG):'1000'; $('#fRem').value=f?fmtIn(f.remainingG):'1000'; $('#fNote').value=f?f.note:'';
   $('#filDlg').showModal();
 }
-$('#addFil').addEventListener('click',()=>openFil(null));
+$('#addFil').addEventListener('click',()=>{ if(admin) openFil(null); });
 $('#filDlg').addEventListener('close',()=>{
   if($('#filDlg').returnValue!=='ok') return;
   const v={brand:$('#fBrand').value.trim(), series:$('#fSeries').value.trim(), material:$('#fMat').value, colorName:$('#fColorName').value.trim(),
@@ -1097,8 +1173,30 @@ $('#resetBtn').addEventListener('click',()=>{
   data=normalizeData(null); save(); view={tab:'set',projectId:null,groupFilter:'all'}; renderSettings(); toast('Her şey silindi');
 });
 
+/* =================== Yönetici girişi =================== */
+$('#lockBtn').addEventListener('click',()=>{
+  if(admin){ setAdmin(false); toast('Kilitlendi'); return; }
+  $('#pwIn').value=''; $('#pwErr').hidden=true; $('#pwDlg').showModal();
+});
+$('#pwForm').addEventListener('submit',async e=>{
+  if(e.submitter && e.submitter.value==='cancel') return;
+  e.preventDefault();
+  try{
+    if(await pwHash($('#pwIn').value)===currentHash()){ $('#pwDlg').close(); setAdmin(true); toast('Yönetici modu açık'); }
+    else { $('#pwErr').hidden=false; $('#pwIn').select(); }
+  }catch(err){ $('#pwErr').textContent='Bu tarayıcı şifre kontrolünü desteklemiyor.'; $('#pwErr').hidden=false; }
+});
+$('#pwChange').addEventListener('click',async()=>{
+  const o=$('#pwOld').value, n=$('#pwNew').value, n2v=$('#pwNew2').value;
+  if(await pwHash(o)!==currentHash()){ toast('Mevcut şifre yanlış'); return; }
+  if(n.length<4){ toast('Yeni şifre en az 4 karakter olmalı'); return; }
+  if(n!==n2v){ toast('Yeni şifreler aynı değil'); return; }
+  data.settings.pwHash=await pwHash(n); save();
+  $('#pwOld').value=$('#pwNew').value=$('#pwNew2').value=''; toast('Şifre değişti ✓');
+});
+
 /* =================== Başlat =================== */
-showTab('proj');
+setAdmin(false);
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
