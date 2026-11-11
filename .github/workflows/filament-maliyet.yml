@@ -21,7 +21,7 @@ jobs:
           python-version: "3.12"
 
       - name: Paketleri kur
-        run: python -m pip install pyinstaller "pywebview==5.4"
+        run: python -m pip install pyinstaller
 
       - name: Programi derle
         working-directory: filament-maliyet
@@ -30,7 +30,6 @@ jobs:
           --version-file windows/version.txt
           --name Filament-Maliyet
           --icon windows/icon.ico
-          --collect-all webview
           --add-data "index.html;app"
           --add-data "icon.svg;app"
           --add-data "icon-180.png;app"
@@ -57,4 +56,4 @@ jobs:
             1. Aşağıdaki **Filament-Maliyet.zip** dosyasını indirin.
             2. Zip dosyasına sağ tıklayıp **Tümünü ayıkla** deyin, çıkan **Filament-Maliyet** klasörünü Belgeler gibi kalıcı bir yere koyun.
             3. Klasördeki **Filament-Maliyet.exe** dosyasına sağ tık → Gönder → Masaüstü (kısayol oluştur).
-            Veriler bilgisayarda saklanır; yeni sürüme geçince kaybolmaz.
+            Program, bilgisayardaki Microsoft Edge ile kendi penceresinde açılır. Veriler bilgisayarda saklanır; yeni sürüme geçince kaybolmaz.
