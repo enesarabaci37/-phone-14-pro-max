@@ -1,0 +1,171 @@
+<meta charset="utf-8">
+<title>Mermer Büst 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600&family=Inter:wght@400;500&display=swap">
+<style>
+  /* Layout: full-bleed museum plinth stage; a slim caption bar on top, view controls docked at the bottom. Single dark look, deliberately. */
+  :root {
+    --stage: #1c1b1d;
+    --stage-deep: #111012;
+    --ink: #ece8e3;
+    --muted: #9c9590;
+    --porphyry: #a3192b;
+    --line: rgba(236, 232, 227, 0.14);
+    --font-display: "Cormorant SC", "Times New Roman", serif;
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--stage-deep); color: var(--ink);
+    font-family: var(--font-body); overflow: hidden;
+  }
+  #stage { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 40%, var(--stage) 0%, var(--stage-deep) 75%); }
+  #stage canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+  #stage canvas:active { cursor: grabbing; }
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 2; pointer-events: none;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 18px); padding-bottom: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  }
+  h1 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(22px, 4vw, 32px); letter-spacing: 0.06em; text-wrap: balance; }
+  h1 span { color: var(--porphyry); }
+  .meta { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+  nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 2;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); padding-top: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
+  }
+  button {
+    font: 500 13px/1 var(--font-body); color: var(--ink); background: rgba(17, 16, 18, 0.7);
+    border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer;
+    letter-spacing: 0.04em; backdrop-filter: blur(6px);
+  }
+  button:hover { border-color: var(--muted); }
+  button:focus-visible { outline: 2px solid var(--porphyry); outline-offset: 2px; }
+  button[aria-pressed="true"] { background: var(--porphyry); border-color: var(--porphyry); }
+  #status { position: fixed; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; z-index: 1; pointer-events: none; }
+  #status[hidden] { display: none; }
+  .hint { width: 100%; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+</style>
+
+<div id="stage"></div>
+<div id="status">Model yükleniyor…</div>
+<header>
+  <h1>Mermer Büst <span>·</span> 3D</h1>
+  <div class="meta" id="meta">3 fotoğraftan · görsel gövde</div>
+</header>
+<nav aria-label="Görünüm">
+  <button id="v-front" type="button" data-view="front">Ön</button>
+  <button id="v-left" type="button" data-view="left">Sol profil</button>
+  <button id="v-right" type="button" data-view="right">Sağ profil</button>
+  <button id="v-34" type="button" data-view="34">¾ açı</button>
+  <button id="spin" type="button" aria-pressed="true">Döndür</button>
+  <div class="hint">Sürükle: döndür · Kaydır / iki parmak: yakınlaştır</div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const stage = document.getElementById('stage');
+  const status = document.getElementById('status');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  stage.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 50);
+  const target = new THREE.Vector3(0, 1.0, 0);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.copy(target);
+  controls.enableDamping = true;
+  controls.minDistance = 1.8; controls.maxDistance = 9;
+  controls.maxPolarAngle = Math.PI * 0.62;
+  controls.autoRotate = !reduced; controls.autoRotateSpeed = 1.2;
+
+  // Soft gallery lighting: the photo texture already carries shading, so keep lights gentle.
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x302a2c, 1.15));
+  const key = new THREE.DirectionalLight(0xfff4ea, 0.55);
+  key.position.set(2.5, 4, 3); key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  Object.assign(key.shadow.camera, { left: -2, right: 2, top: 3, bottom: -1, near: 0.5, far: 12 });
+  key.shadow.bias = -0.0005;
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffe2e2, 0.35); rim.position.set(-3, 2.5, -3); scene.add(rim);
+
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(3, 64), new THREE.ShadowMaterial({ opacity: 0.35 }));
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+  const views = { front: [0, 0], left: [Math.PI / 2, 0], right: [-Math.PI / 2, 0], '34': [Math.PI / 4, 0.12] };
+  let anim = null;
+  function goTo(name) {
+    const [az, el] = views[name];
+    const r = camera.position.distanceTo(controls.target);
+    const from = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
+    const to = new THREE.Spherical(r, Math.PI / 2 - el, az);
+    let dTheta = to.theta - from.theta; dTheta = Math.atan2(Math.sin(dTheta), Math.cos(dTheta));
+    anim = { t0: performance.now(), from, dTheta, dPhi: to.phi - from.phi };
+    setSpin(false);
+  }
+  function setSpin(on) {
+    controls.autoRotate = on;
+    document.getElementById('spin').setAttribute('aria-pressed', String(on));
+  }
+  document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => goTo(b.dataset.view)));
+  document.getElementById('spin').addEventListener('click', () => setSpin(!controls.autoRotate));
+  renderer.domElement.addEventListener('pointerdown', () => { anim = null; });
+  if (reduced) setSpin(false);
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.fov = w / h < 0.8 ? 42 : 30;
+    camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize); resize();
+  const dist = camera.aspect < 0.8 ? 5.2 : 4.6;
+  camera.position.set(Math.sin(0.5) * dist, 1.25, Math.cos(0.5) * dist);
+
+  new THREE.GLTFLoader().load('bust.glb', gltf => {
+    const root = gltf.scene;
+    root.traverse(o => {
+      if (o.isMesh) {
+        o.castShadow = true; o.receiveShadow = true;
+        o.material.roughness = 0.62; o.material.metalness = 0;
+        if (o.material.map) { o.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy(); }
+        o.geometry.computeVertexNormals();
+        document.getElementById('meta').textContent =
+          (o.geometry.index ? o.geometry.index.count / 3 : 0).toLocaleString('tr-TR') + ' üçgen · 3 fotoğraftan';
+      }
+    });
+    scene.add(root);
+    status.hidden = true;
+  }, undefined, () => { status.textContent = 'Model yüklenemedi. Sayfayı yenileyin.'; });
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (anim) {
+      const t = Math.min(1, (performance.now() - anim.t0) / 900);
+      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      const s = new THREE.Spherical(anim.from.radius, anim.from.phi + anim.dPhi * e, anim.from.theta + anim.dTheta * e);
+      camera.position.setFromSpherical(s).add(controls.target);
+      if (t >= 1) anim = null;
+    }
+    controls.update();
+    renderer.render(scene, camera);
+  })();
+})();
+</script>
