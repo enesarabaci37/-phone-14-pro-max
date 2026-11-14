@@ -5,7 +5,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-/* Layout: tek sütun telefon formu + altta sabit sonuç çubuğu; geniş ekranda sağda yapışkan sonuç kartı. */
+/* Layout: müşteri ekranı (iş bilgisi + fiyat kartı) ve ayrı Yönetim ekranı (maliyet, marj, ayarlar). Telefonda tek sütun + altta sabit fiyat çubuğu. */
 :root{
   --bg:#F2F3F5; --card:#FFFFFF; --field:#F6F7F9; --line:#E1E4E8; --ink:#14181D; --muted:#646D78;
   --accent:#E2570B; --accent-soft:#FDEBDF; --accent-ink:#FFFFFF;
@@ -36,38 +36,72 @@ button,input,select{font:inherit;color:inherit}
 header.top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .logo{width:40px;height:40px;border-radius:11px;background:var(--ink);display:grid;place-items:center;flex:none}
 .logo svg{width:24px;height:24px}
+.ttl{flex:1;min-width:0}
 h1{font-size:21px;font-weight:800;margin:0;letter-spacing:-.2px;line-height:1.15;text-wrap:balance}
 .sub{color:var(--muted);font-size:13px;margin:2px 0 0}
 .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
-@media (min-width:900px){.grid{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}.wrap{padding-bottom:40px}}
+@media (min-width:900px){.grid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}.wrap{padding-bottom:40px}}
 .col{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (min-width:900px){#vMain .grid{grid-template-areas:"j q" "h q"}#vMain .ga-q{grid-area:q}#vMain .ga-h{grid-area:h}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .card h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px}
 .f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .f .full{grid-column:1/-1}
 label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:5px}
 .in{position:relative}
-.in input,.in select{width:100%;min-width:0;background:var(--field);border:1px solid var(--line);border-radius:11px;padding:12px 12px;font-size:16px;font-weight:700}
-.in input.n{font-family:var(--num);font-weight:700;padding-right:44px}
+.in input,.in select{width:100%;min-width:0;background:var(--field);border:1px solid var(--line);border-radius:11px;padding:12px;font-size:16px;font-weight:700}
+.in input.n{font-family:var(--num);font-weight:700;padding-right:52px}
 .in .u{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;font-weight:700;pointer-events:none}
 .in input:focus,.in select:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--card)}
-.hint{font-size:12px;color:var(--muted);margin-top:5px;font-weight:600}
+.hint{font-size:12px;color:var(--muted);margin:5px 0 0;font-weight:600}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--field);border-radius:999px;padding:9px 14px;font-weight:700;font-size:14px;cursor:pointer;min-height:42px}
-.chip small{color:var(--muted);font-family:var(--num);font-size:11.5px;margin-left:4px;font-weight:500}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.chip[aria-pressed="true"] small{color:inherit;opacity:.7}
-.chip:focus-visible,.btn:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip:focus-visible,.btn:focus-visible,.hi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer;min-height:46px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.sm{padding:7px 11px;min-height:36px;font-size:13px}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted)}
+.gear{flex:none;display:flex;align-items:center;gap:6px}
+.gear svg{width:18px;height:18px}
 
-/* sonuç */
-.res{position:static}
-@media (min-width:900px){.res{position:sticky;top:16px}}
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.big{border-radius:12px;padding:12px 14px;background:var(--field)}
-.big.sale{background:var(--accent);color:var(--accent-ink)}
-.big .k{font-size:12px;font-weight:700;opacity:.8}
-.big .v{font-family:var(--num);font-weight:700;font-size:clamp(20px,6vw,26px);line-height:1.15;font-variant-numeric:tabular-nums;margin-top:2px;word-break:break-word}
-.big .s{font-size:12px;opacity:.85;margin-top:2px;font-family:var(--num)}
+/* müşteri fiyat kartı */
+.sticky{position:static}
+@media (min-width:900px){.sticky{position:sticky;top:16px}}
+.quote{padding:0;overflow:hidden}
+.qtop{background:var(--accent);color:var(--accent-ink);padding:18px 18px 16px}
+.qtop .k{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;opacity:.85}
+.qtop .v{font-family:var(--num);font-weight:700;font-size:clamp(34px,11vw,46px);line-height:1.05;margin-top:4px;word-break:break-word}
+.qtop .s{font-family:var(--num);font-size:13px;margin-top:4px;opacity:.9}
+.qbody{padding:14px 18px 18px}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:9px 14px;font-variant-numeric:tabular-nums}
+.spec dt{color:var(--muted);font-weight:700;font-size:13.5px}
+.spec dd{margin:0;text-align:right;font-family:var(--num);font-weight:700;min-width:0;overflow-wrap:anywhere}
+.qname{font-size:18px;font-weight:800;margin:0 0 12px;line-height:1.25;overflow-wrap:anywhere}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+#copyFall{width:100%;margin-top:10px;min-height:120px;border-radius:10px;border:1px solid var(--line);background:var(--field);padding:10px;font:500 13px/1.5 var(--num)}
+
+/* kayıtlar */
+.hi{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:11px 0;border-top:1px solid var(--line);cursor:pointer}
+.hi:first-child{border-top:0}
+.hi .t{font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hi .m{color:var(--muted);font-size:12.5px;font-family:var(--num);grid-column:1}
+.hi .p{font-family:var(--num);font-weight:700;text-align:right;grid-row:1/3;grid-column:2;align-self:center}
+.hi .p small{display:block;color:var(--muted);font-weight:500;font-size:11.5px}
+.empty{color:var(--muted);font-size:13.5px;padding:6px 0;margin:0}
+.hhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.hhead h2{margin:0}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--bad)}
+
+/* yönetim */
+.abar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.abar h1{flex:1}
+.lock{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:800}
+.hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.big{border-radius:12px;padding:10px 12px;background:var(--field);min-width:0}
+.big .k{font-size:11.5px;font-weight:700;color:var(--muted)}
+.big .v{font-family:var(--num);font-weight:700;font-size:clamp(14px,4.4vw,19px);line-height:1.2;margin-top:2px;overflow-wrap:anywhere}
+.big.ok .v{color:var(--ok)} .big.neg .v{color:var(--bad)}
 .bar{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--line);margin:4px 0 14px}
 .bar i{display:block;height:100%}
 .rows{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px 10px;align-items:center;font-variant-numeric:tabular-nums}
@@ -78,91 +112,115 @@ label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-b
 .rows .v{font-family:var(--num);font-weight:700;text-align:right;white-space:nowrap}
 .rows .sep{grid-column:1/-1;border-top:1px dashed var(--line)}
 .rows .tot{font-weight:800}
-.profit{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ok-soft);color:var(--ok);border-radius:11px;padding:10px 12px;margin-top:14px;font-weight:800}
-.profit .v{font-family:var(--num)}
-.profit.neg{background:var(--accent-soft);color:var(--bad)}
-.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.btn{border:1px solid var(--line);background:var(--card);border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer;min-height:46px}
-.btn.pri{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.btn.sm{padding:7px 11px;min-height:36px;font-size:13px}
-.btn.ghost{background:none;border-color:transparent;color:var(--muted)}
-
-/* geçmiş */
-.hist{display:flex;flex-direction:column}
-.hi{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:11px 0;border-top:1px solid var(--line);cursor:pointer;text-align:left;background:none;border-left:0;border-right:0;border-bottom:0;width:100%}
-.hi:first-child{border-top:0}
-.hi .t{font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hi .m{color:var(--muted);font-size:12.5px;font-family:var(--num);grid-column:1}
-.hi .p{font-family:var(--num);font-weight:700;text-align:right;grid-row:1/3;grid-column:2;align-self:center}
-.hi .p small{display:block;color:var(--muted);font-weight:500;font-size:11.5px}
-.hsum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.hsum div{flex:1 1 90px;background:var(--field);border-radius:10px;padding:8px 10px}
-.hsum .k{font-size:11.5px;color:var(--muted);font-weight:700}
-.hsum .v{font-family:var(--num);font-weight:700;font-size:15px}
-.empty{color:var(--muted);font-size:13.5px;padding:6px 0}
-.hhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
-.hhead h2{margin:0}
-
-/* ayarlar */
-details.card{padding:0}
-details.card>summary{list-style:none;cursor:pointer;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-details.card>summary::-webkit-details-marker{display:none}
-details.card>summary h2{margin:0}
-details.card>summary .cv{color:var(--muted);font-size:12.5px;font-family:var(--num);margin-left:auto;white-space:nowrap}
-@media (max-width:420px){details.card>summary .cv{display:none}}
-details.card>summary .ar{transition:transform .2s;color:var(--muted)}
-details[open].card>summary .ar{transform:rotate(180deg)}
-.sbody{padding:0 16px 16px;display:flex;flex-direction:column;gap:16px}
-.formula{font-size:12.5px;color:var(--muted);background:var(--field);border-radius:10px;padding:10px 12px;line-height:1.6}
+.msum{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.msum div{background:var(--field);border-radius:10px;padding:8px 10px;min-width:0}
+.msum .k{font-size:11.5px;color:var(--muted);font-weight:700}
+.msum .v{font-family:var(--num);font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.formula{font-size:12.5px;color:var(--muted);background:var(--field);border-radius:10px;padding:10px 12px;line-height:1.6;margin-top:14px}
 .formula b{color:var(--ink)}
 .mats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (min-width:520px){.mats{grid-template-columns:1fr 1fr 1fr}}
 
-/* alt sabit çubuk (telefon) */
+/* alt sabit çubuk (telefon, sadece müşteri ekranı) */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
   padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 .dock .in2{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:12px}
 .dock .d{flex:1;min-width:0}
 .dock .k{font-size:11.5px;color:var(--muted);font-weight:700}
-.dock .v{font-family:var(--num);font-weight:700;font-size:18px;white-space:nowrap}
-.dock .v.a{color:var(--accent)}
-.dock .btn{flex:none}
+.dock .v{font-family:var(--num);font-weight:700;font-size:20px;white-space:nowrap;color:var(--accent);overflow:hidden;text-overflow:ellipsis}
 @media (min-width:900px){.dock{display:none}}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom, 0px));z-index:20;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100vw - 32px)}
 #toast.show{opacity:1}
 @media (min-width:900px){#toast{bottom:24px}}
-.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--bad)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
-<div class="wrap">
+<!-- ============ MÜŞTERİ EKRANI ============ -->
+<div class="wrap" id="vMain">
   <header class="top">
     <div class="logo" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v4H5z" fill="#FF7A33"/><path d="M9 8h6l-2 5h-2z" fill="#E9ECEF"/><path d="M4 18h16v2H4z" fill="#E9ECEF"/><path d="M8 16h8" stroke="#FF7A33" stroke-width="2" stroke-linecap="round"/></svg>
     </div>
-    <div>
-      <h1>X2D Baskı Maliyeti</h1>
-      <p class="sub">Gram ve süreyi gir, maliyet ve satış fiyatı anında çıksın.</p>
+    <div class="ttl">
+      <h1>3D Baskı Fiyatı</h1>
+      <p class="sub">Bambu Lab X2D ile özel üretim</p>
     </div>
+    <button class="btn sm gear" id="toAdmin" type="button" aria-label="Yönetim">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
   </header>
 
   <div class="grid">
     <div class="col">
       <section class="card" aria-labelledby="h-job">
-        <h2 id="h-job">Baskı</h2>
+        <h2 id="h-job">Baskı bilgisi</h2>
         <div class="f">
-          <div class="full"><label for="jName">İş adı</label><div class="in"><input id="jName" placeholder="ör. Telefon standı" autocomplete="off"></div></div>
+          <div class="full"><label for="jName">Ürün / iş adı</label><div class="in"><input id="jName" placeholder="ör. Telefon standı" autocomplete="off"></div></div>
           <div class="full"><label>Malzeme</label><div class="chips" id="matChips" role="group" aria-label="Malzeme"></div></div>
           <div><label for="jG">Filament</label><div class="in"><input class="n" id="jG" inputmode="decimal" placeholder="0"><span class="u">g</span></div></div>
-          <div><label for="jW">Atık (purge)</label><div class="in"><input class="n" id="jW" inputmode="decimal" placeholder="0"><span class="u">g</span></div></div>
-          <div><label for="jH">Süre</label><div class="in"><input class="n" id="jH" inputmode="numeric" placeholder="0"><span class="u">sa</span></div></div>
+          <div><label for="jQ">Adet</label><div class="in"><input class="n" id="jQ" inputmode="numeric" placeholder="1"><span class="u">ad</span></div></div>
+          <div><label for="jH">Baskı süresi</label><div class="in"><input class="n" id="jH" inputmode="numeric" placeholder="0"><span class="u">sa</span></div></div>
           <div><label for="jM">&nbsp;</label><div class="in"><input class="n" id="jM" inputmode="numeric" placeholder="0" aria-label="Dakika"><span class="u">dk</span></div></div>
-          <div class="full hint" style="margin-top:-4px">Bambu Studio'daki “Filament” gramını ve tahmini süreyi yaz. Çift renkte flush / prime tower gramını “Atık”a yaz.</div>
-          <div><label for="jQ">Parça adedi</label><div class="in"><input class="n" id="jQ" inputmode="numeric" placeholder="1"><span class="u">ad</span></div></div>
-          <div><label for="jL">Hazırlık / işçilik</label><div class="in"><input class="n" id="jL" inputmode="numeric" placeholder="0"><span class="u">dk</span></div></div>
-          <div class="full"><label for="jX">Ek masraf (kutu, vida, mıknatıs, boya…)</label><div class="in"><input class="n" id="jX" inputmode="decimal" placeholder="0"><span class="u">₺</span></div></div>
         </div>
+      </section>
+    </div>
+
+    <div class="col sticky ga-q">
+      <section class="card quote" id="quoteCard" aria-labelledby="h-price">
+        <div class="qtop">
+          <div class="k" id="h-price">Fiyat</div>
+          <div class="v" id="qSale">0</div>
+          <div class="s" id="qPer"></div>
+        </div>
+        <div class="qbody">
+          <p class="qname" id="qName"></p>
+          <dl class="spec" id="qSpec"></dl>
+          <div class="acts">
+            <button class="btn" id="copyBtn" type="button">Teklifi kopyala</button>
+            <button class="btn pri" id="saveBtn" type="button">Kaydet</button>
+          </div>
+          <textarea id="copyFall" hidden readonly aria-label="Teklif metni"></textarea>
+        </div>
+      </section>
+    </div>
+
+    <div class="col ga-h">
+      <section class="card" aria-labelledby="h-hist">
+        <div class="hhead"><h2 id="h-hist">Verilen teklifler</h2><button class="btn sm" id="newBtn" type="button">Yeni teklif</button></div>
+        <div id="hList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="dock" id="dock">
+  <div class="in2">
+    <div class="d"><div class="k" id="dK">Fiyat</div><div class="v" id="dSale">0</div></div>
+    <button class="btn pri" id="dockBtn" type="button">Teklifi gör</button>
+  </div>
+</div>
+
+<!-- ============ YÖNETİM EKRANI ============ -->
+<div class="wrap" id="vAdmin" hidden>
+  <div class="abar">
+    <button class="btn sm" id="toMain" type="button">‹ Teklife dön</button>
+    <h1>Yönetim</h1>
+    <span class="lock">Sadece sen</span>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <section class="card" aria-labelledby="h-cost">
+        <h2 id="h-cost">Bu işin maliyeti</h2>
+        <p class="qname" id="aName" style="font-size:16px"></p>
+        <div class="hero">
+          <div class="big"><div class="k">Maliyet</div><div class="v" id="oCost"></div></div>
+          <div class="big"><div class="k">Satış</div><div class="v" id="oSale"></div></div>
+          <div class="big ok" id="oProfitBox"><div class="k">Kâr</div><div class="v" id="oProfit"></div></div>
+        </div>
+        <div class="bar" id="oBar" aria-hidden="true"></div>
+        <div class="rows" id="oRows"></div>
       </section>
 
       <section class="card" aria-labelledby="h-mg">
@@ -171,72 +229,54 @@ details[open].card>summary .ar{transform:rotate(180deg)}
         <div class="f" style="margin-top:12px">
           <div><label for="jP">Özel marj</label><div class="in"><input class="n" id="jP" inputmode="decimal"><span class="u">%</span></div></div>
           <div><label for="jFix">Ya da sabit fiyat</label><div class="in"><input class="n" id="jFix" inputmode="decimal" placeholder="boş"><span class="u">₺</span></div></div>
+          <div class="full"><label for="sRnd">Fiyatı yukarı yuvarla</label><div class="in"><select id="sRnd"><option value="0">Yuvarlama</option><option value="1">1 ₺</option><option value="5">5 ₺</option><option value="10">10 ₺</option><option value="50">50 ₺</option></select></div></div>
         </div>
-        <p class="hint">Sabit fiyat girersen marj yerine o fiyat kullanılır ve kârın ona göre hesaplanır.</p>
+        <p class="hint">Sabit fiyat girersen marj yerine o fiyat kullanılır, kâr ona göre çıkar.</p>
       </section>
 
-      <details class="card" id="setBox">
-        <summary><h2>Makine ve fiyat ayarları</h2><span class="cv" id="setSum"></span><span class="ar" aria-hidden="true">▾</span></summary>
-        <div class="sbody">
-          <div class="f">
-            <div><label for="sKwh">Elektrik fiyatı</label><div class="in"><input class="n" id="sKwh" inputmode="decimal"><span class="u">₺/kWh</span></div></div>
-            <div><label for="sW">Ortalama güç</label><div class="in"><input class="n" id="sW" inputmode="decimal"><span class="u">W</span></div></div>
-            <div><label for="sMp">Makine fiyatı</label><div class="in"><input class="n" id="sMp" inputmode="decimal"><span class="u">₺</span></div></div>
-            <div><label for="sLife">Makine ömrü</label><div class="in"><input class="n" id="sLife" inputmode="decimal"><span class="u">saat</span></div></div>
-            <div><label for="sMt">Bakım / parça</label><div class="in"><input class="n" id="sMt" inputmode="decimal"><span class="u">₺/sa</span></div></div>
-            <div><label for="sFail">Fire payı</label><div class="in"><input class="n" id="sFail" inputmode="decimal"><span class="u">%</span></div></div>
-            <div><label for="sLab">İşçilik ücreti</label><div class="in"><input class="n" id="sLab" inputmode="decimal"><span class="u">₺/sa</span></div></div>
-            <div><label for="sRnd">Satışı yuvarla</label><div class="in"><select id="sRnd"><option value="0">Yuvarlama</option><option value="1">1 ₺</option><option value="5">5 ₺</option><option value="10">10 ₺</option><option value="50">50 ₺</option></select></div></div>
-          </div>
-          <div>
-            <label>Filament fiyatları (1 kg makara)</label>
-            <div class="mats" id="matPrices"></div>
-          </div>
-          <div class="formula">
-            <b>Filament</b> = (gram + atık) × kg fiyatı ÷ 1000<br>
-            <b>Elektrik</b> = saat × güç ÷ 1000 × ₺/kWh<br>
-            <b>Yıpranma</b> = saat × makine fiyatı ÷ ömür<br>
-            <b>Bakım</b> = saat × bakım ₺/sa (nozul, tabla, kayış, yağ)<br>
-            <b>Fire</b> = üstteki dördünün toplamı × fire %<br>
-            <b>Satış</b> = toplam maliyet × (1 + marj %)
-          </div>
-          <div style="display:flex;justify-content:flex-end"><button class="btn sm ghost" id="resetSet" type="button">Varsayılan ayarlara dön</button></div>
+      <section class="card" aria-labelledby="h-ex">
+        <h2 id="h-ex">Bu işin ek giderleri</h2>
+        <div class="f">
+          <div><label for="jW">Atık (flush, prime tower)</label><div class="in"><input class="n" id="jW" inputmode="decimal" placeholder="0"><span class="u">g</span></div></div>
+          <div><label for="jL">Hazırlık / işçilik</label><div class="in"><input class="n" id="jL" inputmode="numeric" placeholder="0"><span class="u">dk</span></div></div>
+          <div class="full"><label for="jX">Ek masraf (kutu, vida, mıknatıs, boya…)</label><div class="in"><input class="n" id="jX" inputmode="decimal" placeholder="0"><span class="u">₺</span></div></div>
         </div>
-      </details>
-    </div>
-
-    <div class="col res">
-      <section class="card" aria-labelledby="h-res" id="resCard">
-        <h2 id="h-res">Sonuç</h2>
-        <div class="hero">
-          <div class="big"><div class="k">Toplam maliyet</div><div class="v" id="oCost">0</div><div class="s" id="oCostPer"></div></div>
-          <div class="big sale"><div class="k">Satış fiyatı</div><div class="v" id="oSale">0</div><div class="s" id="oSalePer"></div></div>
-        </div>
-        <div class="bar" id="oBar" aria-hidden="true"></div>
-        <div class="rows" id="oRows"></div>
-        <div class="profit" id="oProfit"><span>Kâr</span><span class="v" id="oProfitV"></span></div>
-        <div class="acts">
-          <button class="btn" id="copyBtn" type="button">Teklifi kopyala</button>
-          <button class="btn pri" id="saveBtn" type="button">Kaydet</button>
-        </div>
-        <textarea id="copyFall" hidden readonly style="width:100%;margin-top:10px;min-height:120px;border-radius:10px;border:1px solid var(--line);background:var(--field);padding:10px;font:500 13px/1.5 var(--num)"></textarea>
-      </section>
-
-      <section class="card" aria-labelledby="h-hist">
-        <div class="hhead"><h2 id="h-hist">Kayıtlı baskılar</h2><button class="btn sm" id="newBtn" type="button">Yeni baskı</button></div>
-        <div class="hsum" id="hSum"></div>
-        <div class="hist" id="hList"></div>
-        <p class="hint">Kayıtlar bu telefonda saklanır. Bir kayda dokununca forma geri yüklenir.</p>
       </section>
     </div>
-  </div>
-</div>
 
-<div class="dock" aria-hidden="false">
-  <div class="in2">
-    <div class="d"><div class="k">Maliyet</div><div class="v" id="dCost">0</div></div>
-    <div class="d"><div class="k">Satış</div><div class="v a" id="dSale">0</div></div>
-    <button class="btn pri" id="dockBtn" type="button">Ayrıntı</button>
+    <div class="col">
+      <section class="card" aria-labelledby="h-mo">
+        <h2 id="h-mo">Bu ay</h2>
+        <div class="msum" id="mSum"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-set">
+        <h2 id="h-set">Makine ayarları</h2>
+        <div class="f">
+          <div><label for="sKwh">Elektrik fiyatı</label><div class="in"><input class="n" id="sKwh" inputmode="decimal"><span class="u">₺/kWh</span></div></div>
+          <div><label for="sW">Ortalama güç</label><div class="in"><input class="n" id="sW" inputmode="decimal"><span class="u">W</span></div></div>
+          <div><label for="sMp">Makine fiyatı</label><div class="in"><input class="n" id="sMp" inputmode="decimal"><span class="u">₺</span></div></div>
+          <div><label for="sLife">Makine ömrü</label><div class="in"><input class="n" id="sLife" inputmode="decimal"><span class="u">saat</span></div></div>
+          <div><label for="sMt">Bakım / parça</label><div class="in"><input class="n" id="sMt" inputmode="decimal"><span class="u">₺/sa</span></div></div>
+          <div><label for="sFail">Fire payı</label><div class="in"><input class="n" id="sFail" inputmode="decimal"><span class="u">%</span></div></div>
+          <div class="full"><label for="sLab">İşçilik ücreti</label><div class="in"><input class="n" id="sLab" inputmode="decimal"><span class="u">₺/sa</span></div></div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-fp">
+        <h2 id="h-fp">Filament fiyatları (1 kg)</h2>
+        <div class="mats" id="matPrices"></div>
+        <div class="formula">
+          <b>Filament</b> = (gram + atık) × kg fiyatı ÷ 1000<br>
+          <b>Elektrik</b> = saat × güç ÷ 1000 × ₺/kWh<br>
+          <b>Yıpranma</b> = saat × makine fiyatı ÷ ömür<br>
+          <b>Bakım</b> = saat × bakım ₺/sa (nozul, tabla, kayış, yağ)<br>
+          <b>Fire</b> = üstteki dördünün toplamı × fire %<br>
+          <b>Satış</b> = toplam maliyet × (1 + marj %)
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn sm ghost" id="resetSet" type="button">Varsayılan ayarlara dön</button></div>
+      </section>
+    </div>
   </div>
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -265,6 +305,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function num(v){let s=String(v??'').trim().replace(/\s|₺/g,'');if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');const x=parseFloat(s);return isFinite(x)?x:0}
 const fin=v=>v?String(Math.round(v*100)/100).replace('.',','):'';
 const dur=(h,m)=>{const t=Math.round(h*60+m);const hh=Math.floor(t/60),mm=t%60;return hh?`${hh} sa ${mm} dk`:`${mm} dk`};
+const cleanName=n=>String(n||'').replace(/^Örnek:\s*/,'');
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
 
 function calc(j=J){
@@ -279,6 +320,14 @@ function calc(j=J){
   return {hrs,ppk,fg,fil,ele,wear,mt,fire,lab,ext,cost,sale,q,profit:sale-cost};
 }
 
+/* ---------- ekranlar ---------- */
+function showView(admin){
+  $('#vMain').hidden=admin;$('#dock').hidden=admin;$('#vAdmin').hidden=!admin;
+  scrollTo(0,0);
+}
+$('#toAdmin').addEventListener('click',()=>showView(true));
+$('#toMain').addEventListener('click',()=>showView(false));
+
 /* ---------- form ---------- */
 const jobFields={jName:'name',jG:'g',jW:'w',jH:'h',jM:'m',jQ:'q',jL:'l',jX:'x',jP:'mg',jFix:'fix'};
 const setFields={sKwh:'kwh',sW:'w',sMp:'mp',sLife:'life',sMt:'mt',sFail:'fail',sLab:'lab'};
@@ -288,21 +337,15 @@ function fillForm(){
   $('#sRnd').value=String(S.rnd);
   drawMats();drawMargins();drawPrices();
 }
-function drawMats(){
-  $('#matChips').innerHTML=MATS.map(m=>`<button type="button" class="chip" data-mat="${m.id}" aria-pressed="${J.mat===m.id}">${m.id}<small>${nf.format(S.prices[m.id])}</small></button>`).join('');
-}
-function drawMargins(){
-  $('#mgChips').innerHTML=MARGINS.map(p=>`<button type="button" class="chip" data-mg="${p}" aria-pressed="${!J.fix&&J.mg===p}">%${p}</button>`).join('');
-}
-function drawPrices(){
-  $('#matPrices').innerHTML=MATS.map(m=>`<div><label for="pr-${m.id.replace(/\W/g,'')}">${m.id}</label><div class="in"><input class="n" id="pr-${m.id.replace(/\W/g,'')}" data-price="${m.id}" inputmode="decimal" value="${fin(S.prices[m.id])}"><span class="u">₺</span></div></div>`).join('');
-}
+function drawMats(){$('#matChips').innerHTML=MATS.map(m=>`<button type="button" class="chip" data-mat="${m.id}" aria-pressed="${J.mat===m.id}">${m.id}</button>`).join('')}
+function drawMargins(){$('#mgChips').innerHTML=MARGINS.map(p=>`<button type="button" class="chip" data-mg="${p}" aria-pressed="${!J.fix&&J.mg===p}">%${p}</button>`).join('')}
+const pid=id=>'pr-'+id.replace(/\W/g,'');
+function drawPrices(){$('#matPrices').innerHTML=MATS.map(m=>`<div><label for="${pid(m.id)}">${m.id}</label><div class="in"><input class="n" id="${pid(m.id)}" data-price="${m.id}" inputmode="decimal" value="${fin(S.prices[m.id])}"><span class="u">₺</span></div></div>`).join('')}
 document.addEventListener('input',e=>{
   const t=e.target,id=t.id;
-  if(jobFields[id]){const k=jobFields[id];J[k]=k==='name'?t.value:num(t.value);if(k==='mg'){J.fix=0;$('#jFix').value='';}drawMargins();}
+  if(jobFields[id]){const k=jobFields[id];J[k]=k==='name'?t.value:num(t.value);if(k==='mg'){J.fix=0;$('#jFix').value='';}if(k==='mg'||k==='fix')drawMargins();}
   else if(setFields[id]){S[setFields[id]]=num(t.value)}
-  else if(t.dataset.price){S.prices[t.dataset.price]=num(t.value);drawMats()}
-  else if(id==='sRnd'){S.rnd=num(t.value)}
+  else if(t.dataset.price){S.prices[t.dataset.price]=num(t.value)}
   else return;
   render();persist();
 });
@@ -311,13 +354,23 @@ $('#matChips').addEventListener('click',e=>{const b=e.target.closest('[data-mat]
 $('#mgChips').addEventListener('click',e=>{const b=e.target.closest('[data-mg]');if(!b)return;J.mg=+b.dataset.mg;J.fix=0;$('#jP').value=fin(J.mg);$('#jFix').value='';drawMargins();render();persist()});
 $('#resetSet').addEventListener('click',()=>{S=structuredClone(DEF);fillForm();render();persist();toast('Ayarlar varsayılana döndü')});
 
-/* ---------- sonuç ---------- */
+/* ---------- çizim ---------- */
 function render(){
   const c=calc();
+  // müşteri kartı: sadece fiyat ve iş bilgisi
+  $('#qSale').textContent=money(c.sale);
+  $('#qPer').textContent=c.q>1?`${c.q} adet · adet başı ${money(c.sale/c.q)}`:'KDV ve kargo hariç';
+  $('#qName').textContent=cleanName(J.name)||'3D baskı';
+  $('#qSpec').innerHTML=`<dt>Malzeme</dt><dd>${esc(J.mat)}</dd><dt>Ağırlık</dt><dd>${nf.format(J.g)} g</dd><dt>Baskı süresi</dt><dd>${dur(J.h,J.m)}</dd><dt>Adet</dt><dd>${c.q}</dd>`;
+  $('#dSale').textContent=money(c.sale);
+  $('#dK').textContent=c.q>1?`Fiyat · ${c.q} adet`:'Fiyat';
+
+  // yönetim
+  $('#aName').textContent=cleanName(J.name)||'3D baskı';
   const parts=[
     ['Filament',c.fil,'--c1',`${nf.format(c.fg)} g × ${nf.format(c.ppk)} ₺/kg`],
     ['Elektrik',c.ele,'--c2',`${nf.format(c.hrs*S.w/1000)} kWh`],
-    ['Makine yıpranması',c.wear,'--c3',`${dur(J.h,J.m)}`],
+    ['Makine yıpranması',c.wear,'--c3',dur(J.h,J.m)],
     ['Bakım',c.mt,'--c4',`${nf.format(S.mt)} ₺/sa`],
     ['Fire payı',c.fire,'--c5',`%${nf.format(S.fail)}`],
     ['İşçilik',c.lab,'--c6',`${nf.format(J.l)} dk`],
@@ -326,21 +379,18 @@ function render(){
   const tot=c.cost||1;
   $('#oBar').innerHTML=parts.map(p=>`<i style="width:${p[1]/tot*100}%;background:var(${p[2]})"></i>`).join('');
   $('#oRows').innerHTML=parts.map(p=>`<span class="dot" style="background:var(${p[2]})"></span><span class="nm">${p[0]}${p[3]?`<small>${esc(p[3])}</small>`:''}</span><span class="pc">%${Math.round(p[1]/tot*100)}</span><span class="v">${money(p[1])}</span>`).join('')
-    +`<span class="sep"></span><span></span><span class="nm tot">Toplam maliyet</span><span></span><span class="v tot">${money(c.cost)}</span>`;
+    +`<span class="sep"></span><span></span><span class="nm tot">Toplam maliyet</span><span></span><span class="v tot">${money(c.cost)}</span>`
+    +(c.q>1?`<span></span><span class="nm">Adet maliyeti</span><span></span><span class="v">${money(c.cost/c.q)}</span>`:'');
   $('#oCost').textContent=money(c.cost);
   $('#oSale').textContent=money(c.sale);
-  $('#oCostPer').textContent=c.q>1?`adet ${money(c.cost/c.q)}`:`saatlik ${money(c.hrs?c.cost/c.hrs:0)}`;
-  $('#oSalePer').textContent=c.q>1?`adet ${money(c.sale/c.q)}`:(J.fix>0?'sabit fiyat':`marj %${nf.format(J.mg)}`);
-  const pr=$('#oProfit');pr.classList.toggle('neg',c.profit<0);
-  $('#oProfitV').textContent=`${money(c.profit)}${c.cost>0?`  ·  %${nf.format(Math.round(c.profit/c.cost*100))}`:''}`;
-  $('#dCost').textContent=money(c.cost);$('#dSale').textContent=money(c.sale);
-  $('#setSum').textContent=`${nf.format(S.kwh)} ₺/kWh · ${nf.format(S.w)} W`;
+  $('#oProfit').textContent=money(c.profit)+(c.cost>0?` · %${Math.round(c.profit/c.cost*100)}`:'');
+  $('#oProfitBox').className='big '+(c.profit<0?'neg':'ok');
 }
 
 /* ---------- teklif kopyala ---------- */
 function quote(){
   const c=calc();
-  const L=[`${J.name||'3D baskı'}`,`Malzeme: ${J.mat} · ${nf.format(J.g)} g`,`Baskı süresi: ${dur(J.h,J.m)}`];
+  const L=[cleanName(J.name)||'3D baskı',`Malzeme: ${J.mat} · ${nf.format(J.g)} g`,`Baskı süresi: ${dur(J.h,J.m)}`];
   if(c.q>1)L.push(`Adet: ${c.q} · adet fiyatı ${money(c.sale/c.q)}`);
   L.push(`Fiyat: ${money(c.sale)}`);
   return L.join('\n');
@@ -350,12 +400,13 @@ $('#copyBtn').addEventListener('click',()=>{
   const fall=()=>{fb.value=t;fb.hidden=false;fb.focus();fb.select();toast('Metni seçip kopyala')};
   try{navigator.clipboard.writeText(t).then(()=>{fb.hidden=true;toast('Teklif kopyalandı')},fall)}catch(e){fall()}
 });
+$('#dockBtn').addEventListener('click',()=>$('#quoteCard').scrollIntoView({behavior:'smooth',block:'start'}));
 
 /* ---------- kayıtlar ---------- */
 $('#saveBtn').addEventListener('click',()=>{
   const c=calc();
   H.unshift({id:Date.now().toString(36),d:new Date().toISOString(),j:{...J},cost:c.cost,sale:c.sale});
-  H=H.slice(0,200);persist();drawHist();toast('Kaydedildi');
+  H=H.slice(0,300);persist();drawHist();toast('Kaydedildi');
 });
 $('#newBtn').addEventListener('click',()=>{
   J={name:'',mat:J.mat,g:0,w:0,h:0,m:0,q:1,l:J.l,x:0,mg:J.mg,fix:0};
@@ -363,15 +414,15 @@ $('#newBtn').addEventListener('click',()=>{
 });
 let pendingDel=null;
 function drawHist(){
-  const now=new Date(),mo=H.filter(h=>{const d=new Date(h.d);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()});
-  const sum=(a,k)=>a.reduce((s,h)=>s+h[k],0);
-  $('#hSum').innerHTML=H.length?`<div><div class="k">Bu ay baskı</div><div class="v">${mo.length}</div></div><div><div class="k">Bu ay maliyet</div><div class="v">${tl0.format(sum(mo,'cost'))}</div></div><div><div class="k">Bu ay kâr</div><div class="v">${tl0.format(sum(mo,'sale')-sum(mo,'cost'))}</div></div>`:'';
   $('#hList').innerHTML=H.length?H.map(h=>`<div class="hi" role="button" tabindex="0" data-id="${h.id}">
-      <span class="t">${esc(h.j.name||'İsimsiz baskı')}</span>
+      <span class="t">${esc(cleanName(h.j.name)||'İsimsiz baskı')}</span>
       <span class="m">${new Date(h.d).toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} · ${esc(h.j.mat)} · ${nf.format(h.j.g)} g · ${dur(h.j.h,h.j.m)}</span>
-      <span class="p">${money(h.sale)}<small>maliyet ${money(h.cost)}</small></span>
+      <span class="p">${money(h.sale)}${(h.j.q||1)>1?`<small>${h.j.q} adet</small>`:''}</span>
       ${pendingDel===h.id?`<span class="confirm" style="grid-column:1/-1">Silinsin mi? <button class="btn sm" data-del="${h.id}" type="button">Evet, sil</button><button class="btn sm ghost" data-keep type="button">Vazgeç</button></span>`:`<span style="grid-column:1/-1"><button class="btn sm ghost" data-ask="${h.id}" type="button" style="padding-left:0">Sil</button></span>`}
-    </div>`).join(''):'<p class="empty">Henüz kayıt yok. Hesapladığın baskıyı “Kaydet” ile buraya ekle.</p>';
+    </div>`).join(''):'<p class="empty">Henüz kayıt yok. Hesapladığın teklifi “Kaydet” ile buraya ekle.</p>';
+  const now=new Date(),mo=H.filter(h=>{const d=new Date(h.d);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()});
+  const sum=k=>mo.reduce((s,h)=>s+h[k],0);
+  $('#mSum').innerHTML=`<div><div class="k">Kayıtlı iş</div><div class="v">${mo.length}</div></div><div><div class="k">Ciro</div><div class="v">${tl0.format(sum('sale'))}</div></div><div><div class="k">Maliyet</div><div class="v">${tl0.format(sum('cost'))}</div></div><div><div class="k">Kâr</div><div class="v">${tl0.format(sum('sale')-sum('cost'))}</div></div>`;
 }
 $('#hList').addEventListener('click',e=>{
   const a=e.target.closest('[data-ask]'),d=e.target.closest('[data-del]'),k=e.target.closest('[data-keep]');
@@ -383,7 +434,6 @@ $('#hList').addEventListener('click',e=>{
   J={...J,...h.j};fillForm();render();persist();scrollTo({top:0,behavior:'smooth'});toast('Forma yüklendi');
 });
 $('#hList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('hi'))e.target.click()});
-$('#dockBtn').addEventListener('click',()=>$('#resCard').scrollIntoView({behavior:'smooth',block:'start'}));
 
 fillForm();render();drawHist();
 </script>
