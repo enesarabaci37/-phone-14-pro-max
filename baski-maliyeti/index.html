@@ -118,8 +118,12 @@ label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-b
 .msum .v{font-family:var(--num);font-weight:700;font-size:15px;overflow-wrap:anywhere}
 .formula{font-size:12.5px;color:var(--muted);background:var(--field);border-radius:10px;padding:10px 12px;line-height:1.6;margin-top:14px}
 .formula b{color:var(--ink)}
-.mats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (min-width:520px){.mats{grid-template-columns:1fr 1fr 1fr}}
+.frow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1.1fr) auto;gap:8px;align-items:end;padding:10px 0;border-top:1px solid var(--line)}
+.frow:first-child{border-top:0;padding-top:0}
+.frow .del{min-height:48px;padding:0 10px;color:var(--bad)}
+@media (max-width:560px){.frow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.frow .pc2{grid-column:1/2}.frow .del{grid-column:2/3;justify-self:end}}
+.frow .confirm{grid-column:1/-1}
+.addf{width:100%;margin-top:12px;border-style:dashed;color:var(--accent)}
 
 /* alt sabit çubuk (telefon, sadece müşteri ekranı) */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
@@ -157,8 +161,8 @@ label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-b
         <h2 id="h-job">Baskı bilgisi</h2>
         <div class="f">
           <div class="full"><label for="jName">Ürün / iş adı</label><div class="in"><input id="jName" placeholder="ör. Telefon standı" autocomplete="off"></div></div>
-          <div class="full"><label>Malzeme</label><div class="chips" id="matChips" role="group" aria-label="Malzeme"></div></div>
-          <div><label for="jG">Filament</label><div class="in"><input class="n" id="jG" inputmode="decimal" placeholder="0"><span class="u">g</span></div></div>
+          <div class="full"><label>Filament</label><div class="chips" id="matChips" role="group" aria-label="Filament"></div></div>
+          <div><label for="jG">Ağırlık</label><div class="in"><input class="n" id="jG" inputmode="decimal" placeholder="0"><span class="u">g</span></div></div>
           <div><label for="jQ">Adet</label><div class="in"><input class="n" id="jQ" inputmode="numeric" placeholder="1"><span class="u">ad</span></div></div>
           <div><label for="jH">Baskı süresi</label><div class="in"><input class="n" id="jH" inputmode="numeric" placeholder="0"><span class="u">sa</span></div></div>
           <div><label for="jM">&nbsp;</label><div class="in"><input class="n" id="jM" inputmode="numeric" placeholder="0" aria-label="Dakika"><span class="u">dk</span></div></div>
@@ -264,8 +268,9 @@ label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-b
       </section>
 
       <section class="card" aria-labelledby="h-fp">
-        <h2 id="h-fp">Filament fiyatları (1 kg)</h2>
-        <div class="mats" id="matPrices"></div>
+        <h2 id="h-fp">Filamentler (1 kg fiyatı)</h2>
+        <div id="matPrices"></div>
+        <button class="btn addf" id="addFil" type="button">+ Filament ekle</button>
         <div class="formula">
           <b>Filament</b> = (gram + atık) × kg fiyatı ÷ 1000<br>
           <b>Elektrik</b> = saat × güç ÷ 1000 × ₺/kWh<br>
@@ -285,16 +290,13 @@ label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-b
 "use strict";
 const $=s=>document.querySelector(s);
 const KEY='x2d-baski-maliyeti-v1';
-const MATS=[
-  {id:'PLA',p:900},{id:'PLA Matte',p:950},{id:'PETG',p:950},{id:'ABS',p:900},{id:'ASA',p:1150},
-  {id:'TPU',p:1500},{id:'PLA-CF',p:1500},{id:'PA-CF',p:2800},{id:'Diğer',p:1000}
-];
-const DEF={kwh:6.6,w:250,mp:75000,life:6000,mt:1.5,fail:5,lab:200,rnd:5,prices:Object.fromEntries(MATS.map(m=>[m.id,m.p]))};
+const DEF_FILS=[{id:'f1',brand:'Bambu Lab',type:'PLA',p:900},{id:'f2',brand:'BIQU',type:'PLA',p:700},{id:'f3',brand:'Porima',type:'PLA',p:650}];
+const DEF={kwh:6.6,w:250,mp:75000,life:6000,mt:1.5,fail:5,lab:200,rnd:5};
 const MARGINS=[30,50,75,100,150];
-let S=structuredClone(DEF);
-let J={name:'Örnek: Telefon standı',mat:'PLA',g:86,w:0,h:3,m:40,q:1,l:10,x:0,mg:75,fix:0};
+let S={...structuredClone(DEF),fils:structuredClone(DEF_FILS)};
+let J={name:'Örnek: Telefon standı',fil:'f1',g:86,w:0,h:3,m:40,q:1,l:10,x:0,mg:75,fix:0};
 let H=[];
-try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d){S=Object.assign(structuredClone(DEF),d.S||{});S.prices=Object.assign({},DEF.prices,(d.S||{}).prices||{});if(d.J)J=Object.assign(J,d.J);if(Array.isArray(d.H))H=d.H;}}catch(e){}
+try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d){S=Object.assign(structuredClone(DEF),d.S||{});delete S.prices;if(!Array.isArray(S.fils))S.fils=structuredClone(DEF_FILS);if(d.J)J=Object.assign(J,d.J);if(Array.isArray(d.H))H=d.H;}}catch(e){}
 let tm=null;const persist=()=>{clearTimeout(tm);tm=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify({S,J,H}))}catch(e){}},250)};
 
 const tl=new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',minimumFractionDigits:2,maximumFractionDigits:2});
@@ -305,11 +307,15 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function num(v){let s=String(v??'').trim().replace(/\s|₺/g,'');if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');const x=parseFloat(s);return isFinite(x)?x:0}
 const fin=v=>v?String(Math.round(v*100)/100).replace('.',','):'';
 const dur=(h,m)=>{const t=Math.round(h*60+m);const hh=Math.floor(t/60),mm=t%60;return hh?`${hh} sa ${mm} dk`:`${mm} dk`};
+const filOf=id=>S.fils.find(f=>f.id===id);
+const filLabel=f=>f?([f.brand,f.type].filter(Boolean).join(' ')||'İsimsiz filament'):'';
+const matLabel=j=>{const f=filOf(j.fil);return f?filLabel(f):(j.matName||j.mat||'-')};
+function fixSel(){if(!filOf(J.fil)&&S.fils.length&&!J.ppk){J.fil=S.fils[0].id;delete J.mat;delete J.matName}}
 const cleanName=n=>String(n||'').replace(/^Örnek:\s*/,'');
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
 
 function calc(j=J){
-  const hrs=j.h+j.m/60, ppk=S.prices[j.mat]??1000, fg=j.g+j.w;
+  const hrs=j.h+j.m/60, ppk=(filOf(j.fil)||{}).p||j.ppk||0, fg=j.g+j.w;
   const fil=fg*ppk/1000, ele=hrs*S.w/1000*S.kwh, wear=S.life>0?hrs*S.mp/S.life:0, mt=hrs*S.mt;
   const fire=(fil+ele+wear+mt)*S.fail/100, lab=j.l/60*S.lab, ext=j.x;
   const cost=fil+ele+wear+mt+fire+lab+ext;
@@ -337,22 +343,35 @@ function fillForm(){
   $('#sRnd').value=String(S.rnd);
   drawMats();drawMargins();drawPrices();
 }
-function drawMats(){$('#matChips').innerHTML=MATS.map(m=>`<button type="button" class="chip" data-mat="${m.id}" aria-pressed="${J.mat===m.id}">${m.id}</button>`).join('')}
+function drawMats(){$('#matChips').innerHTML=S.fils.length?S.fils.map(f=>`<button type="button" class="chip" data-mat="${f.id}" aria-pressed="${J.fil===f.id}">${esc(filLabel(f))}</button>`).join(''):'<p class="empty">Filament yok. ⚙️ Yönetim ekranından marka ve fiyat ekle.</p>'}
 function drawMargins(){$('#mgChips').innerHTML=MARGINS.map(p=>`<button type="button" class="chip" data-mg="${p}" aria-pressed="${!J.fix&&J.mg===p}">%${p}</button>`).join('')}
 const pid=id=>'pr-'+id.replace(/\W/g,'');
-function drawPrices(){$('#matPrices').innerHTML=MATS.map(m=>`<div><label for="${pid(m.id)}">${m.id}</label><div class="in"><input class="n" id="${pid(m.id)}" data-price="${m.id}" inputmode="decimal" value="${fin(S.prices[m.id])}"><span class="u">₺</span></div></div>`).join('')}
+let pendingFil=null;
+function drawPrices(){$('#matPrices').innerHTML=S.fils.length?S.fils.map(f=>`<div class="frow">
+  <div><label for="fb-${f.id}">Marka</label><div class="in"><input id="fb-${f.id}" data-fid="${f.id}" data-fk="brand" value="${esc(f.brand)}" placeholder="ör. Bambu Lab" autocomplete="off"></div></div>
+  <div><label for="ft-${f.id}">Tür</label><div class="in"><input id="ft-${f.id}" data-fid="${f.id}" data-fk="type" value="${esc(f.type)}" placeholder="ör. PLA" autocomplete="off"></div></div>
+  <div class="pc2"><label for="fp-${f.id}">Fiyat</label><div class="in"><input class="n" id="fp-${f.id}" data-fid="${f.id}" data-fk="p" inputmode="decimal" value="${fin(f.p)}" placeholder="0"><span class="u">₺/kg</span></div></div>
+  ${pendingFil===f.id?`<span class="confirm">Silinsin mi? <button class="btn sm" data-fdel="${f.id}" type="button">Evet, sil</button><button class="btn sm ghost" data-fkeep type="button">Vazgeç</button></span>`:`<button class="btn ghost del" data-fask="${f.id}" type="button" aria-label="${esc(filLabel(f))} sil">Sil</button>`}
+</div>`).join(''):'<p class="empty">Henüz filament yok. Aşağıdan ekle.</p>'}
+$('#addFil').addEventListener('click',()=>{const id='f'+Date.now().toString(36);S.fils.push({id,brand:'',type:'PLA',p:0});if(!filOf(J.fil))J.fil=id;drawPrices();drawMats();render();persist();$('#fb-'+id).focus()});
+$('#matPrices').addEventListener('click',e=>{
+  const a=e.target.closest('[data-fask]'),d=e.target.closest('[data-fdel]'),k=e.target.closest('[data-fkeep]');
+  if(a){pendingFil=a.dataset.fask;drawPrices();return}
+  if(k){pendingFil=null;drawPrices();return}
+  if(d){S.fils=S.fils.filter(f=>f.id!==d.dataset.fdel);pendingFil=null;if(!filOf(J.fil)&&S.fils.length)J.fil=S.fils[0].id;drawPrices();drawMats();render();persist();toast('Filament silindi')}
+});
 document.addEventListener('input',e=>{
   const t=e.target,id=t.id;
   if(jobFields[id]){const k=jobFields[id];J[k]=k==='name'?t.value:num(t.value);if(k==='mg'){J.fix=0;$('#jFix').value='';}if(k==='mg'||k==='fix')drawMargins();}
   else if(setFields[id]){S[setFields[id]]=num(t.value)}
-  else if(t.dataset.price){S.prices[t.dataset.price]=num(t.value)}
+  else if(t.dataset.fid){const f=filOf(t.dataset.fid);if(!f)return;const k=t.dataset.fk;f[k]=k==='p'?num(t.value):t.value;if(k!=='p')drawMats()}
   else return;
   render();persist();
 });
 $('#sRnd').addEventListener('change',e=>{S.rnd=num(e.target.value);render();persist()});
-$('#matChips').addEventListener('click',e=>{const b=e.target.closest('[data-mat]');if(!b)return;J.mat=b.dataset.mat;drawMats();render();persist()});
+$('#matChips').addEventListener('click',e=>{const b=e.target.closest('[data-mat]');if(!b)return;J.fil=b.dataset.mat;delete J.matName;delete J.mat;delete J.ppk;drawMats();render();persist()});
 $('#mgChips').addEventListener('click',e=>{const b=e.target.closest('[data-mg]');if(!b)return;J.mg=+b.dataset.mg;J.fix=0;$('#jP').value=fin(J.mg);$('#jFix').value='';drawMargins();render();persist()});
-$('#resetSet').addEventListener('click',()=>{S=structuredClone(DEF);fillForm();render();persist();toast('Ayarlar varsayılana döndü')});
+$('#resetSet').addEventListener('click',()=>{S={...structuredClone(DEF),fils:S.fils};fillForm();render();persist();toast('Ayarlar varsayılana döndü')});
 
 /* ---------- çizim ---------- */
 function render(){
@@ -361,7 +380,7 @@ function render(){
   $('#qSale').textContent=money(c.sale);
   $('#qPer').textContent=c.q>1?`${c.q} adet · adet başı ${money(c.sale/c.q)}`:'KDV ve kargo hariç';
   $('#qName').textContent=cleanName(J.name)||'3D baskı';
-  $('#qSpec').innerHTML=`<dt>Malzeme</dt><dd>${esc(J.mat)}</dd><dt>Ağırlık</dt><dd>${nf.format(J.g)} g</dd><dt>Baskı süresi</dt><dd>${dur(J.h,J.m)}</dd><dt>Adet</dt><dd>${c.q}</dd>`;
+  $('#qSpec').innerHTML=`<dt>Filament</dt><dd>${esc(matLabel(J))}</dd><dt>Ağırlık</dt><dd>${nf.format(J.g)} g</dd><dt>Baskı süresi</dt><dd>${dur(J.h,J.m)}</dd><dt>Adet</dt><dd>${c.q}</dd>`;
   $('#dSale').textContent=money(c.sale);
   $('#dK').textContent=c.q>1?`Fiyat · ${c.q} adet`:'Fiyat';
 
@@ -390,7 +409,7 @@ function render(){
 /* ---------- teklif kopyala ---------- */
 function quote(){
   const c=calc();
-  const L=[cleanName(J.name)||'3D baskı',`Malzeme: ${J.mat} · ${nf.format(J.g)} g`,`Baskı süresi: ${dur(J.h,J.m)}`];
+  const L=[cleanName(J.name)||'3D baskı',`Filament: ${matLabel(J)} · ${nf.format(J.g)} g`,`Baskı süresi: ${dur(J.h,J.m)}`];
   if(c.q>1)L.push(`Adet: ${c.q} · adet fiyatı ${money(c.sale/c.q)}`);
   L.push(`Fiyat: ${money(c.sale)}`);
   return L.join('\n');
@@ -405,18 +424,18 @@ $('#dockBtn').addEventListener('click',()=>$('#quoteCard').scrollIntoView({behav
 /* ---------- kayıtlar ---------- */
 $('#saveBtn').addEventListener('click',()=>{
   const c=calc();
-  H.unshift({id:Date.now().toString(36),d:new Date().toISOString(),j:{...J},cost:c.cost,sale:c.sale});
+  H.unshift({id:Date.now().toString(36),d:new Date().toISOString(),j:{...J,matName:matLabel(J),ppk:c.ppk},cost:c.cost,sale:c.sale});
   H=H.slice(0,300);persist();drawHist();toast('Kaydedildi');
 });
 $('#newBtn').addEventListener('click',()=>{
-  J={name:'',mat:J.mat,g:0,w:0,h:0,m:0,q:1,l:J.l,x:0,mg:J.mg,fix:0};
+  J={name:'',fil:J.fil,g:0,w:0,h:0,m:0,q:1,l:J.l,x:0,mg:J.mg,fix:0};
   fillForm();render();persist();scrollTo({top:0,behavior:'smooth'});$('#jName').focus({preventScroll:true});
 });
 let pendingDel=null;
 function drawHist(){
   $('#hList').innerHTML=H.length?H.map(h=>`<div class="hi" role="button" tabindex="0" data-id="${h.id}">
       <span class="t">${esc(cleanName(h.j.name)||'İsimsiz baskı')}</span>
-      <span class="m">${new Date(h.d).toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} · ${esc(h.j.mat)} · ${nf.format(h.j.g)} g · ${dur(h.j.h,h.j.m)}</span>
+      <span class="m">${new Date(h.d).toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} · ${esc(matLabel(h.j))} · ${nf.format(h.j.g)} g · ${dur(h.j.h,h.j.m)}</span>
       <span class="p">${money(h.sale)}${(h.j.q||1)>1?`<small>${h.j.q} adet</small>`:''}</span>
       ${pendingDel===h.id?`<span class="confirm" style="grid-column:1/-1">Silinsin mi? <button class="btn sm" data-del="${h.id}" type="button">Evet, sil</button><button class="btn sm ghost" data-keep type="button">Vazgeç</button></span>`:`<span style="grid-column:1/-1"><button class="btn sm ghost" data-ask="${h.id}" type="button" style="padding-left:0">Sil</button></span>`}
     </div>`).join(''):'<p class="empty">Henüz kayıt yok. Hesapladığın teklifi “Kaydet” ile buraya ekle.</p>';
@@ -435,5 +454,5 @@ $('#hList').addEventListener('click',e=>{
 });
 $('#hList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('hi'))e.target.click()});
 
-fillForm();render();drawHist();
+fixSel();fillForm();render();drawHist();
 </script>
