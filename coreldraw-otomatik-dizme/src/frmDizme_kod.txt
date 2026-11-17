@@ -1,0 +1,1400 @@
+Option Explicit
+
+'=====================================================================
+'  ATÖLYE ARAÇLARI - OTOMATİK DİZME (NESTING)
+'  Seçili nesneleri malzeme (plaka) ölçüsüne en az fire ile dizer.
+'  Tüm hesaplar milimetre ile yapılır, ekranda seçilen birim gösterilir.
+'=====================================================================
+
+Private Const EPS As Double = 0.0001
+Private Const UYG As String = "AtolyeAraclari"
+Private Const MAKS_ONIZLEME As Long = 1500
+Private Const VARSAYILAN_AD As String = "Varsayılan"
+Private Const VARSAYILAN_AYAR As String = "birim=1;gen=1000;yuk=700;kenar=5;bosluk=3;adet=1;dondur=1;kalite=1;arama=20;basla=1;kontur=1;sayfa=0;cerceve=1;etiket=1;grupla=0;sayfaboyut=0;plakayer=0;plakaara=50;canli=1"
+
+' --- MaxRects boş alan listeleri
+Private fx() As Double, fy() As Double, fw() As Double, fh() As Double
+Private fc As Long
+Private tx() As Double, ty() As Double, tw() As Double, th() As Double
+Private tc As Long
+
+' --- Son hesap sonucu
+Private hesapOK As Boolean
+Private hesapMesaj As String
+Private nItem As Long
+Private iSrc() As Long, iKop() As Long
+Private iW() As Double, iH() As Double
+Private rS() As Long, rX() As Double, rY() As Double, rR() As Boolean
+Private rSheets As Long
+Private pMatW As Double, pMatH As Double, pKenar As Double, pGap As Double
+Private pSW As Double, pSH As Double, pBasla As Long, pKontur As Boolean
+Private gosterPlaka As Long
+
+' --- Durum
+Private olaylar As Collection
+Private birimEtiketleri As Collection
+Private yukleniyor As Boolean
+Private birimCarpan As Double
+
+' --- Kontroller
+Private mp As MSForms.MultiPage
+Private frOn As MSForms.Frame
+Private lblPlaka As MSForms.Label
+Private lblBilgi As MSForms.Label
+Private WithEvents btnOnceki As MSForms.CommandButton
+Private WithEvents btnSonraki As MSForms.CommandButton
+Private WithEvents btnOnizle As MSForms.CommandButton
+Private WithEvents btnUygula As MSForms.CommandButton
+Private WithEvents btnTamam As MSForms.CommandButton
+Private WithEvents btnIptal As MSForms.CommandButton
+Private WithEvents btnTakas As MSForms.CommandButton
+Private WithEvents cmbOnAyar As MSForms.ComboBox
+Private WithEvents btnKaydet As MSForms.CommandButton
+Private WithEvents btnSil As MSForms.CommandButton
+Private WithEvents cmbBirim As MSForms.ComboBox
+
+Private txtGen As MSForms.TextBox, txtYuk As MSForms.TextBox, txtKenar As MSForms.TextBox
+Private txtBosluk As MSForms.TextBox, txtAdet As MSForms.TextBox, txtArama As MSForms.TextBox
+Private txtPlakaAra As MSForms.TextBox
+Private chkSayfa As MSForms.CheckBox, chkKontur As MSForms.CheckBox
+Private chkCerceve As MSForms.CheckBox, chkEtiket As MSForms.CheckBox, chkGrupla As MSForms.CheckBox
+Private chkSayfaBoyut As MSForms.CheckBox, chkCanli As MSForms.CheckBox
+Private cmbDondur As MSForms.ComboBox, cmbKalite As MSForms.ComboBox, cmbBasla As MSForms.ComboBox
+Private cmbPlakaYer As MSForms.ComboBox
+
+'=====================================================================
+'  PENCERE OLUŞTURMA
+'=====================================================================
+Private Sub UserForm_Initialize()
+    Dim pg As Object, fr As Object, lb As MSForms.Label
+
+    yukleniyor = True
+    Set olaylar = New Collection
+    Set birimEtiketleri = New Collection
+    birimCarpan = 1
+
+    Me.Caption = "Atölye Araçları - Otomatik Dizme"
+    Me.Width = 646
+    Me.Height = 520
+
+    ' ---------- Önizleme alanı ----------
+    Set frOn = Me.Controls.Add("Forms.Frame.1")
+    With frOn
+        .Left = 8: .Top = 8: .Width = 362: .Height = 384
+        .Caption = ""
+        .BackColor = RGB(250, 250, 250)
+        .SpecialEffect = fmSpecialEffectSunken
+    End With
+
+    Set btnOnceki = Me.Controls.Add("Forms.CommandButton.1")
+    With btnOnceki
+        .Caption = "<": .Left = 8: .Top = 398: .Width = 28: .Height = 20
+        .ControlTipText = "Önceki plakayı göster"
+    End With
+    Set lblPlaka = Me.Controls.Add("Forms.Label.1")
+    With lblPlaka
+        .Left = 40: .Top = 401: .Width = 100: .Height = 16
+        .TextAlign = fmTextAlignCenter: .Font.Bold = True
+    End With
+    Set btnSonraki = Me.Controls.Add("Forms.CommandButton.1")
+    With btnSonraki
+        .Caption = ">": .Left = 144: .Top = 398: .Width = 28: .Height = 20
+        .ControlTipText = "Sonraki plakayı göster"
+    End With
+    Set lb = Me.Controls.Add("Forms.Label.1")
+    With lb
+        .Left = 180: .Top = 396: .Width = 190: .Height = 24
+        .Caption = "Mavi: normal   Turuncu: 90° döndürülmüş" & vbCrLf & "Kırmızı çerçeve: plaka   Gri: kenar payı"
+        .Font.Size = 7: .ForeColor = RGB(110, 110, 110)
+    End With
+    Set lblBilgi = Me.Controls.Add("Forms.Label.1")
+    With lblBilgi
+        .Left = 8: .Top = 424: .Width = 362: .Height = 28
+        .Font.Size = 8
+    End With
+
+    ' ---------- Alt düğmeler ----------
+    Set btnOnizle = Me.Controls.Add("Forms.CommandButton.1")
+    With btnOnizle
+        .Caption = "Önizle / Seçimi yenile": .Left = 8: .Top = 458: .Width = 130: .Height = 24
+        .ControlTipText = "Seçili nesnelere göre yerleşimi yeniden hesaplar (CorelDRAW'da nesnelere dokunmaz)"
+    End With
+    Set btnUygula = Me.Controls.Add("Forms.CommandButton.1")
+    With btnUygula
+        .Caption = "Uygula": .Left = 378: .Top = 458: .Width = 80: .Height = 24
+        .ControlTipText = "Nesneleri önizlemedeki gibi dizer, pencere açık kalır"
+    End With
+    Set btnTamam = Me.Controls.Add("Forms.CommandButton.1")
+    With btnTamam
+        .Caption = "Tamam": .Left = 463: .Top = 458: .Width = 80: .Height = 24
+        .Font.Bold = True
+        .ControlTipText = "Nesneleri dizer ve pencereyi kapatır"
+    End With
+    Set btnIptal = Me.Controls.Add("Forms.CommandButton.1")
+    With btnIptal
+        .Caption = "İptal": .Left = 548: .Top = 458: .Width = 80: .Height = 24
+        .Cancel = True
+        .ControlTipText = "Hiçbir şey yapmadan kapatır"
+    End With
+
+    ' ---------- Ön ayar ----------
+    Set lb = Me.Controls.Add("Forms.Label.1")
+    With lb
+        .Caption = "Ön ayar": .Left = 378: .Top = 6: .Width = 100: .Height = 14
+        .Font.Bold = True
+    End With
+    Set cmbOnAyar = Me.Controls.Add("Forms.ComboBox.1")
+    With cmbOnAyar
+        .Left = 378: .Top = 21: .Width = 160: .Height = 20
+        .Style = fmStyleDropDownList
+        .ControlTipText = "Kayıtlı ayar setleri. Sık kullandığınız malzemeler için ön ayar kaydedin."
+    End With
+    Set btnKaydet = Me.Controls.Add("Forms.CommandButton.1")
+    With btnKaydet
+        .Caption = "Kaydet": .Left = 542: .Top = 21: .Width = 46: .Height = 20
+        .ControlTipText = "Şu anki ayarları ön ayar olarak kaydet"
+    End With
+    Set btnSil = Me.Controls.Add("Forms.CommandButton.1")
+    With btnSil
+        .Caption = "Sil": .Left = 592: .Top = 21: .Width = 36: .Height = 20
+        .ControlTipText = "Seçili ön ayarı sil"
+    End With
+
+    ' ---------- Sekmeler ----------
+    Set mp = Me.Controls.Add("Forms.MultiPage.1")
+    With mp
+        .Left = 378: .Top = 48: .Width = 250: .Height = 404
+    End With
+    mp.Pages(0).Caption = "Ana ayarlar"
+    mp.Pages(1).Caption = "Yerleşim"
+
+    ' ===== SEKME 1: ANA AYARLAR =====
+    Set pg = mp.Pages(0)
+
+    Set fr = CerceveEkle(pg, "Malzeme (plaka) ölçüsü", 4, 4, 236, 118)
+    Set txtGen = SayiSatiri(fr, "Genişlik", "Malzemenin (plaka, rulo, levha) genişliği", 12, True, False, 0)
+    Set txtYuk = SayiSatiri(fr, "Yükseklik", "Malzemenin yüksekliği / boyu", 34, True, False, 0)
+    Set chkSayfa = OnaySatiri(fr, "Etkin sayfa boyutunu kullan", _
+        "İşaretlenirse malzeme ölçüsü olarak CorelDRAW sayfa boyutu kullanılır", 57, 150)
+    Set btnTakas = fr.Controls.Add("Forms.CommandButton.1")
+    With btnTakas
+        .Caption = "Çevir": .Left = 160: .Top = 56: .Width = 68: .Height = 19
+        .ControlTipText = "Genişlik ile yüksekliği yer değiştirir (yatay / dikey plaka)"
+    End With
+    Set txtKenar = SayiSatiri(fr, "Kenar payı", _
+        "Malzemenin kenarlarında boş bırakılacak mesafe (kelepçe, tutma payı)", 80, True, False, 0)
+
+    Set fr = CerceveEkle(pg, "Dizme seçenekleri", 4, 126, 236, 250)
+    Set txtBosluk = SayiSatiri(fr, "Nesneler arası boşluk", _
+        "İki nesne arasında bırakılacak en az mesafe (kesim payı / bıçak kalınlığı)", 12, True, False, 0)
+    Set txtAdet = SayiSatiri(fr, "Her nesneden adet", _
+        "Seçili her nesneden kaç tane dizilecek. 1 = sadece seçili nesneler", 34, False, True, 1)
+    Set cmbDondur = ListeSatiri(fr, "Döndürme", _
+        "Daha az fire için nesnelerin 90° çevrilmesine izin verilsin mi?", 56, _
+        "Döndürme yok|90° döndürmeye izin ver", True)
+    Set cmbKalite = ListeSatiri(fr, "Arama", _
+        "Hızlı: anında sonuç.  Normal: önerilen.  En iyi sonuç: daha çok deneme yapar, biraz bekletebilir.", 78, _
+        "Hızlı|Normal|En iyi sonuç", True)
+    Set txtArama = SayiSatiri(fr, "Arama sayısı", _
+        "'En iyi sonuç' seçiliyken denenecek ek karışık sıralama sayısı (fazlası = daha iyi ama yavaş)", 100, False, True, 1)
+    Set cmbBasla = ListeSatiri(fr, "Başlangıç noktası", _
+        "Dizmenin plakanın hangi köşesinden başlayacağı. Artan malzeme karşı tarafta toplanır.", 122, _
+        "Sol alt|Sol üst|Sağ alt|Sağ üst", True)
+    Set chkKontur = OnaySatiri(fr, "Kontur kalınlığını ölçüye kat", _
+        "İşaretliyse kalın konturlu nesnelerin dış çizgisi de ölçüye dahil edilir", 146, 220)
+
+    Set lb = fr.Controls.Add("Forms.Label.1")
+    With lb
+        .Left = 8: .Top = 172: .Width = 220: .Height = 60
+        .Font.Size = 7.5: .ForeColor = RGB(100, 100, 100)
+        .Caption = "Nasıl kullanılır:" & vbCrLf & _
+                   "1) CorelDRAW'da dizilecek nesneleri seçin." & vbCrLf & _
+                   "2) Ölçüleri girin, soldaki önizlemeyi kontrol edin." & vbCrLf & _
+                   "3) Tamam'a basın. Geri almak için Ctrl+Z." & vbCrLf & _
+                   "İpucu: Fareyi bir ayarın üzerinde bekletin, açıklaması çıkar."
+    End With
+
+    ' ===== SEKME 2: YERLEŞİM =====
+    Set pg = mp.Pages(1)
+
+    Set fr = CerceveEkle(pg, "Çıktı", 4, 4, 236, 108)
+    Set chkCerceve = OnaySatiri(fr, "Plaka çerçevesi çiz (kırmızı)", _
+        "Her plakanın dış sınırını kırmızı ince çizgiyle çizer", 10, 220)
+    Set chkEtiket = OnaySatiri(fr, "Plaka bilgisini altına yaz", _
+        "Plaka numarası, ölçüsü ve kullanım oranı plakanın altına yazılır", 30, 220)
+    Set chkGrupla = OnaySatiri(fr, "Her plakadaki nesneleri grupla", _
+        "Her plakanın nesneleri (çerçeve ve yazı dahil) tek grup yapılır", 50, 220)
+    Set chkSayfaBoyut = OnaySatiri(fr, "Sayfa boyutunu plakaya eşitle", _
+        "CorelDRAW sayfa boyutu malzeme ölçüsüne ayarlanır", 70, 220)
+
+    Set fr = CerceveEkle(pg, "Plakalar", 4, 116, 236, 66)
+    Set cmbPlakaYer = ListeSatiri(fr, "Plaka yerleşimi", _
+        "Birden fazla plaka gerekirse plakaların nereye konacağı", 12, _
+        "Yan yana (sağa)|Alt alta (aşağı)|Her plaka ayrı sayfada", True)
+    Set txtPlakaAra = SayiSatiri(fr, "Plakalar arası mesafe", _
+        "Yan yana / alt alta yerleşimde plakalar arasındaki boşluk", 36, True, False, 0)
+
+    Set fr = CerceveEkle(pg, "Birim ve görünüm", 4, 186, 236, 66)
+    Set cmbBirim = ListeSatiri(fr, "Ölçü birimi", _
+        "Tüm ölçülerin gösterildiği birim. Değiştirince değerler otomatik çevrilir.", 12, _
+        "Milimetre (mm)|Santimetre (cm)|Metre (m)", False)
+    Set chkCanli = OnaySatiri(fr, "Canlı önizleme", _
+        "Ayar değiştikçe önizleme kendiliğinden yenilenir. Çok sayıda nesnede kapatabilirsiniz.", 38, 220)
+
+    Set lb = pg.Controls.Add("Forms.Label.1")
+    With lb
+        .Left = 8: .Top = 262: .Width = 228: .Height = 100
+        .Font.Size = 7.5: .ForeColor = RGB(100, 100, 100)
+        .Caption = "Notlar:" & vbCrLf & _
+                   "• Nesneler dış sınır kutularına göre dizilir." & vbCrLf & _
+                   "• Gruplu nesneler tek parça sayılır." & vbCrLf & _
+                   "• Tüm işlem tek adımda Ctrl+Z ile geri alınır." & vbCrLf & _
+                   "• Ayarlar kapanışta hatırlanır."
+    End With
+
+    mp.Value = 0
+
+    ' ---------- Ayarları yükle ----------
+    OnAyarListesiDoldur
+    AyarYukle GetSetting(UYG, "Genel", "Son", VARSAYILAN_AYAR)
+    OnAyarSec GetSetting(UYG, "Genel", "SonOnAyar", VARSAYILAN_AD)
+
+    yukleniyor = False
+    AlanDurumlari
+    Hesapla
+    gosterPlaka = 1
+    Ciz
+End Sub
+
+Private Function CerceveEkle(kap As Object, ByVal baslik As String, ByVal l As Single, ByVal t As Single, _
+                             ByVal w As Single, ByVal h As Single) As Object
+    Dim fr As Object
+    Set fr = kap.Controls.Add("Forms.Frame.1")
+    fr.Caption = baslik
+    fr.Left = l: fr.Top = t: fr.Width = w: fr.Height = h
+    Set CerceveEkle = fr
+End Function
+
+Private Function SayiSatiri(kap As Object, ByVal yazi As String, ByVal ipucu As String, ByVal t As Single, _
+                            ByVal uzunluk As Boolean, ByVal tamsayi As Boolean, ByVal minD As Double) As MSForms.TextBox
+    Dim l As MSForms.Label, tb As MSForms.TextBox, sp As MSForms.SpinButton, lb As MSForms.Label, o As clsOlay
+
+    Set l = kap.Controls.Add("Forms.Label.1")
+    l.Caption = yazi: l.Left = 8: l.Top = t + 3: l.Width = 110: l.Height = 14
+    l.ControlTipText = ipucu
+
+    Set tb = kap.Controls.Add("Forms.TextBox.1")
+    tb.Left = 118: tb.Top = t: tb.Width = 64: tb.Height = 18
+    tb.TextAlign = fmTextAlignRight
+    tb.ControlTipText = ipucu
+
+    Set sp = kap.Controls.Add("Forms.SpinButton.1")
+    sp.Left = 183: sp.Top = t: sp.Width = 13: sp.Height = 18
+    sp.Min = -100000: sp.Max = 100000: sp.Value = 0
+    sp.ControlTipText = ipucu
+
+    Set lb = kap.Controls.Add("Forms.Label.1")
+    lb.Left = 199: lb.Top = t + 3: lb.Width = 32: lb.Height = 14
+    lb.ForeColor = RGB(90, 90, 90)
+    If uzunluk Then
+        birimEtiketleri.Add lb
+        lb.Caption = "mm"
+    ElseIf tamsayi Then
+        lb.Caption = ""
+    End If
+
+    Set o = New clsOlay
+    Set o.Frm = Me
+    Set o.tb = tb
+    Set o.sp = sp
+    o.Tamsayi = tamsayi
+    o.MinDeger = minD
+    olaylar.Add o
+
+    Set SayiSatiri = tb
+End Function
+
+Private Function ListeSatiri(kap As Object, ByVal yazi As String, ByVal ipucu As String, ByVal t As Single, _
+                             ByVal liste As String, ByVal olayEkle As Boolean) As MSForms.ComboBox
+    Dim l As MSForms.Label, cb As MSForms.ComboBox, o As clsOlay, s As Variant
+
+    Set l = kap.Controls.Add("Forms.Label.1")
+    l.Caption = yazi: l.Left = 8: l.Top = t + 3: l.Width = 100: l.Height = 14
+    l.ControlTipText = ipucu
+
+    Set cb = kap.Controls.Add("Forms.ComboBox.1")
+    cb.Left = 104: cb.Top = t: cb.Width = 124: cb.Height = 18
+    cb.Style = fmStyleDropDownList
+    cb.ControlTipText = ipucu
+    For Each s In Split(liste, "|")
+        cb.AddItem CStr(s)
+    Next s
+    cb.ListIndex = 0
+
+    If olayEkle Then
+        Set o = New clsOlay
+        Set o.Frm = Me
+        Set o.cb = cb
+        olaylar.Add o
+    End If
+    Set ListeSatiri = cb
+End Function
+
+Private Function OnaySatiri(kap As Object, ByVal yazi As String, ByVal ipucu As String, ByVal t As Single, _
+                            ByVal w As Single) As MSForms.CheckBox
+    Dim ch As MSForms.CheckBox, o As clsOlay
+    Set ch = kap.Controls.Add("Forms.CheckBox.1")
+    ch.Caption = yazi
+    ch.Left = 8: ch.Top = t: ch.Width = w: ch.Height = 18
+    ch.ControlTipText = ipucu
+    Set o = New clsOlay
+    Set o.Frm = Me
+    Set o.ch = ch
+    olaylar.Add o
+    Set OnaySatiri = ch
+End Function
+
+'=====================================================================
+'  SAYI / BİRİM YARDIMCILARI (clsOlay da kullanır)
+'=====================================================================
+Public Function SayiOku(ByVal s As String) As Double
+    s = Replace(Trim$(s), ",", ".")
+    SayiOku = Val(s)
+End Function
+
+Public Function SayiYaz(ByVal v As Double) As String
+    Dim s As String
+    s = Format(Round(v, 4), "0.####")
+    If VBA.Right$(s, 1) = "," Or VBA.Right$(s, 1) = "." Then s = VBA.Left$(s, Len(s) - 1)
+    SayiYaz = s
+End Function
+
+Public Function AdimBuyuklugu() As Double
+    Select Case cmbBirim.ListIndex
+        Case 1: AdimBuyuklugu = 0.1
+        Case 2: AdimBuyuklugu = 0.01
+        Case Else: AdimBuyuklugu = 1
+    End Select
+End Function
+
+Private Function BirimCarpani(ByVal idx As Long) As Double
+    Select Case idx
+        Case 1: BirimCarpani = 10
+        Case 2: BirimCarpani = 1000
+        Case Else: BirimCarpani = 1
+    End Select
+End Function
+
+Private Function BirimAdi() As String
+    Select Case cmbBirim.ListIndex
+        Case 1: BirimAdi = "cm"
+        Case 2: BirimAdi = "m"
+        Case Else: BirimAdi = "mm"
+    End Select
+End Function
+
+Private Function OlcuYazi(ByVal mm As Double) As String
+    OlcuYazi = SayiYaz(mm / birimCarpan)
+End Function
+
+Private Sub BirimEtiketleriniGuncelle()
+    Dim lb As Variant
+    For Each lb In birimEtiketleri
+        lb.Caption = BirimAdi()
+    Next lb
+End Sub
+
+Private Sub cmbBirim_Change()
+    Dim yeni As Double, eski As Boolean
+    yeni = BirimCarpani(cmbBirim.ListIndex)
+    If Not yukleniyor Then
+        eski = yukleniyor
+        yukleniyor = True
+        BirimCevir txtGen, yeni
+        BirimCevir txtYuk, yeni
+        BirimCevir txtKenar, yeni
+        BirimCevir txtBosluk, yeni
+        BirimCevir txtPlakaAra, yeni
+        yukleniyor = eski
+    End If
+    birimCarpan = yeni
+    BirimEtiketleriniGuncelle
+    AyarDegisti
+End Sub
+
+Private Sub BirimCevir(tb As MSForms.TextBox, ByVal yeni As Double)
+    tb.Text = SayiYaz(SayiOku(tb.Text) * birimCarpan / yeni)
+End Sub
+
+'=====================================================================
+'  AYAR DEĞİŞİNCE
+'=====================================================================
+Public Sub AyarDegisti()
+    If yukleniyor Then Exit Sub
+    AlanDurumlari
+    If chkCanli.Value Then
+        Hesapla
+        gosterPlaka = 1
+        Ciz
+    Else
+        lblBilgi.Caption = "Ayarlar değişti. Önizlemeyi yenilemek için 'Önizle' düğmesine basın."
+    End If
+End Sub
+
+Private Sub AlanDurumlari()
+    Dim eski As Boolean, w As Double, h As Double
+    eski = yukleniyor
+    txtArama.Enabled = (cmbKalite.ListIndex = 2)
+    If chkSayfa.Value Then
+        If SayfaBoyutu(w, h) Then
+            yukleniyor = True
+            txtGen.Text = OlcuYazi(w)
+            txtYuk.Text = OlcuYazi(h)
+            yukleniyor = eski
+        End If
+        txtGen.Enabled = False: txtYuk.Enabled = False: btnTakas.Enabled = False
+    Else
+        txtGen.Enabled = True: txtYuk.Enabled = True: btnTakas.Enabled = True
+    End If
+    txtPlakaAra.Enabled = (cmbPlakaYer.ListIndex <> 2)
+End Sub
+
+Private Function SayfaBoyutu(ByRef w As Double, ByRef h As Double) As Boolean
+    Dim doc As Object, eskiBirim As Long
+    On Error GoTo Yok
+    If Application.Documents.Count = 0 Then Exit Function
+    Set doc = Application.ActiveDocument
+    eskiBirim = doc.Unit
+    doc.Unit = cdrMillimeter
+    w = doc.ActivePage.SizeWidth
+    h = doc.ActivePage.SizeHeight
+    doc.Unit = eskiBirim
+    SayfaBoyutu = True
+    Exit Function
+Yok:
+    SayfaBoyutu = False
+End Function
+
+'=====================================================================
+'  DÜĞMELER
+'=====================================================================
+Private Sub btnOnizle_Click()
+    Hesapla
+    gosterPlaka = 1
+    Ciz
+End Sub
+
+Private Sub btnOnceki_Click()
+    gosterPlaka = gosterPlaka - 1
+    Ciz
+End Sub
+
+Private Sub btnSonraki_Click()
+    gosterPlaka = gosterPlaka + 1
+    Ciz
+End Sub
+
+Private Sub btnTakas_Click()
+    Dim s As String, eski As Boolean
+    eski = yukleniyor
+    yukleniyor = True
+    s = txtGen.Text
+    txtGen.Text = txtYuk.Text
+    txtYuk.Text = s
+    yukleniyor = eski
+    AyarDegisti
+End Sub
+
+Private Sub btnUygula_Click()
+    SonAyarlariKaydet
+    Uygula
+End Sub
+
+Private Sub btnTamam_Click()
+    SonAyarlariKaydet
+    If Uygula() Then Unload Me
+End Sub
+
+Private Sub btnIptal_Click()
+    SonAyarlariKaydet
+    Unload Me
+End Sub
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+    SonAyarlariKaydet
+End Sub
+
+'=====================================================================
+'  ÖN AYARLAR (kayıt defterinde saklanır)
+'=====================================================================
+Private Sub OnAyarListesiDoldur()
+    Dim v As Variant, i As Long, eski As Boolean
+    If GetSetting(UYG, "OnAyar", VARSAYILAN_AD, "") = "" Then
+        SaveSetting UYG, "OnAyar", VARSAYILAN_AD, VARSAYILAN_AYAR
+    End If
+    eski = yukleniyor
+    yukleniyor = True
+    cmbOnAyar.Clear
+    v = GetAllSettings(UYG, "OnAyar")
+    If IsArray(v) Then
+        For i = LBound(v, 1) To UBound(v, 1)
+            cmbOnAyar.AddItem CStr(v(i, 0))
+        Next i
+    End If
+    yukleniyor = eski
+End Sub
+
+Private Sub OnAyarSec(ByVal ad As String)
+    Dim i As Long, eski As Boolean
+    eski = yukleniyor
+    yukleniyor = True
+    For i = 0 To cmbOnAyar.ListCount - 1
+        If cmbOnAyar.List(i) = ad Then cmbOnAyar.ListIndex = i: Exit For
+    Next i
+    yukleniyor = eski
+End Sub
+
+Private Sub cmbOnAyar_Change()
+    Dim s As String
+    If yukleniyor Then Exit Sub
+    If cmbOnAyar.ListIndex < 0 Then Exit Sub
+    s = GetSetting(UYG, "OnAyar", cmbOnAyar.Text, "")
+    If s = "" Then Exit Sub
+    AyarYukle s
+    SaveSetting UYG, "Genel", "SonOnAyar", cmbOnAyar.Text
+    AyarDegisti
+End Sub
+
+Private Sub btnKaydet_Click()
+    Dim ad As String
+    ad = InputBox("Ön ayar adı girin:" & vbCrLf & "(Örn: Pleksi 1000x700, Folyo rulo 152 cm)", _
+                  "Ön ayarı kaydet", cmbOnAyar.Text)
+    ad = Trim$(Replace(ad, "\", ""))
+    If ad = "" Then Exit Sub
+    SaveSetting UYG, "OnAyar", ad, AyarMetni()
+    SaveSetting UYG, "Genel", "SonOnAyar", ad
+    OnAyarListesiDoldur
+    OnAyarSec ad
+    lblBilgi.Caption = "'" & ad & "' ön ayarı kaydedildi."
+End Sub
+
+Private Sub btnSil_Click()
+    Dim ad As String
+    ad = cmbOnAyar.Text
+    If ad = "" Then Exit Sub
+    If ad = VARSAYILAN_AD Then
+        MsgBox "Varsayılan ön ayar silinemez.", vbInformation, "Ön ayar"
+        Exit Sub
+    End If
+    If MsgBox("'" & ad & "' ön ayarı silinsin mi?", vbQuestion + vbYesNo, "Ön ayar") <> vbYes Then Exit Sub
+    On Error Resume Next
+    DeleteSetting UYG, "OnAyar", ad
+    On Error GoTo 0
+    OnAyarListesiDoldur
+    OnAyarSec VARSAYILAN_AD
+End Sub
+
+Private Sub SonAyarlariKaydet()
+    On Error Resume Next
+    SaveSetting UYG, "Genel", "Son", AyarMetni()
+End Sub
+
+' Ayarlar uzunluklar mm olarak, nokta ondalıkla saklanır
+Private Function AyarMetni() As String
+    Dim s As String
+    s = "birim=" & cmbBirim.ListIndex
+    s = s & ";gen=" & MmMetin(txtGen.Text)
+    s = s & ";yuk=" & MmMetin(txtYuk.Text)
+    s = s & ";kenar=" & MmMetin(txtKenar.Text)
+    s = s & ";bosluk=" & MmMetin(txtBosluk.Text)
+    s = s & ";adet=" & CLng(SayiOku(txtAdet.Text))
+    s = s & ";dondur=" & cmbDondur.ListIndex
+    s = s & ";kalite=" & cmbKalite.ListIndex
+    s = s & ";arama=" & CLng(SayiOku(txtArama.Text))
+    s = s & ";basla=" & cmbBasla.ListIndex
+    s = s & ";kontur=" & IIf(chkKontur.Value, 1, 0)
+    s = s & ";sayfa=" & IIf(chkSayfa.Value, 1, 0)
+    s = s & ";cerceve=" & IIf(chkCerceve.Value, 1, 0)
+    s = s & ";etiket=" & IIf(chkEtiket.Value, 1, 0)
+    s = s & ";grupla=" & IIf(chkGrupla.Value, 1, 0)
+    s = s & ";sayfaboyut=" & IIf(chkSayfaBoyut.Value, 1, 0)
+    s = s & ";plakayer=" & cmbPlakaYer.ListIndex
+    s = s & ";plakaara=" & MmMetin(txtPlakaAra.Text)
+    s = s & ";canli=" & IIf(chkCanli.Value, 1, 0)
+    AyarMetni = s
+End Function
+
+Private Function MmMetin(ByVal ekranDegeri As String) As String
+    MmMetin = Trim$(Str$(Round(SayiOku(ekranDegeri) * birimCarpan, 4)))
+End Function
+
+Private Function Deger(ByVal s As String, ByVal anahtar As String, ByVal vars As Double) As Double
+    Dim p As Variant, kv() As String
+    Deger = vars
+    For Each p In Split(s, ";")
+        kv = Split(CStr(p), "=")
+        If UBound(kv) = 1 Then
+            If LCase$(Trim$(kv(0))) = anahtar Then Deger = Val(kv(1)): Exit Function
+        End If
+    Next p
+End Function
+
+Private Sub AyarYukle(ByVal s As String)
+    Dim eski As Boolean, b As Long
+    eski = yukleniyor
+    yukleniyor = True
+
+    b = CLng(Deger(s, "birim", 1))
+    If b < 0 Or b > 2 Then b = 1
+    cmbBirim.ListIndex = b
+    birimCarpan = BirimCarpani(b)
+    BirimEtiketleriniGuncelle
+
+    txtGen.Text = OlcuYazi(Deger(s, "gen", 1000))
+    txtYuk.Text = OlcuYazi(Deger(s, "yuk", 700))
+    txtKenar.Text = OlcuYazi(Deger(s, "kenar", 5))
+    txtBosluk.Text = OlcuYazi(Deger(s, "bosluk", 3))
+    txtAdet.Text = SayiYaz(Deger(s, "adet", 1))
+    ListeAyarla cmbDondur, Deger(s, "dondur", 1)
+    ListeAyarla cmbKalite, Deger(s, "kalite", 1)
+    txtArama.Text = SayiYaz(Deger(s, "arama", 20))
+    ListeAyarla cmbBasla, Deger(s, "basla", 1)
+    chkKontur.Value = (Deger(s, "kontur", 1) = 1)
+    chkSayfa.Value = (Deger(s, "sayfa", 0) = 1)
+    chkCerceve.Value = (Deger(s, "cerceve", 1) = 1)
+    chkEtiket.Value = (Deger(s, "etiket", 1) = 1)
+    chkGrupla.Value = (Deger(s, "grupla", 0) = 1)
+    chkSayfaBoyut.Value = (Deger(s, "sayfaboyut", 0) = 1)
+    ListeAyarla cmbPlakaYer, Deger(s, "plakayer", 0)
+    txtPlakaAra.Text = OlcuYazi(Deger(s, "plakaara", 50))
+    chkCanli.Value = (Deger(s, "canli", 1) = 1)
+
+    yukleniyor = eski
+End Sub
+
+Private Sub ListeAyarla(cb As MSForms.ComboBox, ByVal idx As Double)
+    If idx >= 0 And idx < cb.ListCount Then
+        cb.ListIndex = CLng(idx)
+    Else
+        cb.ListIndex = 0
+    End If
+End Sub
+
+'=====================================================================
+'  HESAP (CorelDRAW'daki nesnelere dokunmaz)
+'=====================================================================
+Private Sub Hesapla()
+    Dim doc As Object, sr As Object, eskiBirim As Long
+    Dim m As Long, n As Long, i As Long, c As Long, k As Long, adet As Long
+    Dim bx As Double, byy As Double, bw As Double, bh As Double
+    Dim w0() As Double, h0() As Double, aw() As Double, ah() As Double
+    Dim matW As Double, matH As Double, usW As Double, usH As Double
+    Dim allowRot As Boolean, kalite As Long, arama As Long
+
+    hesapOK = False
+    rSheets = 0
+    nItem = 0
+    On Error GoTo Hata
+
+    If Application.Documents.Count = 0 Then
+        hesapMesaj = "Açık bir CorelDRAW belgesi yok."
+        Exit Sub
+    End If
+    Set doc = Application.ActiveDocument
+    Set sr = Application.ActiveSelectionRange
+    m = sr.Count
+    If m = 0 Then
+        hesapMesaj = "Dizilecek nesneleri CorelDRAW'da seçin," & vbCrLf & _
+                     "sonra 'Önizle / Seçimi yenile' düğmesine basın." & vbCrLf & vbCrLf & _
+                     "(Bu pencere açıkken seçim yapabilirsiniz.)"
+        Exit Sub
+    End If
+
+    ' --- Parametreler (mm)
+    If chkSayfa.Value Then
+        If Not SayfaBoyutu(matW, matH) Then hesapMesaj = "Sayfa boyutu okunamadı.": Exit Sub
+    Else
+        matW = SayiOku(txtGen.Text) * birimCarpan
+        matH = SayiOku(txtYuk.Text) * birimCarpan
+    End If
+    pKenar = SayiOku(txtKenar.Text) * birimCarpan
+    pGap = SayiOku(txtBosluk.Text) * birimCarpan
+    adet = CLng(SayiOku(txtAdet.Text))
+    allowRot = (cmbDondur.ListIndex = 1)
+    kalite = cmbKalite.ListIndex
+    arama = CLng(SayiOku(txtArama.Text))
+    If arama < 1 Then arama = 1
+    If arama > 500 Then arama = 500
+    pBasla = cmbBasla.ListIndex
+    pKontur = CBool(chkKontur.Value)
+
+    If matW <= 0 Or matH <= 0 Then hesapMesaj = "Malzeme genişliği ve yüksekliği 0'dan büyük olmalı.": Exit Sub
+    If pKenar < 0 Or pGap < 0 Then hesapMesaj = "Boşluk ve kenar payı negatif olamaz.": Exit Sub
+    If adet < 1 Then hesapMesaj = "Adet en az 1 olmalı.": Exit Sub
+    usW = matW - 2 * pKenar
+    usH = matH - 2 * pKenar
+    If usW <= 0 Or usH <= 0 Then hesapMesaj = "Kenar payı malzemeye göre çok büyük.": Exit Sub
+    If m * adet > 5000 Then hesapMesaj = "En fazla 5000 nesne dizilebilir (şu an " & m * adet & ").": Exit Sub
+
+    ' --- Nesne ölçüleri
+    ReDim w0(1 To m): ReDim h0(1 To m)
+    eskiBirim = doc.Unit
+    doc.Unit = cdrMillimeter
+    For i = 1 To m
+        sr.Item(i).GetBoundingBox bx, byy, bw, bh, pKontur
+        w0(i) = bw: h0(i) = bh
+    Next i
+    doc.Unit = eskiBirim
+
+    For i = 1 To m
+        If Not ((w0(i) <= usW + EPS And h0(i) <= usH + EPS) Or _
+                (allowRot And h0(i) <= usW + EPS And w0(i) <= usH + EPS)) Then
+            hesapMesaj = "Bir nesne malzemeye sığmıyor:" & vbCrLf & _
+                         OlcuYazi(w0(i)) & " x " & OlcuYazi(h0(i)) & " " & BirimAdi() & vbCrLf & _
+                         "Kullanılabilir alan: " & OlcuYazi(usW) & " x " & OlcuYazi(usH) & " " & BirimAdi() & _
+                         IIf(allowRot, "", vbCrLf & "(Döndürmeye izin vermeyi deneyin.)")
+            Exit Sub
+        End If
+    Next i
+
+    ' --- Parça listesi
+    n = m * adet
+    ReDim iSrc(1 To n): ReDim iKop(1 To n): ReDim iW(1 To n): ReDim iH(1 To n)
+    ReDim aw(1 To n): ReDim ah(1 To n)
+    k = 0
+    For i = 1 To m
+        For c = 1 To adet
+            k = k + 1
+            iSrc(k) = i: iKop(k) = c
+            iW(k) = w0(i): iH(k) = h0(i)
+            aw(k) = w0(i) + pGap: ah(k) = h0(i) + pGap
+        Next c
+    Next i
+    nItem = n
+    pMatW = matW: pMatH = matH
+    pSW = usW + pGap: pSH = usH + pGap
+
+    lblBilgi.Caption = "Hesaplanıyor..."
+    DoEvents
+    rSheets = EnIyiYerlesim(n, aw, ah, pSW, pSH, allowRot, kalite, arama)
+    If rSheets <= 0 Then
+        hesapMesaj = "Yerleşim bulunamadı."
+        Exit Sub
+    End If
+    hesapOK = True
+    Exit Sub
+
+Hata:
+    hesapMesaj = "Hesaplama hatası: " & Err.Description
+    hesapOK = False
+End Sub
+
+'=====================================================================
+'  ÖNİZLEME ÇİZİMİ
+'=====================================================================
+Private Sub Ciz()
+    Dim PW As Double, PH As Double, sc As Double, sx As Double, sy As Double
+    Dim k As Long, c As Long, adet As Long
+    Dim x As Double, y As Double, w As Double, h As Double, dolu As Double, topDolu As Double
+    Dim lb As MSForms.Label
+
+    frOn.Controls.Clear
+
+    If Not hesapOK Then
+        Set lb = frOn.Controls.Add("Forms.Label.1")
+        With lb
+            .Left = 20: .Top = 140: .Width = frOn.InsideWidth - 40: .Height = 100
+            .Caption = hesapMesaj
+            .TextAlign = fmTextAlignCenter
+            .Font.Size = 10
+            .ForeColor = RGB(120, 120, 120)
+        End With
+        lblPlaka.Caption = ""
+        lblBilgi.Caption = ""
+        btnOnceki.Enabled = False
+        btnSonraki.Enabled = False
+        Exit Sub
+    End If
+
+    If gosterPlaka < 1 Then gosterPlaka = 1
+    If gosterPlaka > rSheets Then gosterPlaka = rSheets
+
+    PW = frOn.InsideWidth
+    PH = frOn.InsideHeight
+    sc = Min2((PW - 24) / pMatW, (PH - 24) / pMatH)
+    sx = (PW - pMatW * sc) / 2
+    sy = (PH - pMatH * sc) / 2
+
+    ' Plaka
+    Set lb = frOn.Controls.Add("Forms.Label.1")
+    With lb
+        .Left = sx: .Top = sy: .Width = Max2(pMatW * sc, 2): .Height = Max2(pMatH * sc, 2)
+        .BackColor = RGB(255, 255, 255)
+        .BorderStyle = fmBorderStyleSingle
+        .BorderColor = RGB(220, 0, 0)
+    End With
+
+    ' Kenar payı
+    If pKenar > 0 Then
+        Set lb = frOn.Controls.Add("Forms.Label.1")
+        With lb
+            .Left = sx + pKenar * sc: .Top = sy + pKenar * sc
+            .Width = Max2((pMatW - 2 * pKenar) * sc, 1): .Height = Max2((pMatH - 2 * pKenar) * sc, 1)
+            .BackStyle = fmBackStyleTransparent
+            .BorderStyle = fmBorderStyleSingle
+            .BorderColor = RGB(200, 200, 200)
+        End With
+    End If
+
+    ' Nesneler
+    For k = 1 To nItem
+        topDolu = topDolu + iW(k) * iH(k)
+        If rS(k) = gosterPlaka Then
+            Konum k, x, y, w, h
+            adet = adet + 1
+            dolu = dolu + iW(k) * iH(k)
+            If c < MAKS_ONIZLEME Then
+                c = c + 1
+                Set lb = frOn.Controls.Add("Forms.Label.1")
+                With lb
+                    .Left = sx + (pKenar + x) * sc
+                    .Top = sy + (pMatH - pKenar - y - h) * sc
+                    .Width = Max2(w * sc, 1)
+                    .Height = Max2(h * sc, 1)
+                    .BorderStyle = fmBorderStyleSingle
+                    If rR(k) Then
+                        .BackColor = RGB(255, 214, 153)
+                        .BorderColor = RGB(190, 110, 0)
+                    Else
+                        .BackColor = RGB(184, 214, 245)
+                        .BorderColor = RGB(30, 90, 160)
+                    End If
+                    .ControlTipText = "Nesne " & iSrc(k) & IIf(iKop(k) > 1, " (kopya " & iKop(k) & ")", "") & ": " & _
+                                      OlcuYazi(iW(k)) & " x " & OlcuYazi(iH(k)) & " " & BirimAdi() & _
+                                      IIf(rR(k), "  - 90° döndürüldü", "")
+                End With
+            End If
+        End If
+    Next k
+
+    lblPlaka.Caption = "Plaka " & gosterPlaka & " / " & rSheets
+    btnOnceki.Enabled = (gosterPlaka > 1)
+    btnSonraki.Enabled = (gosterPlaka < rSheets)
+
+    lblBilgi.Caption = "Bu plaka: " & adet & " nesne   |   Kullanım %" & Format(100 * dolu / (pMatW * pMatH), "0.0") & _
+                       "   |   Fire %" & Format(100 - 100 * dolu / (pMatW * pMatH), "0.0") & vbCrLf & _
+                       "Toplam: " & nItem & " nesne, " & rSheets & " plaka (" & OlcuYazi(pMatW) & " x " & _
+                       OlcuYazi(pMatH) & " " & BirimAdi() & ")   |   Ortalama kullanım %" & _
+                       Format(100 * topDolu / (rSheets * pMatW * pMatH), "0.0")
+End Sub
+
+' k. parçanın plaka içi konumu (kenar payı hariç, başlangıç köşesine göre) ve gerçek ölçüsü (mm)
+Private Sub Konum(ByVal k As Long, ByRef x As Double, ByRef y As Double, ByRef w As Double, ByRef h As Double)
+    If rR(k) Then
+        w = iH(k): h = iW(k)
+    Else
+        w = iW(k): h = iH(k)
+    End If
+    x = rX(k)
+    y = rY(k)
+    Select Case pBasla
+        Case 1  ' Sol üst
+            y = pSH - y - (h + pGap)
+        Case 2  ' Sağ alt
+            x = pSW - x - (w + pGap)
+        Case 3  ' Sağ üst
+            x = pSW - x - (w + pGap)
+            y = pSH - y - (h + pGap)
+    End Select
+End Sub
+
+'=====================================================================
+'  UYGULA (nesneleri CorelDRAW'da yerleştirir)
+'=====================================================================
+Private Function Uygula() As Boolean
+    Dim doc As Object, sr As Object, eskiBirim As Long, grupAcik As Boolean, msg As String
+    Dim shp() As Object, sayfalar() As Object, grp() As Object, lyr As Object, frm As Object
+    Dim k As Long, s As Long, yer As Long, ara As Double
+    Dim ox As Double, oy As Double, bx As Double, byy As Double, bw As Double, bh As Double
+    Dim x As Double, y As Double, w As Double, h As Double
+    Dim dolu() As Double, adetPl() As Long
+
+    Hesapla
+    gosterPlaka = 1
+    Ciz
+    If Not hesapOK Then
+        MsgBox hesapMesaj, vbExclamation, "Otomatik Dizme"
+        Exit Function
+    End If
+
+    Set doc = Application.ActiveDocument
+    Set sr = Application.ActiveSelectionRange
+    yer = cmbPlakaYer.ListIndex
+    ara = SayiOku(txtPlakaAra.Text) * birimCarpan
+
+    On Error GoTo Hata
+    eskiBirim = doc.Unit
+    doc.Unit = cdrMillimeter
+    doc.BeginCommandGroup "Otomatik Dizme"
+    grupAcik = True
+    Application.Optimization = True
+
+    ' Sayfalar
+    ReDim sayfalar(1 To rSheets)
+    Set sayfalar(1) = doc.ActivePage
+    If chkSayfaBoyut.Value Then sayfalar(1).SetSize pMatW, pMatH
+    If yer = 2 Then
+        For s = 2 To rSheets
+            Set sayfalar(s) = doc.AddPages(1)
+            sayfalar(s).SetSize sayfalar(1).SizeWidth, sayfalar(1).SizeHeight
+        Next s
+    End If
+
+    ' Kopyaları oluştur (orijinaller henüz yerindeyken)
+    ReDim shp(1 To nItem)
+    For k = 1 To nItem
+        If iKop(k) = 1 Then
+            Set shp(k) = sr.Item(iSrc(k))
+        Else
+            Set shp(k) = sr.Item(iSrc(k)).Duplicate
+        End If
+    Next k
+
+    ' Grup listeleri
+    ReDim grp(1 To rSheets)
+    For s = 1 To rSheets
+        Set grp(s) = YeniShapeRange()
+    Next s
+    ReDim dolu(1 To rSheets): ReDim adetPl(1 To rSheets)
+
+    ' Yerleştir
+    For k = 1 To nItem
+        s = rS(k)
+        If yer = 2 And s > 1 Then shp(k).MoveToLayer sayfalar(s).ActiveLayer
+        If rR(k) Then shp(k).Rotate 90
+        shp(k).GetBoundingBox bx, byy, bw, bh, pKontur
+        PlakaOrijin s, yer, ara, sayfalar, ox, oy
+        Konum k, x, y, w, h
+        shp(k).Move (ox + pKenar + x) - bx, (oy + pKenar + y) - byy
+        GrupEkle grp(s), shp(k)
+        dolu(s) = dolu(s) + iW(k) * iH(k)
+        adetPl(s) = adetPl(s) + 1
+    Next k
+
+    ' Çerçeve, etiket, grup
+    For s = 1 To rSheets
+        PlakaOrijin s, yer, ara, sayfalar, ox, oy
+        If yer = 2 Then
+            Set lyr = sayfalar(s).ActiveLayer
+        Else
+            Set lyr = doc.ActiveLayer
+        End If
+        If chkCerceve.Value Then
+            Set frm = lyr.CreateRectangle2(ox, oy, pMatW, pMatH)
+            CerceveBicimle frm, s
+            GrupEkle grp(s), frm
+        End If
+        If chkEtiket.Value Then
+            EtiketYaz lyr, ox, oy - 8, "Plaka " & s & "/" & rSheets & "  •  " & OlcuYazi(pMatW) & " x " & _
+                      OlcuYazi(pMatH) & " " & BirimAdi() & "  •  " & adetPl(s) & " adet  •  Kullanım %" & _
+                      Format(100 * dolu(s) / (pMatW * pMatH), "0.0"), grp(s)
+        End If
+        If chkGrupla.Value Then Grupla grp(s), s
+    Next s
+
+    Application.Optimization = False
+    doc.EndCommandGroup
+    grupAcik = False
+    doc.Unit = eskiBirim
+    Application.ActiveWindow.Refresh
+
+    lblBilgi.Caption = "Tamamlandı: " & nItem & " nesne " & rSheets & " plakaya dizildi." & vbCrLf & _
+                       "Beğenmezseniz CorelDRAW'da Ctrl+Z ile tek adımda geri alabilirsiniz."
+    Uygula = True
+    Exit Function
+
+Hata:
+    msg = Err.Description
+    On Error Resume Next
+    Application.Optimization = False
+    If grupAcik Then doc.EndCommandGroup
+    doc.Unit = eskiBirim
+    Application.ActiveWindow.Refresh
+    MsgBox "Dizme sırasında hata oluştu:" & vbCrLf & msg & vbCrLf & vbCrLf & _
+           "Yapılan değişiklikleri Ctrl+Z ile geri alabilirsiniz.", vbExclamation, "Otomatik Dizme"
+    Uygula = False
+End Function
+
+' Plakanın sol-alt köşesi (mm). Plakalar sayfanın sol üstünden başlar.
+Private Sub PlakaOrijin(ByVal s As Long, ByVal yer As Long, ByVal ara As Double, sayfalar() As Object, _
+                        ByRef ox As Double, ByRef oy As Double)
+    Dim pr As Object
+    If yer = 2 Then
+        Set pr = sayfalar(s).BoundingBox
+    Else
+        Set pr = sayfalar(1).BoundingBox
+    End If
+    ox = pr.x
+    oy = pr.y + pr.Height - pMatH
+    Select Case yer
+        Case 0: ox = ox + (s - 1) * (pMatW + ara)
+        Case 1: oy = oy - (s - 1) * (pMatH + ara)
+    End Select
+End Sub
+
+Private Sub CerceveBicimle(frm As Object, ByVal s As Long)
+    On Error Resume Next
+    frm.Fill.ApplyNoFill
+    frm.Outline.Width = 0.25
+    frm.Outline.Color.RGBAssign 255, 0, 0
+    frm.Name = "Plaka " & s
+    frm.OrderToBack
+End Sub
+
+Private Sub EtiketYaz(lyr As Object, ByVal x As Double, ByVal y As Double, ByVal yazi As String, grp As Object)
+    Dim t As Object
+    On Error Resume Next
+    Set t = lyr.CreateArtisticText(x, y, yazi)
+    If t Is Nothing Then Exit Sub
+    t.Text.Story.Size = 12
+    t.Fill.UniformColor.RGBAssign 200, 0, 0
+    t.Name = "Plaka bilgisi"
+    GrupEkle grp, t
+End Sub
+
+Private Function YeniShapeRange() As Object
+    On Error Resume Next
+    Set YeniShapeRange = Application.CreateShapeRange
+End Function
+
+Private Sub GrupEkle(grp As Object, shp As Object)
+    On Error Resume Next
+    If Not grp Is Nothing Then grp.Add shp
+End Sub
+
+Private Sub Grupla(grp As Object, ByVal s As Long)
+    Dim g As Object
+    On Error Resume Next
+    If grp Is Nothing Then Exit Sub
+    If grp.Count > 1 Then
+        Set g = grp.Group
+        g.Name = "Plaka " & s & " grubu"
+    End If
+End Sub
+
+'=====================================================================
+'  DİZME MOTORU (MaxRects, birden çok kural ve sıralama denenir)
+'=====================================================================
+Private Function EnIyiYerlesim(ByVal n As Long, aw() As Double, ah() As Double, ByVal SW As Double, ByVal SH As Double, _
+                               ByVal allowRot As Boolean, ByVal kalite As Long, ByVal arama As Long) As Long
+    Dim ord() As Long, key() As Double, i As Long, rule As Long, d As Long, s As Long
+    Dim pS() As Long, pX() As Double, pY() As Double, pR() As Boolean, ext As Double
+    Dim bestS As Long, bestExt As Double, t0 As Single, rastgele As Single
+
+    ReDim key(1 To n)
+    bestS = 0
+    t0 = Timer
+
+    ' 1) Genel en iyi seçim (her adımda tüm parçalar arasından en uygunu)
+    For i = 1 To n
+        key(i) = Max2(aw(i), ah(i)) * 10000000000# + aw(i) * ah(i)
+    Next i
+    ord = SiraOlustur(key, n)
+    For rule = 0 To 4
+        s = PackGlobal(rule, n, aw, ah, ord, SW, SH, allowRot, pS, pX, pY, pR, ext)
+        EnIyiyiTut s, ext, pS, pX, pY, pR, bestS, bestExt
+    Next rule
+
+    ' 2) Farklı sıralamalarla sıralı yerleştirme
+    If kalite >= 1 Then
+        For d = 1 To 5
+            For i = 1 To n
+                Select Case d
+                    Case 1: key(i) = aw(i) * ah(i)
+                    Case 2: key(i) = Max2(aw(i), ah(i))
+                    Case 3: key(i) = aw(i)
+                    Case 4: key(i) = ah(i)
+                    Case Else: key(i) = aw(i) + ah(i)
+                End Select
+            Next i
+            ord = SiraOlustur(key, n)
+            For rule = 0 To 4
+                s = PackSeq(rule, n, aw, ah, ord, SW, SH, allowRot, pS, pX, pY, pR, ext)
+                EnIyiyiTut s, ext, pS, pX, pY, pR, bestS, bestExt
+            Next rule
+            DoEvents
+        Next d
+    End If
+
+    ' 3) Karışık sıralamalarla ek arama
+    If kalite >= 2 Then
+        rastgele = Rnd(-1)
+        Randomize 7
+        For d = 1 To arama
+            For i = 1 To n
+                key(i) = aw(i) * ah(i) * (0.6 + 0.8 * Rnd)
+            Next i
+            ord = SiraOlustur(key, n)
+            For rule = 0 To 4
+                s = PackSeq(rule, n, aw, ah, ord, SW, SH, allowRot, pS, pX, pY, pR, ext)
+                EnIyiyiTut s, ext, pS, pX, pY, pR, bestS, bestExt
+            Next rule
+            lblBilgi.Caption = "En iyi sonuç aranıyor... " & d & " / " & arama
+            DoEvents
+            If Abs(Timer - t0) > 30 Then Exit For
+        Next d
+    End If
+
+    EnIyiYerlesim = bestS
+End Function
+
+Private Sub EnIyiyiTut(ByVal s As Long, ByVal ext As Double, pS() As Long, pX() As Double, pY() As Double, pR() As Boolean, _
+                       ByRef bestS As Long, ByRef bestExt As Double)
+    If s <= 0 Then Exit Sub
+    If bestS = 0 Or s < bestS Or (s = bestS And ext < bestExt - EPS) Then
+        bestS = s
+        bestExt = ext
+        rS = pS: rX = pX: rY = pY: rR = pR
+    End If
+End Sub
+
+' Anahtara göre büyükten küçüğe sıra (kararlı ekleme sıralaması)
+Private Function SiraOlustur(key() As Double, ByVal n As Long) As Long()
+    Dim o() As Long, i As Long, j As Long, t As Long
+    ReDim o(1 To n)
+    For i = 1 To n: o(i) = i: Next i
+    For i = 2 To n
+        t = o(i)
+        j = i - 1
+        Do While j >= 1
+            If key(t) > key(o(j)) + EPS Then
+                o(j + 1) = o(j)
+                j = j - 1
+            Else
+                Exit Do
+            End If
+        Loop
+        o(j + 1) = t
+    Next i
+    SiraOlustur = o
+End Function
+
+Private Function PackGlobal(ByVal rule As Long, ByVal n As Long, aw() As Double, ah() As Double, ord() As Long, _
+                            ByVal SW As Double, ByVal SH As Double, ByVal allowRot As Boolean, _
+                            pS() As Long, pX() As Double, pY() As Double, pR() As Boolean, ByRef ext As Double) As Long
+    Dim placed() As Boolean, kalan As Long, plaka As Long, plakadaki As Long
+    Dim k As Long, i As Long, bi As Long, lw As Double, lh As Double
+    Dim x As Double, y As Double, rt As Boolean, s1 As Double, s2 As Double
+    Dim gx As Double, gy As Double, gr As Boolean, g1 As Double, g2 As Double
+
+    ReDim placed(1 To n): ReDim pS(1 To n): ReDim pX(1 To n): ReDim pY(1 To n): ReDim pR(1 To n)
+    kalan = n: plaka = 1: plakadaki = 0
+    FreeInit SW, SH
+
+    Do While kalan > 0
+        bi = 0: g1 = 1E+300: g2 = 1E+300
+        lw = -1: lh = -1
+        For k = 1 To n
+            i = ord(k)
+            If Not placed(i) Then
+                If Not (Abs(aw(i) - lw) < EPS And Abs(ah(i) - lh) < EPS) Then
+                    lw = aw(i): lh = ah(i)
+                    If EnIyiYer(rule, aw(i), ah(i), allowRot, x, y, rt, s1, s2) Then
+                        If s1 < g1 - EPS Or (Abs(s1 - g1) <= EPS And s2 < g2 - EPS) Then
+                            bi = i: g1 = s1: g2 = s2: gx = x: gy = y: gr = rt
+                        End If
+                    End If
+                End If
+            End If
+        Next k
+
+        If bi = 0 Then
+            If plakadaki = 0 Then PackGlobal = -1: Exit Function
+            plaka = plaka + 1
+            plakadaki = 0
+            FreeInit SW, SH
+        Else
+            Yerlestir bi, plaka, gx, gy, gr, aw, ah, placed, pS, pX, pY, pR
+            kalan = kalan - 1
+            plakadaki = plakadaki + 1
+        End If
+    Loop
+
+    ext = SonPlakaAlani(n, plaka, aw, ah, pS, pX, pY, pR)
+    PackGlobal = plaka
+End Function
+
+Private Function PackSeq(ByVal rule As Long, ByVal n As Long, aw() As Double, ah() As Double, ord() As Long, _
+                         ByVal SW As Double, ByVal SH As Double, ByVal allowRot As Boolean, _
+                         pS() As Long, pX() As Double, pY() As Double, pR() As Boolean, ByRef ext As Double) As Long
+    Dim placed() As Boolean, kalan As Long, plaka As Long, plakadaki As Long
+    Dim k As Long, i As Long, x As Double, y As Double, rt As Boolean, s1 As Double, s2 As Double
+
+    ReDim placed(1 To n): ReDim pS(1 To n): ReDim pX(1 To n): ReDim pY(1 To n): ReDim pR(1 To n)
+    kalan = n: plaka = 0
+
+    Do While kalan > 0
+        plaka = plaka + 1
+        plakadaki = 0
+        FreeInit SW, SH
+        For k = 1 To n
+            i = ord(k)
+            If Not placed(i) Then
+                If EnIyiYer(rule, aw(i), ah(i), allowRot, x, y, rt, s1, s2) Then
+                    Yerlestir i, plaka, x, y, rt, aw, ah, placed, pS, pX, pY, pR
+                    kalan = kalan - 1
+                    plakadaki = plakadaki + 1
+                End If
+            End If
+        Next k
+        If plakadaki = 0 Then PackSeq = -1: Exit Function
+    Loop
+
+    ext = SonPlakaAlani(n, plaka, aw, ah, pS, pX, pY, pR)
+    PackSeq = plaka
+End Function
+
+Private Sub Yerlestir(ByVal i As Long, ByVal plaka As Long, ByVal x As Double, ByVal y As Double, ByVal rt As Boolean, _
+                      aw() As Double, ah() As Double, placed() As Boolean, _
+                      pS() As Long, pX() As Double, pY() As Double, pR() As Boolean)
+    placed(i) = True
+    pS(i) = plaka: pX(i) = x: pY(i) = y: pR(i) = rt
+    If rt Then
+        PlaceRect x, y, ah(i), aw(i)
+    Else
+        PlaceRect x, y, aw(i), ah(i)
+    End If
+End Sub
+
+' Bir parça için mevcut boş alanlar arasında en iyi yer
+Private Function EnIyiYer(ByVal rule As Long, ByVal w0 As Double, ByVal h0 As Double, ByVal allowRot As Boolean, _
+                          ByRef bxp As Double, ByRef byp As Double, ByRef bRot As Boolean, _
+                          ByRef b1 As Double, ByRef b2 As Double) As Boolean
+    Dim o As Long, r As Long, w As Double, h As Double, s1 As Double, s2 As Double
+    b1 = 1E+300: b2 = 1E+300
+    For o = 0 To 1
+        If o = 0 Then
+            w = w0: h = h0
+        Else
+            w = h0: h = w0
+        End If
+        If o = 0 Or (allowRot And Abs(w - h) > EPS) Then
+            For r = 1 To fc
+                If w <= fw(r) + EPS And h <= fh(r) + EPS Then
+                    Puan rule, r, w, h, s1, s2
+                    If s1 < b1 - EPS Or (Abs(s1 - b1) <= EPS And s2 < b2 - EPS) Then
+                        b1 = s1: b2 = s2
+                        bxp = fx(r): byp = fy(r): bRot = (o = 1)
+                        EnIyiYer = True
+                    End If
+                End If
+            Next r
+        End If
+    Next o
+End Function
+
+Private Sub Puan(ByVal rule As Long, ByVal r As Long, ByVal w As Double, ByVal h As Double, _
+                 ByRef s1 As Double, ByRef s2 As Double)
+    Dim lw As Double, lh As Double
+    lw = fw(r) - w
+    lh = fh(r) - h
+    Select Case rule
+        Case 0      ' En iyi kısa kenar uyumu
+            s1 = Min2(lw, lh): s2 = Max2(lw, lh)
+        Case 1      ' En iyi uzun kenar uyumu
+            s1 = Max2(lw, lh): s2 = Min2(lw, lh)
+        Case 2      ' En iyi alan uyumu
+            s1 = fw(r) * fh(r) - w * h: s2 = Min2(lw, lh)
+        Case 3      ' Satır satır (alttan)
+            s1 = fy(r) + h: s2 = fx(r)
+        Case Else   ' Sütun sütun (soldan)
+            s1 = fx(r) + w: s2 = fy(r)
+    End Select
+End Sub
+
+Private Function SonPlakaAlani(ByVal n As Long, ByVal plaka As Long, aw() As Double, ah() As Double, _
+                               pS() As Long, pX() As Double, pY() As Double, pR() As Boolean) As Double
+    Dim i As Long, w As Double, h As Double, mx As Double, my As Double
+    For i = 1 To n
+        If pS(i) = plaka Then
+            If pR(i) Then
+                w = ah(i): h = aw(i)
+            Else
+                w = aw(i): h = ah(i)
+            End If
+            If pX(i) + w > mx Then mx = pX(i) + w
+            If pY(i) + h > my Then my = pY(i) + h
+        End If
+    Next i
+    SonPlakaAlani = mx * my
+End Function
+
+Private Sub FreeInit(ByVal W As Double, ByVal H As Double)
+    ReDim fx(1 To 1): ReDim fy(1 To 1): ReDim fw(1 To 1): ReDim fh(1 To 1)
+    fx(1) = 0: fy(1) = 0: fw(1) = W: fh(1) = H
+    fc = 1
+End Sub
+
+Private Sub TAdd(ByVal x As Double, ByVal y As Double, ByVal w As Double, ByVal h As Double)
+    If w <= EPS Or h <= EPS Then Exit Sub
+    tc = tc + 1
+    tx(tc) = x: ty(tc) = y: tw(tc) = w: th(tc) = h
+End Sub
+
+Private Function TIn(ByVal i As Long, ByVal j As Long) As Boolean
+    TIn = (tx(i) >= tx(j) - EPS And ty(i) >= ty(j) - EPS And _
+           tx(i) + tw(i) <= tx(j) + tw(j) + EPS And ty(i) + th(i) <= ty(j) + th(j) + EPS)
+End Function
+
+Private Sub PlaceRect(ByVal x As Double, ByVal y As Double, ByVal w As Double, ByVal h As Double)
+    Dim i As Long, j As Long, cnt As Long, keep() As Boolean
+    Dim ax As Double, ay As Double, aww As Double, ahh As Double
+
+    tc = 0
+    ReDim tx(1 To fc * 4 + 4): ReDim ty(1 To fc * 4 + 4)
+    ReDim tw(1 To fc * 4 + 4): ReDim th(1 To fc * 4 + 4)
+
+    For i = 1 To fc
+        ax = fx(i): ay = fy(i): aww = fw(i): ahh = fh(i)
+        If x >= ax + aww - EPS Or x + w <= ax + EPS Or y >= ay + ahh - EPS Or y + h <= ay + EPS Then
+            TAdd ax, ay, aww, ahh
+        Else
+            If x > ax + EPS Then TAdd ax, ay, x - ax, ahh
+            If x + w < ax + aww - EPS Then TAdd x + w, ay, ax + aww - x - w, ahh
+            If y > ay + EPS Then TAdd ax, ay, aww, y - ay
+            If y + h < ay + ahh - EPS Then TAdd ax, y + h, aww, ay + ahh - y - h
+        End If
+    Next i
+
+    If tc = 0 Then fc = 0: Exit Sub
+
+    ReDim keep(1 To tc)
+    For i = 1 To tc: keep(i) = True: Next i
+    For i = 1 To tc
+        For j = 1 To tc
+            If i <> j And keep(j) Then
+                If TIn(i, j) Then
+                    If (Not TIn(j, i)) Or j < i Then keep(i) = False: Exit For
+                End If
+            End If
+        Next j
+    Next i
+
+    ReDim fx(1 To tc): ReDim fy(1 To tc): ReDim fw(1 To tc): ReDim fh(1 To tc)
+    cnt = 0
+    For i = 1 To tc
+        If keep(i) Then
+            cnt = cnt + 1
+            fx(cnt) = tx(i): fy(cnt) = ty(i): fw(cnt) = tw(i): fh(cnt) = th(i)
+        End If
+    Next i
+    fc = cnt
+End Sub
+
+Private Function Min2(ByVal a As Double, ByVal b As Double) As Double
+    If a < b Then Min2 = a Else Min2 = b
+End Function
+
+Private Function Max2(ByVal a As Double, ByVal b As Double) As Double
+    If a > b Then Max2 = a Else Max2 = b
+End Function

@@ -3,7 +3,7 @@
 
 Bu paketteki dosyalar:
   clsOlay.cls     -> pencere düğmelerinin çalışması için yardımcı parça
-  frmDizme.frm    -> Otomatik Dizme penceresi
+  frmDizme_kod.txt -> Otomatik Dizme penceresinin kodu (yapıştırılır)
   modAtolye.bas   -> araç çubuğu ve başlatıcı
   dizme.ico       -> düğme simgesi (kurulumda otomatik kullanılır)
 
@@ -17,16 +17,19 @@ ADIM 1 - Eski denemeleri silin (varsa)
  (ThisMacroStorage'a dokunmayın.)
 
 -------------------------------------------------------
-ADIM 2 - Dosyaları içe aktarın
+ADIM 2 - Dosyaları ekleyin
 -------------------------------------------------------
- 1. Bu ZIP'i masaüstüne çıkarın (sağ tık -> Tümünü ayıkla).
- 2. Betik Düzenleyicisinde soldaki "GlobalMacros (GlobalMacros.gms)"
+ 1. Betik Düzenleyicisinde soldaki "GlobalMacros (GlobalMacros.gms)"
     satırına bir kere tıklayın.
- 3. File -> Import File...  ile sırayla şu üç dosyayı ekleyin:
-      clsOlay.cls
-      frmDizme.frm
-      modAtolye.bas
- 4. Ctrl+S ile kaydedin ve düzenleyiciyi kapatın.
+ 2. File -> Import File...  ile  clsOlay.cls  dosyasını ekleyin.
+ 3. File -> Import File...  ile  modAtolye.bas  dosyasını ekleyin.
+ 4. PENCERE (form) - elle eklenir:
+    a) GlobalMacros seçiliyken  Insert -> UserForm
+    b) Alttaki Properties penceresinde (Name) satırını  frmDizme  yapın, Enter.
+    c) Gri forma sağ tık -> View Code -> içindeki her şeyi silin.
+    d) frmDizme_kod.txt dosyasını Not Defteri ile açın,
+       Ctrl+A, Ctrl+C ile kopyalayıp kod alanına Ctrl+V ile yapıştırın.
+ 5. Ctrl+S ile kaydedin ve düzenleyiciyi kapatın.
 
 -------------------------------------------------------
 ADIM 3 - Üst bara düğmeyi ekleyin (bir kez)
