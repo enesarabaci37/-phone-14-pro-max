@@ -36,6 +36,7 @@ Private tc As Long
 Private hesapOK As Boolean
 Private hesapMesaj As String
 Private adim As String
+Private secS() As Object
 Private nItem As Long
 Private iSrc() As Long, iKop() As Long
 Private iW() As Double, iH() As Double
@@ -716,6 +717,7 @@ Private Sub Hesapla()
     Dim w0() As Double, h0() As Double, aw() As Double, ah() As Double
     Dim matW As Double, matH As Double, usW As Double, usH As Double
     Dim allowRot As Boolean, kalite As Long, arama As Long
+    Dim sh As Shape
 
     hesapOK = False
     rSheets = 0
@@ -730,11 +732,7 @@ Private Sub Hesapla()
     End If
     adim = "seçim"
     Set sr = SecimAl(doc)
-    If sr Is Nothing Then
-        m = 0
-    Else
-        m = sr.Count
-    End If
+    m = SecimDiziyeAl(sr)
     If m = 0 Then
         hesapMesaj = "Dizilecek nesneleri CorelDRAW'da seçin," & vbCrLf & _
                      "sonra 'Önizle / Seçimi yenile' düğmesine basın." & vbCrLf & vbCrLf & _
@@ -775,7 +773,9 @@ Private Sub Hesapla()
     eskiBirim = doc.Unit
     doc.Unit = cdrMillimeter
     For i = 1 To m
-        sr.Item(i).GetBoundingBox bx, byy, bw, bh, pKontur
+        adim = "nesne ölçüleri " & i & "/" & m
+        Set sh = secS(i)
+        sh.GetBoundingBox bx, byy, bw, bh, pKontur
         w0(i) = bw: h0(i) = bh
     Next i
     doc.Unit = eskiBirim
@@ -820,7 +820,7 @@ Private Sub Hesapla()
     Exit Sub
 
 Hata:
-    hesapMesaj = "Hesaplama hatası (" & adim & "): " & Err.Description
+    hesapMesaj = "Hesaplama hatası (" & adim & "): " & Err.Description & " [" & Err.Number & "]"
     hesapOK = False
 End Sub
 
@@ -963,8 +963,7 @@ Private Function Uygula() As Boolean
     End If
 
     Set doc = AktifBelge()
-    Set sr = SecimAl(doc)
-    If doc Is Nothing Or sr Is Nothing Then
+    If doc Is Nothing Then
         MsgBox "Seçili nesneler okunamadı. Nesneleri tekrar seçip deneyin.", vbExclamation, "Otomatik Dizme"
         Exit Function
     End If
@@ -995,9 +994,9 @@ Private Function Uygula() As Boolean
     ReDim shp(1 To nItem)
     For k = 1 To nItem
         If iKop(k) = 1 Then
-            Set shp(k) = sr.Item(iSrc(k))
+            Set shp(k) = secS(iSrc(k))
         Else
-            Set shp(k) = sr.Item(iSrc(k)).Duplicate
+            Set shp(k) = secS(iSrc(k)).Duplicate
         End If
     Next k
 
@@ -1057,7 +1056,7 @@ Private Function Uygula() As Boolean
     Exit Function
 
 Hata:
-    msg = Err.Description
+    msg = Err.Description & " [" & Err.Number & "]"
     On Error Resume Next
     Application.Optimization = False
     If grupAcik Then doc.EndCommandGroup
@@ -1084,6 +1083,19 @@ Private Function SecimAl(doc As Object) As Object
     If sr Is Nothing Then Set sr = Application.ActiveSelectionRange
     If sr Is Nothing Then Set sr = doc.Selection.Shapes.All
     Set SecimAl = sr
+End Function
+
+' Seçimdeki nesneleri secS dizisine alır, sayısını döndürür
+Private Function SecimDiziyeAl(sr As Object) As Long
+    Dim o As Object, m As Long
+    Erase secS
+    If sr Is Nothing Then Exit Function
+    For Each o In sr
+        m = m + 1
+        ReDim Preserve secS(1 To m)
+        Set secS(m) = o
+    Next o
+    SecimDiziyeAl = m
 End Function
 
 ' Plakanın sol-alt köşesi (mm). Plakalar sayfanın sol üstünden başlar.
