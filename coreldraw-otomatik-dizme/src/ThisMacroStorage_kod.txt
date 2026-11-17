@@ -1,0 +1,8 @@
+Option Explicit
+
+' CorelDRAW her açıldığında "Atölye Araçları" çubuğunu kontrol eder,
+' yoksa kendiliğinden yeniden kurar.
+Private Sub GlobalMacroStorage_Start()
+    On Error Resume Next
+    modAtolye.AracCubuguOtomatik
+End Sub

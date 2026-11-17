@@ -17,13 +17,35 @@ Public Sub Dizme()
     frmDizme.Show vbModeless
 End Sub
 
-' ---- Araç çubuğunu kur (bir kez çalıştırmanız yeterli) ----
+' ---- Araç çubuğunu kur / yenile (elle çalıştırmak için) ----
 Public Sub AracCubuguKur()
+    CubukKur False
+End Sub
+
+' ---- CorelDRAW açılırken otomatik çağrılır (ThisMacroStorage) ----
+Public Sub AracCubuguOtomatik()
+    Dim cbs As Object, cb As Object
+    On Error Resume Next
+    Set cbs = CubukListesi()
+    If cbs Is Nothing Then Exit Sub
+    Set cb = cbs.Item(CUBUK_ADI)
+    If cb Is Nothing Then
+        CubukKur True
+    Else
+        If cb.Controls.Count = 0 Then
+            CubukKur True
+        Else
+            cb.Visible = True
+        End If
+    End If
+End Sub
+
+Private Sub CubukKur(ByVal sessiz As Boolean)
     Dim cbs As Object, cb As Object, sonuc As String
 
     Set cbs = CubukListesi()
     If cbs Is Nothing Then
-        ElleKurulumMesaji "Araç çubukları listesine erişilemedi."
+        If Not sessiz Then ElleKurulumMesaji "Araç çubukları listesine erişilemedi."
         Exit Sub
     End If
 
@@ -34,7 +56,7 @@ Public Sub AracCubuguKur()
     Set cb = cbs.Add(CUBUK_ADI, 1, False)   ' 1 = üst bara yerleş
     On Error GoTo 0
     If cb Is Nothing Then
-        ElleKurulumMesaji "Yeni araç çubuğu oluşturulamadı."
+        If Not sessiz Then ElleKurulumMesaji "Yeni araç çubuğu oluşturulamadı."
         Exit Sub
     End If
 
@@ -45,6 +67,7 @@ Public Sub AracCubuguKur()
     cb.Visible = True
     On Error GoTo 0
 
+    If sessiz Then Exit Sub
     If sonuc = "" Then
         MsgBox "'" & CUBUK_ADI & "' araç çubuğu eklendi." & vbCrLf & vbCrLf & _
                "Görmüyorsanız: Pencere > Araç Çubukları > " & CUBUK_ADI & vbCrLf & _
