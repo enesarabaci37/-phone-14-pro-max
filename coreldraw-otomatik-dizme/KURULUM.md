@@ -16,6 +16,8 @@ Seçtiğiniz nesneleri, girdiğiniz malzeme ölçüsüne en az fire ile otomatik
 > Nesneler dış sınır kutularına göre (kontur kalınlığı dahil) dizilir. Yuvarlak veya düzensiz şekiller de kapladıkları dikdörtgene göre yerleştirilir.
 
 ## Kurulum (bir kez yapılır)
+`dist/OtomatikDizme.zip` dosyasını indirin ve içindeki KURULUM.txt adımlarını izleyin. (Aşağıdaki eski elle kurulum adımları geçersizdir.)
+
 1. CorelDRAW'u açın, **Alt+F11** ile Makro Düzenleyiciyi (VBA) açın.
 2. Sol üstteki *Project* penceresinde **GlobalMacros (GlobalMacros.gms)** projesine tıklayın.
 3. **File → Import File...** ile `modDizme.bas` dosyasını içe aktarın.

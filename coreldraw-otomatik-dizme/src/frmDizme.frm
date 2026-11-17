@@ -1,14 +1,25 @@
-Attribute VB_Name = "modDizme"
+VERSION 5.00
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmDizme 
+   Caption         =   "Otomatik Dizme (Montaj)"
+   ClientHeight    =   5000
+   ClientLeft      =   45
+   ClientTop       =   390
+   ClientWidth     =   4200
+   StartUpPosition =   1  'CenterOwner
+End
+Attribute VB_Name = "frmDizme"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
 Option Explicit
 
 ' ============================================================
-'  OTOMATIK DIZME (MONTAJ / NESTING) - CorelDRAW VBA makrosu
+'  OTOMATIK DIZME (MONTAJ / NESTING) - CorelDRAW VBA
 '  Seçili nesneleri girilen malzeme ölçüsüne en az fire ile dizer.
-'  Algoritma: MaxRects. 5 farklı yerleştirme kuralı denenir,
-'  en az plaka ve en küçük son-plaka alanı veren sonuç uygulanır.
-'  Not: Nesneler dış sınır kutularına (kontur dahil) göre dizilir.
 ' ============================================================
 
+'---------------- Algoritma değişkenleri ----------------
 Private Const EPS As Double = 0.0001
 Private Const KURAL_SAYISI As Long = 5
 
@@ -19,13 +30,135 @@ Private fc As Long
 Private tx() As Double, ty() As Double, tw() As Double, th() As Double
 Private tc As Long
 
-' ---- Menüden / araç çubuğundan çalıştırılacak makro ----
-Public Sub OtomatikDizme()
-    frmDizme.Show vbModeless
+' ---- Ana işlem: formdan çağrılır, sonuç raporunu döndürür ----
+'---------------- Pencere ----------------
+Private WithEvents btnDiz As MSForms.CommandButton
+Private WithEvents btnKapat As MSForms.CommandButton
+Private txtW As MSForms.TextBox
+Private txtH As MSForms.TextBox
+Private txtGap As MSForms.TextBox
+Private txtMargin As MSForms.TextBox
+Private txtAdet As MSForms.TextBox
+Private txtAra As MSForms.TextBox
+Private chkRot As MSForms.CheckBox
+Private chkCer As MSForms.CheckBox
+Private txtSonuc As MSForms.TextBox
+
+Private Const UYG As String = "CorelOtomatikDizme"
+
+Private Sub UserForm_Initialize()
+    Dim t As Single
+
+    Me.Caption = "Otomatik Dizme (Montaj)"
+    Me.Width = 275
+    t = 10
+
+    Set txtW = SatirEkle("Malzeme genişliği (mm):", t, Ayar("W", "1000")): t = t + 24
+    Set txtH = SatirEkle("Malzeme yüksekliği (mm):", t, Ayar("H", "700")): t = t + 24
+    Set txtGap = SatirEkle("Nesneler arası boşluk (mm):", t, Ayar("Gap", "3")): t = t + 24
+    Set txtMargin = SatirEkle("Malzeme kenar payı (mm):", t, Ayar("Margin", "5")): t = t + 24
+    Set txtAdet = SatirEkle("Her nesneden adet:", t, Ayar("Adet", "1")): t = t + 24
+    Set txtAra = SatirEkle("Plakalar arası mesafe (mm):", t, Ayar("Ara", "50")): t = t + 26
+
+    Set chkRot = Me.Controls.Add("Forms.CheckBox.1")
+    With chkRot
+        .Caption = "Nesneleri 90° döndürmeye izin ver"
+        .Left = 10: .Top = t: .Width = 245: .Height = 18
+        .Value = (Ayar("Rot", "1") = "1")
+    End With
+    t = t + 20
+
+    Set chkCer = Me.Controls.Add("Forms.CheckBox.1")
+    With chkCer
+        .Caption = "Malzeme çerçevesi çiz (kırmızı)"
+        .Left = 10: .Top = t: .Width = 245: .Height = 18
+        .Value = (Ayar("Cer", "1") = "1")
+    End With
+    t = t + 26
+
+    Set btnDiz = Me.Controls.Add("Forms.CommandButton.1")
+    With btnDiz
+        .Caption = "DİZ"
+        .Left = 10: .Top = t: .Width = 150: .Height = 26
+        .Font.Bold = True
+        .Default = True
+    End With
+
+    Set btnKapat = Me.Controls.Add("Forms.CommandButton.1")
+    With btnKapat
+        .Caption = "Kapat"
+        .Left = 170: .Top = t: .Width = 85: .Height = 26
+        .Cancel = True
+    End With
+    t = t + 34
+
+    Set txtSonuc = Me.Controls.Add("Forms.TextBox.1")
+    With txtSonuc
+        .Left = 10: .Top = t: .Width = 245: .Height = 100
+        .MultiLine = True
+        .WordWrap = True
+        .ScrollBars = fmScrollBarsVertical
+        .Locked = True
+        .BackColor = &H8000000F
+        .Text = "Nesneleri seçin, ölçüleri girin ve DİZ'e basın." & vbCrLf & _
+                "Pencere açıkken seçimi değiştirebilirsiniz."
+    End With
+    t = t + 108
+
+    Me.Height = t + 28
 End Sub
 
-' ---- Ana işlem: formdan çağrılır, sonuç raporunu döndürür ----
-Public Function DiziYap(ByVal matW As Double, ByVal matH As Double, ByVal gap As Double, _
+Private Function SatirEkle(ByVal yazi As String, ByVal t As Single, ByVal deger As String) As MSForms.TextBox
+    Dim l As MSForms.Label, tb As MSForms.TextBox
+    Set l = Me.Controls.Add("Forms.Label.1")
+    l.Caption = yazi
+    l.Left = 10: l.Top = t + 3: l.Width = 160: l.Height = 16
+    Set tb = Me.Controls.Add("Forms.TextBox.1")
+    tb.Left = 175: tb.Top = t: tb.Width = 80: tb.Height = 18
+    tb.TextAlign = fmTextAlignRight
+    tb.Text = deger
+    Set SatirEkle = tb
+End Function
+
+Private Sub btnDiz_Click()
+    Dim sonuc As String
+    AyarKaydet
+    txtSonuc.Text = "Hesaplanıyor, lütfen bekleyin..."
+    btnDiz.Enabled = False
+    DoEvents
+    sonuc = DiziYap(Sayi(txtW.Text), Sayi(txtH.Text), Sayi(txtGap.Text), Sayi(txtMargin.Text), _
+                    CLng(Sayi(txtAdet.Text)), CBool(chkRot.Value), CBool(chkCer.Value), Sayi(txtAra.Text))
+    btnDiz.Enabled = True
+    txtSonuc.Text = sonuc
+End Sub
+
+Private Sub btnKapat_Click()
+    Unload Me
+End Sub
+
+' Virgül veya nokta ile yazılan sayıları okur (12,5 veya 12.5)
+Private Function Sayi(ByVal s As String) As Double
+    s = Replace(Trim$(s), ",", ".")
+    Sayi = Val(s)
+End Function
+
+Private Function Ayar(ByVal anahtar As String, ByVal varsayilan As String) As String
+    Ayar = GetSetting(UYG, "Ayar", anahtar, varsayilan)
+End Function
+
+Private Sub AyarKaydet()
+    SaveSetting UYG, "Ayar", "W", txtW.Text
+    SaveSetting UYG, "Ayar", "H", txtH.Text
+    SaveSetting UYG, "Ayar", "Gap", txtGap.Text
+    SaveSetting UYG, "Ayar", "Margin", txtMargin.Text
+    SaveSetting UYG, "Ayar", "Adet", txtAdet.Text
+    SaveSetting UYG, "Ayar", "Ara", txtAra.Text
+    SaveSetting UYG, "Ayar", "Rot", IIf(chkRot.Value, "1", "0")
+    SaveSetting UYG, "Ayar", "Cer", IIf(chkCer.Value, "1", "0")
+End Sub
+
+'---------------- Dizme algoritması ----------------
+Private Function DiziYap(ByVal matW As Double, ByVal matH As Double, ByVal gap As Double, _
                         ByVal margin As Double, ByVal adet As Long, ByVal allowRot As Boolean, _
                         ByVal cerceve As Boolean, ByVal plakaAra As Double) As String
     Dim doc As Document, sr As ShapeRange, fr As Shape, pr As Rect

@@ -1,0 +1,22 @@
+﻿CORELDRAW OTOMATİK DİZME - KURULUM
+==================================
+
+ÖNCE ESKİLERİ SİLİN (daha önce elle eklediyseniz):
+ 1. Alt+F11 ile Betik Düzenleyicisini açın.
+ 2. Soldaki listede GlobalMacros altındaki "modDizme" üzerine sağ tıklayın
+    -> "Remove modDizme..." -> çıkan soruya "Hayır / No" deyin.
+ 3. Aynısını "frmDizme" için de yapın.
+
+KURULUM:
+ 1. Bu ZIP dosyasını masaüstüne çıkarın (sağ tık -> Tümünü ayıkla).
+ 2. CorelDRAW'da Alt+F11 ile Betik Düzenleyicisini açın.
+ 3. Soldaki listede "GlobalMacros (GlobalMacros.gms)" satırına bir kere tıklayın.
+ 4. File -> Import File...  ->  frmDizme.frm  dosyasını seçin -> Aç
+ 5. File -> Import File...  ->  OtomatikDizme.bas  dosyasını seçin -> Aç
+ 6. Ctrl+S ile kaydedip düzenleyiciyi kapatın.
+
+KULLANIM:
+ 1. Dizilecek nesneleri seçin.
+ 2. Araçlar -> Betikler -> Betikler  (Alt+Shift+F11)
+ 3. GlobalMacros -> OtomatikDizme -> Baslat  üzerine çift tıklayın.
+ 4. Ölçüleri girip DİZ'e basın. Geri almak için Ctrl+Z.
