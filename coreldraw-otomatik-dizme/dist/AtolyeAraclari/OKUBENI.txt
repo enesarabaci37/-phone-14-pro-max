@@ -1,27 +1,32 @@
-﻿ATÖLYE ARAÇLARI - OTOMATİK DİZME
-================================
+﻿ATÖLYE ARAÇLARI - OTOMATİK DİZME  /  KURULUM
+=============================================
 
-KURULUM (tek adım)
-  1. CorelDRAW'u açın.
-  2. Bu klasördeki  Kurulum.vbs  dosyasına çift tıklayın.
-  3. "Kurulum tamamlandı" mesajını bekleyin.
-  Üst barda Arabacı Reklam logolu düğme belirir. CorelDRAW her açıldığında
-  düğme kendiliğinden gelir.
+Kurulum CorelDRAW'un içinden yapılır (bir kez, 2 dakika).
 
-GÜNCELLEME
-  Yeni sürümü aynı şekilde kurun: CorelDRAW açıkken Kurulum.vbs'ye çift tıklayın.
-  Kayıtlı ön ayarlarınız korunur.
+1. CorelDRAW'u KAPATIP YENİDEN AÇIN.
+   (Daha önce elle eklenen parçalar silindiyse bu şart.)
 
-KALDIRMA
-  CorelDRAW açıkken  Kaldir.vbs  dosyasına çift tıklayın.
+2. Yeni BOŞ bir belge açın:  Dosya > Yeni  > Tamam
 
-KULLANIM
-  1. Dizilecek nesneleri seçin.
-  2. Üst bardaki logolu düğmeye basın.
-  3. Malzeme ölçüsünü girin; soldaki önizlemeyi kontrol edin.
-  4. "Diz ve Kapat"a basın. Geri almak için Ctrl+Z.
+3. Alt+F11 ile Betik Düzenleyicisini açın.
 
-SORUN OLURSA
-  - Windows "Bu dosyayı açmak istiyor musunuz?" diye sorarsa "Aç" deyin.
-  - Kurulum sırasında Otomatik Dizme penceresi açık olmasın.
-  - Hata mesajının ekran görüntüsünü gönderin.
+4. Soldaki listede yeni belgenin projesine tıklayın:
+      VBAProject (İsimsiz-1)      <-- GlobalMacros DEĞİL
+
+5. File > Import File...  ile bu klasördeki  Kurulum.bas  dosyasını seçin.
+   Listede "Modules > AtolyeKurulum" belirir.
+
+6. AtolyeKurulum'a çift tıklayın, açılan kodda
+      Public Sub Kur()
+   satırının içine bir kere tıklayın ve F5'e basın.
+
+7. "Kurulum tamamlandı" mesajı gelir, üst bara logolu düğme eklenir.
+
+8. Düzenleyiciyi kapatın. Boş belgeyi KAYDETMEDEN kapatın.
+
+Bundan sonra CorelDRAW her açıldığında düğme kendiliğinden gelir.
+
+GÜNCELLEME: Yeni sürümün Kurulum.bas dosyasıyla aynı adımları tekrarlayın.
+Ön ayarlarınız korunur.
+
+SORUN OLURSA: Çıkan mesajın ekran görüntüsünü gönderin.
