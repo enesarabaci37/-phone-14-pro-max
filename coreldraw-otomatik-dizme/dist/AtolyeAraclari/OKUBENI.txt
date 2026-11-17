@@ -1,0 +1,27 @@
+﻿ATÖLYE ARAÇLARI - OTOMATİK DİZME
+================================
+
+KURULUM (tek adım)
+  1. CorelDRAW'u açın.
+  2. Bu klasördeki  Kurulum.vbs  dosyasına çift tıklayın.
+  3. "Kurulum tamamlandı" mesajını bekleyin.
+  Üst barda Arabacı Reklam logolu düğme belirir. CorelDRAW her açıldığında
+  düğme kendiliğinden gelir.
+
+GÜNCELLEME
+  Yeni sürümü aynı şekilde kurun: CorelDRAW açıkken Kurulum.vbs'ye çift tıklayın.
+  Kayıtlı ön ayarlarınız korunur.
+
+KALDIRMA
+  CorelDRAW açıkken  Kaldir.vbs  dosyasına çift tıklayın.
+
+KULLANIM
+  1. Dizilecek nesneleri seçin.
+  2. Üst bardaki logolu düğmeye basın.
+  3. Malzeme ölçüsünü girin; soldaki önizlemeyi kontrol edin.
+  4. "Diz ve Kapat"a basın. Geri almak için Ctrl+Z.
+
+SORUN OLURSA
+  - Windows "Bu dosyayı açmak istiyor musunuz?" diye sorarsa "Aç" deyin.
+  - Kurulum sırasında Otomatik Dizme penceresi açık olmasın.
+  - Hata mesajının ekran görüntüsünü gönderin.

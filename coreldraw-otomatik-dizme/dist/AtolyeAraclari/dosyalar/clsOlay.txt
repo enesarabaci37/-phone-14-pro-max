@@ -1,25 +1,12 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "clsOlay"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
-Option Explicit
+ï»¿Option Explicit
 
-' Atölye Araçlarý - pencere kontrollerinin olaylarýný yakalar
-' (sayý kutusu + yukarý/aþaðý oklarý, açýlýr liste, onay kutusu)
+' AtÃ¶lye AraÃ§larÄ± - pencere kontrollerinin olaylarÄ±nÄ± yakalar
+' (sayÄ± kutusu + yukarÄ±/aÅŸaÄŸÄ± oklarÄ±, aÃ§Ä±lÄ±r liste, onay kutusu)
 
 Public WithEvents tb As MSForms.TextBox
-Attribute tb.VB_VarHelpID = -1
 Public WithEvents sp As MSForms.SpinButton
-Attribute sp.VB_VarHelpID = -1
 Public WithEvents cb As MSForms.ComboBox
-Attribute cb.VB_VarHelpID = -1
 Public WithEvents ch As MSForms.CheckBox
-Attribute ch.VB_VarHelpID = -1
 
 Public Frm As Object
 Public Tamsayi As Boolean
