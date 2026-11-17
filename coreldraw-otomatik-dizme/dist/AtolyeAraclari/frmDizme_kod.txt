@@ -21,6 +21,7 @@ Private tc As Long
 ' --- Son hesap sonucu
 Private hesapOK As Boolean
 Private hesapMesaj As String
+Private adim As String
 Private nItem As Long
 Private iSrc() As Long, iKop() As Long
 Private iW() As Double, iH() As Double
@@ -462,8 +463,8 @@ End Sub
 Private Function SayfaBoyutu(ByRef w As Double, ByRef h As Double) As Boolean
     Dim doc As Object, eskiBirim As Long
     On Error GoTo Yok
-    If Application.Documents.Count = 0 Then Exit Function
-    Set doc = Application.ActiveDocument
+    Set doc = AktifBelge()
+    If doc Is Nothing Then Exit Function
     eskiBirim = doc.Unit
     doc.Unit = cdrMillimeter
     w = doc.ActivePage.SizeWidth
@@ -696,13 +697,19 @@ Private Sub Hesapla()
     nItem = 0
     On Error GoTo Hata
 
-    If Application.Documents.Count = 0 Then
+    adim = "belge"
+    Set doc = AktifBelge()
+    If doc Is Nothing Then
         hesapMesaj = "Açık bir CorelDRAW belgesi yok."
         Exit Sub
     End If
-    Set doc = Application.ActiveDocument
-    Set sr = Application.ActiveSelectionRange
-    m = sr.Count
+    adim = "seçim"
+    Set sr = SecimAl(doc)
+    If sr Is Nothing Then
+        m = 0
+    Else
+        m = sr.Count
+    End If
     If m = 0 Then
         hesapMesaj = "Dizilecek nesneleri CorelDRAW'da seçin," & vbCrLf & _
                      "sonra 'Önizle / Seçimi yenile' düğmesine basın." & vbCrLf & vbCrLf & _
@@ -711,6 +718,7 @@ Private Sub Hesapla()
     End If
 
     ' --- Parametreler (mm)
+    adim = "ayarlar"
     If chkSayfa.Value Then
         If Not SayfaBoyutu(matW, matH) Then hesapMesaj = "Sayfa boyutu okunamadı.": Exit Sub
     Else
@@ -737,6 +745,7 @@ Private Sub Hesapla()
     If m * adet > 5000 Then hesapMesaj = "En fazla 5000 nesne dizilebilir (şu an " & m * adet & ").": Exit Sub
 
     ' --- Nesne ölçüleri
+    adim = "nesne ölçüleri"
     ReDim w0(1 To m): ReDim h0(1 To m)
     eskiBirim = doc.Unit
     doc.Unit = cdrMillimeter
@@ -774,6 +783,7 @@ Private Sub Hesapla()
     pMatW = matW: pMatH = matH
     pSW = usW + pGap: pSH = usH + pGap
 
+    adim = "yerleşim hesabı"
     lblBilgi.Caption = "Hesaplanıyor..."
     DoEvents
     rSheets = EnIyiYerlesim(n, aw, ah, pSW, pSH, allowRot, kalite, arama)
@@ -785,7 +795,7 @@ Private Sub Hesapla()
     Exit Sub
 
 Hata:
-    hesapMesaj = "Hesaplama hatası: " & Err.Description
+    hesapMesaj = "Hesaplama hatası (" & adim & "): " & Err.Description
     hesapOK = False
 End Sub
 
@@ -927,12 +937,17 @@ Private Function Uygula() As Boolean
         Exit Function
     End If
 
-    Set doc = Application.ActiveDocument
-    Set sr = Application.ActiveSelectionRange
+    Set doc = AktifBelge()
+    Set sr = SecimAl(doc)
+    If doc Is Nothing Or sr Is Nothing Then
+        MsgBox "Seçili nesneler okunamadı. Nesneleri tekrar seçip deneyin.", vbExclamation, "Otomatik Dizme"
+        Exit Function
+    End If
     yer = cmbPlakaYer.ListIndex
     ara = SayiOku(txtPlakaAra.Text) * birimCarpan
 
     On Error GoTo Hata
+    adim = "hazırlık"
     eskiBirim = doc.Unit
     doc.Unit = cdrMillimeter
     doc.BeginCommandGroup "Otomatik Dizme"
@@ -951,6 +966,7 @@ Private Function Uygula() As Boolean
     End If
 
     ' Kopyaları oluştur (orijinaller henüz yerindeyken)
+    adim = "kopyalar"
     ReDim shp(1 To nItem)
     For k = 1 To nItem
         If iKop(k) = 1 Then
@@ -968,6 +984,7 @@ Private Function Uygula() As Boolean
     ReDim dolu(1 To rSheets): ReDim adetPl(1 To rSheets)
 
     ' Yerleştir
+    adim = "yerleştirme"
     For k = 1 To nItem
         s = rS(k)
         If yer = 2 And s > 1 Then shp(k).MoveToLayer sayfalar(s).ActiveLayer
@@ -982,6 +999,7 @@ Private Function Uygula() As Boolean
     Next k
 
     ' Çerçeve, etiket, grup
+    adim = "çerçeve / etiket"
     For s = 1 To rSheets
         PlakaOrijin s, yer, ara, sayfalar, ox, oy
         If yer = 2 Then
@@ -1020,9 +1038,27 @@ Hata:
     If grupAcik Then doc.EndCommandGroup
     doc.Unit = eskiBirim
     Application.ActiveWindow.Refresh
-    MsgBox "Dizme sırasında hata oluştu:" & vbCrLf & msg & vbCrLf & vbCrLf & _
+    MsgBox "Dizme sırasında hata oluştu (" & adim & "):" & vbCrLf & msg & vbCrLf & vbCrLf & _
            "Yapılan değişiklikleri Ctrl+Z ile geri alabilirsiniz.", vbExclamation, "Otomatik Dizme"
     Uygula = False
+End Function
+
+' Etkin belge (yoksa Nothing)
+Private Function AktifBelge() As Object
+    On Error Resume Next
+    If Application.Documents.Count = 0 Then Exit Function
+    Set AktifBelge = Application.ActiveDocument
+End Function
+
+' Belgedeki seçili nesneler (ShapeRange). Okunamazsa Nothing.
+Private Function SecimAl(doc As Object) As Object
+    Dim sr As Object
+    On Error Resume Next
+    If doc Is Nothing Then Exit Function
+    Set sr = doc.SelectionRange
+    If sr Is Nothing Then Set sr = Application.ActiveSelectionRange
+    If sr Is Nothing Then Set sr = doc.Selection.Shapes.All
+    Set SecimAl = sr
 End Function
 
 ' Plakanın sol-alt köşesi (mm). Plakalar sayfanın sol üstünden başlar.
