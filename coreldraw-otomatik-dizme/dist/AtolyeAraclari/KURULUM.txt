@@ -1,0 +1,63 @@
+﻿ATÖLYE ARAÇLARI - OTOMATİK DİZME (NESTING)  /  KURULUM
+=======================================================
+
+Bu paketteki dosyalar:
+  clsOlay.cls     -> pencere düğmelerinin çalışması için yardımcı parça
+  frmDizme.frm    -> Otomatik Dizme penceresi
+  modAtolye.bas   -> araç çubuğu ve başlatıcı
+  dizme.ico       -> düğme simgesi (kurulumda otomatik kullanılır)
+
+-------------------------------------------------------
+ADIM 1 - Eski denemeleri silin (varsa)
+-------------------------------------------------------
+ CorelDRAW'da Alt+F11 ile Betik Düzenleyicisini açın.
+ Soldaki listede GlobalMacros altında şunlardan biri varsa
+ üzerine sağ tıklayın -> "Remove ..." -> soruya "Hayır / No" deyin:
+   modDizme, OtomatikDizme, frmDizme, UserForm1
+ (ThisMacroStorage'a dokunmayın.)
+
+-------------------------------------------------------
+ADIM 2 - Dosyaları içe aktarın
+-------------------------------------------------------
+ 1. Bu ZIP'i masaüstüne çıkarın (sağ tık -> Tümünü ayıkla).
+ 2. Betik Düzenleyicisinde soldaki "GlobalMacros (GlobalMacros.gms)"
+    satırına bir kere tıklayın.
+ 3. File -> Import File...  ile sırayla şu üç dosyayı ekleyin:
+      clsOlay.cls
+      frmDizme.frm
+      modAtolye.bas
+ 4. Ctrl+S ile kaydedin ve düzenleyiciyi kapatın.
+
+-------------------------------------------------------
+ADIM 3 - Üst bara düğmeyi ekleyin (bir kez)
+-------------------------------------------------------
+ 1. Araçlar -> Betikler -> Betikler   (Alt+Shift+F11)
+ 2. GlobalMacros -> modAtolye -> AracCubuguKur  üzerine çift tıklayın.
+ 3. "Atölye Araçları" çubuğu üst bara eklenir. Çubuğu fareyle tutup
+    istediğiniz yere sürükleyebilirsiniz.
+
+-------------------------------------------------------
+ADIM 4 - (Sadece Adım 3 çalışmazsa) Düğmeyi elle ekleme
+-------------------------------------------------------
+ 1. Araçlar -> Seçenekler -> Özelleştirme -> Komutlar
+ 2. Üstteki açılır listeden "Makrolar"ı seçin.
+ 3. "GlobalMacros.modAtolye.Dizme" öğesini üst bardaki bir araç
+    çubuğuna sürükleyip bırakın.
+ 4. Simge için sağdaki "Görünüm" sekmesinden "İçe aktar" ile
+    dizme.ico dosyasını seçin.
+
+-------------------------------------------------------
+KULLANIM
+-------------------------------------------------------
+ 1. Dizilecek nesneleri seçin.
+ 2. Üst bardaki Otomatik Dizme düğmesine basın.
+ 3. Ölçüleri girin; soldaki önizlemede sonucu görün.
+ 4. Tamam'a basın. Beğenmezseniz Ctrl+Z ile tek adımda geri alın.
+
+ Fareyi pencerede bir ayarın üzerinde bekletirseniz ne işe yaradığı yazar.
+
+-------------------------------------------------------
+SORUN OLURSA
+-------------------------------------------------------
+ Hata penceresinin ve (Tamam'a bastıktan sonra) kodda sarı/mavi
+ işaretlenen satırın ekran görüntüsünü gönderin.
