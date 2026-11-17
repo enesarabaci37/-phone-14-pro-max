@@ -195,12 +195,27 @@ Function CorelBul()
                 "CorelDRAW.Application.24", "CorelDRAW.Application.23", "CorelDRAW.Application.22", _
                 "CorelDRAW.Application")
     On Error Resume Next
+    ' 1) Çalışan CorelDRAW'a doğrudan bağlan
     For i = 0 To UBound(ids)
         Err.Clear
         Set o = Nothing
         Set o = GetObject(, ids(i))
         If Err.Number = 0 Then
             If Not o Is Nothing Then
+                Set CorelBul = o
+                Exit Function
+            End If
+        End If
+    Next
+    ' 2) CorelDRAW tek kopya çalışır: CreateObject açık olan pencereye bağlanır
+    For i = 0 To UBound(ids)
+        Err.Clear
+        Set o = Nothing
+        Set o = CreateObject(ids(i))
+        If Err.Number = 0 Then
+            If Not o Is Nothing Then
+                o.Visible = True
+                Err.Clear
                 Set CorelBul = o
                 Exit Function
             End If
