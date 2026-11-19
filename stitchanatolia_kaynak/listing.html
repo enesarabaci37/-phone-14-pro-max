@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,sans-serif;background:#ccc}
+  .img{width:2000px;height:1600px;position:relative;overflow:hidden;margin-bottom:20px}
+  .linen{background:#E9E1D3;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.18) 0 2px,transparent 2px 5px),repeating-linear-gradient(90deg,rgba(120,100,80,.06) 0 2px,transparent 2px 6px)}
+  .frame{position:absolute;left:110px;top:150px;padding:46px;background:#7A5532;background-image:linear-gradient(135deg,rgba(255,255,255,.12),rgba(0,0,0,.18));border-radius:6px;box-shadow:0 40px 80px rgba(60,40,20,.35),0 8px 18px rgba(60,40,20,.25)}
+  .mat{padding:38px;background:#FBF7EE;box-shadow:inset 0 0 0 2px rgba(0,0,0,.06)}
+  .txt{position:absolute;left:1240px;right:90px;top:260px;color:#2A211B}
+  .kick{font-size:28px;letter-spacing:.3em;text-transform:uppercase;color:#B8312F;font-weight:600}
+  h1{font-family:"Cormorant Garamond",serif;font-size:96px;line-height:.98;margin:24px 0 30px}
+  .sub{font-size:34px;line-height:1.45;color:#5A4B40}
+  .badges{display:flex;flex-direction:column;gap:20px;margin-top:56px}
+  .b{display:flex;align-items:center;gap:22px;font-size:30px;font-weight:600}
+  .b i{width:54px;height:54px;border-radius:50%;background:#B8312F;color:#fff;display:grid;place-items:center;font-style:normal;font-size:28px}
+  .pages{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:48px;padding-top:40px}
+  .pages img{height:860px;box-shadow:0 30px 60px rgba(60,40,20,.3);border-radius:6px;background:#fff}
+  .ttl{position:absolute;left:0;right:0;top:80px;text-align:center;font-family:'Cormorant Garamond',serif;font-size:84px;color:#2A211B}
+  .cap{position:absolute;left:0;right:0;bottom:90px;text-align:center;font-size:32px;color:#5A4B40;font-weight:500}
+</style>
+</head>
+<body>
+<script src="pattern.js"></script>
+<div class="img linen" id="m1">
+  <div class="frame"><div class="mat" id="stitch"></div></div>
+  <div class="txt">
+    <div class="kick">Cross Stitch Pattern</div>
+    <h1>Anatolian Kilim<br>“Nazar”</h1>
+    <div class="sub">Traditional Turkish kilim motifs — evil eye, ram’s horn &amp; river path — in a modern cross stitch.</div>
+    <div class="badges">
+      <div class="b"><i>↓</i>PDF · Instant download</div>
+      <div class="b"><i>6</i>DMC colors · full stitches only</div>
+      <div class="b"><i>✕</i>71 × 91 stitches · 5.1 × 6.5 in</div>
+    </div>
+  </div>
+</div>
+<div class="img linen" id="m2">
+  <div class="ttl">What you get</div>
+  <div class="pages"><img src="out/page_2.png"><img src="out/page_3.png"><img src="out/page_4.png"></div>
+  <div class="cap">5-page PDF · Color chart · Printer-friendly symbol chart · DMC key · Stitching guide · Motif meanings</div>
+</div>
+<script>
+const {W,H,grid,colors}=P;
+function stitched(cell,pad){const w=W*cell+pad*2,h=H*cell+pad*2;let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><pattern id="aida" width="${cell}" height="${cell}" patternUnits="userSpaceOnUse" x="${pad}" y="${pad}"><rect width="${cell}" height="${cell}" fill="#F4EEE2"/><circle cx="0" cy="0" r="${cell*0.13}" fill="#E0D5C2"/></pattern></defs><rect width="${w}" height="${h}" fill="url(#aida)"/>`;
+ const sw=cell*0.3;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(!k)continue;const c=colors[k].hex;const x0=pad+x*cell+cell*.14,y0=pad+y*cell+cell*.14,x1=pad+(x+1)*cell-cell*.14,y1=pad+(y+1)*cell-cell*.14;
+  s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" opacity=".9"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${x0+cell*.06}" y1="${y0+cell*.02}" x2="${x1-cell*.1}" y2="${y1-cell*.14}" stroke="rgba(255,255,255,.3)" stroke-width="${sw*.28}" stroke-linecap="round"/>`;}
+ return s+'</svg>';}
+document.getElementById('stitch').innerHTML=stitched(12,14);
+Promise.all([document.fonts.ready,...[...document.images].map(i=>i.complete?1:new Promise(r=>i.onload=r))]).then(()=>document.body.dataset.ready='1');
+</script>
+</body>
+</html>

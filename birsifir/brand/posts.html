@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<style>
+  .cover.blue{background:var(--blue);color:#fff}
+  .cover.blue .title em{color:#BFD3FF}
+  .cover.blue .lead{color:rgba(255,255,255,.85)}
+  .cover.blue .foot{border-top-color:rgba(255,255,255,.25)} .cover.blue .brand .handle{color:rgba(255,255,255,.75)}
+  .cover.blue .swipe{color:#fff} .cover.blue .arrow{background:#fff}
+  .cover.dark{background:var(--ink);color:#fff}
+  .cover.dark .title em{color:#5B8CFF}
+  .cover.dark .lead{color:rgba(255,255,255,.7)}
+  .cover.dark .foot{border-top-color:rgba(255,255,255,.18)} .cover.dark .brand .handle{color:rgba(255,255,255,.6)}
+  .cover.dark .swipe{color:#5B8CFF}
+
+  .cover .art{position:absolute;right:70px;top:700px;width:430px;height:430px}
+  .cover .art svg{width:100%;height:100%;display:block}
+  .cover.has-art .lead{right:540px}
+  /* text slide */
+  .txt{background:var(--paper)}
+  .txt .title{position:absolute;left:80px;right:80px;top:200px;font-size:96px}
+  .txt .title em{font-style:normal;color:var(--blue)}
+  .txt .body{position:absolute;left:80px;right:80px;top:470px;font-size:38px;line-height:1.5;color:var(--ink2)}
+  .list{position:absolute;left:80px;right:80px;display:flex;flex-direction:column;gap:20px}
+  .li{display:flex;gap:26px;align-items:flex-start;background:#fff;border:2px solid var(--line);border-radius:26px;padding:28px 32px;font-size:34px;line-height:1.35;font-weight:600}
+  .li .n{flex:0 0 auto;width:56px;height:56px;border-radius:16px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-family:'Inter Display';font-weight:800;font-size:30px}
+  .li small{display:block;font-weight:400;color:var(--gray);font-size:27px;margin-top:6px}
+  .li.warn .n{background:var(--yellow-soft);color:#8A6500}
+  .note{position:absolute;left:80px;right:80px;bottom:190px;font-size:24px;color:var(--gray)}
+
+  /* step big (no phone) */
+  .stepbig .body{top:420px}
+  .card2{position:absolute;left:80px;right:80px;top:700px;background:#fff;border:2px solid var(--line);border-radius:30px;padding:36px 40px}
+  .card2 .row{display:flex;gap:18px;align-items:center;font-size:30px;font-weight:600;padding:16px 0;flex-wrap:wrap}
+  .card2 .os{flex:0 0 150px;font-size:24px;font-weight:700;color:var(--gray);letter-spacing:.06em;text-transform:uppercase}
+  .crumb{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .crumb b{background:var(--paper);border:2px solid var(--line);padding:6px 14px;border-radius:12px;font-size:26px}
+  .crumb i{font-style:normal;color:var(--gray)}
+  .card2 .sep{height:2px;background:var(--line);margin:6px 0}
+  .tipbox{position:absolute;left:80px;right:80px;top:1010px;background:var(--blue-soft);color:var(--blue-ink);border-radius:24px;padding:28px 34px;font-size:30px;font-weight:600;line-height:1.4}
+
+  /* prompt box */
+  .prompt{position:absolute;left:80px;right:80px;top:420px;background:var(--ink);color:#E8ECF5;border-radius:30px;padding:40px 44px;font-family:'JetBrains Mono',monospace;font-size:29px;line-height:1.55}
+  .prompt .lbl{font-family:Inter;font-weight:700;font-size:22px;letter-spacing:.12em;color:#7FA8FF;margin-bottom:18px}
+  .prompt .ph{color:var(--yellow)}
+
+  /* intro power split */
+  .split{position:absolute;left:80px;right:80px;top:470px;display:flex;gap:30px}
+  .split .half{flex:1;background:#fff;border:2px solid var(--line);border-radius:30px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
+  .split .big{font-family:'Inter Display';font-weight:800;font-size:120px;color:var(--blue);line-height:1}
+  .split .cap{font-size:30px;font-weight:700}
+  .split .cap small{display:block;color:var(--gray);font-weight:500;font-size:24px;margin-top:6px}
+
+  /* call box (warning variant) */
+  .call{position:absolute;left:80px;right:80px;top:620px;background:var(--ink);color:#fff;border-radius:36px;padding:40px 44px}
+  .call .who{font-size:26px;color:rgba(255,255,255,.6);font-weight:600}
+  .call .num{font-family:'Inter Display';font-weight:800;font-size:46px;margin:8px 0 22px}
+  .call .q{background:rgba(255,255,255,.08);border-radius:24px;padding:24px 28px;font-size:29px;line-height:1.45;font-style:italic}
+  .call .btns{display:flex;justify-content:space-around;margin-top:26px}
+  .call .b{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:34px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="art.js"></script>
+<script>
+/* ---------- helpers ---------- */
+function powerSVG(size,bg,fg){
+  const r=250,sw=92,cx=540,cy=575,a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 1080 1080" style="display:block;flex:0 0 auto"><circle cx="540" cy="540" r="540" fill="${bg}"/><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}" fill="none" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${cx}" y1="${cy-r-sw*0.55}" x2="${cx}" y2="${cy-r*0.12}" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round"/></svg>`;
+}
+function outlinePower(size,color,sw=64){
+  const r=250,cx=540,cy=575,a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 1080 1080"><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${cx}" y1="${cy-r-sw*0.55}" x2="${cx}" y2="${cy-r*0.12}" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/></svg>`;
+}
+const ARROW_W='<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ARROW_B='<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" stroke="#0A5CFF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const brand=(white)=>`<div class="brand">${powerSVG(52,white?'#fff':'#0A5CFF',white?'#0A5CFF':'#fff')}Birsıfır <span class="handle">@birsifirteknoloji</span></div>`;
+const chip=(label,style)=>{
+  const S={blue:['var(--blue-soft)','var(--blue)','var(--blue)'],outline:['#fff;border:2px solid var(--line)','var(--ink)','var(--blue)'],yellow:['var(--yellow)','var(--ink)','var(--ink)'],onblue:['rgba(255,255,255,.14)','#fff','#fff'],ondark:['var(--blue)','#fff','#fff']}[style||'blue'];
+  return `<span class="chip" style="background:${S[0]};color:${S[1]}"><span class="dot" style="background:${S[2]}"></span>${label}</span>`;
+};
+const topbar=(c,pg,pgColor)=>`<div class="top">${c}<span class="pg"${pgColor?` style="color:${pgColor}"`:''}>${pg}</span></div>`;
+const crumbs=(arr)=>`<span class="crumb">${arr.map(x=>`<b>${x}</b>`).join('<i>›</i>')}</span>`;
+
+/* ---------- slide builders ---------- */
+const B={
+ cover:(d,pg)=>{const th=d.theme||'white';const onCol=th!=='white';
+   return {cls:`post cover ${th}${d.art?' has-art':''}`,html:`${topbar(chip(d.chip,th==='blue'?'onblue':th==='dark'?'ondark':'blue'),pg,onCol?'rgba(255,255,255,.7)':'')}
+   <div class="title h" style="font-size:${d.fs||132}px">${d.title}</div>${d.art?`<div class="art">${ART[d.art]()}</div>`:''}<div class="lead" style="top:${d.leadTop||800}px">${d.lead}</div>
+   <div class="foot">${brand(th==='blue')}<div class="swipe">Kaydır <span class="arrow">${th==='blue'?ARROW_B:ARROW_W}</span></div></div>`,dark:onCol};},
+ step:(d,pg)=>({cls:'post inner',html:`${topbar(chip(d.chip,'outline'),pg)}<div class="step">${d.n}</div><div class="title h">${d.title}</div><div class="body">${d.body}</div>
+   <div class="phone">${d.ui.map(r=>`<div class="ui-row${r.hl?' hl':''}">${r.t}${r.tgl!==undefined?`<span class="tgl${r.tgl?' on':''}"></span>`:(r.s?`<small>${r.s}</small>`:'')}</div>`).join('')}</div>
+   <div class="path">${d.path.map(x=>`<b>${x}</b>`).join('›')}</div>
+   <div class="foot">${brand()}<div class="pg">Kaydet ⤓</div></div>`}),
+ stepbig:(d,pg)=>({cls:'post inner stepbig',html:`${topbar(chip(d.chip,'outline'),pg)}<div class="step">${d.n}</div><div class="title h">${d.title}</div><div class="body">${d.body}</div>
+   ${d.rows?`<div class="card2">${d.rows.map((r,i)=>(i?'<div class="sep"></div>':'')+`<div class="row"><span class="os">${r.os}</span>${crumbs(r.path)}</div>`).join('')}</div>`:''}
+   ${d.tip?`<div class="tipbox" style="${d.rows?'':'top:700px'}">💡 ${d.tip}</div>`:''}
+   <div class="foot">${brand()}<div class="pg">Kaydet ⤓</div></div>`}),
+ list:(d,pg)=>({cls:'post txt',html:`${topbar(chip(d.chip,d.chipStyle||'outline'),pg)}<div class="title h">${d.title}</div>
+   ${d.body?`<div class="body" style="top:${d.bodyTop||470}px">${d.body}</div>`:''}
+   <div class="list" style="top:${d.listTop||470}px">${d.items.map((it,i)=>`<div class="li${d.warn?' warn':''}"><span class="n">${d.icons?d.icons[i]:i+1}</span><div>${it[0]}${it[1]?`<small>${it[1]}</small>`:''}</div></div>`).join('')}</div>
+   ${d.note?`<div class="note">${d.note}</div>`:''}
+   <div class="foot">${brand()}<div class="pg">${d.footR||'Kaydet ⤓'}</div></div>`}),
+ prompt:(d,pg)=>({cls:'post txt',html:`${topbar(chip(d.chip,'outline'),pg)}<div class="title h" style="font-size:84px">${d.title}</div>
+   <div class="prompt"><div class="lbl">KOPYALA · YAPIŞTIR</div>${d.prompt}</div>
+   ${d.tip?`<div class="tipbox" style="top:${d.tipTop||1020}px">💡 ${d.tip}</div>`:''}
+   <div class="foot">${brand()}<div class="pg">Kaydet ⤓</div></div>`}),
+ split:(d,pg)=>({cls:'post txt',html:`${topbar(chip(d.chip,'outline'),pg)}<div class="title h">${d.title}</div>
+   <div class="split"><div class="half"><svg width="200" height="200" viewBox="0 0 200 200"><line x1="100" y1="30" x2="100" y2="170" stroke="#0A5CFF" stroke-width="30" stroke-linecap="round"/></svg><div class="big">1</div><div class="cap">Çizgi<small>Açık · Var</small></div></div>
+   <div class="half"><svg width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="70" fill="none" stroke="#0A5CFF" stroke-width="30"/></svg><div class="big">0</div><div class="cap">Daire<small>Kapalı · Yok</small></div></div></div>
+   <div class="body" style="top:1010px;font-size:32px">${d.body}</div>
+   <div class="foot">${brand()}<div class="pg">Kaydet ⤓</div></div>`}),
+ warn:(d,pg)=>({cls:'post warn',html:`<div class="band"></div>${topbar(chip('Dikkat','yellow'),d.right||'Dolandırıcılık uyarısı')}
+   <div class="title h">${d.title}</div><div class="stamp">SAHTE</div>${d.box}
+   <div class="tips">${d.tips.map((t,i)=>`<div class="tip"><b>${i+1}</b>${t}</div>`).join('')}</div>
+   <div class="foot">${brand()}<div class="pg">Ailene gönder ↗</div></div>`}),
+ final:(d,pg)=>({cls:'post final',html:`${topbar(chip('Birsıfır','onblue'),pg,'rgba(255,255,255,.7)')}<div class="title h">${d.title||'İşine yaradıysa,<br>bir adım daha.'}</div>
+   <div class="acts">${(d.acts||[['⤓','Kaydet','Lazım olduğunda kaybetme'],['↗','Birine gönder','Ailene, arkadaşına, gruba'],['＋','Takip et','Her gün bir teknoloji ipucu']]).map(a=>`<div class="act"><span class="ic">${a[0]}</span><div>${a[1]}<small>${a[2]}</small></div></div>`).join('')}</div>
+   <div class="foot">${brand(true)}<div></div></div>`,dark:true}),
+};
+
+/* ---------- content ---------- */
+const SMS=`<div class="sms"><div class="from"><span>Bilinmeyen numara</span><span>Bugün 14:32</span></div><div class="msg">Kargonuz adres eksikliği nedeniyle teslim edilemedi. Bilgilerinizi güncellemek için tıklayın: <u>kargo-teslimat-tr.xyz</u></div></div>`;
+const CALL=`<div class="call"><div class="who">Gelen arama · "Banka güvenlik birimi"</div><div class="num">0850 ••• •• ••</div><div class="q">"Hesabınızda şüpheli işlem var. Paranızı korumak için güvenli hesaba aktarmamız gerekiyor. Telefonunuza gelen kodu söyler misiniz?"</div></div>`;
+const POSTS=[
+ {id:'p1',slides:[
+  ['cover',{theme:'blue',art:'binary',chip:'Merhaba',title:'Güç düğmesinde<br>bir <em>sır</em> var.',fs:120,lead:'Her gün bastığın o simge aslında iki rakamdan oluşuyor.'}],
+  ['split',{chip:'Biliyor muydun?',title:'Çizgi <em>1</em>,<br>daire <em>0</em>.',body:'Bilgisayarların dili sadece iki rakamdır: 1 (açık) ve 0 (kapalı). Güç simgesi bu ikisinin birleşimidir. Ekranında gördüğün her şey bu iki rakamdan oluşur.'}],
+  ['final',{title:'Biz de adımızı<br>buradan aldık:<br>Birsıfır.',acts:[['📱','Telefon ipuçları','Bilmediğin pratik özellikler'],['🤖','Yapay zekâ rehberleri','Herkesin anlayacağı dille'],['⚠️','Dolandırıcılık uyarıları','Seni ve aileni korumak için']]}],
+ ]},
+ {id:'p2',slides:[
+  ['cover',{art:'chat',chip:'İpucu',title:'WhatsApp\'ta<br>bilmediğin<br><em>5 özellik</em>',lead:'Çoğu kişi bunları yıllardır kullanmadan geçiyor. Kaydet, sonra lazım olacak.'}],
+  ['step',{chip:'WhatsApp',n:'01',title:'Okundu bilgisini kapat',body:'Mesajı okusan da karşı taraf mavi tiki görmez. Not: Sen de başkalarınınkini göremezsin.',ui:[{t:'Son görülme',s:'Herkes'},{t:'Profil fotoğrafı',s:'Kişilerim'},{t:'Okundu bilgisi',tgl:false,hl:1},{t:'Durum',s:'Kişilerim'}],path:['Ayarlar','Gizlilik','Okundu bilgisi']}],
+  ['step',{chip:'WhatsApp',n:'02',title:'Gönderdiğin mesajı düzelt',body:'Yazım hatası mı yaptın? Gönderdikten sonraki 15 dakika içinde mesajı düzenleyebilirsin.',ui:[{t:'Yanıtla'},{t:'Kopyala'},{t:'Düzenle',hl:1},{t:'Sil'}],path:['Mesaja basılı tut','Düzenle']}],
+  ['step',{chip:'WhatsApp',n:'03',title:'Özel sohbetini kilitle',body:'Kilitli sohbet ayrı bir klasöre taşınır, sadece parmak izi, yüz tanıma veya şifrenle açılır.',ui:[{t:'Medya, bağlantı ve belgeler'},{t:'Süreli mesajlar',s:'Kapalı'},{t:'Sohbet kilidi',tgl:true,hl:1},{t:'Şifreleme'}],path:['Sohbet','Kişi adına dokun','Sohbet kilidi']}],
+  ['step',{chip:'WhatsApp',n:'04',title:'Tek seferlik fotoğraf gönder',body:'Fotoğrafı gönderirken "1" simgesine dokun. Karşı taraf bir kez açar, sonra fotoğraf kaybolur.',ui:[{t:'Fotoğraf seçildi'},{t:'Açıklama ekle…'},{t:'① Bir kez görüntüle',hl:1},{t:'Gönder ➤'}],path:['Fotoğraf seç','"1" simgesi','Gönder']}],
+  ['step',{chip:'WhatsApp',n:'05',title:'Mesajlar kendiliğinden silinsin',body:'Süreli mesajları aç: yazışmalar 24 saat, 7 gün veya 90 gün sonra otomatik silinir.',ui:[{t:'24 saat'},{t:'7 gün',hl:1},{t:'90 gün'},{t:'Kapalı'}],path:['Sohbet','Kişi adına dokun','Süreli mesajlar']}],
+  ['final',{}],
+ ]},
+ {id:'p3',slides:[
+  ['warn',{title:'Bu mesaj gelirse<br><mark>sakın tıklama.</mark>',box:SMS,tips:['Linke tıklama','Bilgi girme','Numarayı engelle']}],
+ ]},
+ {id:'p4',slides:[
+  ['cover',{art:'battery',chip:'Pil',title:'Şarjın<br><em>akşama kadar</em><br>gitsin.',lead:'Telefonunda hemen değiştirebileceğin 5 ayar. 2 dakikanı alır.'}],
+  ['stepbig',{chip:'Pil · 1/5',n:'01',title:'Parlaklığı otomatiğe al',body:'Ekran, pilin en büyük tüketicisidir. Otomatik parlaklık ortam ışığına göre ayarlanır ve gereksiz harcamayı önler.',rows:[{os:'iPhone',path:['Ayarlar','Erişilebilirlik','Ekran ve Metin Boyutu','Otomatik Parlaklık']},{os:'Android',path:['Ayarlar','Ekran','Uyarlamalı parlaklık']}]}],
+  ['stepbig',{chip:'Pil · 2/5',n:'02',title:'Tasarruf modunu aç',body:'Şarj %20\'ye düşmeden açarsan arka plandaki işlemler kısılır ve pil çok daha uzun gider.',rows:[{os:'iPhone',path:['Ayarlar','Pil','Düşük Güç Modu']},{os:'Android',path:['Ayarlar','Pil','Güç tasarrufu']}]}],
+  ['stepbig',{chip:'Pil · 3/5',n:'03',title:'Arka plan yenilemeyi kapat',body:'Kullanmadığın uygulamalar arka planda sürekli internete bağlanıp pil harcar.',rows:[{os:'iPhone',path:['Ayarlar','Genel','Arka Planda Uygulama Yenileme']},{os:'Android',path:['Ayarlar','Uygulamalar','Uygulamayı seç','Pil']}]}],
+  ['stepbig',{chip:'Pil · 4/5',n:'04',title:'Konumu "kullanırken" yap',body:'Haritalar gibi uygulamalar konumunu sadece açıkken kullansın, sürekli değil.',rows:[{os:'iPhone',path:['Ayarlar','Gizlilik ve Güvenlik','Konum Servisleri']},{os:'Android',path:['Ayarlar','Konum','Uygulama konum izinleri']}]}],
+  ['stepbig',{chip:'Pil · 5/5',n:'05',title:'Karanlık modu kullan',body:'OLED ekranlı telefonlarda siyah pikseller kapalıdır, yani neredeyse hiç enerji harcamaz.',rows:[{os:'iPhone',path:['Ayarlar','Ekran ve Parlaklık','Koyu']},{os:'Android',path:['Ayarlar','Ekran','Koyu tema']}]}],
+  ['final',{}],
+ ]},
+ {id:'p5',slides:[
+  ['warn',{title:'Bu arama gelirse<br><mark>hemen kapat.</mark>',right:'Telefon dolandırıcılığı',box:CALL,tips:['Kod ve şifre verme','Para aktarma','Bankanı kendin ara']}],
+ ]},
+ {id:'p6',slides:[
+  ['cover',{art:'ai',theme:'dark',chip:'Yapay Zekâ',title:'Yapay zekâ<br><em>nedir?</em>',lead:'60 saniyede, hiç teknik terim kullanmadan anlatıyoruz.'}],
+  ['list',{chip:'Yapay Zekâ · 1/3',title:'Çok okumuş<br>bir <em>asistan</em> düşün.',listTop:520,items:[['Milyonlarca kitap ve yazıyı "okumuş"','Bu sayede dilimizi ve konuları öğrenmiş'],['Sorduğunu anlar, cevap yazar','Tıpkı bilgili bir arkadaşla yazışmak gibi'],['Telefonundan ücretsiz kullanabilirsin','ChatGPT, Gemini, Claude gibi uygulamalarla']]}],
+  ['list',{chip:'Yapay Zekâ · 2/3',title:'Neler <em>yapabilir?</em>',listTop:430,icons:['✍️','📄','🍲','🌍'],items:[['Dilekçe, mektup, CV yazar'],['Uzun bir metni özetler'],['Evdeki malzemelerle tarif önerir'],['Yabancı dildeki yazıyı çevirir']]}],
+  ['list',{chip:'Yapay Zekâ · 3/3',chipStyle:'yellow',title:'Ama <em>dikkat!</em>',warn:true,listTop:430,icons:['!','!','!'],items:[['Bazen yanlış bilgi verebilir','Sağlık, hukuk, para konularında mutlaka kontrol et'],['Kişisel bilgilerini yazma','TC kimlik no, şifre, kart bilgisi asla'],['Her söylediğine körü körüne güvenme','Bir yardımcıdır, uzman değildir']]}],
+  ['final',{}],
+ ]},
+ {id:'p7',slides:[
+  ['cover',{art:'slow',chip:'Bakım',title:'Telefonun<br><em>yavaşladıysa</em><br>4 adım.',lead:'Yeni telefon almadan önce bunları dene.'}],
+  ['stepbig',{chip:'Bakım · 1/4',n:'01',title:'Yeniden başlat',body:'Haftada bir kapatıp aç. Arka planda biriken işlemler temizlenir, telefon rahatlar.',tip:'En basit ama en çok işe yarayan adım. Çoğu sorun burada çözülür.'}],
+  ['stepbig',{chip:'Bakım · 2/4',n:'02',title:'Hafızada yer aç',body:'Depolama dolunca telefon ciddi şekilde yavaşlar. En az %10 boş alan bırak.',rows:[{os:'iPhone',path:['Ayarlar','Genel','iPhone Saklama Alanı']},{os:'Android',path:['Ayarlar','Depolama']}]}],
+  ['stepbig',{chip:'Bakım · 3/4',n:'03',title:'Kullanmadığın uygulamaları sil',body:'Son 3 ayda açmadığın uygulamalar sadece yer kaplar ve arka planda çalışır.',tip:'WhatsApp\'ta biriken videolar da çok yer kaplar: Ayarlar › Depolama ve veriler › Depolamayı yönet'}],
+  ['stepbig',{chip:'Bakım · 4/4',n:'04',title:'Güncellemeleri yap',body:'Güncellemeler hataları düzeltir ve güvenlik açıklarını kapatır. Ertelemeyi bırak.',rows:[{os:'iPhone',path:['Ayarlar','Genel','Yazılım Güncelleme']},{os:'Android',path:['Ayarlar','Yazılım güncelleme']}]}],
+  ['final',{}],
+ ]},
+ {id:'p8',slides:[
+  ['cover',{art:'cv',theme:'dark',chip:'Yapay Zekâ',title:'CV\'ni<br><em>1 dakikada</em><br>hazırla.',lead:'Tek bir komutla, ücretsiz. Komutu bir sonraki sayfada veriyoruz.'}],
+  ['prompt',{chip:'Yapay Zekâ · 1/3',title:'1. Bu komutu<br>yapay zekâya yapıştır',prompt:'Benim için sade ve profesyonel bir CV hazırla.<br><br>Mesleğim: <span class="ph">[örn. satış danışmanı]</span><br>Deneyimim: <span class="ph">[çalıştığın yerler ve yıllar]</span><br>Eğitimim: <span class="ph">[okul, bölüm]</span><br>Becerilerim: <span class="ph">[bildiğin işler]</span><br><br>Kısa ve güçlü cümleler kullan.',tip:'Köşeli parantezleri kendi bilgilerinle doldur.',tipTop:1060}],
+  ['list',{chip:'Yapay Zekâ · 2/3',title:'2. Sonra bunu<br><em>iste:</em>',listTop:470,icons:['✂️','🎯','🌍'],items:[['"Daha kısa yap, tek sayfaya sığsın"'],['"Başvurduğum iş ilanına göre düzenle"','İlan metnini de yapıştırabilirsin'],['"İngilizcesini de hazırla"']]}],
+  ['list',{chip:'Yapay Zekâ · 3/3',chipStyle:'yellow',title:'3. Şunları <em>yazma!</em>',warn:true,listTop:430,icons:['!','!','!'],items:[['TC kimlik numaran'],['Ev adresin ve telefonun','Bunları CV hazır olunca kendin ekle'],['Yapmadığın işler','Yapay zekâ abartabilir, mutlaka kontrol et']]}],
+  ['final',{}],
+ ]},
+ {id:'p9',slides:[
+  ['cover',{art:'lock',chip:'Güvenlik',title:'Şifren<br><em>123456</em> mı?',lead:'Dünyada en çok kullanılan şifrelerden biri bu. Seninki daha iyi olsun.'}],
+  ['stepbig',{chip:'Güvenlik · 1/4',n:'01',title:'Uzun olsun: en az 12 karakter',body:'Kısa şifreler bilgisayarlar tarafından çok hızlı tahmin edilir. Her ekstra karakter işi katlayarak zorlaştırır.',tip:'Uzunluk, karmaşıklıktan daha önemlidir.'}],
+  ['stepbig',{chip:'Güvenlik · 2/4',n:'02',title:'Cümle şifre kullan',body:'Kendine özel bir cümleyi şifreye çevir. Hatırlaması kolay, tahmin etmesi zor.',tip:'Örnek yapı: Kahvaltıda3Simit+Çay! (Bu örneği kullanma, kendi cümleni bul.)'}],
+  ['stepbig',{chip:'Güvenlik · 3/4',n:'03',title:'Her hesaba farklı şifre',body:'Bir sitedeki şifren çalınırsa, aynı şifreyi kullandığın her hesap tehlikeye girer.',tip:'Telefonundaki şifre yöneticisi şifreleri senin yerine hatırlar ve güçlü şifre önerir.'}],
+  ['stepbig',{chip:'Güvenlik · 4/4',n:'04',title:'İki adımlı doğrulamayı aç',body:'Şifren çalınsa bile, telefonuna gelen kod olmadan hesabına kimse giremez.',tip:'WhatsApp, Instagram, e-posta ve banka uygulamalarında mutlaka aç.'}],
+  ['final',{}],
+ ]},
+];
+
+/* ---------- render ---------- */
+const root=document.getElementById('root');
+POSTS.forEach(p=>{
+  const n=p.slides.length;
+  p.slides.forEach(([type,data],i)=>{
+    const pg=`${i+1} / ${n}`;
+    const r=B[type](data,pg);
+    const div=document.createElement('div');
+    div.className='tpl '+r.cls; div.id=`${p.id}_${i+1}`; div.dataset.post=p.id;
+    div.innerHTML=r.html;
+    const dark=!!r.dark;
+    div.insertAdjacentHTML('afterbegin',`<div class="wm-bleed">${outlinePower(720,dark?'rgba(255,255,255,0.07)':'rgba(10,92,255,0.055)',64)}</div>`);
+    div.insertAdjacentHTML('beforeend',`<div class="wm-side" style="color:${dark?'rgba(255,255,255,.45)':'rgba(107,114,128,.75)'}">@birsifirteknoloji</div>`);
+    root.appendChild(div);
+  });
+});
+document.fonts.ready.then(()=>{
+/* ---------- akış düzeni: taşmaları önle ---------- */
+document.querySelectorAll('.tpl.inner').forEach(t=>{
+  const title=t.querySelector('.title'), body=t.querySelector('.body');
+  const fs=parseFloat(getComputedStyle(title).fontSize);
+  if(title.offsetHeight>fs*1.3) title.style.fontSize='70px';
+  let y=title.offsetTop+title.offsetHeight+30; body.style.top=y+'px';
+  y=body.offsetTop+body.offsetHeight;
+  const phone=t.querySelector('.phone'), path=t.querySelector('.path');
+  if(phone){ const pt=y+44; phone.style.top=pt+'px'; const maxH=(path.offsetTop-24)-pt; phone.style.height=Math.min(470,maxH)+'px'; }
+  const card=t.querySelector('.card2'); if(card){ card.style.top=(y+50)+'px'; y=card.offsetTop+card.offsetHeight; }
+  const tip=t.querySelector('.tipbox'); if(tip){ tip.style.top=(y+(card?30:50))+'px'; if(!card){tip.style.fontSize='34px';tip.style.padding='36px 40px';} }
+});
+
+document.querySelectorAll('.tpl.stepbig').forEach(t=>{
+  const els=['.step','.title','.body','.card2','.tipbox'].map(q=>t.querySelector(q)).filter(Boolean);
+  const topY=Math.min(...els.map(e=>e.offsetTop)), botY=Math.max(...els.map(e=>e.offsetTop+e.offsetHeight));
+  const off=Math.round((190+1170)/2-(topY+botY)/2);
+  if(off>0) els.forEach(e=>e.style.top=(e.offsetTop+off)+'px');
+});
+document.body.dataset.ready='1';});
+</script>
+</body>
+</html>

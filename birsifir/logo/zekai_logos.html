@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Outfit:wght@500;700;800&display=block" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A0F1F; --navy2:#121a33; --white:#F4F7FF; --blue:#2E7BFF; --cyan:#22D3EE; --muted:#8A94B3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#05080f;font-family:'Sora',sans-serif;color:var(--white)}
+  .sheet{width:1600px;padding:60px}
+  h1{font-weight:800;font-size:44px;letter-spacing:.5px;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:20px;margin-bottom:40px}
+  .row{display:flex;gap:40px;align-items:center;background:var(--navy);border:1px solid #1d2747;border-radius:28px;padding:40px;margin-bottom:36px}
+  .num{font-weight:800;font-size:18px;color:var(--cyan);letter-spacing:2px;margin-bottom:10px}
+  .title{font-weight:800;font-size:30px;margin-bottom:8px}
+  .desc{color:#b8c1dd;font-size:17px;line-height:1.5;max-width:330px}
+  .meta{flex:0 0 360px}
+  .avatar{flex:0 0 300px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .avatar .cap{color:var(--muted);font-size:14px}
+  .word{flex:1;min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .word .cap{color:var(--muted);font-size:14px}
+  .single{width:1080px;height:1080px;display:none}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <h1>ZEKAİ · Logo Taslakları</h1>
+  <div class="sub">Zeki · Eğlenceli · Kolay — İnsan zekâsı × Yapay zekâ</div>
+
+  <!-- KONSEPT 1 -->
+  <div class="row">
+    <div class="meta">
+      <div class="num">KONSEPT 1</div>
+      <div class="title">Kesişim</div>
+      <div class="desc">ZEKA (beyaz çizgi) ve AI (mavi çizgi) ortak <b>A</b> harfinde buluşur. İ'nin noktası parlayan bir "yapay zekâ kıvılcımı". Kurumsal ve saygın.</div>
+    </div>
+    <div class="avatar">
+      <svg id="av1" width="260" height="260" viewBox="0 0 1080 1080"></svg>
+      <div class="cap">Profil fotoğrafı</div>
+    </div>
+    <div class="word">
+      <svg id="wm1" width="760" height="300" viewBox="0 0 1000 400"></svg>
+      <div class="cap">Yazı logo</div>
+    </div>
+  </div>
+
+  <!-- KONSEPT 2 -->
+  <div class="row">
+    <div class="meta">
+      <div class="num">KONSEPT 2</div>
+      <div class="title">Kıvılcım</div>
+      <div class="desc">Küçük harf, yuvarlak ve samimi. "ai" mavi, i'nin noktası yapay zekâ simgesi ✦. Genç, modern, sıcak — "Zekai Abi" hissi.</div>
+    </div>
+    <div class="avatar">
+      <svg id="av2" width="260" height="260" viewBox="0 0 1080 1080"></svg>
+      <div class="cap">Profil fotoğrafı</div>
+    </div>
+    <div class="word">
+      <svg id="wm2" width="760" height="300" viewBox="0 0 1000 400"></svg>
+      <div class="cap">Yazı logo</div>
+    </div>
+  </div>
+
+  <!-- KONSEPT 3 -->
+  <div class="row">
+    <div class="meta">
+      <div class="num">KONSEPT 3</div>
+      <div class="title">Anlatan Balon</div>
+      <div class="desc">Konuşma balonu: "Teknolojiyi sana anlatan biri." Profil fotoğrafında "yazıyor…" noktaları — merak uyandırır, bildirim gibi dikkat çeker.</div>
+    </div>
+    <div class="avatar">
+      <svg id="av3" width="260" height="260" viewBox="0 0 1080 1080"></svg>
+      <div class="cap">Profil fotoğrafı</div>
+    </div>
+    <div class="word">
+      <svg id="wm3" width="760" height="300" viewBox="0 0 1000 400"></svg>
+      <div class="cap">Yazı logo</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const el=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const C={navy:'#0A0F1F',navy2:'#141d3a',white:'#F4F7FF',blue:'#2E7BFF',cyan:'#22D3EE',muted:'#8A94B3'};
+
+function defs(svg,id){
+  const d=el('defs',{},svg);
+  const g=el('linearGradient',{id:'bg'+id,x1:0,y1:0,x2:1,y2:1},d);
+  el('stop',{offset:0,'stop-color':C.blue},g);el('stop',{offset:1,'stop-color':C.cyan},g);
+  const glow=el('filter',{id:'glow'+id,x:'-100%',y:'-100%',width:'300%',height:'300%'},d);
+  el('feGaussianBlur',{stdDeviation:10,result:'b'},glow);
+  const m=el('feMerge',{},glow);el('feMergeNode',{in:'b'},m);el('feMergeNode',{in:'SourceGraphic'},m);
+  return d;
+}
+function spark(parent,cx,cy,r,fill,filter){ // 4-point AI sparkle
+  const p=`M ${cx} ${cy-r} C ${cx+r*0.18} ${cy-r*0.18} ${cx+r*0.18} ${cy-r*0.18} ${cx+r} ${cy} C ${cx+r*0.18} ${cy+r*0.18} ${cx+r*0.18} ${cy+r*0.18} ${cx} ${cy+r} C ${cx-r*0.18} ${cy+r*0.18} ${cx-r*0.18} ${cy+r*0.18} ${cx-r} ${cy} C ${cx-r*0.18} ${cy-r*0.18} ${cx-r*0.18} ${cy-r*0.18} ${cx} ${cy-r} Z`;
+  return el('path',{d:p,fill,filter:filter||''},parent);
+}
+
+/* ---------- KONSEPT 1: Kesişim ---------- */
+function concept1Word(svg,{bg=true}={}){
+  const d=defs(svg,'1w');
+  if(bg) el('rect',{x:0,y:0,width:1000,height:400,rx:36,fill:C.navy},svg);
+  // letters drawn individually (dotless I + custom dot)
+  const letters=['Z','E','K','A','I'];
+  const t=el('text',{x:0,y:250,'font-family':'Sora','font-weight':800,'font-size':170,'letter-spacing':6},svg);
+  letters.forEach(l=>{const s=el('tspan',{},t);s.textContent=l;});
+  const w=t.getComputedTextLength(); const x0=(1000-w)/2; t.setAttribute('x',x0);
+  const ex=i=>t.getExtentOfChar(i);
+  // gradient on A spanning white->blue
+  const a=ex(3), iE=ex(4);
+  const ga=el('linearGradient',{id:'ga1',gradientUnits:'userSpaceOnUse',x1:a.x,y1:0,x2:a.x+a.width,y2:0},d);
+  el('stop',{offset:0.15,'stop-color':C.white},ga);el('stop',{offset:0.85,'stop-color':C.blue},ga);
+  const sp=t.querySelectorAll('tspan');
+  [0,1,2].forEach(i=>sp[i].setAttribute('fill',C.white));
+  sp[3].setAttribute('fill','url(#ga1)');
+  sp[4].setAttribute('fill',C.blue);
+  // İ dot = glowing AI dot
+  const dotCx=iE.x+iE.width/2-3, dotCy=62;
+  el('circle',{cx:dotCx,cy:dotCy,r:17,fill:C.cyan,filter:'url(#glow1w)'},svg);
+  // bars: ZEKA white, AI blue, overlapping at A
+  const z=ex(0);
+  el('rect',{x:z.x+4,y:285,width:(a.x+a.width)-z.x-8,height:12,rx:6,fill:C.white},svg);
+  el('rect',{x:a.x+4,y:305,width:(iE.x+iE.width)-a.x-8,height:12,rx:6,fill:C.blue},svg);
+  const tag=el('text',{x:500,y:368,'text-anchor':'middle','font-family':'Sora','font-weight':600,'font-size':24,'letter-spacing':7,fill:C.muted},svg);
+  tag.textContent='ZEKİ · EĞLENCELİ · KOLAY';
+}
+function concept1Avatar(svg){
+  const d=defs(svg,'1a');
+  el('circle',{cx:540,cy:540,r:540,fill:C.navy2},svg);
+  const ga=el('linearGradient',{id:'gz1',x1:0,y1:0,x2:1,y2:1},d);
+  el('stop',{offset:0.35,'stop-color':C.white},ga);el('stop',{offset:1,'stop-color':C.blue},ga);
+  const t=el('text',{x:540,y:745,'text-anchor':'middle','font-family':'Sora','font-weight':800,'font-size':640,fill:'url(#gz1)'},svg);
+  t.textContent='Z';
+  el('circle',{cx:820,cy:255,r:62,fill:C.cyan,filter:'url(#glow1a)'},svg);
+  el('rect',{x:290,y:815,width:330,height:34,rx:17,fill:C.white},svg);
+  el('rect',{x:500,y:868,width:290,height:34,rx:17,fill:C.blue},svg);
+}
+
+/* ---------- KONSEPT 2: Kıvılcım ---------- */
+function concept2Word(svg,{bg=true}={}){
+  const d=defs(svg,'2w');
+  if(bg) el('rect',{x:0,y:0,width:1000,height:400,rx:36,fill:C.navy},svg);
+  const t=el('text',{x:0,y:265,'font-family':'Outfit','font-weight':800,'font-size':230,'letter-spacing':-4},svg);
+  const parts=[['zek',C.white],['a','url(#bg2w)'],['ı','url(#bg2w)']];
+  parts.forEach(([s,f])=>{const sp=el('tspan',{fill:f},t);sp.textContent=s;});
+  const w=t.getComputedTextLength(); t.setAttribute('x',(1000-w)/2);
+  const iE=t.getExtentOfChar(4);
+  spark(svg,iE.x+iE.width/2,98,40,C.cyan,'url(#glow2w)');
+  const tag=el('text',{x:500,y:350,'text-anchor':'middle','font-family':'Outfit','font-weight':500,'font-size':28,'letter-spacing':5,fill:C.muted},svg);
+  tag.textContent='zeki · eğlenceli · kolay';
+}
+function concept2Avatar(svg){
+  const d=defs(svg,'2a');
+  el('circle',{cx:540,cy:540,r:540,fill:'url(#bg2a)'},svg);
+  const t=el('text',{x:500,y:760,'text-anchor':'middle','font-family':'Outfit','font-weight':800,'font-size':700,fill:C.white},svg);
+  t.textContent='z';
+  spark(svg,800,290,120,C.white,'url(#glow2a)');
+  spark(svg,905,470,46,'rgba(255,255,255,.85)');
+}
+
+/* ---------- KONSEPT 3: Anlatan Balon ---------- */
+function bubble(parent,x,y,w,h,r,fill){
+  // rounded rect with tail bottom-left
+  const tx=x+r*0.9, p=`M ${x+r} ${y} H ${x+w-r} Q ${x+w} ${y} ${x+w} ${y+r} V ${y+h-r} Q ${x+w} ${y+h} ${x+w-r} ${y+h} H ${tx+h*0.32} L ${tx-h*0.06} ${y+h+h*0.28} L ${tx+h*0.06} ${y+h} H ${x+r} Q ${x} ${y+h} ${x} ${y+h-r} V ${y+r} Q ${x} ${y} ${x+r} ${y} Z`;
+  return el('path',{d:p,fill},parent);
+}
+function concept3Word(svg,{bg=true}={}){
+  const d=defs(svg,'3w');
+  if(bg) el('rect',{x:0,y:0,width:1000,height:400,rx:36,fill:C.navy},svg);
+  const t=el('text',{x:0,y:0,'font-family':'Sora','font-weight':800,'font-size':140,'letter-spacing':4,fill:C.white},svg);
+  [['ZEK',C.white],['AI',C.navy]].forEach(([s,f])=>{const sp=el('tspan',{fill:f},t);sp.textContent=s;});
+  const w=t.getComputedTextLength();
+  const bw=w+120, bh=200, bx=(1000-bw)/2, by=60;
+  const b=bubble(svg,bx,by,bw,bh,60,'url(#bg3w)');
+  svg.insertBefore(b,t);
+  t.setAttribute('x',bx+60); t.setAttribute('y',by+bh/2+50);
+  // AI highlight pill behind "Aİ"
+  const a=t.getExtentOfChar(3), i=t.getExtentOfChar(4);
+  const pill=el('rect',{x:a.x-10,y:by+35,width:(i.x+i.width)-a.x+20,height:bh-70,rx:26,fill:C.white},svg);
+  svg.insertBefore(pill,t);
+  const tag=el('text',{x:500,y:368,'text-anchor':'middle','font-family':'Sora','font-weight':600,'font-size':24,'letter-spacing':7,fill:C.muted},svg);
+  tag.textContent='TEKNOLOJİ, SADE DİLLE';
+}
+function concept3Avatar(svg){
+  const d=defs(svg,'3a');
+  el('circle',{cx:540,cy:540,r:540,fill:C.navy2},svg);
+  bubble(svg,170,230,740,540,170,'url(#bg3a)');
+  const t=el('text',{x:540,y:590,'text-anchor':'middle','font-family':'Sora','font-weight':800,'font-size':330,fill:C.white},svg);
+  t.textContent='Z';
+  [0,1,2].forEach(k=>el('circle',{cx:430+k*110,cy:690,r:26,fill:C.white,opacity:[1,.7,.45][k]},svg));
+}
+
+function renderAll(){
+  concept1Avatar(document.getElementById('av1'));concept1Word(document.getElementById('wm1'),{bg:false});
+  concept2Avatar(document.getElementById('av2'));concept2Word(document.getElementById('wm2'),{bg:false});
+  concept3Avatar(document.getElementById('av3'));concept3Word(document.getElementById('wm3'),{bg:false});
+  document.body.dataset.ready='1';
+}
+document.fonts.ready.then(()=>Promise.all([
+  document.fonts.load("800 100px Sora"),document.fonts.load("600 100px Sora"),
+  document.fonts.load("800 100px Outfit"),document.fonts.load("500 100px Outfit")
+])).then(renderAll);
+</script>
+</body>
+</html>

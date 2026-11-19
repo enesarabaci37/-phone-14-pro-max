@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<style>
+  .news{background:var(--white)}
+  .news .media{position:absolute;left:80px;right:80px;top:170px;height:560px;border-radius:32px;overflow:hidden}
+  .news .media svg{display:block;width:100%;height:100%}
+  .news .kicker{position:absolute;left:80px;right:80px;top:785px;font-weight:700;font-size:28px;color:var(--blue);letter-spacing:.01em}
+  .news .nhl{position:absolute;left:80px;right:80px;top:830px;font-size:64px;line-height:1.08}
+  .news .sum{position:absolute;left:80px;right:80px;font-size:31px;line-height:1.45;color:var(--ink2)}
+  .news .src{position:absolute;left:80px;right:80px;bottom:150px;font-size:22px;color:var(--gray)}
+  .news .src b{color:var(--ink2);font-weight:600}
+  .newsmark{display:inline-flex;align-items:center;gap:10px}
+  .newsmark .bar{width:6px;height:28px;border-radius:3px;background:var(--blue)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="art.js"></script>
+<script>
+function powerSVG(size,bg,fg){const r=250,sw=92,cx=540,cy=575,a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+ return `<svg width="${size}" height="${size}" viewBox="0 0 1080 1080" style="display:block;flex:0 0 auto"><circle cx="540" cy="540" r="540" fill="${bg}"/><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}" fill="none" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${cx}" y1="${cy-r-sw*0.55}" x2="${cx}" y2="${cy-r*0.12}" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round"/></svg>`;}
+function outlinePower(size,color,sw=64){const r=250,cx=540,cy=575,a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+ return `<svg width="${size}" height="${size}" viewBox="0 0 1080 1080"><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${cx}" y1="${cy-r-sw*0.55}" x2="${cx}" y2="${cy-r*0.12}" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/></svg>`;}
+const NEWS=[
+ {id:'n1',date:'19 Kasım 2026',art:'n_gamepad',kicker:'Oyun',hl:'GTA 6 Türkiye\'de çıktı.',sum:'Yılların beklenen oyunu 19 Kasım 00.00 itibarıyla PS5 ve Xbox Series X|S\'te oynanabiliyor. PC sürümü için henüz tarih yok.',src:'Rockstar Games duyurusu, Habertürk'},
+ {id:'n2',date:'12 Kasım 2026',art:'n_chip',kicker:'Şirketler',hl:'Nvidia\'nın kurucusu 33 yıl sonra görevi bıraktı.',sum:'Jensen Huang CEO\'luktan ve yönetim kurulundan ayrıldı. Kalıcı isim bulunana kadar şirketi finans direktörü Colette Kress yönetecek.',src:'CNN, CNBC, Fortune'},
+ {id:'n3',date:'18 Kasım 2026',art:'n_voyager',kicker:'Uzay',hl:'Voyager 1, insanlığın en uzak noktasına ulaştı.',sum:'1977\'de fırlatılan sonda Dünya\'dan "1 ışık günü" uzakta: yaklaşık 26 milyar km. Gönderilen bir mesaj ona tam 24 saatte ulaşıyor.',src:'NASA, NPR'},
+];
+const root=document.getElementById('root');
+NEWS.forEach(n=>{
+  const d=document.createElement('div'); d.className='tpl post news'; d.id=n.id;
+  d.innerHTML=`<div class="wm-bleed">${outlinePower(720,'rgba(10,92,255,0.055)',64)}</div>
+   <div class="top"><span class="chip" style="background:var(--ink);color:#fff"><span class="dot" style="background:var(--blue)"></span>Kısa Kısa</span><span class="pg">${n.date}</span></div>
+   <div class="media">${ART[n.art]()}</div>
+   <div class="kicker"><span class="newsmark"><span class="bar"></span>${n.kicker}</span></div>
+   <div class="nhl h">${n.hl}</div>
+   <div class="sum">${n.sum}</div>
+   <div class="src">Kaynak: <b>${n.src}</b></div>
+   <div class="foot">${'<div class="brand">'+powerSVG(52,'#0A5CFF','#fff')+'Birsıfır <span class="handle">@birsifirteknoloji</span></div>'}<div class="pg">Haber ✓ doğrulandı</div></div>
+   <div class="wm-side" style="color:rgba(107,114,128,.75)">@birsifirteknoloji</div>`;
+  root.appendChild(d);
+});
+document.fonts.ready.then(()=>{
+  document.querySelectorAll('.news').forEach(t=>{const hl=t.querySelector('.nhl'),s=t.querySelector('.sum');
+    if(hl.offsetHeight>64*1.1*2+4) hl.style.fontSize='56px';
+    s.style.top=(hl.offsetTop+hl.offsetHeight+26)+'px';});
+  document.body.dataset.ready='1';});
+</script>
+</body>
+</html>

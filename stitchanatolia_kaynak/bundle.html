@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;color:#2A211B;background:#999}
+.page{width:210mm;height:297mm;padding:16mm 15mm;position:relative;overflow:hidden;background:#FFFDF8;page-break-after:always}
+.band{position:absolute;left:0;right:0;height:5mm;background:repeating-linear-gradient(90deg,#B8312F 0 6mm,#CFA14A 6mm 8mm,#1F3B5C 8mm 14mm,#CFA14A 14mm 16mm)}
+.kick{font-size:9pt;letter-spacing:.28em;text-transform:uppercase;color:#B8312F;font-weight:600}
+.h{font-family:'Cormorant Garamond',serif;font-weight:700;line-height:1.02}
+.sub{font-size:10.5pt;color:#6B5B4E;line-height:1.5}
+.foot{position:absolute;left:15mm;right:15mm;bottom:9mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#9A8B7E}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5mm;margin-top:8mm;align-items:end}
+.cell{display:flex;flex-direction:column;align-items:center;gap:2mm}
+.cell b{font-family:'Cormorant Garamond',serif;font-size:13pt}
+table{width:100%;border-collapse:collapse;font-size:10pt;margin-top:6mm}
+th{text-align:left;font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;color:#9A8B7E;font-weight:600;padding:2mm;border-bottom:.4mm solid #2A211B}
+td{padding:3mm 2mm;border-bottom:.25mm solid #E7DCCB;vertical-align:middle}
+.note{background:#F6EFE3;border-radius:2.5mm;padding:4mm 5mm;font-size:8.8pt;line-height:1.55;color:#5A4B40;margin-top:7mm}
+/* etsy images */
+.img{width:2000px;height:1600px;position:relative;overflow:hidden;margin:20px;font-family:Inter}
+.linen{position:absolute;inset:0;background:#E9E1D3;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.18) 0 2px,transparent 2px 5px),repeating-linear-gradient(90deg,rgba(120,100,80,.06) 0 2px,transparent 2px 6px)}
+.frame{padding:22px;background:#7A5532;background-image:linear-gradient(135deg,rgba(255,255,255,.12),rgba(0,0,0,.18));border-radius:5px;box-shadow:0 26px 50px rgba(60,40,20,.33)}
+.mat{padding:16px;background:#FBF7EE}
+.ib{position:absolute;left:0;right:0;height:20px;background:repeating-linear-gradient(90deg,#B8312F 0 44px,#CFA14A 44px 56px,#1F3B5C 56px 100px,#CFA14A 100px 112px)}
+.badge{display:inline-flex;align-items:center;gap:16px;background:#B8312F;color:#fff;font-weight:700;font-size:36px;padding:16px 34px;border-radius:999px}
+.row{display:flex;justify-content:center;align-items:flex-end;gap:34px}
+.pin{width:1000px;height:1500px;position:relative;overflow:hidden;margin:20px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="all_patterns.js"></script>
+<script>
+const D=DATA, ORDER=['nazar','tree_of_life','elibelinde','bereket','mini_nazar'];
+const NAME={nazar:'“Nazar” Medallion',tree_of_life:'Tree of Life',elibelinde:'Elibelinde',bereket:'Bereket',mini_nazar:'Mini Nazar Set'};
+const MEAN={nazar:'Evil eye · protection',tree_of_life:'Family · long life',elibelinde:'Motherhood · abundance',bereket:'Abundance · blessing',mini_nazar:'4 quick evil eye motifs'};
+function stitched(P,maxW,maxH,pad=6){const {W,H,grid,colors}=P;const c=Math.min(maxW/W,maxH/H);const w=W*c+pad*2,h=H*c+pad*2;
+ let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="#F4EEE2"/>`;
+ if(c>4)for(let y=0;y<=H;y++)for(let x=0;x<=W;x++)s+=`<circle cx="${pad+x*c}" cy="${pad+y*c}" r="${c*0.12}" fill="#E0D5C2"/>`;
+ const sw=c*.3;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(!k)continue;const col=colors[k].hex;const x0=pad+x*c+c*.14,y0=pad+y*c+c*.14,x1=pad+(x+1)*c-c*.14,y1=pad+(y+1)*c-c*.14;
+ s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" opacity=".9"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"/>`;}
+ return s+'</svg>';}
+const fr=(s,w,h,p=22,m=16)=>`<div class="frame" style="padding:${p}px"><div class="mat" style="padding:${m}px">${stitched(D[s],w,h)}</div></div>`;
+const r=document.getElementById('root');
+// ---- PDF cover
+r.innerHTML+=`<section class="page" id="p_cover"><div class="band" style="top:0"></div>
+ <div style="margin-top:8mm" class="kick">Cross stitch pattern collection · PDF</div>
+ <div class="h" style="font-size:40pt;margin:4mm 0 3mm">The Anatolian Kilim<br>Collection</div>
+ <div class="sub">Five modern cross stitch patterns inspired by traditional Turkish kilim weaving — each motif with its own story and meaning.</div>
+ <div class="grid">${ORDER.map(s=>`<div class="cell">${stitched(D[s],170,200,4)}<b>${NAME[s]}</b></div>`).join('')}
+  <div class="cell" style="justify-content:center;height:100%"><div style="border:.4mm dashed #CFA14A;border-radius:3mm;padding:6mm;text-align:center"><div class="h" style="font-size:30pt;color:#B8312F;line-height:1.3;margin-bottom:1mm">5</div><div style="font-size:9pt;font-weight:600;letter-spacing:.12em">PATTERNS<br>IN ONE PDF</div></div></div></div>
+ <div class="foot"><span>StitchAnatolia · The Anatolian Kilim Collection</span><span>Designed in Taşköprü, Türkiye</span></div><div class="band" style="bottom:0"></div></section>`;
+// ---- contents
+const PAGES={};let p=3;ORDER.forEach(s=>{PAGES[s]=p;p+=5;});
+r.innerHTML+=`<section class="page" id="p_contents"><div class="kick" style="margin-top:4mm">Contents</div><div class="h" style="font-size:26pt;margin-top:2mm">What’s inside</div>
+ <table><tr><th>#</th><th>Pattern</th><th>Meaning</th><th style="text-align:right">Stitches</th><th style="text-align:right">Colors</th><th style="text-align:right">Page</th></tr>
+ ${ORDER.map((s,i)=>`<tr><td><b>${i+1}</b></td><td><b class="h" style="font-size:14pt">${NAME[s]}</b></td><td style="color:#6B5B4E">${MEAN[s]}</td><td style="text-align:right">${D[s].W} × ${D[s].H}</td><td style="text-align:right">${Object.keys(D[s].colors).length}</td><td style="text-align:right"><b>${PAGES[s]}</b></td></tr>`).join('')}</table>
+ <div class="note"><b>How to use this collection</b><br>Each pattern has 5 pages: a cover, the motif meanings with the DMC floss key, a full color chart, a printer-friendly black &amp; white chart and a stitching guide. Print only the pages you need. All patterns use full cross stitches only, on 14 count Aida with 2 strands of DMC floss.</div>
+ <div class="note"><b>Please note:</b> This is a digital PDF — no physical items are included. For personal use only; you may sell items you stitch yourself, but please do not share or resell the pattern files. Thank you for supporting a small designer from Taşköprü, Türkiye!</div>
+ <div class="foot"><span>StitchAnatolia · The Anatolian Kilim Collection</span><span>Page 2</span></div></section>`;
+// ---- etsy image 1
+r.innerHTML+=`<div class="img" id="e1"><div class="linen"></div><div class="ib" style="top:0"></div><div class="ib" style="bottom:0"></div>
+ <div style="position:absolute;left:0;right:0;top:90px;text-align:center"><div style="font-weight:600;font-size:30px;letter-spacing:.3em;color:#B8312F">CROSS STITCH PATTERN BUNDLE</div>
+ <div class="h" style="font-size:110px;margin-top:18px">The Anatolian Kilim Collection</div></div>
+ <div class="row" style="position:absolute;left:0;right:0;top:420px">${['nazar','tree_of_life','elibelinde','bereket'].map(s=>fr(s,280,380)).join('')}</div>
+ <div class="row" style="position:absolute;left:0;right:0;top:1000px">${fr('mini_nazar',300,300)}<div style="text-align:left;margin-left:40px;margin-bottom:20px"><span class="badge">5 patterns · 1 PDF</span>
+ <div style="font-size:38px;font-weight:600;margin-top:30px;color:#2A211B">Save 39% vs. buying separately</div>
+ <div style="font-size:30px;color:#6B5B4E;margin-top:14px">Instant download · DMC keys · Color + B&amp;W charts</div></div></div>
+ <div style="position:absolute;right:80px;bottom:60px" class="h"><span style="font-size:42px;color:#7A5532">StitchAnatolia</span></div></div>`;
+// ---- etsy image 2
+r.innerHTML+=`<div class="img" id="e2"><div class="linen" style="background:#F6EFE3"></div><div class="ib" style="top:0"></div>
+ <div style="position:absolute;left:0;right:0;top:80px;text-align:center" class="h"><span style="font-size:90px">What you get</span></div>
+ <div style="position:absolute;left:120px;right:120px;top:260px;display:grid;grid-template-columns:repeat(5,1fr);gap:30px">
+ ${ORDER.map((s,i)=>`<div style="background:#FBF7EE;border-radius:16px;padding:24px;text-align:center;box-shadow:0 10px 30px rgba(60,40,20,.10)">${stitched(D[s],260,300,4)}<div class="h" style="font-size:36px;margin-top:16px">${NAME[s]}</div><div style="font-size:22px;color:#6B5B4E;margin-top:8px">${D[s].W} × ${D[s].H} · ${Object.keys(D[s].colors).length} colors</div></div>`).join('')}</div>
+ <div style="position:absolute;left:160px;right:160px;top:900px;display:grid;grid-template-columns:1fr 1fr;gap:26px 60px;font-size:34px;line-height:1.3">
+ ${['One 27-page PDF, instant download','Full color chart for every pattern','Printer-friendly black &amp; white charts','DMC floss keys with stitch counts','The meaning behind every kilim motif','Step-by-step stitching guides'].map(t=>`<div style="display:flex;gap:22px;align-items:center"><span style="width:52px;height:52px;border-radius:50%;background:#B8312F;color:#fff;display:grid;place-items:center;font-size:28px;flex:0 0 auto">✓</span>${t}</div>`).join('')}</div>
+ <div style="position:absolute;left:0;right:0;bottom:70px;text-align:center" class="h"><span style="font-size:42px;color:#7A5532">StitchAnatolia</span></div><div class="ib" style="bottom:0"></div></div>`;
+// ---- pinterest pin
+r.innerHTML+=`<div class="pin" id="pin"><div class="linen"></div><div class="ib" style="top:0;height:18px"></div><div class="ib" style="bottom:0;height:18px"></div>
+ <div style="position:absolute;left:0;right:0;top:70px;text-align:center"><div style="font-weight:600;font-size:26px;letter-spacing:.3em;color:#B8312F">5 PATTERNS · 1 PDF</div>
+ <div class="h" style="font-size:86px;margin-top:20px;padding:0 40px">Turkish Kilim Cross Stitch Pattern Bundle</div></div>
+ <div style="position:absolute;left:60px;right:60px;top:430px;display:grid;grid-template-columns:1fr 1fr;gap:26px;justify-items:center">
+ ${['nazar','tree_of_life','elibelinde','bereket'].map(s=>fr(s,300,330,16,12)).join('')}</div>
+ <div style="position:absolute;left:0;right:0;bottom:150px;text-align:center"><span class="badge" style="font-size:30px">Save 39% · Instant PDF</span></div>
+ <div style="position:absolute;left:0;right:0;bottom:62px;text-align:center" class="h"><span style="font-size:44px;color:#7A5532">StitchAnatolia</span></div></div>`;
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+</script>
+</body>
+</html>

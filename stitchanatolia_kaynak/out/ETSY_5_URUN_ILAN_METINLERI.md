@@ -1,0 +1,405 @@
+# StitchAnatolia · 5 Ürünün Etsy İlan Metinleri
+
+Her ürün için: başlığı, 13 etiketi (tek tek) ve açıklamayı ilgili kutulara kopyala.
+
+**Ortak ayarlar (5 ürün için aynı):** Digital files · I did · Kategori: Craft Supplies & Tools → Patterns & How To → **Cross Stitch Patterns**
+
+
+---
+
+## 1. Nazar Madalyonu  ·  Önerilen fiyat: **5,50 $**
+
+**Klasör:** `1_Nazar_Madalyonu` → PDF'i ürün dosyası olarak, 2 görseli ilan görseli olarak yükle.
+
+**Başlık** (137/140):
+```
+Turkish Kilim Cross Stitch Pattern PDF, Evil Eye Nazar Medallion, Geometric Boho Embroidery Chart, Anatolian Rug Design, Instant Download
+```
+
+**Etiketler:**
+```
+kilim cross stitch
+turkish pattern
+evil eye stitch
+nazar cross stitch
+cross stitch pdf
+geometric pattern
+boho cross stitch
+ethnic embroidery
+dmc pattern
+modern cross stitch
+turkish gift
+rug cross stitch
+anatolian motif
+```
+
+**Açıklama:**
+```
+Bring the warmth of a handwoven Turkish rug to your hoop. 🧵
+
+This modern cross stitch pattern is inspired by centuries-old Anatolian kilim weaving. Every motif carries a meaning:
+
+• GÖZ (Evil Eye) – the center medallion, woven to protect the home from envy and harm
+• KOÇBOYNUZU (Ram's Horn) – strength, heroism and fertility
+• SU YOLU (River Path) – the zigzag border, the flow of life and abundance
+• YILDIZ (Star) – happiness and good fortune
+
+Designed in Taşköprü, a small town in northern Türkiye.
+
+━━━━━━━━━━━━━━━━━━━━
+PATTERN DETAILS
+━━━━━━━━━━━━━━━━━━━━
+• Stitch count: 71 × 91
+• Colors: 6 DMC threads (347, 311, 729, 712, 938, 3809)
+• Full cross stitches only – no backstitch, no fractional stitches
+• Skill level: Advanced beginner
+
+Finished size:
+• 14 count Aida: 5.1 × 6.5 in (12.9 × 16.5 cm)
+• 16 count Aida: 4.4 × 5.7 in (11.3 × 14.4 cm)
+• 18 count Aida: 3.9 × 5.1 in (10.0 × 12.8 cm)
+
+━━━━━━━━━━━━━━━━━━━━
+WHAT YOU GET
+━━━━━━━━━━━━━━━━━━━━
+A 5-page PDF (A4, also prints well on US Letter):
+1. Cover with stitched preview
+2. Motif meanings + DMC floss key with stitch counts
+3. Full color chart with symbols
+4. Printer-friendly black & white symbol chart
+5. Step-by-step stitching guide
+
+━━━━━━━━━━━━━━━━━━━━
+PLEASE NOTE
+━━━━━━━━━━━━━━━━━━━━
+• This is a DIGITAL PATTERN. No physical item, fabric or floss will be shipped.
+• Your file is available to download right after purchase.
+• Colors may look slightly different depending on your screen.
+• For personal use only. You may sell items you stitch yourself, but please do not share or resell the pattern file.
+
+More Anatolian kilim patterns in my shop: StitchAnatolia 🧵
+Questions? Send me a message – I'm happy to help! 💛
+```
+
+
+---
+
+## 2. Hayat Ağacı  ·  Önerilen fiyat: **5,50 $**
+
+**Klasör:** `2_Hayat_Agaci` → PDF'i ürün dosyası olarak, 2 görseli ilan görseli olarak yükle.
+
+**Başlık** (136/140):
+```
+Tree of Life Cross Stitch Pattern PDF, Turkish Kilim Embroidery Chart, Anatolian Folk Art, Boho Botanical Cross Stitch, Instant Download
+```
+
+**Etiketler:**
+```
+tree of life stitch
+kilim cross stitch
+turkish pattern
+folk art pattern
+cross stitch pdf
+botanical stitch
+boho cross stitch
+ethnic embroidery
+dmc pattern
+modern cross stitch
+family tree gift
+anatolian motif
+tree cross stitch
+```
+
+**Açıklama:**
+```
+A symbol of life, family and roots — stitched in the colors of a Turkish kilim. 🌳
+
+The Tree of Life is one of the oldest motifs in Anatolian weaving:
+
+• HAYAT AĞACI (Tree of Life) – immortality, family roots and the hope that life goes on
+• GÖZ (Evil Eye) – a protective diamond crowning the tree
+• BAKLAVA (Diamond) – small wishes for protection and good luck
+• SU YOLU (River Path) – the zigzag border, the flow of life and abundance
+
+A meaningful gift for a new home, a wedding or a family celebration.
+
+Designed in Taşköprü, a small town in northern Türkiye.
+
+━━━━━━━━━━━━━━━━━━━━
+PATTERN DETAILS
+━━━━━━━━━━━━━━━━━━━━
+• Stitch count: 61 × 85
+• Colors: 7 DMC threads (347, 311, 729, 712, 938, 3809, 3363)
+• Full cross stitches only – no backstitch, no fractional stitches
+• Skill level: Advanced beginner
+
+Finished size:
+• 14 count Aida: 4.4 × 6.1 in (11.1 × 15.4 cm)
+• 16 count Aida: 3.8 × 5.3 in (9.7 × 13.5 cm)
+• 18 count Aida: 3.4 × 4.7 in (8.6 × 12.0 cm)
+
+━━━━━━━━━━━━━━━━━━━━
+WHAT YOU GET
+━━━━━━━━━━━━━━━━━━━━
+A 5-page PDF (A4, also prints well on US Letter):
+1. Cover with stitched preview
+2. Motif meanings + DMC floss key with stitch counts
+3. Full color chart with symbols
+4. Printer-friendly black & white symbol chart
+5. Step-by-step stitching guide
+
+━━━━━━━━━━━━━━━━━━━━
+PLEASE NOTE
+━━━━━━━━━━━━━━━━━━━━
+• This is a DIGITAL PATTERN. No physical item, fabric or floss will be shipped.
+• Your file is available to download right after purchase.
+• Colors may look slightly different depending on your screen.
+• For personal use only. You may sell items you stitch yourself, but please do not share or resell the pattern file.
+
+More Anatolian kilim patterns in my shop: StitchAnatolia 🧵
+Questions? Send me a message – I'm happy to help! 💛
+```
+
+
+---
+
+## 3. Elibelinde  ·  Önerilen fiyat: **5,50 $**
+
+**Klasör:** `3_Elibelinde` → PDF'i ürün dosyası olarak, 2 görseli ilan görseli olarak yükle.
+
+**Başlık** (136/140):
+```
+Elibelinde Cross Stitch Pattern PDF, Turkish Kilim Goddess Motif, Feminine Folk Art Embroidery Chart, Anatolian Symbol, Instant Download
+```
+
+**Etiketler:**
+```
+kilim cross stitch
+turkish pattern
+goddess cross stitch
+feminine folk art
+cross stitch pdf
+motherhood gift
+boho cross stitch
+ethnic embroidery
+dmc pattern
+modern cross stitch
+elibelinde
+anatolian motif
+women symbol stitch
+```
+
+**Açıklama:**
+```
+Three "hands-on-hips" figures — the ancient Anatolian symbol of women. 🤲
+
+ELİBELİNDE is one of the most beloved kilim motifs, woven by women for thousands of years:
+
+• ELİBELİNDE (Hands on Hips) – motherhood, fertility and the strength of women
+• KOÇBOYNUZU (Ram's Horn) – strength beside the female figure: together, a happy and fertile home
+• BAKLAVA (Diamond) – small wishes for protection and good luck
+• SU YOLU (River Path) – the zigzag border, the flow of life and abundance
+
+A beautiful gift for a mother, a sister or a friend.
+
+Designed in Taşköprü, a small town in northern Türkiye.
+
+━━━━━━━━━━━━━━━━━━━━
+PATTERN DETAILS
+━━━━━━━━━━━━━━━━━━━━
+• Stitch count: 57 × 89
+• Colors: 6 DMC threads (347, 311, 729, 712, 938, 3809)
+• Full cross stitches only – no backstitch, no fractional stitches
+• Skill level: Advanced beginner
+
+Finished size:
+• 14 count Aida: 4.1 × 6.4 in (10.3 × 16.1 cm)
+• 16 count Aida: 3.6 × 5.6 in (9.0 × 14.1 cm)
+• 18 count Aida: 3.2 × 4.9 in (8.0 × 12.6 cm)
+
+━━━━━━━━━━━━━━━━━━━━
+WHAT YOU GET
+━━━━━━━━━━━━━━━━━━━━
+A 5-page PDF (A4, also prints well on US Letter):
+1. Cover with stitched preview
+2. Motif meanings + DMC floss key with stitch counts
+3. Full color chart with symbols
+4. Printer-friendly black & white symbol chart
+5. Step-by-step stitching guide
+
+━━━━━━━━━━━━━━━━━━━━
+PLEASE NOTE
+━━━━━━━━━━━━━━━━━━━━
+• This is a DIGITAL PATTERN. No physical item, fabric or floss will be shipped.
+• Your file is available to download right after purchase.
+• Colors may look slightly different depending on your screen.
+• For personal use only. You may sell items you stitch yourself, but please do not share or resell the pattern file.
+
+More Anatolian kilim patterns in my shop: StitchAnatolia 🧵
+Questions? Send me a message – I'm happy to help! 💛
+```
+
+
+---
+
+## 4. Bereket  ·  Önerilen fiyat: **5,50 $**
+
+**Klasör:** `4_Bereket` → PDF'i ürün dosyası olarak, 2 görseli ilan görseli olarak yükle.
+
+**Başlık** (136/140):
+```
+Turkish Kilim Cross Stitch Pattern PDF, Square Medallion Pillow Design, Geometric Abundance Motif, Anatolian Rug Chart, Instant Download
+```
+
+**Etiketler:**
+```
+kilim cross stitch
+turkish pattern
+square cross stitch
+pillow cross stitch
+cross stitch pdf
+geometric pattern
+boho cross stitch
+ethnic embroidery
+dmc pattern
+modern cross stitch
+housewarming gift
+rug cross stitch
+anatolian motif
+```
+
+**Açıklama:**
+```
+A square kilim medallion of abundance — perfect for a pillow, a framed piece or a housewarming gift. 🌾
+
+BEREKET means abundance and blessing in Turkish:
+
+• BEREKET (Abundance) – layered diamonds wishing for a full table and a home that never lacks
+• KOÇBOYNUZU (Ram's Horn) – four horns facing outward, protecting the abundance
+• GÖZ (Evil Eye) – protective eyes in every corner
+• SU YOLU (River Path) – the zigzag border, the flow of life
+
+Designed in Taşköprü, a small town in northern Türkiye.
+
+━━━━━━━━━━━━━━━━━━━━
+PATTERN DETAILS
+━━━━━━━━━━━━━━━━━━━━
+• Stitch count: 71 × 71
+• Colors: 6 DMC threads (347, 311, 729, 712, 938, 3809)
+• Full cross stitches only – no backstitch, no fractional stitches
+• Skill level: Advanced beginner
+
+Finished size:
+• 14 count Aida: 5.1 × 5.1 in (12.9 × 12.9 cm)
+• 16 count Aida: 4.4 × 4.4 in (11.3 × 11.3 cm)
+• 18 count Aida: 3.9 × 3.9 in (10.0 × 10.0 cm)
+
+━━━━━━━━━━━━━━━━━━━━
+WHAT YOU GET
+━━━━━━━━━━━━━━━━━━━━
+A 5-page PDF (A4, also prints well on US Letter):
+1. Cover with stitched preview
+2. Motif meanings + DMC floss key with stitch counts
+3. Full color chart with symbols
+4. Printer-friendly black & white symbol chart
+5. Step-by-step stitching guide
+
+━━━━━━━━━━━━━━━━━━━━
+PLEASE NOTE
+━━━━━━━━━━━━━━━━━━━━
+• This is a DIGITAL PATTERN. No physical item, fabric or floss will be shipped.
+• Your file is available to download right after purchase.
+• Colors may look slightly different depending on your screen.
+• For personal use only. You may sell items you stitch yourself, but please do not share or resell the pattern file.
+
+More Anatolian kilim patterns in my shop: StitchAnatolia 🧵
+Questions? Send me a message – I'm happy to help! 💛
+```
+
+
+---
+
+## 5. Mini Nazar Seti  ·  Önerilen fiyat: **3,50 $**
+
+**Klasör:** `5_Mini_Nazar_Seti` → PDF'i ürün dosyası olarak, 2 görseli ilan görseli olarak yükle.
+
+**Başlık** (136/140):
+```
+Evil Eye Cross Stitch Pattern Set PDF, 4 Mini Turkish Nazar Designs, Easy Beginner Embroidery, Small Quick Stitch Gift, Instant Download
+```
+
+**Etiketler:**
+```
+evil eye stitch
+nazar cross stitch
+mini cross stitch
+beginner pattern
+cross stitch pdf
+small cross stitch
+quick stitch
+turkish pattern
+evil eye gift
+protection symbol
+dmc pattern
+bookmark pattern
+easy cross stitch
+```
+
+**Açıklama:**
+```
+Four small evil eye motifs — quick, easy and full of meaning. 🧿
+
+The NAZAR BONCUĞU (evil eye bead) is Türkiye's most famous protective symbol. This set includes 4 mini designs:
+
+• Classic Nazar – the famous blue eye bead
+• Kilim Nazar – warm reds and golds
+• Sea Nazar – turquoise and white, like the Aegean coast
+• Earth Nazar – Anatolian earth tones
+
+Each motif is about 2 × 2 inches on 14 count Aida — perfect for cards, bookmarks, ornaments, keychains and small gifts. Great for beginners!
+
+Designed in Taşköprü, a small town in northern Türkiye.
+
+━━━━━━━━━━━━━━━━━━━━
+PATTERN DETAILS
+━━━━━━━━━━━━━━━━━━━━
+• Stitch count: 53 × 53
+• Colors: 10 DMC threads (347, 311, 729, 712, 938, 3809, 820, 3846, Blanc, 310)
+• Full cross stitches only – no backstitch, no fractional stitches
+• Skill level: Beginner
+
+Finished size:
+• 14 count Aida: 3.8 × 3.8 in (9.6 × 9.6 cm)
+• 16 count Aida: 3.3 × 3.3 in (8.4 × 8.4 cm)
+• 18 count Aida: 2.9 × 2.9 in (7.5 × 7.5 cm)
+
+━━━━━━━━━━━━━━━━━━━━
+WHAT YOU GET
+━━━━━━━━━━━━━━━━━━━━
+A 5-page PDF (A4, also prints well on US Letter):
+1. Cover with stitched preview
+2. Motif meanings + DMC floss key with stitch counts
+3. Full color chart with symbols
+4. Printer-friendly black & white symbol chart
+5. Step-by-step stitching guide
+
+━━━━━━━━━━━━━━━━━━━━
+PLEASE NOTE
+━━━━━━━━━━━━━━━━━━━━
+• This is a DIGITAL PATTERN. No physical item, fabric or floss will be shipped.
+• Your file is available to download right after purchase.
+• Colors may look slightly different depending on your screen.
+• For personal use only. You may sell items you stitch yourself, but please do not share or resell the pattern file.
+
+More Anatolian kilim patterns in my shop: StitchAnatolia 🧵
+Questions? Send me a message – I'm happy to help! 💛
+```
+
+
+---
+
+## ⚠️ Yayınlamadan önce
+- **Yapay zekâ beyanı:** Etsy kuralları gerektiriyorsa her açıklamanın sonuna şunu ekle:
+  `This pattern was designed with the help of digital and AI design tools and carefully checked by hand.`
+- **Fiyat:** İlk satış ve yorumlar gelene kadar bu fiyatlarda kalalım. Sonra 1 $ artırırız.
+- **Sıra:** Önce Nazar Madalyonu'nu yükle, sonra diğerlerini aynı gün içinde ekle.

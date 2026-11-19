@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@500;600&display=block" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#999}
+  .box{position:relative;overflow:hidden;margin:20px}
+  .cream{background:#F6EFE3}
+</style>
+</head>
+<body>
+<script src="pattern.js"></script>
+<div class="box cream" id="icon" style="width:1000px;height:1000px"></div>
+<div class="box cream" id="banner" style="width:3360px;height:840px"></div>
+<div class="box cream" id="mini" style="width:1200px;height:300px"></div>
+<script>
+const RED='#B8312F',NAVY='#1F3B5C',GOLD='#CFA14A',CREAM='#F3EBD3',BROWN='#3A2214',TEAL='#3A7C82';
+/* göz motifi: x ilmeklerden oluşan baklava */
+function eyeMotif(cell){
+  const R=6,n=R*2+1;let s='';
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){const d=Math.abs(x-R)+Math.abs(y-R);if(d>R)continue;
+    const c=d>=R?NAVY:d>=4?RED:d>=2?GOLD:d>=1?CREAM:NAVY;
+    const x0=x*cell+cell*.16,y0=y*cell+cell*.16,x1=(x+1)*cell-cell*.16,y1=(y+1)*cell-cell*.16,sw=cell*.3;
+    s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" opacity=".9"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round"/>`;}
+  return {svg:`<svg width="${n*cell}" height="${n*cell}" viewBox="0 0 ${n*cell} ${n*cell}">${s}</svg>`,size:n*cell};
+}
+function zigzag(width,cell,color){let s='';const cols=Math.ceil(width/cell);
+  for(let x=0;x<cols;x++){const t=x%8,o=t<=4?t:8-t;for(const y of [o,o+1]){const x0=x*cell+cell*.16,y0=y*cell+cell*.16,x1=(x+1)*cell-cell*.16,y1=(y+1)*cell-cell*.16,sw=cell*.3;
+    s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" opacity=".9"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/>`;}}
+  return `<svg width="${cols*cell}" height="${6*cell}" viewBox="0 0 ${cols*cell} ${6*cell}">${s}</svg>`;}
+
+/* ikon */
+const ic=document.getElementById('icon');const e=eyeMotif(40);
+ic.innerHTML=`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px">
+  ${e.svg}
+  <div style="font-family:'Cormorant Garamond';font-weight:700;font-size:92px;color:${BROWN};letter-spacing:.01em">StitchAnatolia</div></div>
+  <div style="position:absolute;left:0;right:0;top:0;height:26px;background:repeating-linear-gradient(90deg,${RED} 0 46px,${GOLD} 46px 60px,${NAVY} 60px 106px,${GOLD} 106px 120px)"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:26px;background:repeating-linear-gradient(90deg,${RED} 0 46px,${GOLD} 46px 60px,${NAVY} 60px 106px,${GOLD} 106px 120px)"></div>`;
+
+/* büyük kapak 3360x840 */
+const bn=document.getElementById('banner');const e2=eyeMotif(30);
+bn.innerHTML=`<div style="position:absolute;left:0;right:0;top:40px;opacity:.9">${zigzag(3360,22,RED)}</div>
+ <div style="position:absolute;left:0;right:0;bottom:40px;opacity:.9">${zigzag(3360,22,RED)}</div>
+ <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:70px">
+   ${e2.svg}
+   <div><div style="font-family:Inter;font-weight:600;font-size:36px;letter-spacing:.32em;color:${RED};text-transform:uppercase">Cross stitch patterns</div>
+   <div style="font-family:'Cormorant Garamond';font-weight:700;font-size:170px;line-height:1;color:${BROWN};margin:10px 0 14px">StitchAnatolia</div>
+   <div style="font-family:Inter;font-weight:500;font-size:40px;color:#6B5B4E">Turkish kilim motifs, stitched by you · Designed in Taşköprü, Türkiye</div></div>
+   ${e2.svg}
+ </div>`;
+
+/* mini kapak 1200x300 */
+const mn=document.getElementById('mini');const e3=eyeMotif(12);
+mn.innerHTML=`<div style="position:absolute;left:0;right:0;top:10px;opacity:.85">${zigzag(1200,9,RED)}</div>
+ <div style="position:absolute;left:0;right:0;bottom:10px;opacity:.85">${zigzag(1200,9,RED)}</div>
+ <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:30px">${e3.svg}
+ <div><div style="font-family:'Cormorant Garamond';font-weight:700;font-size:66px;line-height:1;color:${BROWN}">StitchAnatolia</div>
+ <div style="font-family:Inter;font-weight:500;font-size:17px;color:#6B5B4E;margin-top:6px">Turkish kilim cross stitch patterns · Designed in Türkiye</div></div></div>`;
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+</script>
+</body>
+</html>

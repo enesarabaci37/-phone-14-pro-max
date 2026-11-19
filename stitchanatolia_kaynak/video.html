@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@500;600&display=block" rel="stylesheet">
+<style>*{margin:0;padding:0}body{background:#000}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1080"></canvas>
+<script>
+const S = 1080, FPS = 30, DUR = 12, TOTAL = FPS * DUR;
+const slug = (location.hash || '#nazar').slice(1);
+const sc = document.createElement('script'); sc.src = `designs/${slug}/pattern.js`; sc.onload = init; document.body.appendChild(sc);
+const c = document.getElementById('c'), ctx = c.getContext('2d');
+const RED = '#B8312F', NAVY = '#1F3B5C', GOLD = '#CFA14A', BROWN = '#3A2214', CREAM = '#F6EFE3';
+let W, H, grid, colors, meta, cell, ox, oy, stitches = [], fabric, finished;
+const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+
+function drawStitch(g, px, py, cs, col, k = 1, a = 1) {
+  const cx = px + cs / 2, cy = py + cs / 2, h = cs * 0.36 * k, sw = cs * 0.30 * k;
+  g.globalAlpha = a; g.lineCap = 'round'; g.lineWidth = sw; g.strokeStyle = col;
+  g.beginPath(); g.moveTo(cx - h, cy + h); g.lineTo(cx + h, cy - h); g.stroke();
+  g.beginPath(); g.moveTo(cx - h, cy - h); g.lineTo(cx + h, cy + h); g.stroke();
+  g.strokeStyle = 'rgba(255,255,255,.30)'; g.lineWidth = sw * 0.28;
+  g.beginPath(); g.moveTo(cx - h + cs * .06, cy - h + cs * .02); g.lineTo(cx + h - cs * .1, cy + h - cs * .14); g.stroke();
+  g.globalAlpha = 1;
+}
+function makeFabric() {
+  const f = document.createElement('canvas'); f.width = S; f.height = S; const g = f.getContext('2d');
+  g.fillStyle = '#F2EBDD'; g.fillRect(0, 0, S, S);
+  g.fillStyle = '#E2D7C3';
+  const sx = ox % cell, sy = oy % cell;
+  for (let y = sy - cell; y < S + cell; y += cell) for (let x = sx - cell; x < S + cell; x += cell) {
+    g.beginPath(); g.arc(x, y, cell * 0.13, 0, Math.PI * 2); g.fill();
+  }
+  const vg = g.createRadialGradient(S / 2, S / 2, S * 0.35, S / 2, S / 2, S * 0.75);
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(70,45,20,0.16)');
+  g.fillStyle = vg; g.fillRect(0, 0, S, S);
+  return f;
+}
+function makeFinished(cs) {
+  const f = document.createElement('canvas'); f.width = Math.ceil(W * cs + 20); f.height = Math.ceil(H * cs + 20); const g = f.getContext('2d');
+  g.fillStyle = '#F4EEE2'; g.fillRect(0, 0, f.width, f.height);
+  g.fillStyle = '#E0D5C2';
+  for (let y = 0; y <= H + 1; y++) for (let x = 0; x <= W + 1; x++) { g.beginPath(); g.arc(10 + x * cs, 10 + y * cs, cs * 0.13, 0, Math.PI * 2); g.fill(); }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const k = grid[y][x]; if (k) drawStitch(g, 10 + x * cs, 10 + y * cs, cs, colors[k].hex); }
+  return f;
+}
+function kilimBand(y, h) {
+  const seg = [[RED, 36], [GOLD, 10], [NAVY, 36], [GOLD, 10]]; let x = 0, i = 0;
+  while (x < S) { const [col, w] = seg[i++ % 4]; ctx.fillStyle = col; ctx.fillRect(x, y, w, h); x += w; }
+}
+function init() {
+  ({ W, H, grid, colors, meta } = P);
+  cell = Math.min(740 / W, 740 / H);
+  ox = Math.round((S - W * cell) / 2); oy = Math.round((S - H * cell) / 2) + 14;
+  const r = rng(7), cx = W / 2, cy = H / 2;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const k = grid[y][x]; if (k) stitches.push({ x, y, k, d: Math.hypot(x - cx, (y - cy) * 0.9) + r() * 2.2 }); }
+  stitches.sort((a, b) => a.d - b.d);
+  fabric = makeFabric();
+  finished = makeFinished(Math.min(420 / W, 420 / H));
+  Promise.all([document.fonts.load('700 60px "Cormorant Garamond"'), document.fonts.load('600 30px Inter'), document.fonts.load('500 30px Inter')])
+    .then(() => { window.drawFrame = drawFrame; drawFrame(0); document.body.dataset.ready = '1'; });
+}
+function drawFrame(f) {
+  const t = f / FPS;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  // ---------- scene 1: stitching (0 - 9.4s)
+  const zoom = 1 + 0.07 * ease((t - 7.0) / 2.4);
+  ctx.save();
+  ctx.translate(S / 2, S / 2); ctx.scale(zoom, zoom); ctx.translate(-S / 2, -S / 2);
+  ctx.drawImage(fabric, 0, 0);
+  const T0 = 0.5, T1 = 6.6, n = stitches.length, POP = 5;
+  const prog = clamp((t - T0) / (T1 - T0), 0, 1);
+  const shown = Math.floor(n * (1 - Math.pow(1 - prog, 1.35)));
+  const perFrame = n / ((T1 - T0) * FPS);
+  for (let i = 0; i < n; i++) {
+    const s = stitches[i];
+    let k = 1, a = 1;
+    if (i >= shown) { const ahead = (i - shown) / Math.max(perFrame, 1); if (ahead > POP) break; const p = 1 - ahead / POP; k = 0.35 + 0.65 * p; a = p; if (prog >= 1) { k = 1; a = 1; } }
+    drawStitch(ctx, ox + s.x * cell, oy + s.y * cell, cell, colors[s.k].hex, k, a);
+  }
+  // needle sparkle at frontier
+  if (prog > 0 && prog < 1 && shown < n) {
+    const s = stitches[Math.min(shown, n - 1)], nx = ox + (s.x + .5) * cell, ny = oy + (s.y + .5) * cell;
+    ctx.strokeStyle = '#9AA3AD'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(nx + 46, ny - 46); ctx.stroke();
+    ctx.strokeStyle = '#C9CFD6'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(nx + 3, ny - 3); ctx.lineTo(nx + 44, ny - 44); ctx.stroke();
+    ctx.strokeStyle = colors[s.k].hex; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(nx + 44, ny - 44); ctx.quadraticCurveTo(nx + 90, ny - 60, nx + 120, ny - 20); ctx.stroke();
+  }
+  // wooden frame grows in after stitching
+  const fa = ease((t - 6.7) / 0.9);
+  if (fa > 0) {
+    const pad = 34 * fa, bw = 30;
+    const x0 = ox - pad - bw, y0 = oy - pad - bw, w0 = W * cell + 2 * (pad + bw), h0 = H * cell + 2 * (pad + bw);
+    ctx.globalAlpha = fa;
+    ctx.shadowColor = 'rgba(40,25,10,.35)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
+    const gr = ctx.createLinearGradient(x0, y0, x0 + w0, y0 + h0); gr.addColorStop(0, '#8A6038'); gr.addColorStop(1, '#5E3F22');
+    ctx.strokeStyle = gr; ctx.lineWidth = bw; ctx.strokeRect(x0 + bw / 2, y0 + bw / 2, w0 - bw, h0 - bw);
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = '#FBF7EE'; ctx.lineWidth = pad; if (pad > 0) ctx.strokeRect(x0 + bw + pad / 2, y0 + bw + pad / 2, w0 - 2 * bw - pad, h0 - 2 * bw - pad);
+    ctx.globalAlpha = 1;
+  }
+  ctx.restore();
+  // top caption during stitching
+  const capA = ease(t / 0.6) * (1 - ease((t - 8.6) / 0.6));
+  if (capA > 0) {
+    ctx.globalAlpha = capA;
+    ctx.fillStyle = 'rgba(246,239,227,.88)'; roundRect(S / 2 - 210, 22, 420, 44, 22); ctx.fill();
+    ctx.fillStyle = RED; ctx.font = '600 17px Inter'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(spaced('CROSS STITCH PATTERN · PDF'), S / 2, 45);
+    ctx.globalAlpha = 1;
+  }
+  // ---------- scene 2: end card (9.1s - 12s)
+  const ea = ease((t - 9.1) / 0.6);
+  if (ea > 0) {
+    ctx.globalAlpha = ea;
+    ctx.fillStyle = CREAM; ctx.fillRect(0, 0, S, S);
+    kilimBand(0, 16); kilimBand(S - 16, 16);
+    const rise = (1 - ease((t - 9.2) / 0.8)) * 30;
+    const fw = finished.width, fh = finished.height, tx = (S - fw) / 2, ty = 90 + rise;
+    ctx.shadowColor = 'rgba(40,25,10,.25)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10;
+    ctx.fillStyle = '#6E4A2A'; ctx.fillRect(tx - 22, ty - 22, fw + 44, fh + 44);
+    ctx.shadowColor = 'transparent';
+    ctx.drawImage(finished, tx, ty);
+    let y = ty + fh + 82;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = BROWN; ctx.font = '700 64px "Cormorant Garamond"';
+    const title = meta.title.replace(/<br>/g, ' ');
+    fitText(title, S / 2, y, 980, 64);
+    y += 52;
+    ctx.fillStyle = RED; ctx.font = '600 22px Inter'; ctx.fillText(spaced('PDF PATTERN · INSTANT DOWNLOAD'), S / 2, y);
+    y += 40;
+    ctx.fillStyle = '#6B5B4E'; ctx.font = '500 24px Inter';
+    ctx.fillText(`${W} × ${H} stitches  ·  ${Object.keys(colors).length} DMC colors  ·  Full stitches only`, S / 2, y);
+    ctx.fillStyle = '#7A5532'; ctx.font = '700 40px "Cormorant Garamond"'; ctx.fillText('StitchAnatolia', S / 2, S - 70);
+    ctx.fillStyle = '#9A8B7E'; ctx.font = '500 18px Inter'; ctx.fillText('Designed in Taşköprü, Türkiye', S / 2, S - 42);
+    ctx.globalAlpha = 1;
+  }
+  // fade from/to black edges
+  const fadeIn = 1 - ease(t / 0.35);
+  if (fadeIn > 0) { ctx.fillStyle = `rgba(242,235,221,${fadeIn})`; ctx.fillRect(0, 0, S, S); }
+}
+function spaced(s) { return s.split('').join(String.fromCharCode(8202)); }
+function fitText(s, x, y, maxW, size) { let fs = size; ctx.font = `700 ${fs}px "Cormorant Garamond"`; while (ctx.measureText(s).width > maxW && fs > 30) { fs -= 2; ctx.font = `700 ${fs}px "Cormorant Garamond"`; } ctx.fillText(s, x, y); }
+function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+</script>
+</body>
+</html>

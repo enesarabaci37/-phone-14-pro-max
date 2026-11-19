@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --blue:#0A5CFF; --blue-ink:#0847C7; --blue-soft:#E8EFFF;
+    --ink:#0B0F1A; --ink2:#1F2633; --gray:#6B7280; --line:#E3E6EC;
+    --paper:#F6F7F9; --white:#FFFFFF; --yellow:#FFC300; --yellow-soft:#FFF4CC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#d9dce2;font-family:'Inter',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+  .tpl{position:relative;overflow:hidden;margin:40px}
+  .h{font-family:'Inter Display','Inter',sans-serif;font-weight:800;letter-spacing:-0.025em;line-height:1.02}
+  .post{width:1080px;height:1350px}
+  .tall{width:1080px;height:1920px}
+
+  /* shared chrome */
+  .top{position:absolute;left:80px;right:80px;top:72px;display:flex;justify-content:space-between;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:12px;font-weight:700;font-size:26px;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px}
+  .chip .dot{width:12px;height:12px;border-radius:50%}
+  .pg{font-weight:600;font-size:26px;color:var(--gray);font-variant-numeric:tabular-nums}
+  .foot{position:absolute;left:80px;right:80px;bottom:64px;display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:2px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:16px;font-weight:700;font-size:28px}
+  .brand .handle{color:var(--gray);font-weight:500}
+  .swipe{display:flex;align-items:center;gap:12px;font-weight:700;font-size:26px;color:var(--blue)}
+  .arrow{width:48px;height:48px;border-radius:50%;background:var(--blue);display:grid;place-items:center}
+
+  /* cover */
+  .cover{background:var(--white)}
+  .cover .title{position:absolute;left:80px;right:80px;top:300px;font-size:132px}
+  .cover .title em{font-style:normal;color:var(--blue)}
+  .cover .lead{position:absolute;left:80px;right:180px;top:800px;font-size:38px;line-height:1.45;color:var(--ink2)}
+  .bignum{position:absolute;right:56px;top:170px;font-family:'Inter Display';font-weight:800;font-size:420px;color:var(--blue-soft);letter-spacing:-.05em;line-height:1}
+
+  /* inner slide */
+  .inner{background:var(--paper)}
+  .step{position:absolute;left:80px;top:200px;font-family:'Inter Display';font-weight:800;font-size:44px;color:var(--blue);letter-spacing:.02em}
+  .inner .title{position:absolute;left:80px;right:80px;top:265px;font-size:84px}
+  .inner .body{position:absolute;left:80px;right:80px;top:395px;font-size:36px;line-height:1.5;color:var(--ink2)}
+  .phone{position:absolute;left:50%;transform:translateX(-50%);top:555px;width:430px;height:470px;border-radius:56px 56px 0 0;background:var(--white);border:14px solid var(--ink);border-bottom:none;padding:40px 30px 0}
+  .ui-row{display:flex;align-items:center;justify-content:space-between;padding:22px 6px;border-bottom:2px solid var(--line);font-size:26px;font-weight:600}
+  .ui-row small{display:block;font-weight:400;color:var(--gray);font-size:20px;margin-top:4px}
+  .tgl{width:72px;height:42px;border-radius:999px;background:#D7DBE3;position:relative;flex:0 0 auto}
+  .tgl::after{content:'';position:absolute;top:5px;left:5px;width:32px;height:32px;border-radius:50%;background:#fff}
+  .tgl.on{background:var(--blue)} .tgl.on::after{left:35px}
+  .hl{outline:5px solid var(--yellow);outline-offset:6px;border-radius:14px}
+  .path{position:absolute;left:80px;right:80px;top:1065px;display:flex;gap:14px;align-items:center;font-size:26px;font-weight:600;color:var(--gray)}
+  .path b{color:var(--ink);background:var(--white);border:2px solid var(--line);padding:8px 16px;border-radius:12px}
+
+  /* final */
+  .final{background:var(--blue);color:#fff}
+  .final .title{position:absolute;left:80px;right:80px;top:250px;font-size:112px}
+  .final .acts{position:absolute;left:80px;right:80px;top:680px;display:flex;flex-direction:column;gap:22px}
+  .act{display:flex;align-items:center;gap:28px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.22);border-radius:28px;padding:30px 36px;font-size:38px;font-weight:700}
+  .act .ic{width:72px;height:72px;border-radius:20px;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:36px;flex:0 0 auto}
+  .act small{display:block;font-weight:400;font-size:26px;opacity:.8;margin-top:4px}
+  .final .foot{border-top-color:rgba(255,255,255,.25)} .final .brand .handle{color:rgba(255,255,255,.75)}
+
+  /* warning */
+  .warn{background:var(--white)}
+  .warn .band{position:absolute;left:0;right:0;top:0;height:16px;background:var(--yellow)}
+  .warn .title{position:absolute;left:80px;right:80px;top:230px;font-size:104px}
+  .warn .title mark{background:linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 92%, transparent 92%);color:inherit;padding:0 6px}
+  .sms{position:absolute;left:80px;right:80px;top:620px;background:var(--paper);border:2px solid var(--line);border-radius:36px;padding:40px 44px}
+  .sms .from{display:flex;justify-content:space-between;font-size:26px;color:var(--gray);font-weight:600;margin-bottom:22px}
+  .sms .msg{background:#E9EBEF;border-radius:30px 30px 30px 8px;padding:30px 34px;font-size:34px;line-height:1.45}
+  .sms .msg u{color:var(--blue);text-decoration-thickness:3px}
+  .stamp{z-index:3;position:absolute;right:96px;top:548px;transform:rotate(8deg);border:6px solid #D92D20;color:#D92D20;font-family:'Inter Display';font-weight:800;font-size:40px;letter-spacing:.08em;padding:10px 22px;border-radius:14px;background:#fff}
+  .tips{position:absolute;left:80px;right:80px;top:1010px;display:flex;gap:18px}
+  .tip{flex:1;background:var(--yellow-soft);border-radius:24px;padding:24px 26px;font-size:26px;font-weight:600;line-height:1.35}
+  .tip b{display:block;font-family:'Inter Display';font-size:34px;margin-bottom:6px}
+
+  /* reels cover */
+  .reel{background:var(--ink);color:#fff}
+  .reel .safe{position:absolute;left:0;right:0;top:285px;height:1350px}
+  .reel .chip{position:absolute;left:80px;top:120px}
+  .reel .title{position:absolute;left:80px;right:80px;top:420px;font-size:150px}
+  .reel .title em{font-style:normal;color:var(--blue);}
+  .reel .sub{position:absolute;left:80px;right:80px;top:1060px;font-size:40px;color:rgba(255,255,255,.7);line-height:1.4}
+  .reel .brandbar{position:absolute;left:80px;right:80px;bottom:300px;display:flex;align-items:center;gap:18px;font-weight:700;font-size:32px}
+  .reel .brandbar .handle{color:rgba(255,255,255,.6);font-weight:500}
+  .reel .ep{position:absolute;right:80px;top:120px;font-weight:700;font-size:28px;color:rgba(255,255,255,.6)}
+
+  /* story */
+  .story{background:var(--paper)}
+  .story .chip{position:absolute;left:80px;top:220px}
+  .story .q{position:absolute;left:80px;right:80px;top:330px;font-size:104px}
+  .poll{position:absolute;left:80px;right:80px;top:900px;background:#fff;border-radius:40px;box-shadow:0 10px 40px rgba(11,15,26,.08);padding:44px}
+  .poll.ph{background:transparent;box-shadow:none;border:4px dashed #C9CED8;height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}.phi{width:84px;height:84px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:48px;font-weight:700}.pht{font-size:34px;font-weight:700;color:var(--gray);line-height:1.35}.pht span{font-weight:500;font-size:28px}
+  .poll .pq{font-size:34px;font-weight:700;text-align:center;margin-bottom:30px;color:var(--gray)}
+  .opt{display:flex;justify-content:space-between;align-items:center;border:3px solid var(--line);border-radius:26px;padding:30px 36px;font-size:40px;font-weight:700;margin-top:18px}
+  .opt.a{border-color:var(--blue);color:var(--blue)}
+  .story .brandbar{position:absolute;left:0;right:0;bottom:200px;display:flex;justify-content:center;align-items:center;gap:16px;font-weight:700;font-size:30px}
+  .story .brandbar .handle{color:var(--gray);font-weight:500}
+
+
+  /* --- koruma katmanı --- */
+  .wm-bleed{position:absolute;right:-250px;bottom:-215px;width:720px;height:720px;pointer-events:none}
+  .wm-side{position:absolute;right:26px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font-weight:600;font-size:19px;letter-spacing:.22em;white-space:nowrap;pointer-events:none}
+  .wm-center{display:none;position:absolute;inset:0;align-items:center;justify-content:center;z-index:50;pointer-events:none}
+  body.mode-a .wm-center{display:flex} body.mode-a .wm-bleed, body.mode-a .wm-side{display:none}
+  body.mode-none .wm-bleed, body.mode-none .wm-side{display:none}
+  /* logos */
+  .logo-dark{width:1600px;height:600px;background:var(--ink);display:flex;align-items:center;justify-content:center}
+  .logo-light{width:1600px;height:600px;background:#fff;display:flex;align-items:center;justify-content:center}
+  .wm{display:flex;align-items:center;gap:44px}
+  .wm .name{font-family:'Inter Display';font-weight:800;font-size:150px;letter-spacing:-.035em;line-height:1}
+  .wm .sub{font-weight:600;font-size:40px;letter-spacing:.42em;margin-top:14px;padding-left:6px}
+</style>
+</head>
+<body>
+
+<!-- 1. Carousel cover -->
+<div class="tpl post cover" id="t1">
+  <div class="top"><span class="chip" style="background:var(--blue-soft);color:var(--blue)"><span class="dot" style="background:var(--blue)"></span>İpucu</span><span class="pg">1 / 7</span></div>
+  <div class="title h">WhatsApp'ta<br>bilmediğin<br><em>5 özellik</em></div>
+  <div class="lead">Çoğu kişi bunları yıllardır kullanmadan geçiyor. Kaydet, sonra lazım olacak.</div>
+  <div class="foot"><div class="brand" data-logo="blue">Birsıfır <span class="handle">@birsifirteknoloji</span></div><div class="swipe">Kaydır <span class="arrow" data-arrow></span></div></div>
+</div>
+
+<!-- 2. Carousel inner -->
+<div class="tpl post inner" id="t2">
+  <div class="top"><span class="chip" style="background:#fff;color:var(--ink);border:2px solid var(--line)"><span class="dot" style="background:var(--blue)"></span>WhatsApp</span><span class="pg">2 / 7</span></div>
+  <div class="step">01</div>
+  <div class="title h">Okundu bilgisini kapat</div>
+  <div class="body">Mesajı okusan da karşı taraf mavi tiki görmez. Not: Sen de başkalarınınkini göremezsin.</div>
+  <div class="phone">
+    <div class="ui-row">Son görülme<small>Herkes</small></div>
+    <div class="ui-row">Profil fotoğrafı<small>Kişilerim</small></div>
+    <div class="ui-row hl">Okundu bilgisi<span class="tgl"></span></div>
+    <div class="ui-row">Durum<small>Kişilerim</small></div>
+  </div>
+  <div class="path"><b>Ayarlar</b>›<b>Gizlilik</b>›<b>Okundu bilgisi</b></div>
+  <div class="foot"><div class="brand" data-logo="blue">Birsıfır <span class="handle">@birsifirteknoloji</span></div><div class="pg">Kaydet ⤓</div></div>
+</div>
+
+<!-- 3. Carousel final -->
+<div class="tpl post final" id="t3">
+  <div class="top"><span class="chip" style="background:rgba(255,255,255,.14);color:#fff"><span class="dot" style="background:#fff"></span>Birsıfır</span><span class="pg" style="color:rgba(255,255,255,.7)">7 / 7</span></div>
+  <div class="title h">İşine yaradıysa,<br>bir adım daha.</div>
+  <div class="acts">
+    <div class="act"><span class="ic">⤓</span><div>Kaydet<small>Lazım olduğunda kaybetme</small></div></div>
+    <div class="act"><span class="ic">↗</span><div>Birine gönder<small>Ailene, arkadaşına, gruba</small></div></div>
+    <div class="act"><span class="ic">＋</span><div>Takip et<small>Her gün bir teknoloji ipucu</small></div></div>
+  </div>
+  <div class="foot"><div class="brand" data-logo="white">Birsıfır <span class="handle">@birsifirteknoloji</span></div><div></div></div>
+</div>
+
+<!-- 4. Warning -->
+<div class="tpl post warn" id="t4">
+  <div class="band"></div>
+  <div class="top"><span class="chip" style="background:var(--yellow);color:var(--ink)"><span class="dot" style="background:var(--ink)"></span>Dikkat</span><span class="pg">Dolandırıcılık uyarısı</span></div>
+  <div class="title h">Bu mesaj gelirse<br><mark>sakın tıklama.</mark></div>
+  <div class="stamp">SAHTE</div>
+  <div class="sms">
+    <div class="from"><span>Bilinmeyen numara</span><span>Bugün 14:32</span></div>
+    <div class="msg">Kargonuz adres eksikliği nedeniyle teslim edilemedi. Bilgilerinizi güncellemek için tıklayın: <u>kargo-teslimat-tr.xyz</u></div>
+  </div>
+  <div class="tips">
+    <div class="tip"><b>1</b>Linke tıklama</div>
+    <div class="tip"><b>2</b>Bilgi girme</div>
+    <div class="tip"><b>3</b>Numarayı engelle</div>
+  </div>
+  <div class="foot"><div class="brand" data-logo="blue">Birsıfır <span class="handle">@birsifirteknoloji</span></div><div class="pg">Ailene gönder ↗</div></div>
+</div>
+
+<!-- 5. Reels cover -->
+<div class="tpl tall reel" id="t5">
+  <span class="chip" style="background:var(--blue);color:#fff"><span class="dot" style="background:#fff"></span>Yapay Zekâ</span>
+  <div class="ep">Bölüm 01</div>
+  <div class="title h">CV'ni<br><em>1 dakikada</em><br>hazırla.</div>
+  <div class="sub">Tek bir komutla. Ücretsiz.</div>
+  <div class="brandbar" data-logo="blue">Birsıfır <span class="handle">@birsifirteknoloji</span></div>
+</div>
+
+<!-- 6. Story -->
+<div class="tpl tall story" id="t6">
+  <span class="chip" style="background:var(--blue-soft);color:var(--blue)"><span class="dot" style="background:var(--blue)"></span>Günün sorusu</span>
+  <div class="q h">Telefonunu<br>en son ne zaman<br><span style="color:var(--blue)">güncelledin?</span></div>
+  <div class="poll ph"><div class="phi">＋</div><div class="pht">Instagram anket çıkartması<br><span>buraya gelecek</span></div></div>
+  <div class="brandbar" data-logo="blue">Birsıfır <span class="handle">@birsifirteknoloji</span></div>
+</div>
+
+<!-- Logos -->
+<div class="tpl logo-light" id="l1"><div class="wm"><span data-icon="blue" data-size="220"></span><div><div class="name">birsıfır</div><div class="sub" style="color:var(--blue)">TEKNOLOJİ</div></div></div></div>
+<div class="tpl logo-dark" id="l2"><div class="wm"><span data-icon="blue" data-size="220"></span><div><div class="name" style="color:#fff">birsıfır</div><div class="sub" style="color:#7FA8FF">TEKNOLOJİ</div></div></div></div>
+<div class="tpl" id="p1" style="width:1080px;height:1080px;background:transparent"><span data-icon="blue" data-size="1080"></span></div>
+
+<script>
+function powerSVG(size,bg,fg){
+  const r=250,sw=92,cx=540,cy=575,a=Math.PI*0.30;
+  const x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 1080 1080" style="display:block;flex:0 0 auto">
+    <circle cx="540" cy="540" r="540" fill="${bg}"/>
+    <path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}" fill="none" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round"/>
+    <line x1="${cx}" y1="${cy-r-sw*0.55}" x2="${cx}" y2="${cy-r*0.12}" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round"/></svg>`;
+}
+
+function outlinePower(size,color,sw=70){
+  const r=250,cx=540,cy=575,a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 1080 1080"><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${cx}" y1="${cy-r-sw*0.55}" x2="${cx}" y2="${cy-r*0.12}" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/></svg>`;
+}
+document.querySelectorAll('.tpl.post, .tpl.tall').forEach(t=>{
+  const dark=t.classList.contains('final')||t.classList.contains('reel');
+  const c=dark?'rgba(255,255,255,0.07)':'rgba(10,92,255,0.055)';
+  t.insertAdjacentHTML('afterbegin',`<div class="wm-bleed">${outlinePower(720,c,64)}</div>`);
+  t.insertAdjacentHTML('beforeend',`<div class="wm-side" style="color:${dark?'rgba(255,255,255,.45)':'rgba(107,114,128,.75)'}">@birsifirteknoloji</div>`);
+  t.insertAdjacentHTML('beforeend',`<div class="wm-center">${outlinePower(820,dark?'rgba(255,255,255,.16)':'rgba(10,92,255,.13)',80)}</div>`);
+});
+if(location.hash) document.body.classList.add(location.hash.slice(1));
+
+document.querySelectorAll('[data-logo]').forEach(e=>{
+  const white=e.dataset.logo==='white';
+  e.insertAdjacentHTML('afterbegin',powerSVG(e.closest('.tall')?60:52, white?'#fff':'#0A5CFF', white?'#0A5CFF':'#fff'));
+});
+document.querySelectorAll('[data-icon]').forEach(e=>{e.outerHTML=powerSVG(+e.dataset.size,'#0A5CFF','#fff');});
+document.querySelectorAll('[data-arrow]').forEach(e=>{e.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';});
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+</script>
+</body>
+</html>

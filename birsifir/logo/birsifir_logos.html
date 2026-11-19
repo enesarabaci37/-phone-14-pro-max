@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Orbitron:wght@700;900&display=block" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#05080f;font-family:'Sora',sans-serif;color:#F4F7FF}
+  .sheet{width:1600px;padding:60px}
+  h1{font-weight:800;font-size:44px;margin-bottom:6px}
+  .sub{color:#8A94B3;font-size:20px;margin-bottom:40px}
+  .row{display:flex;gap:40px;align-items:center;background:#0A0F1F;border:1px solid #1d2747;border-radius:28px;padding:40px;margin-bottom:36px}
+  .num{font-weight:800;font-size:18px;letter-spacing:2px;margin-bottom:10px}
+  .title{font-weight:800;font-size:30px;margin-bottom:8px}
+  .desc{color:#b8c1dd;font-size:17px;line-height:1.5;max-width:330px}
+  .meta{flex:0 0 360px}
+  .avatar{flex:0 0 300px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .word{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .cap{color:#8A94B3;font-size:14px}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <h1>BİRSIFIR · Logo Taslakları</h1>
+  <div class="sub">1 ve 0: teknolojinin dili · 1-0: her zaman öndesin</div>
+
+  <div class="row">
+    <div class="meta">
+      <div class="num" style="color:#3CF29A">KONSEPT 1</div>
+      <div class="title">Skor Tabelası</div>
+      <div class="desc">Stadyumdaki dijital skorbord gibi parlayan <b>1:0</b>. Hem maç skoru hem bilgisayar dili. İleride Birsıfır Spor'a da birebir uyar.</div>
+    </div>
+    <div class="avatar"><svg id="av1" width="260" height="260" viewBox="0 0 1080 1080"></svg><div class="cap">Profil fotoğrafı</div></div>
+    <div class="word"><svg id="wm1" width="760" height="300" viewBox="0 0 1000 400"></svg><div class="cap">Yazı logo</div></div>
+  </div>
+
+  <div class="row">
+    <div class="meta">
+      <div class="num" style="color:#22D3EE">KONSEPT 2</div>
+      <div class="title">Güç Düğmesi</div>
+      <div class="desc">Her cihazdaki güç simgesi ⏻ aslında <b>1</b> (çizgi) ve <b>0</b> (daire) birleşimidir. "Teknolojiyi aç." Sade, akıllı, uluslararası.</div>
+    </div>
+    <div class="avatar"><svg id="av2" width="260" height="260" viewBox="0 0 1080 1080"></svg><div class="cap">Profil fotoğrafı</div></div>
+    <div class="word"><svg id="wm2" width="760" height="300" viewBox="0 0 1000 400"></svg><div class="cap">Yazı logo</div></div>
+  </div>
+
+  <div class="row">
+    <div class="meta">
+      <div class="num" style="color:#FF7A3D">KONSEPT 3</div>
+      <div class="title">Kıvılcımlı Sıfır</div>
+      <div class="desc">Kalın bir <b>1</b> ve içinde yapay zekâ kıvılcımı ✦ taşıyan bir <b>0</b>. Enerjik turuncu: dikkat çeker, akılda kalır.</div>
+    </div>
+    <div class="avatar"><svg id="av3" width="260" height="260" viewBox="0 0 1080 1080"></svg><div class="cap">Profil fotoğrafı</div></div>
+    <div class="word"><svg id="wm3" width="760" height="300" viewBox="0 0 1000 400"></svg><div class="cap">Yazı logo</div></div>
+  </div>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const C={navy:'#0A0F1F',navy2:'#141d3a',white:'#F4F7FF',muted:'#8A94B3',green:'#3CF29A',green2:'#13C27A',cyan:'#22D3EE',blue:'#2E7BFF',orange:'#FF7A3D',orange2:'#FF3D6E'};
+function glow(d,id,std=10){const f=el('filter',{id,filterUnits:'userSpaceOnUse',x:-2000,y:-2000,width:6000,height:6000},d);el('feGaussianBlur',{stdDeviation:std,result:'b'},f);const m=el('feMerge',{},f);el('feMergeNode',{in:'b'},m);el('feMergeNode',{in:'SourceGraphic'},m);}
+function grad(d,id,a,b,x2=1,y2=1){const g=el('linearGradient',{id,x1:0,y1:0,x2,y2},d);el('stop',{offset:0,'stop-color':a},g);el('stop',{offset:1,'stop-color':b},g);}
+function spark(p,cx,cy,r,fill,filter){const k=0.18;const d=`M ${cx} ${cy-r} C ${cx+r*k} ${cy-r*k} ${cx+r*k} ${cy-r*k} ${cx+r} ${cy} C ${cx+r*k} ${cy+r*k} ${cx+r*k} ${cy+r*k} ${cx} ${cy+r} C ${cx-r*k} ${cy+r*k} ${cx-r*k} ${cy+r*k} ${cx-r} ${cy} C ${cx-r*k} ${cy-r*k} ${cx-r*k} ${cy-r*k} ${cx} ${cy-r} Z`;return el('path',{d,fill,filter:filter||''},p);}
+function centerText(t,cx){const w=t.getComputedTextLength();t.setAttribute('x',cx-w/2);return w;}
+
+/* ---- 1: Skor tabelası ---- */
+function scoreboard(p,x,y,w,h,fs,id){
+  el('rect',{x,y,width:w,height:h,rx:h*0.16,fill:'#060a14',stroke:'#1f2a4a','stroke-width':Math.max(4,h*0.03)},p);
+  // LED dot grid texture
+  const pat=el('pattern',{id:'dots'+id,width:fs*0.09,height:fs*0.09,patternUnits:'userSpaceOnUse'},p.querySelector('defs'));
+  el('circle',{cx:fs*0.045,cy:fs*0.045,r:fs*0.012,fill:'#16203b'},pat);
+  el('rect',{x:x+6,y:y+6,width:w-12,height:h-12,rx:h*0.14,fill:`url(#dots${id})`},p);
+  const t=el('text',{y:y+h/2+fs*0.36,'font-family':'Orbitron','font-weight':900,'font-size':fs,fill:C.green,filter:`url(#g${id})`},p);
+  t.textContent='1:0';centerText(t,x+w/2);
+}
+function c1Word(svg){
+  const d=el('defs',{},svg);glow(d,'g1w',6);
+  scoreboard(svg,60,95,300,190,150,'1w');
+  const t=el('text',{x:400,y:205,'font-family':'Sora','font-weight':800,'font-size':96,'letter-spacing':2,fill:C.white},svg);t.textContent='BİRSIFIR';
+  const s=el('text',{x:404,y:262,'font-family':'Sora','font-weight':600,'font-size':30,'letter-spacing':14,fill:C.green},svg);s.textContent='TEKNOLOJİ';
+}
+function c1Avatar(svg){
+  const d=el('defs',{},svg);glow(d,'g1a',14);
+  el('circle',{cx:540,cy:540,r:540,fill:C.navy2},svg);
+  scoreboard(svg,110,300,860,480,390,'1a');
+}
+
+/* ---- 2: Güç düğmesi ---- */
+function power(p,cx,cy,r,sw,stroke,filter){
+  const a=Math.PI*0.30; // gap half-angle
+  const x1=cx+r*Math.sin(a), y1=cy-r*Math.cos(a), x2=cx-r*Math.sin(a);
+  el('path',{d:`M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}`,fill:'none',stroke,'stroke-width':sw,'stroke-linecap':'round',filter:filter||''},p);
+  el('line',{x1:cx,y1:cy-r-sw*0.55,x2:cx,y2:cy-r*0.12,stroke,'stroke-width':sw,'stroke-linecap':'round',filter:filter||''},p);
+}
+function c2Word(svg){
+  const d=el('defs',{},svg);{const g=el('linearGradient',{id:'p2w',gradientUnits:'userSpaceOnUse',x1:75,y1:90,x2:265,y2:300},d);el('stop',{offset:0,'stop-color':C.blue},g);el('stop',{offset:1,'stop-color':C.cyan},g);}glow(d,'g2w',5);
+  power(svg,170,200,95,30,'url(#p2w)','url(#g2w)');
+  const t=el('text',{x:310,y:232,'font-family':'Sora','font-weight':800,'font-size':104,'letter-spacing':-1,fill:C.white},svg);
+  const a=el('tspan',{},t);a.textContent='bir';const b=el('tspan',{fill:C.cyan},t);b.textContent='sıfır';
+  const s=el('text',{x:316,y:292,'font-family':'Sora','font-weight':600,'font-size':28,'letter-spacing':13,fill:C.muted},svg);s.textContent='TEKNOLOJİ';
+}
+function c2Avatar(svg){
+  const d=el('defs',{},svg);grad(d,'p2a',C.blue,C.cyan);glow(d,'g2a',16);
+  el('circle',{cx:540,cy:540,r:540,fill:'url(#p2a)'},svg);
+  power(svg,540,575,250,92,C.white,'url(#g2a)');
+}
+
+/* ---- 3: Kıvılcımlı sıfır ---- */
+function oneZero(p,x,y,h,fillOne,strokeZero,sparkFill,filter){
+  // "1" as bold slab with flag
+  const w=h*0.22;
+  el('path',{d:`M ${x+w*0.15} ${y+h*0.2} L ${x+w*1.05} ${y} L ${x+w*1.6} ${y} L ${x+w*1.6} ${y+h} L ${x+w*0.6} ${y+h} L ${x+w*0.6} ${y+h*0.32} L ${x+w*0.15} ${y+h*0.42} Z`,fill:fillOne},p);
+  const zx=x+w*1.6+h*0.42, zr=h*0.30, sw=h*0.2;
+  el('ellipse',{cx:zx,cy:y+h/2,rx:zr,ry:h/2-sw/2,fill:'none',stroke:strokeZero,'stroke-width':sw},p);
+  spark(p,zx,y+h/2,h*0.18,sparkFill,filter);
+  return zx+zr+sw/2;
+}
+function c3Word(svg){
+  const d=el('defs',{},svg);grad(d,'o3w',C.orange,C.orange2,0,1);glow(d,'g3w',5);
+  const end=oneZero(svg,70,95,200,C.white,'url(#o3w)',C.white,'url(#g3w)');
+  const t=el('text',{x:end+40,y:205,'font-family':'Sora','font-weight':800,'font-size':92,fill:C.white},svg);t.textContent='BİRSIFIR';
+  const s=el('text',{x:end+44,y:262,'font-family':'Sora','font-weight':600,'font-size':30,'letter-spacing':14,fill:C.orange},svg);s.textContent='TEKNOLOJİ';
+}
+function c3Avatar(svg){
+  const d=el('defs',{},svg);grad(d,'o3a',C.orange,C.orange2);glow(d,'g3a',14);
+  el('circle',{cx:540,cy:540,r:540,fill:'url(#o3a)'},svg);
+  oneZero(svg,250,290,500,C.white,C.white,C.white,'url(#g3a)');
+}
+
+document.fonts.ready.then(()=>Promise.all([document.fonts.load('800 100px Sora'),document.fonts.load('600 100px Sora'),document.fonts.load('900 100px Orbitron')])).then(()=>{
+  c1Avatar(av1);c1Word(wm1);c2Avatar(av2);c2Word(wm2);c3Avatar(av3);c3Word(wm3);
+  document.body.dataset.ready='1';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@500;600;700&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#888;font-family:Inter,sans-serif}
+.pin{width:1000px;height:1500px;position:relative;overflow:hidden;background:#F6EFE3;margin:20px;color:#2A211B}
+.band{position:absolute;left:0;right:0;height:18px;background:repeating-linear-gradient(90deg,#B8312F 0 40px,#CFA14A 40px 52px,#1F3B5C 52px 92px,#CFA14A 92px 104px)}
+.linen{position:absolute;inset:0;background:#E9E1D3;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.18) 0 2px,transparent 2px 5px),repeating-linear-gradient(90deg,rgba(120,100,80,.06) 0 2px,transparent 2px 6px)}
+.kick{font-weight:600;font-size:26px;letter-spacing:.3em;text-transform:uppercase;color:#B8312F}
+.h{font-family:'Cormorant Garamond',serif;font-weight:700;line-height:1}
+.frame{padding:30px;background:#7A5532;background-image:linear-gradient(135deg,rgba(255,255,255,.12),rgba(0,0,0,.18));border-radius:6px;box-shadow:0 30px 60px rgba(60,40,20,.35)}
+.mat{padding:26px;background:#FBF7EE}
+.pill{display:inline-flex;align-items:center;gap:14px;background:#2A211B;color:#fff;font-weight:600;font-size:28px;padding:16px 30px;border-radius:999px}
+.brand{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:44px;color:#7A5532}
+.small{font-size:22px;color:#9A8B7E;font-weight:500}
+.center{position:absolute;left:0;right:0;text-align:center}
+.grid5{position:absolute;left:60px;right:60px;top:360px;display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.cell{background:#FBF7EE;border-radius:14px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(60,40,20,.12)}
+.cell b{font-family:'Cormorant Garamond',serif;font-size:34px}
+.mot{position:absolute;left:70px;right:70px;top:370px;display:flex;flex-direction:column;gap:22px}
+.m{display:flex;gap:30px;align-items:center;background:#FBF7EE;border-radius:20px;padding:20px 30px;box-shadow:0 10px 30px rgba(60,40,20,.10)}
+.m .t b{font-family:'Cormorant Garamond',serif;font-size:46px;display:block;line-height:1.05}
+.m .t i{font-style:normal;color:#B8312F;font-weight:600;font-size:22px;letter-spacing:.12em;text-transform:uppercase}
+.m .t p{font-size:24px;line-height:1.4;color:#5A4B40;margin-top:6px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const SLUGS=['nazar','tree_of_life','elibelinde','bereket','mini_nazar'];
+const D={};let loaded=0;
+{const sc=document.createElement('script');sc.src='all_patterns.js';sc.onload=()=>{Object.assign(D,DATA);build();};document.body.appendChild(sc);}
+function stitched(P,maxW,maxH,pad=10){const {W,H,grid,colors}=P;const cell=Math.min(maxW/W,maxH/H);const w=W*cell+pad*2,h=H*cell+pad*2;
+ let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><pattern id="a${Math.random().toString(36).slice(2)}" width="${cell}" height="${cell}" patternUnits="userSpaceOnUse"></pattern></defs><rect width="${w}" height="${h}" fill="#F4EEE2"/>`;
+ for(let y=0;y<=H;y++)for(let x=0;x<=W;x++)if((x+y)%1===0)s+=`<circle cx="${pad+x*cell}" cy="${pad+y*cell}" r="${cell*0.12}" fill="#E0D5C2"/>`;
+ const sw=cell*.3;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(!k)continue;const c=colors[k].hex;const x0=pad+x*cell+cell*.14,y0=pad+y*cell+cell*.14,x1=pad+(x+1)*cell-cell*.14,y1=pad+(y+1)*cell-cell*.14;
+ s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" opacity=".9"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${x0+cell*.06}" y1="${y0+cell*.02}" x2="${x1-cell*.1}" y2="${y1-cell*.14}" stroke="rgba(255,255,255,.3)" stroke-width="${sw*.28}" stroke-linecap="round"/>`;}
+ return s+'</svg>';}
+const NAME={nazar:['Evil Eye','“Nazar”'],tree_of_life:['Tree of Life','“Hayat Ağacı”'],elibelinde:['Elibelinde','“Hands on Hips”'],bereket:['Bereket','“Abundance”'],mini_nazar:['Mini Evil Eye','Set of 4']};
+const HOOK={nazar:'Turkish Kilim Cross Stitch Pattern',tree_of_life:'Tree of Life Cross Stitch Pattern',elibelinde:'Anatolian Goddess Cross Stitch',bereket:'Kilim Pillow Cross Stitch Pattern',mini_nazar:'Easy Evil Eye Cross Stitch'};
+function productPin(s,variant){const P=D[s];const [n1,n2]=NAME[s];
+ if(variant==='a') return `<div class="pin" id="pin_${s}_a"><div class="linen"></div><div class="band" style="top:0"></div>
+  <div class="center" style="top:70px"><div class="kick">${s==='mini_nazar'?'Beginner friendly':'Cross stitch pattern'}</div>
+  <div class="h" style="font-size:84px;margin-top:22px;padding:0 50px">${HOOK[s]}</div></div>
+  <div class="center" style="top:${s==='bereket'||s==='mini_nazar'?380:340}px;display:flex;justify-content:center"><div class="frame"><div class="mat">${stitched(P,640,760)}</div></div></div>
+  <div class="center" style="bottom:150px"><span class="pill">↓ Instant PDF download</span></div>
+  <div class="center" style="bottom:62px"><div class="brand">StitchAnatolia</div></div>
+  <div class="band" style="bottom:0"></div></div>`;
+ return `<div class="pin" id="pin_${s}_b"><div class="band" style="top:0"></div>
+  <div class="center" style="top:60px;display:flex;justify-content:center">${stitched(P,880,880,14)}</div>
+  <div class="center" style="top:1000px"><div class="h" style="font-size:96px">${n1}</div><div class="h" style="font-size:56px;color:#B8312F;margin-top:10px">${n2}</div>
+  <div style="font-size:28px;color:#5A4B40;margin-top:28px;font-weight:500">${P.W} × ${P.H} stitches · ${Object.keys(P.colors).length} DMC colors · Full stitches only</div></div>
+  <div class="center" style="bottom:60px"><div class="brand">StitchAnatolia</div><div class="small">Turkish kilim cross stitch patterns</div></div>
+  <div class="band" style="bottom:0"></div></div>`;}
+function collectionPin(){return `<div class="pin" id="pin_collection"><div class="linen"></div><div class="band" style="top:0"></div>
+ <div class="center" style="top:80px"><div class="kick">5 patterns · Instant PDF</div><div class="h" style="font-size:92px;margin-top:22px">Turkish Kilim<br>Cross Stitch Patterns</div></div>
+ <div class="grid5">${['nazar','tree_of_life','elibelinde','bereket'].map(s=>`<div class="cell">${stitched(D[s],330,330,6)}<b>${NAME[s][0]}</b></div>`).join('')}</div>
+ <div class="center" style="bottom:66px"><div class="brand">StitchAnatolia</div><div class="small">Designed in Taşköprü, Türkiye</div></div>
+ <div class="band" style="bottom:0"></div></div>`;}
+function icon(kind){const I={eye:`<path d="M14 4 L24 14 L14 24 L4 14 Z" fill="#1F3B5C"/><path d="M14 7 L21 14 L14 21 L7 14 Z" fill="#B8312F"/><path d="M14 10.5 L17.5 14 L14 17.5 L10.5 14 Z" fill="#CFA14A"/><circle cx="14" cy="14" r="1.4" fill="#1F3B5C"/>`,
+ tree:`<rect x="13" y="8" width="2.4" height="15" fill="#3A2214"/><path d="M14 16 L7 11 M14 16 L21 11 M14 12 L9 8 M14 12 L19 8" stroke="#5E7A4E" stroke-width="2.2"/><path d="M8 24 H20 L18 22 H10 Z" fill="#B8312F"/>`,
+ hands:`<path d="M14 4 L16 6 L14 8 L12 6 Z" fill="#B8312F"/><path d="M8 10 H20 M8 10 Q5 13 9 16 M20 10 Q23 13 19 16" fill="none" stroke="#B8312F" stroke-width="2"/><path d="M14 13 L20 24 H8 Z" fill="#B8312F"/>`,
+ ram:`<path d="M6 6 V10 H8 V12 H10 V14 H18 V12 H20 V10 H22 V6" fill="none" stroke="#3A2214" stroke-width="2.4"/>`,
+ water:`<path d="M2 18 L7 10 L12 18 L17 10 L22 18 L27 10" fill="none" stroke="#B8312F" stroke-width="2.6"/>`};
+ return `<svg width="112" height="112" viewBox="0 0 28 28" style="flex:0 0 auto"><rect width="28" height="28" rx="5" fill="#F0E6D4"/>${I[kind]}</svg>`;}
+function meaningPin(){const M=[['eye','Göz','Evil eye','Protects the home from envy and harm'],['tree','Hayat Ağacı','Tree of life','Family roots, long life and continuity'],['hands','Elibelinde','Hands on hips','Motherhood and the strength of women'],['ram','Koçboynuzu','Ram’s horn','Strength, heroism and fertility'],['water','Su Yolu','River path','The flow of life and abundance']];
+ return `<div class="pin" id="pin_meanings"><div class="band" style="top:0"></div>
+ <div class="center" style="top:80px"><div class="kick">Anatolian symbols</div><div class="h" style="font-size:90px;margin-top:20px">What Turkish Kilim<br>Motifs Mean</div></div>
+ <div class="mot">${M.map(m=>`<div class="m">${icon(m[0])}<div class="t"><i>${m[2]}</i><b>${m[1]}</b><p>${m[3]}</p></div></div>`).join('')}</div>
+ <div class="center" style="bottom:56px"><div class="brand">StitchAnatolia</div><div class="small">Kilim cross stitch patterns · Save for later ♡</div></div>
+ <div class="band" style="bottom:0"></div></div>`;}
+function coverPin(){const L=['nazar','tree_of_life','elibelinde','bereket'];
+ return `<div id="pin_cover" style="width:1920px;height:1080px;position:relative;overflow:hidden;background:#F6EFE3;margin:20px">
+ <div class="linen"></div><div class="band" style="top:0;height:22px"></div><div class="band" style="bottom:0;height:22px"></div>
+ <div class="center" style="top:120px"><div class="kick" style="font-size:28px">Turkish kilim cross stitch patterns</div>
+ <div class="h" style="font-size:120px;margin-top:20px;color:#3A2214">StitchAnatolia</div></div>
+ <div style="position:absolute;left:0;right:0;top:400px;display:flex;justify-content:center;align-items:center;gap:46px">
+ ${L.map(s=>`<div class="frame" style="padding:20px"><div class="mat" style="padding:16px">${stitched(D[s],250,330,6)}</div></div>`).join('')}</div>
+ <div class="center" style="bottom:70px;font-size:30px;color:#5A4B40;font-weight:500">Evil eye · Tree of life · Elibelinde · Bereket &nbsp;—&nbsp; Instant PDF downloads</div>
+ </div>`;}
+function build(){let h='';SLUGS.forEach(s=>{h+=productPin(s,'a')+productPin(s,'b');});h+=collectionPin()+meaningPin()+coverPin();
+ document.getElementById('root').innerHTML=h;document.fonts.ready.then(()=>document.body.dataset.ready='1');}
+</script>
+</body>
+</html>

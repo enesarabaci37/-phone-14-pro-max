@@ -1,0 +1,33 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=block" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#05080f;font-family:'Sora',sans-serif;color:#F4F7FF}
+.sheet{width:1600px;padding:60px}h1{font-weight:800;font-size:44px;margin-bottom:6px}.sub{color:#8A94B3;font-size:20px;margin-bottom:40px}
+.row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}
+.card{background:#0A0F1F;border:1px solid #1d2747;border-radius:24px;padding:28px 18px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.n{font-weight:800;font-size:22px}.h{font-family:monospace;color:#8A94B3;font-size:15px}.d{color:#b8c1dd;font-size:14px;line-height:1.45;min-height:60px}
+.tag{font-weight:800;font-size:13px;letter-spacing:2px;padding:6px 12px;border-radius:999px}
+.note{margin-top:30px;background:#0A0F1F;border:1px solid #1d2747;border-radius:20px;padding:22px 28px;color:#b8c1dd;font-size:17px;line-height:1.6}
+</style></head><body><div class="sheet" id="sheet">
+<h1>BİRSIFIR · Renk Ailesi</h1><div class="sub">Aynı simge, aynı yazı tipi, aynı şablon — sadece renk değişir</div>
+<div class="row" id="row"></div>
+<div class="note">⚽ Spor için <b>çim yeşili</b> seçildi: Türkiye'de sarı-lacivert, sarı-kırmızı, siyah-beyaz, bordo-mavi takım renkleridir. Spor sayfası hiçbir takımı çağrıştırmamalı.</div>
+</div><script>
+const NS='http://www.w3.org/2000/svg';const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+function power(p,cx,cy,r,sw,stroke){const a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+el('path',{d:`M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}`,fill:'none',stroke,'stroke-width':sw,'stroke-linecap':'round'},p);
+el('line',{x1:cx,y1:cy-r-sw*0.55,x2:cx,y2:cy-r*0.12,stroke,'stroke-width':sw,'stroke-linecap':'round'},p);}
+const F=[
+ {n:'Teknoloji',bg:'#0A5CFF',fg:'#fff',h:'#0A5CFF',d:'Güven, akıl, gelecek. İlk açacağımız sayfa.',u:'birsifirteknoloji'},
+ {n:'Spor',bg:'#00C26E',fg:'#fff',h:'#00C26E',d:'Çim sahası rengi. Hiçbir takımı çağrıştırmaz.',u:'birsifirspor'},
+ {n:'Haber',bg:'#E5192E',fg:'#fff',h:'#E5192E',d:'"Son dakika" rengi. Herkes kırmızıyı haberle eşleştirir.',u:'birsifirhaber'},
+ {n:'Magazin',bg:'#FF2E93',fg:'#fff',h:'#FF2E93',d:'Pembe/fuşya: eğlence, ünlüler, renkli dünya.',u:'birsifirmagazin'},
+ {n:'Ekonomi',bg:'#FFC300',fg:'#111',h:'#FFC300',d:'Altın sarısı: para, altın, borsa. Sarıyı buraya saklıyoruz.',u:'birsifirekonomi'},
+];
+const row=document.getElementById('row');
+F.forEach(f=>{const c=document.createElement('div');c.className='card';
+const s=el('svg',{width:180,height:180,viewBox:'0 0 1080 1080'});el('circle',{cx:540,cy:540,r:540,fill:f.bg},s);power(s,540,575,250,92,f.fg);
+c.innerHTML=`<div class="n">${f.n}</div>`;c.appendChild(s);
+c.insertAdjacentHTML('beforeend',`<div class="tag" style="background:${f.bg};color:${f.fg}">BİRSIFIR ${f.n.toLocaleUpperCase('tr')}</div><div class="h">${f.h}</div><div class="d">${f.d}</div><div class="h">@${f.u}</div>`);
+row.appendChild(c);});
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+</script></body></html>

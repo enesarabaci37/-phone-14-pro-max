@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=block" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#05080f;font-family:'Sora',sans-serif;color:#F4F7FF}
+  .sheet{width:1600px;padding:60px}
+  h1{font-weight:800;font-size:44px;margin-bottom:6px}
+  .sub{color:#8A94B3;font-size:20px;margin-bottom:40px}
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+  .card{min-width:0;background:#0A0F1F;border:1px solid #1d2747;border-radius:26px;padding:30px;display:flex;flex-direction:column;align-items:center;gap:18px}
+  .lbl{font-weight:800;font-size:22px}
+  .hint{color:#8A94B3;font-size:15px;text-align:center;line-height:1.4;min-height:42px}
+  .tiny{display:flex;align-items:center;gap:10px;background:#000;border-radius:14px;padding:10px 12px;flex:1;min-width:0}
+  .tiny.light{background:#fff;color:#111}
+  .tiny .u{font-size:15px;font-weight:600}
+  .tiny .u small{display:block;font-weight:400;opacity:.6;font-size:12px}
+  .pair{display:flex;gap:10px;width:100%}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <h1>Güç Düğmesi · Net Renk Seçenekleri</h1>
+  <div class="sub">Alttaki küçük satırlar: Instagram'da (karanlık ve aydınlık modda) gerçek boyutta nasıl göründüğü</div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const V=[
+  {k:'A',name:'Şu anki (geçişli)',bg:'grad',fg:'#F4F7FF',hint:'Referans için: maviden turkuaza geçiş.'},
+  {k:'B',name:'Elektrik Mavisi',bg:'#0A5CFF',fg:'#FFFFFF',hint:'Düz, canlı mavi + beyaz. Net, güven veren, klasik teknoloji rengi.'},
+  {k:'C',name:'Gece Neonu',bg:'#000000',fg:'#00B2FF',glow:true,hint:'Siyah zemin + parlayan neon mavi. Havalı, gamer/teknoloji hissi.'},
+  {k:'D',name:'Beyaz Temiz',bg:'#FFFFFF',fg:'#0A5CFF',ring:'#E6ECFF',hint:'Beyaz zemin + mavi simge. Apple tarzı sade ve ferah.'},
+  {k:'E',name:'Sarı Şimşek',bg:'#FFD60A',fg:'#0B0B0B',hint:'Sarı + siyah. Akışta en çok göze çarpan kontrast, enerjik.'},
+  {k:'F',name:'Lacivert Asil',bg:'#0B1B4D',fg:'#FFFFFF',dot:'#22D3EE',hint:'Koyu lacivert + beyaz. Kurumsal, ağırbaşlı, saygın.'},
+];
+function power(p,cx,cy,r,sw,stroke,filter){
+  const a=Math.PI*0.30,x1=cx+r*Math.sin(a),y1=cy-r*Math.cos(a),x2=cx-r*Math.sin(a);
+  el('path',{d:`M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y1}`,fill:'none',stroke,'stroke-width':sw,'stroke-linecap':'round',filter:filter||''},p);
+  el('line',{x1:cx,y1:cy-r-sw*0.55,x2:cx,y2:cy-r*0.12,stroke,'stroke-width':sw,'stroke-linecap':'round',filter:filter||''},p);
+}
+function avatar(v,size,id){
+  const s=el('svg',{width:size,height:size,viewBox:'0 0 1080 1080'});
+  const d=el('defs',{},s);
+  if(v.bg==='grad'){const g=el('linearGradient',{id:'g'+id,x1:0,y1:0,x2:1,y2:1},d);el('stop',{offset:0,'stop-color':'#2E7BFF'},g);el('stop',{offset:1,'stop-color':'#22D3EE'},g);}
+  if(v.glow){const f=el('filter',{id:'f'+id,filterUnits:'userSpaceOnUse',x:-500,y:-500,width:2100,height:2100},d);el('feGaussianBlur',{stdDeviation:22,result:'b'},f);const m=el('feMerge',{},f);el('feMergeNode',{in:'b'},m);el('feMergeNode',{in:'b'},m);el('feMergeNode',{in:'SourceGraphic'},m);}
+  el('circle',{cx:540,cy:540,r:540,fill:v.bg==='grad'?`url(#g${id})`:v.bg},s);
+  if(v.ring) el('circle',{cx:540,cy:540,r:530,fill:'none',stroke:v.ring,'stroke-width':20},s);
+  power(s,540,575,250,92,v.fg,v.glow?`url(#f${id})`:'');
+  if(v.dot) el('circle',{cx:540,cy:232,r:0,fill:v.dot},s);
+  return s;
+}
+const grid=document.getElementById('grid');
+V.forEach((v,i)=>{
+  const c=document.createElement('div');c.className='card';
+  c.innerHTML=`<div class="lbl">${v.k} · ${v.name}</div>`;
+  c.appendChild(avatar(v,260,'big'+i));
+  const h=document.createElement('div');h.className='hint';h.textContent=v.hint;c.appendChild(h);
+  const pair=document.createElement('div');pair.className='pair';
+  ['','light'].forEach((m,j)=>{
+    const t=document.createElement('div');t.className='tiny '+m;
+    t.appendChild(avatar(v,44,'t'+i+j));
+    const u=document.createElement('div');u.className='u';u.innerHTML='birsifirteknoloji<small>Birsıfır | Teknoloji</small>';
+    t.appendChild(u);pair.appendChild(t);
+  });
+  c.appendChild(pair);grid.appendChild(c);
+});
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+  @page{size:A4;margin:0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,sans-serif;color:#2A211B;background:#fff}
+  .page{width:210mm;height:297mm;padding:16mm 15mm;position:relative;page-break-after:always;overflow:hidden;background:#FFFDF8}
+  .page:last-child{page-break-after:auto}
+  .kick{font-size:9pt;letter-spacing:.28em;text-transform:uppercase;color:#B8312F;font-weight:600}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:34pt;line-height:1.02;margin:4mm 0 3mm}
+  h2{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22pt;margin-bottom:4mm}
+  .sub{font-size:10.5pt;color:#6B5B4E;line-height:1.5}
+  .band{position:absolute;left:0;right:0;height:5mm;background:repeating-linear-gradient(90deg,#B8312F 0 6mm,#CFA14A 6mm 8mm,#1F3B5C 8mm 14mm,#CFA14A 14mm 16mm)}
+  .foot{position:absolute;left:15mm;right:15mm;bottom:9mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#9A8B7E}
+  .specs{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-top:6mm}
+  .spec{border:0.3mm solid #E7DCCB;border-radius:2mm;padding:3mm;background:#fff}
+  .spec b{display:block;font-size:12pt;margin-top:1mm}
+  .spec span{font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:#9A8B7E}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  th{text-align:left;font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;color:#9A8B7E;font-weight:600;padding:2mm 2mm;border-bottom:0.4mm solid #2A211B}
+  td{padding:2.2mm 2mm;border-bottom:0.25mm solid #E7DCCB;vertical-align:middle}
+  .sw{width:9mm;height:6mm;border-radius:1mm;border:0.2mm solid rgba(0,0,0,.25);display:inline-flex;align-items:center;justify-content:center;font-size:9pt;font-family:'DejaVu Sans'}
+  .motifs{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin:5mm 0 7mm}
+  .motif{display:flex;gap:3.5mm;align-items:flex-start;background:#fff;border:0.3mm solid #E7DCCB;border-radius:2.5mm;padding:3.5mm}
+  .motif svg{flex:0 0 auto}
+  .motif b{font-family:'Cormorant Garamond',serif;font-size:13.5pt;display:block}
+  .motif i{font-style:normal;color:#B8312F;font-size:8pt;letter-spacing:.08em}
+  .motif p{font-size:8.6pt;line-height:1.45;color:#5A4B40;margin-top:1mm}
+  ol{padding-left:5mm;font-size:9.6pt;line-height:1.6}
+  ol li{margin-bottom:2mm}
+  .note{background:#F6EFE3;border-radius:2.5mm;padding:4mm 5mm;font-size:8.6pt;line-height:1.55;color:#5A4B40}
+  .chartwrap{display:flex;justify-content:center;margin-top:3mm}
+</style>
+</head>
+<body>
+<div id="doc"></div>
+<script>
+const slug=(location.hash||'').slice(1);
+const sc=document.createElement('script'); sc.src=slug?`designs/${slug}/pattern.js`:'pattern.js';
+sc.onload=build; document.body.appendChild(sc);
+function isDark(hex){const n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (0.299*r+0.587*g+0.114*b)<150;}
+function build(){
+const {W,H,grid,colors,counts}=P;
+const M=P.meta||{title:'Anatolian Kilim<br>“Nazar” Medallion',short:'“Nazar” Medallion',tagline:'A modern pattern inspired by centuries-old Turkish kilim weaving — the evil eye for protection, ram’s horns for strength and the river border for the flow of life.',level:'Beginner+',
+ motifs:[['eye','Göz · Evil Eye','CENTER MEDALLION','A diamond with a dot at its heart. Woven into kilims to protect the home from envy and harm.'],['ram','Koçboynuzu · Ram’s Horn','TOP & BOTTOM','A symbol of strength, heroism and fertility, used by Anatolian weavers for generations.'],['water','Su Yolu · River Path','BORDER','The zigzag of flowing water. It stands for life, continuity and abundance.'],['star','Yıldız · Star','CORNERS','Stars represent happiness and good fortune — a wish woven for the owner.']]};
+const keys=Object.keys(colors), total=Object.values(counts).reduce((a,b)=>a+b,0);
+const sizeIn=n=>(W/n).toFixed(1)+' × '+(H/n).toFixed(1);
+function stitched(cell,pad=6){const w=W*cell+pad*2,h=H*cell+pad*2;let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><pattern id="aida" width="${cell}" height="${cell}" patternUnits="userSpaceOnUse" x="${pad}" y="${pad}"><rect width="${cell}" height="${cell}" fill="#F4EEE2"/><circle cx="0" cy="0" r="${cell*0.13}" fill="#E2D8C6"/></pattern></defs><rect width="${w}" height="${h}" fill="url(#aida)"/>`;
+  const sw=cell*0.30;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(!k)continue;const c=colors[k].hex;const x0=pad+x*cell+cell*0.14,y0=pad+y*cell+cell*0.14,x1=pad+(x+1)*cell-cell*0.14,y1=pad+(y+1)*cell-cell*0.14;
+    s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" opacity=".92"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${x0+cell*0.06}" y1="${y0+cell*0.02}" x2="${x1-cell*0.1}" y2="${y1-cell*0.14}" stroke="rgba(255,255,255,.28)" stroke-width="${sw*0.28}" stroke-linecap="round"/>`;}
+  return s+'</svg>';}
+function chart(mode){
+  const cell=Math.min(176/W,222/H,3.4), m=6, w=W*cell+m*2, h=H*cell+m*2, fs=Math.min(2.2,cell*0.85);
+  let s=`<svg width="${w}mm" height="${h}mm" viewBox="0 0 ${w} ${h}">`;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(!k)continue;const X=m+x*cell,Y=m+y*cell;
+    if(mode==='color') s+=`<rect x="${X}" y="${Y}" width="${cell}" height="${cell}" fill="${colors[k].hex}"/>`;
+    const light=mode==='color'&&isDark(colors[k].hex);
+    s+=`<text x="${X+cell/2}" y="${Y+cell*0.74}" text-anchor="middle" font-size="${cell*0.78}" font-family="DejaVu Sans" fill="${light?'#fff':'#2A211B'}">${colors[k].sym}</text>`;}
+  for(let x=0;x<=W;x++){const b=x%10===0||x===W;s+=`<line x1="${m+x*cell}" y1="${m}" x2="${m+x*cell}" y2="${m+H*cell}" stroke="${b?'#2A211B':'#BFB3A3'}" stroke-width="${b?0.28:0.08}"/>`;if(x%10===0)s+=`<text x="${m+x*cell}" y="${m-1.6}" text-anchor="middle" font-size="${fs}" fill="#6B5B4E">${x}</text>`;}
+  for(let y=0;y<=H;y++){const b=y%10===0||y===H;s+=`<line x1="${m}" y1="${m+y*cell}" x2="${m+W*cell}" y2="${m+y*cell}" stroke="${b?'#2A211B':'#BFB3A3'}" stroke-width="${b?0.28:0.08}"/>`;if(y%10===0)s+=`<text x="${m-1.4}" y="${m+y*cell+0.8}" text-anchor="end" font-size="${fs}" fill="#6B5B4E">${y}</text>`;}
+  const cx=m+(W/2)*cell, cy=m+(H/2)*cell;
+  s+=`<path d="M ${cx-1.6} ${m-4.6} L ${cx+1.6} ${m-4.6} L ${cx} ${m-2.2} Z" fill="#B8312F"/><path d="M ${cx-1.6} ${m+H*cell+4.6} L ${cx+1.6} ${m+H*cell+4.6} L ${cx} ${m+H*cell+2.2} Z" fill="#B8312F"/><path d="M ${m-4.6} ${cy-1.6} L ${m-4.6} ${cy+1.6} L ${m-2.2} ${cy} Z" fill="#B8312F"/>`;
+  return s+'</svg>';}
+function icon(kind){const I={
+   eye:`<path d="M14 4 L24 14 L14 24 L4 14 Z" fill="#1F3B5C"/><path d="M14 7 L21 14 L14 21 L7 14 Z" fill="#B8312F"/><path d="M14 10.5 L17.5 14 L14 17.5 L10.5 14 Z" fill="#CFA14A"/><circle cx="14" cy="14" r="1.4" fill="#1F3B5C"/>`,
+   ram:`<path d="M6 6 V10 H8 V12 H10 V14 H18 V12 H20 V10 H22 V6" fill="none" stroke="#3A2214" stroke-width="2.4"/>`,
+   water:`<path d="M2 18 L7 10 L12 18 L17 10 L22 18 L27 10" fill="none" stroke="#B8312F" stroke-width="2.6"/>`,
+   star:`<path d="M14 3 L16 11 L24 9 L18 14 L24 19 L16 17 L14 25 L12 17 L4 19 L10 14 L4 9 L12 11 Z" fill="#3A7C82"/>`,
+   tree:`<rect x="13" y="8" width="2.4" height="15" fill="#3A2214"/><path d="M14 16 L7 11 M14 16 L21 11 M14 12 L9 8 M14 12 L19 8" stroke="#5E7A4E" stroke-width="2.2"/><path d="M8 24 H20 L18 22 H10 Z" fill="#B8312F"/>`,
+   hands:`<path d="M14 4 L16 6 L14 8 L12 6 Z" fill="#B8312F"/><path d="M8 10 H20 M8 10 Q5 13 9 16 M20 10 Q23 13 19 16" fill="none" stroke="#B8312F" stroke-width="2"/><path d="M14 13 L20 24 H8 Z" fill="#B8312F"/>`,
+   diamond:`<path d="M14 5 L23 14 L14 23 L5 14 Z" fill="#3A7C82"/><path d="M14 10 L18 14 L14 18 L10 14 Z" fill="#CFA14A"/>`};
+  return `<svg width="11mm" height="11mm" viewBox="0 0 28 28"><rect width="28" height="28" rx="5" fill="#F6EFE3"/>${I[kind]||I.diamond}</svg>`;}
+const name=M.short||M.title.replace(/<br>/g,' ');
+const foot=n=>`<div class="foot"><span>StitchAnatolia · ${name}</span><span>Designed in Taşköprü, Türkiye · Page ${n}/5</span></div>`;
+const coverCell=Math.min(400/W,520/H);
+document.getElementById('doc').innerHTML=`
+<section class="page"><div class="band" style="top:0"></div>
+  <div style="margin-top:6mm" class="kick">Cross Stitch Pattern · PDF</div>
+  <h1>${M.title}</h1><div class="sub">${M.tagline}</div>
+  <div style="display:flex;justify-content:center;margin-top:7mm">${stitched(coverCell)}</div>
+  <div class="specs"><div class="spec"><span>Stitches</span><b>${W} × ${H}</b></div><div class="spec"><span>Colors</span><b>${keys.length} DMC</b></div><div class="spec"><span>Size on 14ct</span><b>${sizeIn(14)} in</b></div><div class="spec"><span>Level</span><b>${M.level}</b></div></div>
+  ${foot(1)}<div class="band" style="bottom:0"></div></section>
+<section class="page"><div class="kick">The story</div><h2>Every motif has a meaning</h2>
+  <div class="motifs">${M.motifs.map(m=>`<div class="motif">${icon(m[0])}<div><b>${m[1]}</b><i>${m[2]}</i><p>${m[3]}</p></div></div>`).join('')}</div>
+  <div class="kick">Floss key</div><h2 style="margin-top:2mm">DMC colors</h2>
+  <table><tr><th>Symbol</th><th>DMC</th><th>Color name</th><th style="text-align:right">Stitches</th><th style="text-align:right">Skeins</th></tr>
+  ${keys.map(k=>{const c=colors[k];return `<tr><td><span class="sw" style="background:${c.hex};color:${isDark(c.hex)?'#fff':'#2A211B'}">${c.sym}</span></td><td><b>${c.dmc}</b></td><td>${c.name}</td><td style="text-align:right">${counts[k].toLocaleString('en')}</td><td style="text-align:right">1</td></tr>`}).join('')}
+  <tr><td></td><td></td><td><b>Total</b></td><td style="text-align:right"><b>${total.toLocaleString('en')}</b></td><td style="text-align:right"><b>${keys.length}</b></td></tr></table>
+  <div style="margin-top:4mm" class="sub">Full cross stitches only — no backstitch, no fractional stitches. Fabric is left unstitched as the background.</div>
+  ${foot(2)}</section>
+<section class="page"><div class="kick">Chart 1 of 2</div><h2>Color chart</h2><div class="chartwrap">${chart('color')}</div>
+  <div class="sub" style="margin-top:2mm;text-align:center;font-size:8.5pt">Bold lines every 10 stitches · Red arrows mark the center</div>${foot(3)}</section>
+<section class="page"><div class="kick">Chart 2 of 2</div><h2>Symbol chart (printer-friendly)</h2><div class="chartwrap">${chart('bw')}</div>
+  <div class="sub" style="margin-top:2mm;text-align:center;font-size:8.5pt">${keys.map(k=>`<span style="font-family:'DejaVu Sans'">${colors[k].sym}</span> ${colors[k].dmc}`).join(' &nbsp;·&nbsp; ')}</div>${foot(4)}</section>
+<section class="page"><div class="kick">Before you start</div><h2>How to stitch this pattern</h2>
+  <ol><li><b>Fabric:</b> 14 count Aida in cream, ecru or white. Leave at least 3 in (8 cm) extra on every side for framing.</li>
+  <li><b>Find the center:</b> Fold the fabric in half both ways. Start stitching from the center of the chart (red arrows).</li>
+  <li><b>Floss:</b> Use 2 strands of DMC embroidery floss for all cross stitches.</li>
+  <li><b>Stitch direction:</b> Keep all top stitches crossing in the same direction for a neat, even look.</li>
+  <li><b>Work in sections:</b> Complete one color area at a time and tick off the 10 × 10 blocks on a printed chart as you go.</li>
+  <li><b>Finish:</b> Gently hand-wash, press face-down on a towel, then frame or mount in a hoop.</li></ol>
+  <table style="margin:6mm 0"><tr><th>Fabric</th><th style="text-align:right">Finished size (inches)</th><th style="text-align:right">Finished size (cm)</th></tr>
+  ${[11,14,16,18].map(n=>`<tr><td>${n} count Aida</td><td style="text-align:right">${sizeIn(n)}</td><td style="text-align:right">${(W/n*2.54).toFixed(1)} × ${(H/n*2.54).toFixed(1)}</td></tr>`).join('')}</table>
+  <div class="note"><b>Please note:</b> This is a digital PDF pattern — no physical items or floss are included. Colors on screen may vary slightly from actual floss. The pattern is for personal use only; you may sell items you stitch yourself, but please do not share, resell or redistribute the pattern file.<br><br>Thank you for supporting a small designer from Taşköprü, Türkiye. If you stitch it, I would love to see your finished piece!</div>
+  ${foot(5)}<div class="band" style="bottom:0"></div></section>`;
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+}
+</script>
+</body>
+</html>
