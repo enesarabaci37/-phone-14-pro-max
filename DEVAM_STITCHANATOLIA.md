@@ -22,7 +22,7 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 4 | Bereket (kare yastık) | 71×71 | SA-004 |
 | 5 | Mini Nazar Seti (4 mini desen) | 53×53 | SA-005 |
 | 6 | Kilim Koleksiyonu: 5'li paket (27 sayfalık PDF) | – | – |
-| 7 | Göz Seti (6 göz motifi sampler) | 75×53 | SA-006 |
+| 7 | Göz Seti (6 göz motifi sampler) — YAYINDA: etsy.com/listing/4622089877 | 75×53 | SA-006 |
 | 8 | Kurt Ağzı | 61×87 | SA-007 |
 | 9 | Yıldız (kare) | 69×69 | SA-008 |
 
@@ -58,6 +58,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   5. Bereket b + Elibelinde videosu
   6. Mini Nazar b + Bereket videosu
   7. Paket videosu
+  - Yeni ürünler (sıraya araya eklenecek): Göz Seti a + b (link: https://www.etsy.com/listing/4622089877), Kurt Ağzı a + b, Yıldız a + b, 3 yeni video
 
 ## Instagram @stitchanatolia
 - Profil hazır.
