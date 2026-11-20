@@ -50,15 +50,18 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - "Yapay zeka ile değiştirildi" seçeneği AÇIK olmalı.
   - ✏️ kalem editörüne ASLA basılmaz, görseli kırpıyor.
   - Etsy'yi Pinterest'te sahiplenme (claim) özelliği Türkiye'de yok.
-- **Günlük pin takvimi:** her akşam 2 pin, saat 21:00–01:00 arası. Kullanıcı "bugünün pinlerini söyle" der, Claude başlık, açıklama, pano ve link alanlarını verir. Kalan sıra:
-  1. Motiflerin anlamı (pin_meanings) + Nazar videosu
-  2. Koleksiyon pini + Hayat Ağacı videosu
-  3. Nazar b + Mini Nazar videosu
-  4. Hayat Ağacı b + Elibelinde b
-  5. Bereket b + Elibelinde videosu
-  6. Mini Nazar b + Bereket videosu
-  7. Paket videosu
-  - Yeni ürünler (sıraya araya eklenecek): Göz Seti a + b (link: https://www.etsy.com/listing/4622089877), Kurt Ağzı a + b (https://www.etsy.com/listing/4622103012), Yıldız a + b (https://www.etsy.com/listing/4622099525), 3 yeni video
+- **Günlük pin takvimi:** her akşam 2 pin, saat 21:00–01:00 arası (Pinterest'in "daha sonra yayınla" zamanlamasıyla da olur). Kullanıcı "bugünün pinlerini söyle" der, Claude başlık, açıklama, pano ve link alanlarını verir. Yeni ürünlerin linkleri ve pin metinleri kendi URUN_BILGILERI.txt dosyalarında. Sıra (20 Kasım 2026'dan itibaren):
+  1. 20 Kas: Göz Seti a + Kurt Ağzı a
+  2. 21 Kas: Yıldız a + Motiflerin anlamı (pin_meanings)
+  3. 22 Kas: Göz Seti videosu + Nazar videosu
+  4. 23 Kas: Kurt Ağzı videosu + Koleksiyon pini
+  5. 24 Kas: Yıldız videosu + Hayat Ağacı videosu
+  6. 25 Kas: Göz Seti b + Nazar b
+  7. 26 Kas: Kurt Ağzı b + Mini Nazar videosu
+  8. 27 Kas: Yıldız b + Hayat Ağacı b
+  9. 28 Kas: Elibelinde b + Bereket b
+  10. 29 Kas: Elibelinde videosu + Mini Nazar b
+  11. 30 Kas: Bereket videosu + Paket videosu
 
 ## Instagram @stitchanatolia
 - Profil hazır.
