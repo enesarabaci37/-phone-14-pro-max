@@ -23,10 +23,10 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 5 | Mini Nazar Seti (4 mini desen) | 53×53 | SA-005 |
 | 6 | Kilim Koleksiyonu: 5'li paket (27 sayfalık PDF) | – | – |
 | 7 | Göz Seti (6 göz motifi sampler) — YAYINDA: etsy.com/listing/4622089877 | 75×53 | SA-006 |
-| 8 | Kurt Ağzı | 61×87 | SA-007 |
-| 9 | Yıldız (kare) | 69×69 | SA-008 |
+| 8 | Kurt Ağzı — YAYINDA: etsy.com/listing/4622103012 | 61×87 | SA-007 |
+| 9 | Yıldız (kare) — YAYINDA: etsy.com/listing/4622099525 | 69×69 | SA-008 |
 
-> 7-9 numaralı ürünlerin dosyaları hazır (`1_URUNLER/7_Goz_Seti`, `8_Kurt_Agzi`, `9_Yildiz`); Etsy'ye yüklenme durumunu kullanıcıya sor.
+> 7-9 numaralı ürünler Etsy'de yayında (toplam 9 ilan). Yıldız'da Holiday: Christmas.
 
 - Her ürünün videosu var.
 - Mağazanın bölümleri, öne çıkan ürünleri, logosu, kapağı, makbuz şeridi, duyurusu ve hakkında yazısı tamam.
@@ -58,7 +58,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   5. Bereket b + Elibelinde videosu
   6. Mini Nazar b + Bereket videosu
   7. Paket videosu
-  - Yeni ürünler (sıraya araya eklenecek): Göz Seti a + b (link: https://www.etsy.com/listing/4622089877), Kurt Ağzı a + b, Yıldız a + b, 3 yeni video
+  - Yeni ürünler (sıraya araya eklenecek): Göz Seti a + b (link: https://www.etsy.com/listing/4622089877), Kurt Ağzı a + b (https://www.etsy.com/listing/4622103012), Yıldız a + b (https://www.etsy.com/listing/4622099525), 3 yeni video
 
 ## Instagram @stitchanatolia
 - Profil hazır.
