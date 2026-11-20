@@ -1,0 +1,5 @@
+__pycache__/
+*.zip
+stitchanatolia_kaynak/video_out/
+stitchanatolia_kaynak/out/*/
+stitchanatolia_kaynak/pins/*.png
