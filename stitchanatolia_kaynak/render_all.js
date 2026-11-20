@@ -6,10 +6,15 @@ const FILE = {
   elibelinde: 'Anatolian_Kilim_Elibelinde_Cross_Stitch_Pattern.pdf',
   bereket: 'Anatolian_Kilim_Bereket_Cross_Stitch_Pattern.pdf',
   mini_nazar: 'Mini_Nazar_Evil_Eye_Cross_Stitch_Set.pdf',
+  goz_seti: 'Kilim_Goz_Evil_Eye_Sampler_Cross_Stitch_Pattern.pdf',
+  kurt_agzi: 'Anatolian_Kilim_Kurt_Agzi_Wolf_Cross_Stitch_Pattern.pdf',
+  yildiz: 'Anatolian_Kilim_Yildiz_Star_Cross_Stitch_Pattern.pdf',
 };
+const ONLY = process.argv.slice(2);
 (async () => {
   const b = await chromium.launch();
   for (const slug of Object.keys(FILE)) {
+    if (ONLY.length && !ONLY.includes(slug)) continue;
     const OUT = path.join(__dirname, 'out', slug);
     fs.mkdirSync(OUT, { recursive: true });
     const p = await b.newPage({ viewport: { width: 900, height: 1300 }, deviceScaleFactor: 1.5 });

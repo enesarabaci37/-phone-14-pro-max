@@ -22,6 +22,11 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 4 | Bereket (kare yastık) | 71×71 | SA-004 |
 | 5 | Mini Nazar Seti (4 mini desen) | 53×53 | SA-005 |
 | 6 | Kilim Koleksiyonu: 5'li paket (27 sayfalık PDF) | – | – |
+| 7 | Göz Seti (6 göz motifi sampler) | 75×53 | SA-006 |
+| 8 | Kurt Ağzı | 61×87 | SA-007 |
+| 9 | Yıldız (kare) | 69×69 | SA-008 |
+
+> 7-9 numaralı ürünlerin dosyaları hazır (`1_URUNLER/7_Goz_Seti`, `8_Kurt_Agzi`, `9_Yildiz`); Etsy'ye yüklenme durumunu kullanıcıya sor.
 
 - Her ürünün videosu var.
 - Mağazanın bölümleri, öne çıkan ürünleri, logosu, kapağı, makbuz şeridi, duyurusu ve hakkında yazısı tamam.
@@ -92,7 +97,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 İlk 7 günde 5 görüntülenme, 1 ziyaret, 0 sipariş. Bu normal; mağaza yeni ve ürün sayısı az.
 
 ## Sıradaki işler
-1. **ŞİMDİ, 1. hafta:** 3 yeni desen, SKU'ları SA-006, SA-007, SA-008.
+1. ✅ **1. hafta:** 3 yeni desen hazırlandı (SA-006, SA-007, SA-008). Kaynak: `designs2.py` (desenler), `listings2.py` (URUN_BILGILERI.txt). Pinleri de günlük pin takvimine ekle.
    - 🧿 Göz Seti
    - 🐺 Kurt İzi (Kurt Ağzı)
    - ⭐ Yıldız

@@ -30,7 +30,7 @@ body{background:#888;font-family:Inter,sans-serif}
 <body>
 <div id="root"></div>
 <script>
-const SLUGS=['nazar','tree_of_life','elibelinde','bereket','mini_nazar'];
+const SLUGS=['nazar','tree_of_life','elibelinde','bereket','mini_nazar','goz_seti','kurt_agzi','yildiz'];
 const D={};let loaded=0;
 {const sc=document.createElement('script');sc.src='all_patterns.js';sc.onload=()=>{Object.assign(D,DATA);build();};document.body.appendChild(sc);}
 function stitched(P,maxW,maxH,pad=10){const {W,H,grid,colors}=P;const cell=Math.min(maxW/W,maxH/H);const w=W*cell+pad*2,h=H*cell+pad*2;
@@ -39,19 +39,19 @@ function stitched(P,maxW,maxH,pad=10){const {W,H,grid,colors}=P;const cell=Math.
  const sw=cell*.3;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(!k)continue;const c=colors[k].hex;const x0=pad+x*cell+cell*.14,y0=pad+y*cell+cell*.14,x1=pad+(x+1)*cell-cell*.14,y1=pad+(y+1)*cell-cell*.14;
  s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" opacity=".9"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round"/><line x1="${x0+cell*.06}" y1="${y0+cell*.02}" x2="${x1-cell*.1}" y2="${y1-cell*.14}" stroke="rgba(255,255,255,.3)" stroke-width="${sw*.28}" stroke-linecap="round"/>`;}
  return s+'</svg>';}
-const NAME={nazar:['Evil Eye','“Nazar”'],tree_of_life:['Tree of Life','“Hayat Ağacı”'],elibelinde:['Elibelinde','“Hands on Hips”'],bereket:['Bereket','“Abundance”'],mini_nazar:['Mini Evil Eye','Set of 4']};
-const HOOK={nazar:'Turkish Kilim Cross Stitch Pattern',tree_of_life:'Tree of Life Cross Stitch Pattern',elibelinde:'Anatolian Goddess Cross Stitch',bereket:'Kilim Pillow Cross Stitch Pattern',mini_nazar:'Easy Evil Eye Cross Stitch'};
+const NAME={nazar:['Evil Eye','“Nazar”'],tree_of_life:['Tree of Life','“Hayat Ağacı”'],elibelinde:['Elibelinde','“Hands on Hips”'],bereket:['Bereket','“Abundance”'],mini_nazar:['Mini Evil Eye','Set of 4'],goz_seti:['Göz Sampler','6 Evil Eye Motifs'],kurt_agzi:['Kurt Ağzı','“Wolf’s Mouth”'],yildiz:['Yıldız','“Kilim Star”']};
+const HOOK={nazar:'Turkish Kilim Cross Stitch Pattern',tree_of_life:'Tree of Life Cross Stitch Pattern',elibelinde:'Anatolian Goddess Cross Stitch',bereket:'Kilim Pillow Cross Stitch Pattern',mini_nazar:'Easy Evil Eye Cross Stitch',goz_seti:'Evil Eye Sampler Cross Stitch Pattern',kurt_agzi:'Wolf Kilim Cross Stitch Pattern',yildiz:'Kilim Star Cross Stitch Pattern'};
 function productPin(s,variant){const P=D[s];const [n1,n2]=NAME[s];
  if(variant==='a') return `<div class="pin" id="pin_${s}_a"><div class="linen"></div><div class="band" style="top:0"></div>
   <div class="center" style="top:70px"><div class="kick">${s==='mini_nazar'?'Beginner friendly':'Cross stitch pattern'}</div>
   <div class="h" style="font-size:84px;margin-top:22px;padding:0 50px">${HOOK[s]}</div></div>
-  <div class="center" style="top:${s==='bereket'||s==='mini_nazar'?380:340}px;display:flex;justify-content:center"><div class="frame"><div class="mat">${stitched(P,640,760)}</div></div></div>
+  <div class="center" style="top:${s==='goz_seti'?470:(s==='bereket'||s==='mini_nazar'||s==='yildiz'?380:340)}px;display:flex;justify-content:center"><div class="frame"><div class="mat">${stitched(P,640,760)}</div></div></div>
   <div class="center" style="bottom:150px"><span class="pill">↓ Instant PDF download</span></div>
   <div class="center" style="bottom:62px"><div class="brand">StitchAnatolia</div></div>
   <div class="band" style="bottom:0"></div></div>`;
  return `<div class="pin" id="pin_${s}_b"><div class="band" style="top:0"></div>
   <div class="center" style="top:60px;display:flex;justify-content:center">${stitched(P,880,880,14)}</div>
-  <div class="center" style="top:1000px"><div class="h" style="font-size:96px">${n1}</div><div class="h" style="font-size:56px;color:#B8312F;margin-top:10px">${n2}</div>
+  <div class="center" style="top:${s==='goz_seti'?820:1000}px"><div class="h" style="font-size:96px">${n1}</div><div class="h" style="font-size:56px;color:#B8312F;margin-top:10px">${n2}</div>
   <div style="font-size:28px;color:#5A4B40;margin-top:28px;font-weight:500">${P.W} × ${P.H} stitches · ${Object.keys(P.colors).length} DMC colors · Full stitches only</div></div>
   <div class="center" style="bottom:60px"><div class="brand">StitchAnatolia</div><div class="small">Turkish kilim cross stitch patterns</div></div>
   <div class="band" style="bottom:0"></div></div>`;}
