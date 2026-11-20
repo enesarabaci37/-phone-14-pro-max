@@ -38,7 +38,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 
 ## Pinterest
 - İşletme hesabı açıldı. Kişisel hesap dönüştürülmedi; "Ücretsiz işletme hesabı oluştur" yolu kullanıldı.
-- Profil ve kapak hazır, **6 pin yayında**.
+- Profil ve kapak hazır, **9 pin yayında** (20 Kasım).
 - Panolar:
   - Turkish Kilim Cross Stitch Patterns
   - Evil Eye Cross Stitch
@@ -51,17 +51,17 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - ✏️ kalem editörüne ASLA basılmaz, görseli kırpıyor.
   - Etsy'yi Pinterest'te sahiplenme (claim) özelliği Türkiye'de yok.
 - **Günlük pin takvimi:** her akşam 2 pin, saat 21:00–01:00 arası (Pinterest'in "daha sonra yayınla" zamanlamasıyla da olur). Kullanıcı "bugünün pinlerini söyle" der, Claude başlık, açıklama, pano ve link alanlarını verir. Yeni ürünlerin linkleri ve pin metinleri kendi URUN_BILGILERI.txt dosyalarında. Sıra (20 Kasım 2026'dan itibaren):
-  1. 20 Kas: Göz Seti a + Kurt Ağzı a
-  2. 21 Kas: Yıldız a + Motiflerin anlamı (pin_meanings)
-  3. 22 Kas: Göz Seti videosu + Nazar videosu
-  4. 23 Kas: Kurt Ağzı videosu + Koleksiyon pini
-  5. 24 Kas: Yıldız videosu + Hayat Ağacı videosu
-  6. 25 Kas: Göz Seti b + Nazar b
-  7. 26 Kas: Kurt Ağzı b + Mini Nazar videosu
-  8. 27 Kas: Yıldız b + Hayat Ağacı b
-  9. 28 Kas: Elibelinde b + Bereket b
-  10. 29 Kas: Elibelinde videosu + Mini Nazar b
-  11. 30 Kas: Bereket videosu + Paket videosu
+  - ✅ 20 Kas: Göz Seti a + Kurt Ağzı a + Yıldız a yayınlandı (Pinterest'te toplam 9 pin)
+  1. 21 Kas: Motiflerin anlamı (pin_meanings) + Göz Seti videosu
+  2. 22 Kas: Nazar videosu + Kurt Ağzı videosu
+  3. 23 Kas: Koleksiyon pini + Yıldız videosu
+  4. 24 Kas: Hayat Ağacı videosu + Göz Seti b
+  5. 25 Kas: Nazar b + Kurt Ağzı b
+  6. 26 Kas: Mini Nazar videosu + Yıldız b
+  7. 27 Kas: Hayat Ağacı b + Elibelinde b
+  8. 28 Kas: Bereket b + Elibelinde videosu
+  9. 29 Kas: Mini Nazar b + Bereket videosu
+  10. 30 Kas: Paket videosu
 
 ## Instagram @stitchanatolia
 - Profil hazır.
