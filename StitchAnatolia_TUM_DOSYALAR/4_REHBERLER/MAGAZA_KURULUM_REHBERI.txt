@@ -1,0 +1,82 @@
+﻿# StitchAnatolia · Etsy Mağaza Kurulum Rehberi
+
+> Telefondaki Etsy uygulamasında bazı mağaza ayarları görünmeyebilir. En rahatı **"Etsy Seller"** uygulamasını indirmek ya da işlemleri bilgisayardan / telefonun tarayıcısından **etsy.com → Shop Manager** üzerinden yapmak.
+
+## Adım 1 · Hesap güvenliği ve ayarlar (5 dk)
+- [ ] **İki adımlı doğrulamayı aç:** Account settings → Security → Two-factor authentication
+- [ ] **Tatil modunu kapat:** Shop Manager → Settings → Vacation mode → Off
+- [ ] **Ödeme bilgilerini kontrol et:** Shop Manager → Finances → Payment settings. Banka hesabın (IBAN) güncel mi?
+- [ ] **Faturalandırma için kart tanımlı mı:** Shop Manager → Finances → Billing settings (listeleme ücretleri buradan çekilir)
+
+## Adım 2 · Mağaza adını değiştir (2 dk)
+Shop Manager → Settings → **Info & Appearance** → Shop name → `StitchAnatolia`
+(Doğru yazım: "Stich" değil **Stitch** → S-t-i-t-c-h-A-n-a-t-o-l-i-a)
+
+## Adım 3 · Görseller (3 dk)
+| Alan | Dosya |
+|---|---|
+| **Shop icon** (mağaza logosu) | `magaza_logosu_1000x1000.png` |
+| **Banner** → "Big banner" seç | `magaza_kapak_buyuk_3360x840.png` |
+| (Mini banner seçersen) | `magaza_kapak_mini_1200x300.png` |
+
+## Adım 4 · Mağaza metinleri (kopyala-yapıştır)
+
+**Shop title** (logonun altında görünen kısa açıklama, en fazla 55 karakter):
+```
+Turkish Kilim Cross Stitch Patterns · Instant PDF
+```
+
+**Announcement** (mağaza duyurusu):
+```
+Welcome to StitchAnatolia! 🧵 Modern cross stitch patterns inspired by traditional Turkish kilim weaving. Every motif tells a story: the evil eye for protection, ram's horns for strength, the river path for the flow of life. All patterns are instant PDF downloads with full color + printer-friendly charts and DMC thread keys. New designs added every week!
+```
+
+**About → Story headline:**
+```
+Centuries-old kilim motifs, made for your hoop
+```
+
+**About → Story:**
+```
+I live in Taşköprü, a small town in the Kastamonu region of northern Türkiye, where handwoven kilims have decorated homes for generations.
+
+Every kilim motif has a meaning. The "göz" (evil eye) protects a home from envy, the "koçboynuzu" (ram's horn) stands for strength, and the "su yolu" (river path) represents the flow of life. I wanted to bring these symbols into a craft that anyone, anywhere can enjoy: cross stitch.
+
+Each StitchAnatolia pattern is carefully charted with clear symbols, a full color chart, a printer-friendly version and a DMC thread key, so you can focus on the joy of stitching.
+
+Thank you for supporting a small shop from Anatolia. If you stitch one of my designs, I would love to see it! 💛
+```
+
+**Message to buyers** (satın alma sonrası otomatik mesaj):
+```
+Thank you so much for your purchase! 🧵 Your PDF pattern is ready to download from your Etsy account (Purchases → Download files). If you have any trouble opening the file or have a question while stitching, just send me a message. Happy stitching! — StitchAnatolia
+```
+
+## Adım 5 · Politikalar
+Shop Manager → Settings → **Policies**
+- Digital items: **No returns or exchanges** (dijital ürünlerde standart). Ama dosya açılmazsa yardım edileceğini belirt.
+- **FAQ** bölümüne ekle:
+
+```
+Q: Will I receive a physical item?
+A: No. This is a digital PDF pattern. No fabric, floss or physical item will be shipped.
+
+Q: How do I download my pattern?
+A: After purchase, go to You → Purchases → Download files. You can also find the link in your confirmation email.
+
+Q: Can I print the pattern?
+A: Yes! Each pattern includes a printer-friendly black and white symbol chart. It prints on A4 and US Letter.
+
+Q: Can I sell the items I stitch?
+A: Yes, you may sell finished pieces you stitch yourself. Please do not share, copy or resell the PDF file.
+```
+
+## Adım 6 · İlk ürünü yükle
+`ETSY_ILAN_METNI.md` dosyasındaki adımları takip et: Shop Manager → Listings → **Add a listing**
+
+---
+
+## ⏭️ Sonrası
+- Açılışta en az **5-10 desenle** başlayalım. Yenilerini hazırlayıp sana göndereceğim.
+- Sonra **haftada 2-3 yeni desen** ekleyelim. Etsy düzenli ürün eklenen mağazaları sever.
+- İlk satıştan sonra alıcıdan kibarca **fotoğraflı yorum** isteyelim. İlk 5 yorum çok kıymetli.

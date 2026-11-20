@@ -1,0 +1,100 @@
+﻿# 🎁 The Anatolian Kilim Collection (5'li Paket) · Etsy + Pinterest
+
+## ETSY — Nasıl yüklenir?
+**En kolayı:** Listings → **Nazar Madalyonu** → ⚙️ → **Copy**, sonra aşağıdakileri değiştir.
+
+| Alan | Ne yapacaksın |
+|---|---|
+| 📸 Photos | **Delete all** → `etsy_gorsel_1_kapak.png` (ilk) + `etsy_gorsel_2_icerik.png` |
+| 🎬 Video | **Add videos** → `Kilim_Collection_bundle_video.mp4` |
+| ✏️ Title | Aşağıda |
+| 📄 Digital files | Nazar PDF'ini **✕ sil** → `Anatolian_Kilim_Collection_5_Cross_Stitch_Patterns.pdf` (27 sayfa, ~10 MB) |
+| 📝 Description | Aşağıda (Ctrl+A → Delete → yapıştır) |
+| 🏷️ Tags | **Delete all** → aşağıdaki 13 etiket |
+| 🏠 Occasion | Housewarming kalabilir |
+| 💲 Price | **15.50** |
+| 📦 Quantity | 999 |
+| 🔤 SKU | **SA-BUNDLE-01** |
+| ⚙️ Settings → Shop section | Yeni bölüm: **Bundles** (yoksa Kilim Patterns) |
+| ⭐ Feature this listing | **Aç** (en değerli ürün, mağazanın en üstünde görünsün) |
+
+### Title (135/140)
+```
+Turkish Kilim Cross Stitch Pattern Bundle, 5 PDF Patterns, Evil Eye, Tree of Life, Elibelinde, Boho Embroidery Charts, Instant Download
+```
+
+### Tags (13)
+```
+cross stitch bundle
+kilim cross stitch
+pattern bundle
+turkish pattern
+evil eye stitch
+tree of life stitch
+boho cross stitch
+cross stitch pdf
+ethnic embroidery
+dmc pattern
+modern cross stitch
+anatolian motif
+crafter gift
+```
+
+### Description
+```
+All five StitchAnatolia kilim patterns in one PDF — save 39% compared to buying them separately! 🧵
+
+Every pattern is inspired by traditional Turkish kilim weaving, and every motif carries a meaning:
+
+1. "NAZAR" MEDALLION – the evil eye, protecting the home from envy (71 × 91 stitches, 6 colors)
+2. TREE OF LIFE – family roots, long life and continuity (61 × 85 stitches, 7 colors)
+3. ELİBELİNDE – "hands on hips", motherhood and the strength of women (57 × 89 stitches, 6 colors)
+4. BEREKET – a square medallion of abundance, perfect for pillows (71 × 71 stitches, 6 colors)
+5. MINI NAZAR SET – four quick evil eye motifs for cards and gifts (53 × 53 stitches, 10 colors)
+
+Designed in Taşköprü, a small town in northern Türkiye.
+
+━━━━━━━━━━━━━━━━━━━━
+WHAT YOU GET
+━━━━━━━━━━━━━━━━━━━━
+One 27-page PDF (A4, also prints well on US Letter):
+• Collection cover + contents page
+• For every pattern: cover, motif meanings + DMC floss key with stitch counts, full color chart, printer-friendly black & white chart, step-by-step stitching guide
+
+━━━━━━━━━━━━━━━━━━━━
+DETAILS
+━━━━━━━━━━━━━━━━━━━━
+• Full cross stitches only – no backstitch, no fractional stitches
+• DMC embroidery floss, 2 strands on 14 count Aida
+• Skill level: Beginner to advanced beginner
+
+━━━━━━━━━━━━━━━━━━━━
+PLEASE NOTE
+━━━━━━━━━━━━━━━━━━━━
+• This is a DIGITAL PATTERN BUNDLE. No physical item, fabric or floss will be shipped.
+• Your file is available to download right after purchase.
+• Colors may look slightly different depending on your screen.
+• For personal use only. You may sell items you stitch yourself, but please do not share or resell the pattern files.
+
+Questions? Send me a message – I'm happy to help! 💛
+```
+
+---
+
+## PINTEREST — Paket pini
+| Alan | Değer |
+|---|---|
+| Görsel | `pin_bundle_dikey.png` |
+| Pano | Turkish Kilim Cross Stitch Patterns |
+| Bağlantı | Yeni paket ürününün Etsy linki (yayınladıktan sonra ⚙️ → Share) |
+| Konular | Kanaviçe Deseni · Geleneksel Nakış · Kilim |
+| Yapay zeka ile değiştirildi | Aç ✅ |
+
+**Başlık (69 karakter):**
+```
+Turkish Kilim Cross Stitch Pattern Bundle | 5 Anatolian Folk Art PDFs
+```
+**Açıklama:**
+```
+Five modern cross stitch patterns inspired by Turkish kilim weaving in one PDF: evil eye medallion, tree of life, elibelinde, bereket and a mini evil eye set. Every motif has a meaning. DMC keys, color + printer-friendly charts. Save 39% vs. buying separately. Instant download. #crossstitch #kilim #crossstitchpattern #evileye #folkart
+```

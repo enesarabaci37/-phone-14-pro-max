@@ -1,0 +1,18 @@
+﻿STITCHANATOLIA - TUM DOSYALAR
+
+1_URUNLER/  -> Her urun kendi klasorunde:
+   * .pdf               : Aliciya satilan desen dosyasi (Etsy > Digital files)
+   * Etsy/              : Etsy ilan gorselleri (kapak + icerik) ve video
+   * Pinterest/         : DIKEY pin gorselleri (_a = baslikli, _b = yakin plan)
+   * URUN_BILGILERI.txt  : Etsy baslik/etiket/aciklama + Pinterest baslik/aciklama
+
+2_MARKA_LOGO_KAPAK/
+   * magaza_logosu_1000x1000.png   : Etsy + Pinterest profil fotografi
+   * magaza_kapak_buyuk_3360x840   : Etsy magaza kapagi
+   * pinterest_kapak_1920x1080     : Pinterest profil kapagi
+   * makbuz_seridi_760x100         : Etsy siparis makbuzu seridi
+
+3_PINTEREST_GENEL/  -> Koleksiyon pini ve "motiflerin anlami" pini (dikey)
+4_REHBERLER/        -> Etsy ilan metinleri, magaza kurulum ve Pinterest rehberi
+
+Tum .txt dosyalari Not Defteri (Notepad) ile acilir.
