@@ -30,6 +30,10 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
   - 01 GTA 6 · Kaç Saat Çalışmalısın (Reels): https://drive.google.com/drive/folders/1WyVymudWawWpHPA05BiX_Jpuj9eT5hzA
   - 02 Efsane Cuma · Sahte Site Uyarısı (Reels): https://drive.google.com/drive/folders/1VuZPpcqCQdlILaCStH0eCQznLapj2cyf
   - 03 Efsane Cuma · 5 İşaret (Kaydırmalı Gönderi): https://drive.google.com/drive/folders/1-cKwVtooTJSl2QYcJmtnFRybBQ6ZpULD
+  - 04 WhatsApp · 2 Ayarı Hemen Aç (Reels): https://drive.google.com/drive/folders/1A4qN0fcYGMdcWZEMY3awFsaQ1mnSjMeb
+  - 05 iPhone 17 · Kaç Saat Çalışmalısın (Reels): https://drive.google.com/drive/folders/1Sp9hHliSYcdlCxbFr5u6oouGdUmEi1XU
+  - 06 15 Yaş Sosyal Medya Yasağı (Kaydırmalı Gönderi): https://drive.google.com/drive/folders/15dDblMThKrNOMqBtg1rVUSC5PwYkT4e9
+  - 07 Hikâye · Efsane Cuma Yarın: https://drive.google.com/drive/folders/1mLRMTIGsWpcGW3tXHOrvFb2kI-p5FYkT
   - Drive bağlantısı çağrı başına yaklaşık 3 MB dosya taşıyabiliyor. Videoları kullanıcı sohbetteki dosyadan "Paylaş → Drive" ile kendisi kaydediyor.
 - **Paylaşım Takvimi** (Google E-Tablo, tarih/saat/nerede/içerik/durum/klasör): https://docs.google.com/spreadsheets/d/1bshXdwxNtoJq18wW7-RrMkuFpW0JaU5ZeWe9nbb2o3s
 - Tasarım tuvali (Claude artifact; logo, palet, tipografi, Instagram, Haber/Kıyas/Alıntı şablonları): https://claude.ai/artifact/6jmevU6ezz12XUe2brtN84
