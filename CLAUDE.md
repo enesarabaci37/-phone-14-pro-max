@@ -57,6 +57,7 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 - 45 sn, "5 işaretle sahte siteyi anla" + sanal kart çözümü. Betikler `bentaka/scripts/efsane_cuma/` (build.py → reels.html + timeline.json, music.py, compose.py).
 - **Higgsfield web üretim akışı (kullanıcı yapar):** higgsfield.ai'de model Seedance 2.5, Mode "References" (ekli görsel olmadan), 9:16, 5 sn, Sound kapalı, 720p → 35 kredi/video. Soul 2.0 görselleri ücretsiz (2.999 hak). Kullanıcı "hazır" deyince show_generations ile videoları oluşturulma sırasına göre çek.
 - Promptlara "absolutely no text, no letters, no words" eklenmeli, yoksa bozuk yazı çıkıyor.
+- **Kredi tasarrufu kuralı (kullanıcı kararı):** Reels başına en fazla 1 video (açılış, 35 kredi). Diğer sahneler Soul 2.0 görseli (ücretsiz, 2.999 hak) + montajda yakınlaşma/kayma hareketi. "Nasıl yapılır" sahneleri kullanıcının telefon ekran kaydı. Sık sahneler (hacker, bildirim, neon şehir, kapanış) tekrar kullanılır. Kalan Plus kredisi ~765 (21 Kasım 2026).
 
 ## Yarım kalan işler
 - **Seslendirme:** Önizlemede kullanılan Türkçe ses (Piper tr_TR-dfki) CC BY-NC-SA lisanslı, yani ticari kullanıma uygun değil, yayınlanmamalı. Seçenekler:
