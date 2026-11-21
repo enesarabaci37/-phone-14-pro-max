@@ -54,7 +54,9 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - Etsy'yi Pinterest'te sahiplenme (claim) özelliği Türkiye'de yok.
 - **Günlük pin takvimi:** her akşam 2 pin, saat 21:00–01:00 arası (Pinterest'in "daha sonra yayınla" zamanlamasıyla da olur). Kullanıcı "bugünün pinlerini söyle" der, Claude başlık, açıklama, pano ve link alanlarını verir. Yeni ürünlerin linkleri ve pin metinleri kendi URUN_BILGILERI.txt dosyalarında. Sıra (20 Kasım 2026'dan itibaren):
   - ✅ 20 Kas: Göz Seti a + Kurt Ağzı a + Yıldız a yayınlandı (Pinterest'te toplam 9 pin)
-  - Noel pinleri (yeni, araya eklenecek, ÖNCELİKLİ): Noel Süsü a/b/video, Noel Ağacı a/b/video. Pano: Süs → Boho Cross Stitch Ideas, Ağaç → Turkish Kilim Cross Stitch Patterns.
+  - ✅ 21 Kas akşamı 3. pin: Noel Ağacı a.
+  - Noel öncelikli sıra: 22 Noel Süsü a + Nazar videosu · 23 Noel Ağacı videosu + Kurt Ağzı videosu · 24 Noel Süsü videosu + Koleksiyon · 25 Noel Ağacı b + Yıldız videosu · 26 Noel Süsü b + Hayat Ağacı videosu · sonra eski sıra.
+  - Noel pinleri: Noel Süsü a/b/video, Noel Ağacı a/b/video. Pano: Süs → Boho Cross Stitch Ideas, Ağaç → Turkish Kilim Cross Stitch Patterns.
   - İpucu: Etsy Share & Save (⚙️ → Share) linkleri pinlerde kullanılmalı; kullanıcıdan 11 ürünün share linkleri istendi.
   - ✅ 21 Kas: Motiflerin anlamı (link: stitchanatolia.etsy.com) + Göz Seti videosu (Pinterest'te 11 pin)
   2. 22 Kas: Nazar videosu + Kurt Ağzı videosu
