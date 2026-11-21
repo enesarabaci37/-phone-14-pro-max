@@ -25,7 +25,7 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 7 | Göz Seti (6 göz motifi sampler) — YAYINDA: etsy.com/listing/4622089877 | 75×53 | SA-006 |
 | 8 | Kurt Ağzı — YAYINDA: etsy.com/listing/4622103012 | 61×87 | SA-007 |
 | 9 | Yıldız (kare) — YAYINDA: etsy.com/listing/4622099525 | 69×69 | SA-008 |
-| 10 | Noel Süsü Seti (6 mini süs) — 3,50 $ | 63×47 | SA-009 |
+| 10 | Noel Süsü Seti (6 mini süs) — 3,50 $ — YAYINDA: etsy.com/listing/4622778027 | 63×47 | SA-009 |
 | 11 | Anadolu Noel Ağacı — 5,50 $ | 61×85 | SA-010 |
 
 > 7-9 numaralı ürünler Etsy'de yayında (toplam 9 ilan). Yıldız'da Holiday: Christmas.
