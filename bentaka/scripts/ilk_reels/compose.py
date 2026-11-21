@@ -8,17 +8,12 @@ import os, subprocess, sys
 HF, OV, MIX, OUT = sys.argv[1:5]
 FPS = 30
 # (başlangıç, bitiş, kaynak, hareket)  hareket: in = yakınlaş, out = uzaklaş, pan = yatay kay
-PLAN = [
-    (0.0, 4.9, 'v1.mp4', None),
-    (4.9, 8.3, 'i2.png', 'in'),
-    (8.3, 18.3, 'v2.mp4', None),
-    (18.3, 26.0, 'i4.png', 'in'),
-    (26.0, 37.2, 'i5.png', 'pan'),
-    (37.2, 42.3, 'i6.png', 'out'),
-    (42.3, 46.0, 'i7.png', 'in'),
-    (46.0, 53.4, 'i8.png', 'in'),
-    (53.4, 59.0, 'v3.mp4', None),
-]
+import json
+TL = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'timeline.json')))
+_S, _E = TL['S'], TL['END']
+_SRC = [('v1.mp4', None), ('i2.png', 'in'), ('v2.mp4', None), ('i4.png', 'in'), ('i5.png', 'pan'),
+        ('i6.png', 'out'), ('i7.png', 'in'), ('i8.png', 'in'), ('v3.mp4', None)]
+PLAN = [(_S[i], _S[i + 1] if i < 8 else _E, src, mv) for i, (src, mv) in enumerate(_SRC)]
 TMP = os.path.join(os.path.dirname(OUT), '_seg'); os.makedirs(TMP, exist_ok=True)
 GRADE = 'eq=contrast=1.06:saturation=1.08,scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,fps=30,format=yuv420p'
 
@@ -30,12 +25,12 @@ def dur(path):
 
 segs = []
 for i, (a, b, src, mv) in enumerate(PLAN):
-    d = round(b - a, 3); n = round(d * FPS); out = os.path.join(TMP, f's{i}.mp4'); path = os.path.join(HF, src)
+    n = round(b * FPS) - round(a * FPS); d = n / FPS; out = os.path.join(TMP, f's{i}.mp4'); path = os.path.join(HF, src)
     if src.endswith('.mp4') and not os.path.exists(path):  # video gelmediyse yedek görsel
         path, mv = os.path.join(HF, 'test1.jpg'), 'in'
     if path.endswith('.mp4'):
         k = max(d / dur(path), 1.0)  # gerekirse yavaşlat
-        run(['-i', path, '-vf', f'setpts={k:.4f}*PTS,{GRADE}', '-t', str(d), '-an', '-c:v', 'libx264', '-crf', '14', '-preset', 'fast', out])
+        run(['-i', path, '-vf', f'setpts={k:.4f}*PTS,{GRADE}', '-frames:v', str(n), '-an', '-c:v', 'libx264', '-crf', '14', '-preset', 'fast', out])
     else:
         if mv == 'in':   z, x = f'1+0.10*on/{n}', 'iw/2-(iw/zoom/2)'
         elif mv == 'out': z, x = f'1.10-0.10*on/{n}', 'iw/2-(iw/zoom/2)'

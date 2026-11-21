@@ -6,7 +6,9 @@ Kullanım: python3 music.py <çıktı.wav>
 import sys, wave
 import numpy as np
 
-SR, BPM, DUR = 48000, 120, 59.0
+import json, os
+TL = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'timeline.json')))
+SR, BPM, DUR = 48000, 120, TL['END']
 BEAT = 60 / BPM
 N = int(SR * DUR)
 L = np.zeros(N); R = np.zeros(N)
@@ -121,11 +123,8 @@ def arp(notes, n_bar):
 
 # Bölümler: (başlangıç, bitiş, davul, arp)
 def section(t):
-    if t < 4.9: return 'full'
-    if t < 8.3: return 'tension'
-    if t < 26: return 'full'
-    if t < 30: return 'build'
-    if t < 53.4: return 'full'
+    for end, name in TL['sections']:
+        if t < end: return name
     return 'outro'
 
 K, C, HC, HO = kick(), clap(), hat(), hat(True)
@@ -173,15 +172,15 @@ for b in range(nbars):
 L *= duck; R *= duck
 
 # --- efektler (görüntüye senkron) -------------------------------------------
-for c in [4.9, 8.3, 18.3, 26, 37.2, 42.3, 46, 53.4]:
+for c in TL['cuts']:
     w = whoosh(); add(w, c - len(w) / SR + 0.05, 0.5, 0.3); add(w, c - len(w) / SR + 0.05, 0.5, -0.3)
-for c in [0.35, 26.0, 32.8, 37.6, 53.5]:
+for c in TL['impacts']:
     add(impact(), c, 0.75)
-add(riser(1.0), 25.0, 0.8); add(riser(1.2), 52.2, 0.7)
+for t0, d in TL['risers']: add(riser(d), t0, 0.8)
 for k in range(24):  # Türkiye sayacı (30,2 – 32,8 sn)
-    add(tick(), 30.2 + k * 0.105, 0.6 * (1 - k / 30))
+    add(tick(), TL['tr_ticks'][0] + k * TL['tr_ticks'][1] / 24, 0.6 * (1 - k / 30))
 for k in range(10):  # iş günü kutuları (38,4 – 39,8 sn)
-    add(tick(), 38.4 + k * 0.14, 0.4)
+    add(tick(), TL['day_ticks'][0] + k * TL['day_ticks'][1] / 10, 0.4)
 
 # ana çıkış: yumuşak kırpma, giriş/çıkış
 mix = np.stack([L, R], 1)

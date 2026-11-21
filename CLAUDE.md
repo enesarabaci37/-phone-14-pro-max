@@ -42,7 +42,9 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 ## İlk Reels (21 Kasım 2026)
 - GTA 6 "kaç saat çalışman gerekiyor" Reels'i, 59 sn: Higgsfield API ile üretilen 3 video ve 6 görsel, Azure tr-TR-AhmetNeural seslendirme, özgün müzik. Betikler `bentaka/scripts/ilk_reels/` altında (README'de birleştirme adımları ve Instagram açıklaması var).
 - **Higgsfield API bağlı:** Anahtar ortamın Network secrets bölümünde kayıtlı (sunucu api.higgsfield.ai, `Authorization: Key …`). Bakiye ayrıdır, Plus paket kredisi kullanılmaz. Kullanıcı 5 $ yükledi, bu Reels yaklaşık 3,1 $ tuttu. Fiyatlar: Soul görsel 1080p 0,19 $, Seedance 2.5 video 720p saniyesi yaklaşık 0,118 $. API'de seslendirme/müzik modeli yok.
-- Azure Speech kullanımına kullanıcı bu Reels için onay verdi.
+- Azure Speech kullanımına kullanıcı bu Reels için onay verdi, ama sesi beğenmedi.
+- **ElevenLabs bağlı:** Starter paketi alındı (ilk ay 1 $, sonra 6 $/ay). Anahtar Network secrets'ta kayıtlı (api.elevenlabs.io, xi-api-key). Starter'da 192 kbps çıkış yok, 128 kbps kullanılıyor. Seçilen ses: Fatih Yıldırım (7VqWGAWwo2HMrylfKrcm), model eleven_v4, hız 1.05.
+- Okunuş kuralı: Metinde "GTA 6" yerine "Geta altı", "Ultimate" yerine "Altimit", "euro" yerine "avro" yazılır.
 - Görsel kuralı: Gerçek GTA 6 görüntüleri, karakterleri ve logoları taklit edilmez. "GTA havasında" özgün sahneler üretilir ve "TEMSİLİ GÖRSEL · YAPAY ZEKÂ" etiketi konur.
 
 ## Yarım kalan işler
