@@ -28,6 +28,7 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
   - GTA 6 içerik klasörü: https://drive.google.com/drive/folders/1OXhh_fwlJFmx09hmc9RB5K-JKG541baX
 - Paylaşım klasörü "Bentaka Paylaşımlar" (her içerik için numaralı alt klasör: video, kapak, açıklama): https://drive.google.com/drive/folders/1mtMj2u5XsyJ8FV6CTN5JRVIDZDEFjJCo
   - 01 GTA 6 · Kaç Saat Çalışmalısın (Reels): https://drive.google.com/drive/folders/1WyVymudWawWpHPA05BiX_Jpuj9eT5hzA
+  - 02 Efsane Cuma · Sahte Site Uyarısı (Reels): https://drive.google.com/drive/folders/1VuZPpcqCQdlILaCStH0eCQznLapj2cyf
   - Drive bağlantısı çağrı başına yaklaşık 3 MB dosya taşıyabiliyor. Videoları kullanıcı sohbetteki dosyadan "Paylaş → Drive" ile kendisi kaydediyor.
 - Tasarım tuvali (Claude artifact; logo, palet, tipografi, Instagram, Haber/Kıyas/Alıntı şablonları): https://claude.ai/artifact/6jmevU6ezz12XUe2brtN84
 
@@ -50,6 +51,11 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 - Okunuş kuralı: Metinde "GTA 6" yerine "Geta altı", "Ultimate" yerine "Altimit", "euro" yerine "avro" yazılır.
 - Görsel kuralı: Gerçek GTA 6 görüntüleri, karakterleri ve logoları taklit edilmez. "GTA havasında" özgün sahneler üretilir. Kullanıcı videodaki "TEMSİLİ GÖRSEL · YAPAY ZEKÂ" yazısını istemedi; bunun yerine paylaşırken Instagram'ın "Yapay zekâ bilgisi" etiketi açılır.
 - Video içi sadelik: Tarih/platform satırı ve kaynak satırı videoda yer almaz, kaynaklar gönderi açıklamasına yazılır. Sağ alttaki filigran büyük harfli "© BENTAKA" değil, logodaki gibi Sora Bold küçük harf "bentaka".
+
+## Efsane Cuma Reels (21 Kasım 2026)
+- 45 sn, "5 işaretle sahte siteyi anla" + sanal kart çözümü. Betikler `bentaka/scripts/efsane_cuma/` (build.py → reels.html + timeline.json, music.py, compose.py).
+- **Higgsfield web üretim akışı (kullanıcı yapar):** higgsfield.ai'de model Seedance 2.5, Mode "References" (ekli görsel olmadan), 9:16, 5 sn, Sound kapalı, 720p → 35 kredi/video. Soul 2.0 görselleri ücretsiz (2.999 hak). Kullanıcı "hazır" deyince show_generations ile videoları oluşturulma sırasına göre çek.
+- Promptlara "absolutely no text, no letters, no words" eklenmeli, yoksa bozuk yazı çıkıyor.
 
 ## Yarım kalan işler
 - **Seslendirme:** Önizlemede kullanılan Türkçe ses (Piper tr_TR-dfki) CC BY-NC-SA lisanslı, yani ticari kullanıma uygun değil, yayınlanmamalı. Seçenekler:
