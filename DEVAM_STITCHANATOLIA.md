@@ -25,6 +25,8 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 7 | Göz Seti (6 göz motifi sampler) — YAYINDA: etsy.com/listing/4622089877 | 75×53 | SA-006 |
 | 8 | Kurt Ağzı — YAYINDA: etsy.com/listing/4622103012 | 61×87 | SA-007 |
 | 9 | Yıldız (kare) — YAYINDA: etsy.com/listing/4622099525 | 69×69 | SA-008 |
+| 10 | Noel Süsü Seti (6 mini süs) — 3,50 $ | 63×47 | SA-009 |
+| 11 | Anadolu Noel Ağacı — 5,50 $ | 61×85 | SA-010 |
 
 > 7-9 numaralı ürünler Etsy'de yayında (toplam 9 ilan). Yıldız'da Holiday: Christmas.
 
@@ -111,7 +113,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 
    Her biri için hazırlanacaklar: PDF, Etsy görselleri, video, Pinterest pini, ilan metni (.txt) ve sohbette adım adım yükleme talimatı.
 2. Her akşam 2 pin (yukarıdaki takvime göre).
-3. 2. hafta: 2 Noel deseni + 2 kilim deseni.
+3. 2. hafta: ✅ 2 Noel deseni hazır (SA-009, SA-010; `designs3.py`, `listings3.py`, yeni renk DMC 699 Christmas Green). Etsy'ye yüklenme durumunu sor (Yıldız kopyalanarak, Holiday: Christmas). Sonra 2 kilim deseni (SA-011, SA-012).
 4. 3. hafta: Instagram'ın ilk 9 gönderisi ve haftalık paket.
 5. 4. hafta: Google Sheets takip tablosu, 2. paket ürün, genel değerlendirme.
 6. 2. ay:

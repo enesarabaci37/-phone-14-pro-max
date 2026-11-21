@@ -9,6 +9,8 @@ const FILE = {
   goz_seti: 'Kilim_Goz_Evil_Eye_Sampler_Cross_Stitch_Pattern.pdf',
   kurt_agzi: 'Anatolian_Kilim_Kurt_Agzi_Wolf_Cross_Stitch_Pattern.pdf',
   yildiz: 'Anatolian_Kilim_Yildiz_Star_Cross_Stitch_Pattern.pdf',
+  noel_susleri: 'Kilim_Christmas_Ornaments_Cross_Stitch_Pattern.pdf',
+  noel_agaci: 'Anatolian_Kilim_Christmas_Tree_Cross_Stitch_Pattern.pdf',
 };
 const ONLY = process.argv.slice(2);
 (async () => {

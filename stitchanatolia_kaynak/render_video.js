@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
-const NAMES = { nazar: '1_Nazar_Madalyonu', tree_of_life: '2_Hayat_Agaci', elibelinde: '3_Elibelinde', bereket: '4_Bereket', mini_nazar: '5_Mini_Nazar_Seti', goz_seti: '7_Goz_Seti', kurt_agzi: '8_Kurt_Agzi', yildiz: '9_Yildiz' };
+const NAMES = { nazar: '1_Nazar_Madalyonu', tree_of_life: '2_Hayat_Agaci', elibelinde: '3_Elibelinde', bereket: '4_Bereket', mini_nazar: '5_Mini_Nazar_Seti', goz_seti: '7_Goz_Seti', kurt_agzi: '8_Kurt_Agzi', yildiz: '9_Yildiz', noel_susleri: '10_Noel_Susleri', noel_agaci: '11_Noel_Agaci' };
 const only = process.argv[2];
 const previewOnly = process.argv[3] === 'preview';
 (async () => {
