@@ -7,7 +7,7 @@ ses_klasörü: t1.wav ... t9.wav (sessizliği kırpılmış satırlar)
 import json, re, subprocess, sys, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 VO, SPEED = sys.argv[1], float(sys.argv[2]) if len(sys.argv) > 2 else 1.05
-GAP, LEAD, TAIL = 0.45, 0.3, 2.3
+GAP, LEAD, TAIL = 0.3, 0.25, 2.3
 dur = lambda p: float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', p]))
 
 OS = [0, 4.9, 8.3, 18.3, 26, 37.2, 42.3, 46, 53.4]       # eski sahne başları
@@ -21,7 +21,7 @@ for i in range(8):
     V.append(round(V[-1] + D[i] + GAP, 3))
 S = [0.0] + [round(v - LEAD, 3) for v in V[1:]]
 END = round(V[8] + D[8] + TAIL, 2)
-K = [max(0.8, min(1.6, D[i] / OD[i])) for i in range(9)]
+K = [max(0.6, min(1.6, D[i] / OD[i])) for i in range(9)]
 
 def scene_of(t):
     i = 0
