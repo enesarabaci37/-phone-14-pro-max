@@ -26,6 +26,9 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
   - İçinde: 01 Logo (SVG, PNG, Baskı CMYK PDF/EPS) · 02 Sosyal Medya · 03 E-posta · 04 Web Sitesi · 05 Renk Paleti · 06 Fontlar · 07 Gönderi Şablonları · 08 İçerikler
   - Marka kılavuzu PDF: https://drive.google.com/file/d/1LAxH8fW7rEY2uiHy11bMTm5GlqQKvnTz/view
   - GTA 6 içerik klasörü: https://drive.google.com/drive/folders/1OXhh_fwlJFmx09hmc9RB5K-JKG541baX
+- Paylaşım klasörü "Bentaka Paylaşımlar" (her içerik için numaralı alt klasör: video, kapak, açıklama): https://drive.google.com/drive/folders/1mtMj2u5XsyJ8FV6CTN5JRVIDZDEFjJCo
+  - 01 GTA 6 · Kaç Saat Çalışmalısın (Reels): https://drive.google.com/drive/folders/1WyVymudWawWpHPA05BiX_Jpuj9eT5hzA
+  - Drive bağlantısı çağrı başına yaklaşık 3 MB dosya taşıyabiliyor. Videoları kullanıcı sohbetteki dosyadan "Paylaş → Drive" ile kendisi kaydediyor.
 - Tasarım tuvali (Claude artifact; logo, palet, tipografi, Instagram, Haber/Kıyas/Alıntı şablonları): https://claude.ai/artifact/6jmevU6ezz12XUe2brtN84
 
 ## Yapılanlar
