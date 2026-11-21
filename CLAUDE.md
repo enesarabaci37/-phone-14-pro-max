@@ -45,7 +45,8 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 - Azure Speech kullanımına kullanıcı bu Reels için onay verdi, ama sesi beğenmedi.
 - **ElevenLabs bağlı:** Starter paketi alındı (ilk ay 1 $, sonra 6 $/ay). Anahtar Network secrets'ta kayıtlı (api.elevenlabs.io, xi-api-key). Starter'da 192 kbps çıkış yok, 128 kbps kullanılıyor. Seçilen ses: Fatih Yıldırım (7VqWGAWwo2HMrylfKrcm), model eleven_v4, hız 1.05.
 - Okunuş kuralı: Metinde "GTA 6" yerine "Geta altı", "Ultimate" yerine "Altimit", "euro" yerine "avro" yazılır.
-- Görsel kuralı: Gerçek GTA 6 görüntüleri, karakterleri ve logoları taklit edilmez. "GTA havasında" özgün sahneler üretilir ve "TEMSİLİ GÖRSEL · YAPAY ZEKÂ" etiketi konur.
+- Görsel kuralı: Gerçek GTA 6 görüntüleri, karakterleri ve logoları taklit edilmez. "GTA havasında" özgün sahneler üretilir. Kullanıcı videodaki "TEMSİLİ GÖRSEL · YAPAY ZEKÂ" yazısını istemedi; bunun yerine paylaşırken Instagram'ın "Yapay zekâ bilgisi" etiketi açılır.
+- Video içi sadelik: Tarih/platform satırı ve kaynak satırı videoda yer almaz, kaynaklar gönderi açıklamasına yazılır. Sağ alttaki filigran büyük harfli "© BENTAKA" değil, logodaki gibi Sora Bold küçük harf "bentaka".
 
 ## Yarım kalan işler
 - **Seslendirme:** Önizlemede kullanılan Türkçe ses (Piper tr_TR-dfki) CC BY-NC-SA lisanslı, yani ticari kullanıma uygun değil, yayınlanmamalı. Seçenekler:

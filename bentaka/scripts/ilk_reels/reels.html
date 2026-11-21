@@ -44,13 +44,11 @@ canvas{position:absolute;inset:0}
   <div style="display:flex;align-items:center;gap:16px"><svg width="54" height="54" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle cx="68" cy="72" r="8" fill="#C6FF3D"/></svg><span style="font-size:32px;font-weight:600">@bentaka</span></div>
   <span class="chip">OYUN</span>
 </div>
-<div id="ai" class="mono" style="display:none;position:absolute;left:84px;bottom:420px;font-size:20px;color:rgba(243,245,248,.55)">TEMSİLİ GÖRSEL · YAPAY ZEKÂ</div>
-<div id="copy" class="mono" style="position:absolute;right:84px;bottom:420px;font-size:20px;color:rgba(243,245,248,.38);opacity:0">© BENTAKA</div>
+<div id="copy" class="sora" style="position:absolute;right:84px;bottom:410px;font-weight:700;font-size:34px;letter-spacing:-.045em;color:rgba(243,245,248,.6);opacity:0">bentaka</div>
 
 <!-- S1: Kanca -->
 <section class="scene" data-s="0.0" data-e="3.716">
   <div class="pad" style="top:430px">
-    <div class="el mono c" data-in="0.15" style="font-size:28px">19 Kasım 2026 · PS5 / Xbox Series X|S</div>
     <div class="el big v" data-in="0.329" data-fx="punch" style="font-size:270px;white-space:nowrap;margin-top:30px;text-shadow:0 0 80px rgba(198,255,61,.35)">GTA 6</div>
     <div class="el h1" data-in="0.805" style="font-size:132px;margin-top:6px">çıktı.</div>
     <div class="el h1" data-in="1.954" style="font-size:104px;margin-top:110px">Ama sana <span class="hl dark" data-hl="2.43">kaça<i></i></span><br>mal oldu?</div>
@@ -183,7 +181,6 @@ canvas{position:absolute;inset:0}
       <span class="sora" style="font-weight:700;font-size:170px;letter-spacing:-.045em;padding-bottom:14px">bentaka</span></div>
     <div class="el sora c" data-in="0.583" style="font-weight:600;font-size:60px;margin-top:40px">Future, first<span class="v">.</span></div>
     <div class="el" data-in="1.028" style="margin-top:60px"><span class="chip" style="font-size:28px;padding:16px 30px">TAKİP ET · @BENTAKA</span></div>
-    <div class="el mono c" data-in="1.398" style="font-size:20px;text-align:center;line-height:1.8;margin-top:90px;opacity:.8">Kaynak: PlayStation Store TR / DE / US (dijital, standart ve ultimate)<br>2026 brüt asgari ücret: TR 33.030 TL ÷ 225 saat · DE 13,90 € · ABD federal 7,25 $</div>
   </div>
 </section>
 
@@ -227,7 +224,7 @@ function mood(t){
   return .45;
 }
 const OVERLAY=location.hash.includes('overlay');
-if(OVERLAY){document.body.style.background='transparent';document.getElementById('root').style.background='transparent';document.getElementById('ai').style.display='block';}
+if(OVERLAY){document.body.style.background='transparent';document.getElementById('root').style.background='transparent';}
 // sahneye göre perde koyuluğu (0 = açık, 1 = koyu)
 function scrim(t){
   const k=[[0.0,.25],[1.796,.25],[2.113,.55],[3.716,.6],[6.748,.72],[33.411,.72],[33.411,.7],[39.749,.7],[40.177,.74],[44.888,.4],[99,.4]];
