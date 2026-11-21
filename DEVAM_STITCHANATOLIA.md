@@ -110,6 +110,8 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 - Banka: TR …9394 Verified, aylık ödeme. Fatura kartı: VISA …4852 varsayılan (eski …9149 sorunluydu), auto-billing ayın 1'i.
 - Cyber Specials: %25 indirim, tüm ilanlar, 23 Kas – 1 Ara 2026 (Etsy etkinliği).
 - Custom requests kapalı (2. ayda değerlendirilecek).
+- 5 Aralık 2026, 20:00 için hatırlatma kuruldu: Abandoned cart, Favorited item ve Thank you teklifleri (%15).
+- Ürün temposu: haftada 3-4 yeni desen (günlük değil). Hedef: 5 Aralık'ta ~15, Aralık sonunda 20+ ürün.
 
 ## Son durum
 İlk 7 günde 5 görüntülenme, 1 ziyaret, 0 sipariş. Bu normal; mağaza yeni ve ürün sayısı az.
