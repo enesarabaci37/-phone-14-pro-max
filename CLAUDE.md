@@ -29,6 +29,7 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 - Paylaşım klasörü "Bentaka Paylaşımlar" (her içerik için numaralı alt klasör: video, kapak, açıklama): https://drive.google.com/drive/folders/1mtMj2u5XsyJ8FV6CTN5JRVIDZDEFjJCo
   - 01 GTA 6 · Kaç Saat Çalışmalısın (Reels): https://drive.google.com/drive/folders/1WyVymudWawWpHPA05BiX_Jpuj9eT5hzA
   - 02 Efsane Cuma · Sahte Site Uyarısı (Reels): https://drive.google.com/drive/folders/1VuZPpcqCQdlILaCStH0eCQznLapj2cyf
+  - 03 Efsane Cuma · 5 İşaret (Kaydırmalı Gönderi): https://drive.google.com/drive/folders/1-cKwVtooTJSl2QYcJmtnFRybBQ6ZpULD
   - Drive bağlantısı çağrı başına yaklaşık 3 MB dosya taşıyabiliyor. Videoları kullanıcı sohbetteki dosyadan "Paylaş → Drive" ile kendisi kaydediyor.
 - Tasarım tuvali (Claude artifact; logo, palet, tipografi, Instagram, Haber/Kıyas/Alıntı şablonları): https://claude.ai/artifact/6jmevU6ezz12XUe2brtN84
 
