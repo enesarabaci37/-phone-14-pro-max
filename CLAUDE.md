@@ -6,7 +6,7 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 
 ## Marka (kesinleşti)
 - **İsim:** Bentaka. Dil psikolojisine göre seçildi: sesler dudaktan damağa ilerliyor (B→N→T→K), patlamalı sesle başlıyor, her dilde aynı okunuyor. Hedef kitle Türkiye ve yurt dışı.
-- **Kullanıcı adı:** Şablonlarda `@bentaka` geçiyor. Instagram'da bu adın alınıp alınmadığı doğrulanmadı.
+- **Kullanıcı adı: @bentakatr** (Instagram, profesyonel hesap, 21 Kasım 2026). @bentaka başkasına ait, hiçbir yerde kullanma. Gmail'de 'bentaka' da alınmış. bentaka.com/.net/.app/.co kayıtlı görünmüyordu (21 Kasım, RDAP); kullanıcıya bentaka.com + info@ önerildi.
 - **Slogan:** **"Future, first."** Her yerde İngilizce ve tek başına kullanılır, sondaki nokta Volt renginde. Türkçe karşılığı ("Geleceği ilk sen gör.") **logonun yanına yazılmaz**, sadece Türkçe gönderi açıklamalarında kullanılabilir. Kullanıcı ilk slogan olan "Signal over noise"ı beğenmedi.
 - **Logo:** Küçük harf "b" monogramı. İçinde bir halka ve ortasında bir nokta var (bit, çekirdek, odak). Yazı kısmı Sora Bold, harf aralığı −0.045em. Noktanın rengi koyu zeminde Volt, açık zeminde İyon.
 - **Renkler (HEX · kuşe kâğıt CMYK):** Gece #0B0E14 (70 55 35 95) · Grafit #1A1F2B (82 70 48 55) · Çelik #8A93A6 (48 36 24 6) · Bulut #F3F5F8 (4 2 1 0) · **Volt #C6FF3D** (25 0 85 0, ana vurgu) · İyon #5B7CFF (68 52 0 0). CMYK değerleri ölçülmedi, el ile belirlendi; baskıdan önce matbaadan prova istenmeli. Volt açık zeminde yazı rengi olarak kullanılmaz.

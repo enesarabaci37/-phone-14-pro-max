@@ -62,7 +62,7 @@ f'''<div class="pad" style="top:470px">
 f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:160px">
   <div class="el" data-in="0.1" data-fx="punch" style="display:flex;align-items:center;gap:32px">{LOGO.format(s=170,id='id="dot"')}<span class="sora" style="font-weight:700;font-size:170px;letter-spacing:-.045em;padding-bottom:14px">bentaka</span></div>
   <div class="el sora c" data-in="0.7" style="font-weight:600;font-size:60px;margin-top:40px">Future, first<span class="v">.</span></div>
-  <div class="el" data-in="1.3" style="margin-top:60px"><span class="chip" style="font-size:28px;padding:16px 30px">TAKİP ET · @BENTAKA</span></div>
+  <div class="el" data-in="1.3" style="margin-top:60px"><span class="chip" style="font-size:28px;padding:16px 30px">TAKİP ET · @BENTAKATR</span></div>
 </div>''',
 ]
 secs = ''.join(f'<section class="scene" data-s="{S[i]}" data-e="{E[i]}">{scenes[i]}</section>\n' for i in range(N))

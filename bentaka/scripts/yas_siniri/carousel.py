@@ -37,7 +37,7 @@ def page(n, bg, body, label='BUNU BİLMİYORDUN', swipe=False):
 <svg class="wm" width="760" height="760" viewBox="0 0 120 120"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle cx="68" cy="72" r="8" fill="#F3F5F8"/></svg>
 <div class="page"><div class="top"><span class="chip {'red' if label=='YASAK' else ''}">{label}</span><span class="mono c" style="font-size:22px">SOSYAL MEDYA · 15 YAŞ</span></div>
 <div style="flex:1;display:flex;flex-direction:column;justify-content:center">{body}</div>
-<div class="foot"><div style="display:flex;align-items:center;gap:14px">{LOGO.format(s=44)}<span style="font-size:28px;font-weight:600">@bentaka</span></div>
+<div class="foot"><div style="display:flex;align-items:center;gap:14px">{LOGO.format(s=44)}<span style="font-size:28px;font-weight:600">@bentakatr</span></div>
 <div style="display:flex;align-items:center;gap:26px">{sw}<span class="mono c" style="font-size:22px">{n}/8</span></div></div></div></body></html>'''
 
 def sign(k, title, desc, extra=''):
