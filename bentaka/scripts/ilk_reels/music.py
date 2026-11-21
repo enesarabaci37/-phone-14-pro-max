@@ -6,7 +6,7 @@ Kullanım: python3 music.py <çıktı.wav>
 import sys, wave
 import numpy as np
 
-SR, BPM, DUR = 48000, 120, 54.0
+SR, BPM, DUR = 48000, 120, 59.0
 BEAT = 60 / BPM
 N = int(SR * DUR)
 L = np.zeros(N); R = np.zeros(N)
@@ -121,12 +121,11 @@ def arp(notes, n_bar):
 
 # Bölümler: (başlangıç, bitiş, davul, arp)
 def section(t):
-    if t < 5: return 'full'
-    if t < 9: return 'tension'
-    if t < 22: return 'full'
-    if t < 26: return 'build'
-    if t < 33: return 'full'
-    if t < 49: return 'full'
+    if t < 4.9: return 'full'
+    if t < 8.3: return 'tension'
+    if t < 26: return 'full'
+    if t < 30: return 'build'
+    if t < 53.4: return 'full'
     return 'outro'
 
 K, C, HC, HO = kick(), clap(), hat(), hat(True)
@@ -174,15 +173,15 @@ for b in range(nbars):
 L *= duck; R *= duck
 
 # --- efektler (görüntüye senkron) -------------------------------------------
-for c in [5, 9, 16, 22, 33, 39, 44, 49]:
+for c in [4.9, 8.3, 18.3, 26, 37.2, 42.3, 46, 53.4]:
     w = whoosh(); add(w, c - len(w) / SR + 0.05, 0.5, 0.3); add(w, c - len(w) / SR + 0.05, 0.5, -0.3)
-for c in [0.35, 22.0, 29.6, 33.4, 49.1]:
+for c in [0.35, 26.0, 32.8, 37.6, 53.5]:
     add(impact(), c, 0.75)
-add(riser(1.0), 21.0, 0.8); add(riser(1.2), 47.8, 0.7)
-for k in range(24):  # Türkiye sayacı (26,2 – 28,8 sn)
-    add(tick(), 26.2 + k * 0.105, 0.6 * (1 - k / 30))
-for k in range(12):  # iş günü kutuları (34,7 – 36,5 sn)
-    add(tick(), 34.7 + k * 0.15, 0.4)
+add(riser(1.0), 25.0, 0.8); add(riser(1.2), 52.2, 0.7)
+for k in range(24):  # Türkiye sayacı (30,2 – 32,8 sn)
+    add(tick(), 30.2 + k * 0.105, 0.6 * (1 - k / 30))
+for k in range(10):  # iş günü kutuları (38,4 – 39,8 sn)
+    add(tick(), 38.4 + k * 0.14, 0.4)
 
 # ana çıkış: yumuşak kırpma, giriş/çıkış
 mix = np.stack([L, R], 1)
