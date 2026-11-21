@@ -26,7 +26,7 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 8 | Kurt Ağzı — YAYINDA: etsy.com/listing/4622103012 | 61×87 | SA-007 |
 | 9 | Yıldız (kare) — YAYINDA: etsy.com/listing/4622099525 | 69×69 | SA-008 |
 | 10 | Noel Süsü Seti (6 mini süs) — 3,50 $ — YAYINDA: etsy.com/listing/4622778027 | 63×47 | SA-009 |
-| 11 | Anadolu Noel Ağacı — 5,50 $ | 61×85 | SA-010 |
+| 11 | Anadolu Noel Ağacı — 5,50 $ — YAYINDA: etsy.com/listing/4622790172 | 61×85 | SA-010 |
 
 > 7-9 numaralı ürünler Etsy'de yayında (toplam 9 ilan). Yıldız'da Holiday: Christmas.
 
@@ -54,6 +54,8 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - Etsy'yi Pinterest'te sahiplenme (claim) özelliği Türkiye'de yok.
 - **Günlük pin takvimi:** her akşam 2 pin, saat 21:00–01:00 arası (Pinterest'in "daha sonra yayınla" zamanlamasıyla da olur). Kullanıcı "bugünün pinlerini söyle" der, Claude başlık, açıklama, pano ve link alanlarını verir. Yeni ürünlerin linkleri ve pin metinleri kendi URUN_BILGILERI.txt dosyalarında. Sıra (20 Kasım 2026'dan itibaren):
   - ✅ 20 Kas: Göz Seti a + Kurt Ağzı a + Yıldız a yayınlandı (Pinterest'te toplam 9 pin)
+  - Noel pinleri (yeni, araya eklenecek, ÖNCELİKLİ): Noel Süsü a/b/video, Noel Ağacı a/b/video. Pano: Süs → Boho Cross Stitch Ideas, Ağaç → Turkish Kilim Cross Stitch Patterns.
+  - İpucu: Etsy Share & Save (⚙️ → Share) linkleri pinlerde kullanılmalı; kullanıcıdan 11 ürünün share linkleri istendi.
   - ✅ 21 Kas: Motiflerin anlamı (link: stitchanatolia.etsy.com) + Göz Seti videosu (Pinterest'te 11 pin)
   2. 22 Kas: Nazar videosu + Kurt Ağzı videosu
   3. 23 Kas: Koleksiyon pini + Yıldız videosu
@@ -113,7 +115,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 
    Her biri için hazırlanacaklar: PDF, Etsy görselleri, video, Pinterest pini, ilan metni (.txt) ve sohbette adım adım yükleme talimatı.
 2. Her akşam 2 pin (yukarıdaki takvime göre).
-3. 2. hafta: ✅ 2 Noel deseni hazır (SA-009, SA-010; `designs3.py`, `listings3.py`, yeni renk DMC 699 Christmas Green). Etsy'ye yüklenme durumunu sor (Yıldız kopyalanarak, Holiday: Christmas). Sonra 2 kilim deseni (SA-011, SA-012).
+3. 2. hafta: ✅ 2 Noel deseni hazır (SA-009, SA-010; `designs3.py`, `listings3.py`, yeni renk DMC 699 Christmas Green). İkisi de yayında, 'Christmas' bölümünde (toplam 11 ilan). Sonra 2 kilim deseni (SA-011, SA-012).
 4. 3. hafta: Instagram'ın ilk 9 gönderisi ve haftalık paket.
 5. 4. hafta: Google Sheets takip tablosu, 2. paket ürün, genel değerlendirme.
 6. 2. ay:
