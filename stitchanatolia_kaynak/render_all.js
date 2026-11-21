@@ -11,6 +11,8 @@ const FILE = {
   yildiz: 'Anatolian_Kilim_Yildiz_Star_Cross_Stitch_Pattern.pdf',
   noel_susleri: 'Kilim_Christmas_Ornaments_Cross_Stitch_Pattern.pdf',
   noel_agaci: 'Anatolian_Kilim_Christmas_Tree_Cross_Stitch_Pattern.pdf',
+  kus: 'Anatolian_Kilim_Kus_Birds_Cross_Stitch_Pattern.pdf',
+  pitrak: 'Anatolian_Kilim_Pitrak_Cross_Stitch_Pattern.pdf',
 };
 const ONLY = process.argv.slice(2);
 (async () => {

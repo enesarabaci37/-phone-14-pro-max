@@ -27,6 +27,8 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 9 | Yıldız (kare) — YAYINDA: etsy.com/listing/4622099525 | 69×69 | SA-008 |
 | 10 | Noel Süsü Seti (6 mini süs) — 3,50 $ — YAYINDA: etsy.com/listing/4622778027 | 63×47 | SA-009 |
 | 11 | Anadolu Noel Ağacı — 5,50 $ — YAYINDA: etsy.com/listing/4622790172 | 61×85 | SA-010 |
+| 12 | Kuş (kilim kuşları + hayat ağacı) — 5,50 $ — hazır, Etsy'ye yüklenecek | 61×85 | SA-011 |
+| 13 | Pıtrak (kare madalyon) — 5,50 $ — hazır, Etsy'ye yüklenecek | 71×71 | SA-012 |
 
 > 7-9 numaralı ürünler Etsy'de yayında (toplam 9 ilan). Yıldız'da Holiday: Christmas.
 
@@ -124,7 +126,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 
    Her biri için hazırlanacaklar: PDF, Etsy görselleri, video, Pinterest pini, ilan metni (.txt) ve sohbette adım adım yükleme talimatı.
 2. Her akşam 2 pin (yukarıdaki takvime göre).
-3. 2. hafta: ✅ 2 Noel deseni hazır (SA-009, SA-010; `designs3.py`, `listings3.py`, yeni renk DMC 699 Christmas Green). İkisi de yayında, 'Christmas' bölümünde (toplam 11 ilan). Sonra 2 kilim deseni (SA-011, SA-012).
+3. 2. hafta: ✅ 2 Noel deseni hazır (SA-009, SA-010; `designs3.py`, `listings3.py`, yeni renk DMC 699 Christmas Green). İkisi de yayında, 'Christmas' bölümünde (toplam 11 ilan). ✅ 2 kilim deseni hazır: Kuş (SA-011), Pıtrak (SA-012); `designs4.py`, `listings4.py`. Kuş → Elibelinde kopyala, Pıtrak → Bereket kopyala; Shop section: Kilim Patterns, Holiday yok.
 4. 3. hafta: Instagram'ın ilk 9 gönderisi ve haftalık paket.
 5. 4. hafta: Google Sheets takip tablosu, 2. paket ürün, genel değerlendirme.
 6. 2. ay:
