@@ -31,6 +31,7 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
   - 02 Efsane Cuma · Sahte Site Uyarısı (Reels): https://drive.google.com/drive/folders/1VuZPpcqCQdlILaCStH0eCQznLapj2cyf
   - 03 Efsane Cuma · 5 İşaret (Kaydırmalı Gönderi): https://drive.google.com/drive/folders/1-cKwVtooTJSl2QYcJmtnFRybBQ6ZpULD
   - Drive bağlantısı çağrı başına yaklaşık 3 MB dosya taşıyabiliyor. Videoları kullanıcı sohbetteki dosyadan "Paylaş → Drive" ile kendisi kaydediyor.
+- **Paylaşım Takvimi** (Google E-Tablo, tarih/saat/nerede/içerik/durum/klasör): https://docs.google.com/spreadsheets/d/1bshXdwxNtoJq18wW7-RrMkuFpW0JaU5ZeWe9nbb2o3s
 - Tasarım tuvali (Claude artifact; logo, palet, tipografi, Instagram, Haber/Kıyas/Alıntı şablonları): https://claude.ai/artifact/6jmevU6ezz12XUe2brtN84
 
 ## Yapılanlar
@@ -57,6 +58,8 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 - 45 sn, "5 işaretle sahte siteyi anla" + sanal kart çözümü. Betikler `bentaka/scripts/efsane_cuma/` (build.py → reels.html + timeline.json, music.py, compose.py).
 - **Higgsfield web üretim akışı (kullanıcı yapar):** higgsfield.ai'de model Seedance 2.5, Mode "References" (ekli görsel olmadan), 9:16, 5 sn, Sound kapalı, 720p → 35 kredi/video. Soul 2.0 görselleri ücretsiz (2.999 hak). Kullanıcı "hazır" deyince show_generations ile videoları oluşturulma sırasına göre çek.
 - Promptlara "absolutely no text, no letters, no words" eklenmeli, yoksa bozuk yazı çıkıyor.
+- **ÇALIŞMA DÜZENİ (kullanıcı kararı, 21 Kasım 2026):** Kullanıcı hiçbir üretim işiyle uğraşmak istemiyor, sadece Instagram'da paylaşıyor. "Bugün ne paylaşılacak?" diye sorunca: takvime bak, içeriği tamamen kendin üret (Higgsfield API Soul 2 görselleri + ElevenLabs ses + kendi grafiklerin), Drive'daki klasöre görsel/kapak/açıklamayı yükle, videoları sohbete gönder (Fotoğraflar'a kaydedecek), saat ve yeri (Reels/Gönderi/Hikâye) net listele. Kullanıcıdan Higgsfield web üretimi ya da ekran kaydı isteme.
+- **Higgsfield API Soul 2 (ucuz yol):** POST api.higgsfield.ai/higgsfield-ai/soul/v2/standard {"prompt","aspect_ratio":"9:16"} → 960×1696 görsel, yaklaşık 0,005 $. Videoları API'den üretme (pahalı). Kullanıcı 21 Kasım'da 5 $ daha yükledi (bakiye 5,06 $).
 - **Kredi tasarrufu kuralı (kullanıcı kararı):** Reels başına en fazla 1 video (açılış, 35 kredi). Diğer sahneler Soul 2.0 görseli (ücretsiz, 2.999 hak) + montajda yakınlaşma/kayma hareketi. "Nasıl yapılır" sahneleri kullanıcının telefon ekran kaydı. Sık sahneler (hacker, bildirim, neon şehir, kapanış) tekrar kullanılır. Kalan Plus kredisi ~765 (21 Kasım 2026).
 
 ## Yarım kalan işler

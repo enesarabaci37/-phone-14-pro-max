@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><title>Bentaka: WhatsApp</title>
+<style>
+@font-face{font-family:Sora;font-weight:400;src:url(../../fonts/Sora-Regular.ttf)}
+@font-face{font-family:Sora;font-weight:600;src:url(../../fonts/Sora-SemiBold.ttf)}
+@font-face{font-family:Sora;font-weight:700;src:url(../../fonts/Sora-Bold.ttf)}
+@font-face{font-family:Sora;font-weight:800;src:url(../../fonts/Sora-ExtraBold.ttf)}
+@font-face{font-family:Inter;font-weight:400;src:url(file:///usr/share/fonts/opentype/inter/Inter-Regular.otf)}
+@font-face{font-family:Inter;font-weight:600;src:url(file:///usr/share/fonts/opentype/inter/Inter-SemiBold.otf)}
+@font-face{font-family:Mono;font-weight:500;src:url(file:///usr/share/fonts/truetype/jetbrains-mono/JetBrainsMono-Medium.ttf)}
+:root{--gece:#0B0E14;--grafit:#1A1F2B;--celik:#8A93A6;--bulut:#F3F5F8;--volt:#C6FF3D;--iyon:#5B7CFF}
+*{box-sizing:border-box;margin:0}
+body{background:var(--gece);width:1080px;height:1920px;overflow:hidden}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--gece);font-family:Inter,sans-serif;color:var(--bulut)}
+canvas{position:absolute;inset:0}
+.sora{font-family:Sora,sans-serif}
+.mono{font-family:Mono,monospace;letter-spacing:.12em;text-transform:uppercase}
+.v{color:var(--volt)} .c{color:var(--celik)} .i{color:var(--iyon)}
+.scene{position:absolute;inset:0;opacity:0;will-change:transform,opacity,filter}
+.el{opacity:0}
+.pad{position:absolute;left:84px;right:84px}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:12px 22px;border-radius:999px;background:var(--volt);color:var(--gece);font-family:Mono,monospace;font-size:24px;letter-spacing:.12em}
+.chip.ghost{background:rgba(243,245,248,.06);color:var(--bulut);border:2px solid rgba(243,245,248,.14)}
+.label{font-family:Mono,monospace;font-size:28px;letter-spacing:.14em;text-transform:uppercase;color:var(--volt);display:flex;align-items:center;gap:16px}
+.label:before{content:"";width:40px;height:4px;background:var(--volt);border-radius:2px}
+.glass{background:linear-gradient(160deg,rgba(26,31,43,.92),rgba(11,14,20,.86));border:2px solid rgba(243,245,248,.08);border-radius:40px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.flag{width:96px;height:96px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-family:Mono,monospace;font-size:30px;letter-spacing:.06em;background:var(--grafit);color:var(--bulut);border:2px solid rgba(243,245,248,.1)}
+.hl{position:relative;display:inline-block;z-index:0;white-space:nowrap}
+.hl i{position:absolute;left:-12px;right:-12px;top:8%;bottom:-2%;background:var(--volt);z-index:-1;transform-origin:left;transform:scaleX(0);border-radius:6px}
+.hl.dark{color:var(--gece)}
+.big{font-family:Sora,sans-serif;font-weight:800;letter-spacing:-.045em;line-height:.95}
+.h1{font-family:Sora,sans-serif;font-weight:700;letter-spacing:-.035em;line-height:1.04}
+.num{font-variant-numeric:tabular-nums}
+.scene .h1,.scene .big,.scene .sora,.scene .el{text-shadow:0 4px 24px rgba(0,0,0,.65),0 1px 3px rgba(0,0,0,.6)}
+
+.chip.red{background:#FF5A5A;color:#0B0E14}
+.badge{flex:none;width:88px;height:88px;border-radius:26px;background:var(--volt);color:var(--gece);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:800;font-size:52px}
+.sign{display:flex;align-items:center;gap:32px;padding:34px 40px}
+.st{font-family:Sora,sans-serif;font-weight:700;font-size:54px;letter-spacing:-.03em;line-height:1.08}
+.ss{font-size:34px;color:var(--celik);margin-top:10px;line-height:1.3}
+.mock{flex:1;padding:22px;border-radius:30px}
+.mock .bar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-radius:16px;background:rgba(243,245,248,.08);font-family:Mono,monospace;font-size:24px}
+.mock .bar b{width:12px;height:12px;border-radius:6px;background:rgba(243,245,248,.3)}
+.mock .bar span{margin-left:8px}
+.mock .ok,.mock .ko{margin-top:120px;font-family:Mono,monospace;font-size:28px;letter-spacing:.14em;color:var(--volt)}
+.mock .ko{color:#FF5A5A}
+.mock.bad{border-color:rgba(255,90,90,.6)}
+.url{padding:30px 40px;font-family:Mono,monospace;font-size:46px;letter-spacing:.02em}
+.url .m{color:#FF5A5A;text-decoration:underline}
+.url .tag{display:inline-block;margin-left:16px;font-size:22px;padding:8px 14px;border-radius:999px;background:rgba(255,90,90,.18);color:#FF8A8A;vertical-align:middle;letter-spacing:.06em}
+.sms{padding:34px 40px;border-radius:40px 40px 40px 12px;background:rgba(243,245,248,.95);color:#0B0E14;text-shadow:none!important}
+.sms .lnk{color:#2B59FF}
+.vcard{margin-top:50px;width:780px;padding:44px 50px;border-radius:40px;background:linear-gradient(135deg,#C6FF3D,#8FE04A 60%,#5B7CFF);box-shadow:0 40px 100px rgba(198,255,61,.35);text-shadow:none!important}
+.step{display:flex;align-items:center;gap:28px;margin-top:40px;font-size:48px;font-weight:600}
+.step .badge{width:72px;height:72px;font-size:40px;border-radius:22px}
+
+.phone{width:620px;border-radius:64px;padding:18px;background:#05070B;border:3px solid rgba(243,245,248,.18);box-shadow:0 40px 120px rgba(0,0,0,.6);text-shadow:none!important}
+.scr{border-radius:48px;background:#F2F3F5;color:#0B0E14;padding:34px 26px 40px;min-height:640px;font-family:Inter,sans-serif}
+.scr .ttl{font-family:Sora,sans-serif;font-weight:700;font-size:40px;letter-spacing:-.02em;display:flex;align-items:center;gap:14px}
+.scr .crumb{font-size:22px;color:#6B7280;margin-bottom:16px}
+.grp{background:#fff;border-radius:24px;margin-top:22px;overflow:hidden}
+.row{display:flex;align-items:center;justify-content:space-between;padding:24px 26px;font-size:30px;border-bottom:1px solid #E5E7EB}
+.row:last-child{border-bottom:0}
+.row small{display:block;font-size:22px;color:#6B7280;margin-top:4px}
+.tog{width:92px;height:54px;border-radius:27px;background:#D1D5DB;position:relative;transition:none;flex:none}
+.tog:after{content:"";position:absolute;left:4px;top:4px;width:46px;height:46px;border-radius:23px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.tog.on{background:#25D366}.tog.on:after{left:42px}
+.hit{outline:5px solid #C6FF3D;outline-offset:-5px;border-radius:24px}
+.danger{color:#E11D48;font-weight:600}
+.bub{max-width:820px;padding:30px 36px;border-radius:12px 40px 40px 40px;background:#F3F5F8;color:#0B0E14;font-size:38px;line-height:1.35;text-shadow:none!important}
+.bub .who{font-family:Mono,monospace;font-size:22px;color:#6B7280;letter-spacing:.1em;margin-bottom:8px}
+</style></head>
+<body><div id="root">
+<canvas id="bg" width="1080" height="1920"></canvas>
+<svg id="wm" style="position:absolute;right:-200px;bottom:260px;opacity:.05" width="900" height="900" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle cx="68" cy="72" r="8" fill="#F3F5F8"/></svg>
+<div id="hud" style="position:absolute;left:84px;right:84px;top:190px;display:flex;align-items:center;justify-content:space-between;opacity:0">
+  <div style="display:flex;align-items:center;gap:16px"><svg width="54" height="54" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle cx="68" cy="72" r="8" fill="#C6FF3D"/></svg><span style="font-size:32px;font-weight:600">@bentaka</span></div>
+  <span class="chip">GÜVENLİK</span>
+</div>
+<div id="copy" class="sora" style="position:absolute;right:84px;bottom:410px;font-weight:700;font-size:34px;letter-spacing:-.045em;color:rgba(243,245,248,.6);opacity:0">bentaka</div>
+<section class="scene" data-s="0.0" data-e="4.356"><div class="pad" style="top:420px">
+  <div class="el" data-in="0.1"><span class="chip red"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0B0E14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> DİKKAT!</span></div>
+  <div class="el bub" data-in="0.45" data-fx="left" style="margin-top:50px"><div class="who">ANNEM ❤️ · şimdi</div>Kızım acil 5.000 TL lazım, şu IBAN'a atar mısın? Sonra anlatırım 🙏</div>
+  <div class="el h1" data-in="1.62" style="font-size:80px;margin-top:60px">Böyle bir mesaj gelirse…</div>
+  <div class="el big" data-in="2.98" data-fx="punch" style="font-size:108px;margin-top:30px"><span class="hl dark" data-hl="3.22">sakın gönderme.<i></i></span></div>
+</div></section>
+<section class="scene" data-s="4.356" data-e="11.468"><div class="pad" style="top:440px">
+  <div class="el label" data-in="0.1">Hesaplar ele geçiriliyor</div>
+  <div class="el h1" data-in="0.25" style="font-size:86px;margin-top:40px">WhatsApp'ın çalınıyor, <span class="v">rehberindeki herkesten</span> para isteniyor.</div>
+  <div class="el glass" data-in="4.68" style="display:inline-flex;align-items:center;gap:18px;padding:24px 34px;margin-top:60px;font-size:34px;font-weight:600">🛡️ Siber Güvenlik Başkanlığı uyardı</div>
+</div></section>
+<section class="scene" data-s="11.468" data-e="19.005"><div class="pad" style="top:380px">
+  <div class="el" data-in="0.1" style="display:flex;align-items:center;gap:26px"><div class="badge">1</div><div class="h1" style="font-size:64px">İki adımlı doğrulamayı aç</div></div>
+  <div class="el phone" data-in="1.34" data-fx="punch" style="margin:46px auto 0"><div class="scr">
+    <div class="crumb">Ayarlar › Hesap</div><div class="ttl">İki adımlı doğrulama</div>
+    <div class="grp"><div class="row hit"><span>İki adımlı doğrulama<small>6 haneli PIN ile koru</small></span><div class="tog" data-on="4.74"></div></div></div>
+    <div class="grp"><div class="row"><span>PIN'i değiştir</span><span style="color:#9CA3AF">›</span></div><div class="row"><span>E-posta adresi ekle</span><span style="color:#9CA3AF">›</span></div></div>
+  </div></div>
+</div></section>
+<section class="scene" data-s="19.005" data-e="24.05"><div class="pad" style="top:380px">
+  <div class="el" data-in="0.1" style="display:flex;align-items:center;gap:26px"><div class="badge">2</div><div class="h1" style="font-size:64px">Bağlı cihazlara bak</div></div>
+  <div class="el phone" data-in="0.72" data-fx="punch" style="margin:46px auto 0"><div class="scr">
+    <div class="crumb">Ayarlar</div><div class="ttl">Bağlı cihazlar</div>
+    <div class="grp"><div class="row"><span>💻 Mac · Safari<small>Son etkin: dün</small></span><span style="color:#16A34A;font-size:24px">SENİN</span></div>
+    <div class="row hit"><span>🖥️ Windows · Chrome<small>Son etkin: şimdi · İstanbul?</small></span><span class="danger" style="font-size:24px">?</span></div></div>
+    <div class="grp"><div class="row danger" style="justify-content:center">Çıkış yap</div></div>
+  </div></div>
+  <div class="el h1" data-in="3.1" style="font-size:56px;margin-top:40px;text-align:center">Tanımıyorsan <span class="v">hemen çıkış yap.</span></div>
+</div></section>
+<section class="scene" data-s="24.05" data-e="29.773"><div class="pad" style="top:470px">
+  <div class="el label" data-in="0.1">Bir de</div>
+  <div style="display:flex;flex-direction:column;gap:30px;margin-top:44px">
+    <div class="el glass sign" data-in="0.25" data-fx="left"><div class="badge">🔒</div><div><div class="st">Kodu kimseyle paylaşma</div><div class="ss">WhatsApp'tan gelen 6 haneli doğrulama kodu sadece senin</div></div></div>
+    <div class="el glass sign" data-in="2.96" data-fx="left"><div class="badge">📞</div><div><div class="st">Para isteyeni ara</div><div class="ss">Mesajla değil, telefonla sesini duyarak doğrula</div></div></div>
+  </div>
+</div></section>
+<section class="scene" data-s="29.773" data-e="33.623"><div class="pad" style="top:470px">
+  <div class="el" data-in="0.1" data-fx="plane"><svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="#C6FF3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
+  <div class="el h1" data-in="0.25" style="font-size:108px;margin-top:50px">Bunu <span class="v">aile grubuna</span> gönder.</div>
+  <div class="el h1 c" data-in="1.85" style="font-size:62px;margin-top:30px">Bir dakikada herkes korunsun.</div>
+  <div class="el" data-in="2.73" style="display:flex;gap:22px;margin-top:70px"><span class="chip" style="font-size:30px;padding:20px 34px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0B0E14" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>GÖNDER</span><span class="chip ghost" style="font-size:30px;padding:20px 34px">KAYDET</span></div>
+</div></section>
+<section class="scene" data-s="33.623" data-e="99"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:160px">
+  <div class="el" data-in="0.1" data-fx="punch" style="display:flex;align-items:center;gap:32px"><svg width="170" height="170" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle id="dot" cx="68" cy="72" r="8" fill="#C6FF3D"/></svg><span class="sora" style="font-weight:700;font-size:170px;letter-spacing:-.045em;padding-bottom:14px">bentaka</span></div>
+  <div class="el sora c" data-in="0.7" style="font-weight:600;font-size:60px;margin-top:40px">Future, first<span class="v">.</span></div>
+  <div class="el" data-in="1.3" style="margin-top:60px"><span class="chip" style="font-size:28px;padding:16px 30px">TAKİP ET · @BENTAKA</span></div>
+</div></section>
+
+<div id="wipe" style="position:absolute;left:-400px;top:-200px;width:600px;height:2400px;background:var(--volt);transform:rotate(12deg) translateX(-2600px)"></div>
+<div id="flash" style="position:absolute;inset:0;background:#F3F5F8;opacity:0;pointer-events:none"></div>
+</div>
+<script>
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const prog=(t,s,d)=>clamp((t-s)/d,0,1);
+const eOut=p=>1-Math.pow(1-p,3);
+const eInOut=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const eBack=p=>{const c=1.7;return 1+(c+1)*Math.pow(p-1,3)+c*Math.pow(p-1,2)};
+const WIPES=[4.356,11.468,24.05,29.773,33.623],FLASH=[2.98,16.208,33.723],END=38.51,LAST=33.623,CD=[0,0];
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');
+document.body.style.background='transparent';document.getElementById('root').style.background='transparent';
+function drawOverlay(t){
+  const W=1080,H=1920,a=t<2?.35:(t>LAST?.45:.66);cx.clearRect(0,0,W,H);
+  let g=cx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,`rgba(11,14,20,${Math.min(.9,a+.25)})`);g.addColorStop(.12,`rgba(11,14,20,${a})`);
+  g.addColorStop(.8,`rgba(11,14,20,${a})`);g.addColorStop(1,`rgba(11,14,20,${Math.min(.92,a+.3)})`);
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const vg=cx.createRadialGradient(540,900,450,540,900,1250);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.55)');cx.fillStyle=vg;cx.fillRect(0,0,W,H);
+}
+const scenes=[...document.querySelectorAll('.scene')];
+const hud=document.getElementById('hud'),copy=document.getElementById('copy'),wm=document.getElementById('wm');
+const wipe=document.getElementById('wipe'),flash=document.getElementById('flash');
+window.render=function(t){
+  drawOverlay(t);
+  scenes.forEach(sc=>{
+    const s=+sc.dataset.s,e=+sc.dataset.e,lt=t-s;
+    if(t<s-.01||t>e+.4){sc.style.opacity=0;return}
+    const o=1-eInOut(prog(t,e-.3,.3));sc.style.opacity=o;
+    const outP=prog(t,e-.3,.3);
+    sc.style.transform=`translateY(${(-outP*60).toFixed(1)}px) scale(${(1+outP*.04).toFixed(4)})`;
+    sc.style.filter=outP>0?`blur(${(outP*14).toFixed(1)}px)`:'none';
+    sc.querySelectorAll('.el').forEach(el=>{
+      const p=prog(lt,+el.dataset.in,.55),fx=el.dataset.fx;
+      el.style.opacity=eOut(clamp(p*1.6,0,1));
+      if(fx==='punch'){const k=eBack(p);el.style.transform=`scale(${(.82+.18*k).toFixed(4)})`;el.style.transformOrigin='left center';el.style.filter=`blur(${((1-eOut(p))*10).toFixed(1)}px)`}
+      else if(fx==='left'){el.style.transform=`translateX(${((1-eOut(p))*-140).toFixed(1)}px)`;el.style.filter='none'}
+      else if(fx==='plane'){const q=eOut(p);el.style.transform=`translate(${(-200+200*q).toFixed(1)}px,${(120-120*q).toFixed(1)}px) rotate(${(-20+20*q).toFixed(1)}deg)`}
+      else {el.style.transform=`translateY(${((1-eOut(p))*70).toFixed(1)}px)`;el.style.filter=`blur(${((1-eOut(p))*8).toFixed(1)}px)`}
+    });
+    sc.querySelectorAll('[data-on]').forEach(el=>el.classList.toggle('on',lt>=+el.dataset.on));
+    sc.querySelectorAll('[data-hl]').forEach(el=>{
+      const p=eInOut(prog(lt,+el.dataset.hl,.4));el.querySelector('i').style.transform=`scaleX(${p.toFixed(4)})`;
+      el.style.color=p>.5?'#0B0E14':'#F3F5F8'});
+  });
+  const cd=document.getElementById('cd');if(cd){const left=Math.max(0,299-(t-CD[0])*7);const m=Math.floor(left/60),s=Math.floor(left%60);cd.textContent=`00:0${m}:${String(s).padStart(2,'0')}`}
+  const hv=Math.min(eOut(prog(t,.1,.5)),1-eOut(prog(t,LAST-.3,.3)));
+  hud.style.opacity=hv;copy.style.opacity=hv;
+  wm.style.transform=`translateY(${(Math.sin(t*.4)*14).toFixed(1)}px) rotate(${(t*.6).toFixed(2)}deg)`;
+  const dot=document.getElementById('dot');if(dot)dot.setAttribute('r',(8+Math.max(0,Math.sin((t-LAST)*4))*2.5*(t>LAST?1:0)).toFixed(2));
+  let wx=-2600;WIPES.forEach(c=>{const p=prog(t,c-.32,.5);if(p>0&&p<1)wx=-1800+eInOut(p)*3600});
+  wipe.style.transform=`rotate(12deg) translateX(${wx.toFixed(0)}px)`;
+  let fl=0;FLASH.forEach(c=>{const d=t-c;if(d>=0&&d<.35)fl=Math.max(fl,.5*(1-d/.35))});flash.style.opacity=fl.toFixed(3);
+  document.getElementById('root').style.filter=t>END-.8?`brightness(${(1-prog(t,END-.8,.8)).toFixed(3)})`:'none';
+};
+window.TOTAL=END;
+render(3);
+</script>
+</body></html>
