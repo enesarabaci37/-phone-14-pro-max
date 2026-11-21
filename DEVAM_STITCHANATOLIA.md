@@ -38,7 +38,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 
 ## Pinterest
 - İşletme hesabı açıldı. Kişisel hesap dönüştürülmedi; "Ücretsiz işletme hesabı oluştur" yolu kullanıldı.
-- Profil ve kapak hazır, **9 pin yayında** (20 Kasım).
+- Profil ve kapak hazır, **11 pin yayında** (21 Kasım).
 - Panolar:
   - Turkish Kilim Cross Stitch Patterns
   - Evil Eye Cross Stitch
@@ -52,7 +52,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - Etsy'yi Pinterest'te sahiplenme (claim) özelliği Türkiye'de yok.
 - **Günlük pin takvimi:** her akşam 2 pin, saat 21:00–01:00 arası (Pinterest'in "daha sonra yayınla" zamanlamasıyla da olur). Kullanıcı "bugünün pinlerini söyle" der, Claude başlık, açıklama, pano ve link alanlarını verir. Yeni ürünlerin linkleri ve pin metinleri kendi URUN_BILGILERI.txt dosyalarında. Sıra (20 Kasım 2026'dan itibaren):
   - ✅ 20 Kas: Göz Seti a + Kurt Ağzı a + Yıldız a yayınlandı (Pinterest'te toplam 9 pin)
-  1. 21 Kas: Motiflerin anlamı (pin_meanings) + Göz Seti videosu
+  - ✅ 21 Kas: Motiflerin anlamı (link: stitchanatolia.etsy.com) + Göz Seti videosu (Pinterest'te 11 pin)
   2. 22 Kas: Nazar videosu + Kurt Ağzı videosu
   3. 23 Kas: Koleksiyon pini + Yıldız videosu
   4. 24 Kas: Hayat Ağacı videosu + Göz Seti b
@@ -71,6 +71,9 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - Profesyonel hesap
 - **0 gönderi.** 3. haftada ilk 9 gönderi tek seferde hazırlanıp paylaşılacak.
 - 2FA açılmalı. Pinterest için de aynısı geçerli.
+
+## Not
+- Kullanıcı bazen Etsy ile Pinterest'i karıştırıyor: Pinterest pinleri Etsy ilanlarına giden reklamlar, Etsy'de değişiklik gerekmez. Her akşam o günün dosyalarını SendUserFile ile direkt gönder. Tüm dosyalar tek zip olarak (StitchAnatolia_TUM_DOSYALAR.zip) 21 Kasım'da gönderildi.
 
 ## Teknik akış (`stitchanatolia_kaynak/`)
 - `designs.py`: desen üreticileri (`G` sınıfı: put, mirx, stamp, diamond, frame). Çıktı `designs/<slug>/pattern.js` dosyalarına, toplu hali `all_patterns.js`'e yazılır.
