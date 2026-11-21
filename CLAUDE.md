@@ -39,6 +39,12 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
    - Seslendirmeye göre zamanlanmış 28 saniyelik sürüm ve seslendirme metni.
    - Hesaplanan değerler: Türkiye 27,2 saat, ABD 11 saat, Almanya 5,8 saat.
 
+## İlk Reels (21 Kasım 2026)
+- GTA 6 "kaç saat çalışman gerekiyor" Reels'i, 59 sn: Higgsfield API ile üretilen 3 video ve 6 görsel, Azure tr-TR-AhmetNeural seslendirme, özgün müzik. Betikler `bentaka/scripts/ilk_reels/` altında (README'de birleştirme adımları ve Instagram açıklaması var).
+- **Higgsfield API bağlı:** Anahtar ortamın Network secrets bölümünde kayıtlı (sunucu api.higgsfield.ai, `Authorization: Key …`). Bakiye ayrıdır, Plus paket kredisi kullanılmaz. Kullanıcı 5 $ yükledi, bu Reels yaklaşık 3,1 $ tuttu. Fiyatlar: Soul görsel 1080p 0,19 $, Seedance 2.5 video 720p saniyesi yaklaşık 0,118 $. API'de seslendirme/müzik modeli yok.
+- Azure Speech kullanımına kullanıcı bu Reels için onay verdi.
+- Görsel kuralı: Gerçek GTA 6 görüntüleri, karakterleri ve logoları taklit edilmez. "GTA havasında" özgün sahneler üretilir ve "TEMSİLİ GÖRSEL · YAPAY ZEKÂ" etiketi konur.
+
 ## Yarım kalan işler
 - **Seslendirme:** Önizlemede kullanılan Türkçe ses (Piper tr_TR-dfki) CC BY-NC-SA lisanslı, yani ticari kullanıma uygun değil, yayınlanmamalı. Seçenekler:
   - **Higgsfield (en güncel plan):** Kullanıcının Plus paketi var. Higgsfield bağlantısı sadece okuma yapabiliyor; üretim yapamıyor. Kullanıcı higgsfield.ai'de seslendirme, müzik ve açılış videosunu üretecek ve "hazır" yazacak. Sonra ürettiklerini geçmişinden alıp son videoyu birleştir.
