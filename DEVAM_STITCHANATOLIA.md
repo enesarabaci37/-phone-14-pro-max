@@ -106,6 +106,11 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 | WH | Blanc | #FFFFFF |
 | BK | 310 | #111111 |
 
+## Etsy ödeme ve kampanya (21 Kasım)
+- Banka: TR …9394 Verified, aylık ödeme. Fatura kartı: VISA …4852 varsayılan (eski …9149 sorunluydu), auto-billing ayın 1'i.
+- Cyber Specials: %25 indirim, tüm ilanlar, 23 Kas – 1 Ara 2026 (Etsy etkinliği).
+- Custom requests kapalı (2. ayda değerlendirilecek).
+
 ## Son durum
 İlk 7 günde 5 görüntülenme, 1 ziyaret, 0 sipariş. Bu normal; mağaza yeni ve ürün sayısı az.
 
