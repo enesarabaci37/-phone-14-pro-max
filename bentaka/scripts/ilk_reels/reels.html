@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><title>Bentaka ilk Reels: GTA 6</title>
+<style>
+@font-face{font-family:Sora;font-weight:400;src:url(../../fonts/Sora-Regular.ttf)}
+@font-face{font-family:Sora;font-weight:600;src:url(../../fonts/Sora-SemiBold.ttf)}
+@font-face{font-family:Sora;font-weight:700;src:url(../../fonts/Sora-Bold.ttf)}
+@font-face{font-family:Sora;font-weight:800;src:url(../../fonts/Sora-ExtraBold.ttf)}
+@font-face{font-family:Inter;font-weight:400;src:url(file:///usr/share/fonts/opentype/inter/Inter-Regular.otf)}
+@font-face{font-family:Inter;font-weight:600;src:url(file:///usr/share/fonts/opentype/inter/Inter-SemiBold.otf)}
+@font-face{font-family:Mono;font-weight:500;src:url(file:///usr/share/fonts/truetype/jetbrains-mono/JetBrainsMono-Medium.ttf)}
+:root{--gece:#0B0E14;--grafit:#1A1F2B;--celik:#8A93A6;--bulut:#F3F5F8;--volt:#C6FF3D;--iyon:#5B7CFF}
+*{box-sizing:border-box;margin:0}
+body{background:var(--gece);width:1080px;height:1920px;overflow:hidden}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--gece);font-family:Inter,sans-serif;color:var(--bulut)}
+canvas{position:absolute;inset:0}
+.sora{font-family:Sora,sans-serif}
+.mono{font-family:Mono,monospace;letter-spacing:.12em;text-transform:uppercase}
+.v{color:var(--volt)} .c{color:var(--celik)} .i{color:var(--iyon)}
+.scene{position:absolute;inset:0;opacity:0;will-change:transform,opacity,filter}
+.el{opacity:0}
+.pad{position:absolute;left:84px;right:84px}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:12px 22px;border-radius:999px;background:var(--volt);color:var(--gece);font-family:Mono,monospace;font-size:24px;letter-spacing:.12em}
+.chip.ghost{background:rgba(243,245,248,.06);color:var(--bulut);border:2px solid rgba(243,245,248,.14)}
+.label{font-family:Mono,monospace;font-size:28px;letter-spacing:.14em;text-transform:uppercase;color:var(--volt);display:flex;align-items:center;gap:16px}
+.label:before{content:"";width:40px;height:4px;background:var(--volt);border-radius:2px}
+.glass{background:linear-gradient(160deg,rgba(26,31,43,.92),rgba(11,14,20,.86));border:2px solid rgba(243,245,248,.08);border-radius:40px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.flag{width:96px;height:96px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-family:Mono,monospace;font-size:30px;letter-spacing:.06em;background:var(--grafit);color:var(--bulut);border:2px solid rgba(243,245,248,.1)}
+.hl{position:relative;display:inline-block;z-index:0;white-space:nowrap}
+.hl i{position:absolute;left:-12px;right:-12px;top:8%;bottom:-2%;background:var(--volt);z-index:-1;transform-origin:left;transform:scaleX(0);border-radius:6px}
+.hl.dark{color:var(--gece)}
+.big{font-family:Sora,sans-serif;font-weight:800;letter-spacing:-.045em;line-height:.95}
+.h1{font-family:Sora,sans-serif;font-weight:700;letter-spacing:-.035em;line-height:1.04}
+.num{font-variant-numeric:tabular-nums}
+</style></head>
+<body><div id="root">
+<canvas id="bg" width="1080" height="1920"></canvas>
+
+<!-- Büyük "b" filigranı -->
+<svg id="wm" style="position:absolute;right:-200px;bottom:260px;opacity:.05" width="900" height="900" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle cx="68" cy="72" r="8" fill="#F3F5F8"/></svg>
+
+<!-- Sabit üst bilgi -->
+<div id="hud" style="position:absolute;left:84px;right:84px;top:190px;display:flex;align-items:center;justify-content:space-between;opacity:0">
+  <div style="display:flex;align-items:center;gap:16px"><svg width="54" height="54" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle cx="68" cy="72" r="8" fill="#C6FF3D"/></svg><span style="font-size:32px;font-weight:600">@bentaka</span></div>
+  <span class="chip">OYUN</span>
+</div>
+<div id="copy" class="mono" style="position:absolute;right:84px;bottom:420px;font-size:20px;color:rgba(243,245,248,.38);opacity:0">© BENTAKA</div>
+
+<!-- S1: Kanca -->
+<section class="scene" data-s="0" data-e="5">
+  <div class="pad" style="top:430px">
+    <div class="el mono c" data-in="0.15" style="font-size:28px">19 Kasım 2026 · PS5 / Xbox Series X|S</div>
+    <div class="el big v" data-in="0.35" data-fx="punch" style="font-size:270px;white-space:nowrap;margin-top:30px;text-shadow:0 0 80px rgba(198,255,61,.35)">GTA 6</div>
+    <div class="el h1" data-in="0.95" style="font-size:132px;margin-top:6px">çıktı.</div>
+    <div class="el h1" data-in="2.3" style="font-size:104px;margin-top:110px">Ama sana <span class="hl dark" data-hl="2.8">kaça<i></i></span><br>mal oldu?</div>
+  </div>
+</section>
+
+<!-- S2: Asıl soru -->
+<section class="scene" data-s="5" data-e="9">
+  <div class="pad" style="top:520px">
+    <div class="el label" data-in="0.1">Fiyat etiketini unut</div>
+    <div class="el h1 c" data-in="0.35" style="font-size:84px;margin-top:56px">Asıl soru şu:</div>
+    <div class="el h1" data-in="0.8" style="font-size:118px;margin-top:26px">Bu oyun için <span class="hl dark" data-hl="1.4">kaç saat<i></i></span> çalışman gerekiyor?</div>
+    <div class="el" data-in="2.2" style="margin-top:70px"><span class="chip ghost">2026 ASGARİ ÜCRETİYLE HESAPLADIK</span></div>
+  </div>
+</section>
+
+<!-- S3: Fiyatlar -->
+<section class="scene" data-s="9" data-e="16">
+  <div class="pad" style="top:360px">
+    <div class="el label" data-in="0.1">Aynı oyun · 3 ülke</div>
+    <div class="el h1" data-in="0.25" style="font-size:80px;margin-top:30px">Standart sürüm fiyatı</div>
+    <div style="display:flex;flex-direction:column;gap:28px;margin-top:56px">
+      <div class="el glass" data-in="0.6" data-fx="left" style="display:flex;align-items:center;gap:36px;padding:38px 44px">
+        <div class="flag">TR</div><div style="flex:1;font-size:46px;font-weight:600">Türkiye</div>
+        <div class="sora num" style="font-weight:700;font-size:84px"><span data-count="3999" data-cs="0.7" data-cd="1.1" data-fmt="int">0</span> TL</div></div>
+      <div class="el glass" data-in="1.1" data-fx="left" style="display:flex;align-items:center;gap:36px;padding:38px 44px">
+        <div class="flag">DE</div><div style="flex:1;font-size:46px;font-weight:600">Almanya</div>
+        <div class="sora num" style="font-weight:700;font-size:84px"><span data-count="79.99" data-cs="1.2" data-cd="1.0" data-fmt="2">0</span> €</div></div>
+      <div class="el glass" data-in="1.6" data-fx="left" style="display:flex;align-items:center;gap:36px;padding:38px 44px">
+        <div class="flag">ABD</div><div style="flex:1;font-size:46px;font-weight:600">ABD</div>
+        <div class="sora num" style="font-weight:700;font-size:84px"><span data-count="79.99" data-cs="1.7" data-cd="1.0" data-fmt="2">0</span> $</div></div>
+    </div>
+    <div class="el h1 c" data-in="3.4" style="font-size:66px;margin-top:84px">Fiyatlar birbirine yakın…</div>
+    <div class="el h1" data-in="4.6" data-fx="punch" style="font-size:96px;margin-top:14px">ama <span class="v">maaşlar</span> değil.</div>
+  </div>
+</section>
+
+<!-- S4: Saatlik ücret -->
+<section class="scene" data-s="16" data-e="22">
+  <div class="pad" style="top:380px">
+    <div class="el label" data-in="0.1">Saatlik brüt asgari ücret</div>
+    <div class="el h1" data-in="0.25" style="font-size:80px;margin-top:30px">Bir saatlik emeğin değeri</div>
+    <div style="display:flex;flex-direction:column;gap:26px;margin-top:60px">
+      <div class="el glass" data-in="0.6" data-fx="left" style="display:flex;align-items:center;gap:36px;padding:36px 44px">
+        <div class="flag">DE</div><div style="flex:1;font-size:46px;font-weight:600">Almanya</div>
+        <div class="sora num" style="font-weight:700;font-size:80px"><span data-count="13.90" data-cs="0.7" data-cd="0.9" data-fmt="2">0</span> €</div></div>
+      <div class="el glass" data-in="1.0" data-fx="left" style="display:flex;align-items:center;gap:36px;padding:36px 44px">
+        <div class="flag">ABD</div><div style="flex:1;font-size:46px;font-weight:600">ABD <span class="c" style="font-size:30px">federal</span></div>
+        <div class="sora num" style="font-weight:700;font-size:80px"><span data-count="7.25" data-cs="1.1" data-cd="0.9" data-fmt="2">0</span> $</div></div>
+      <div class="el glass" data-in="1.4" data-fx="left" style="display:flex;align-items:center;gap:36px;padding:36px 44px;border-color:rgba(198,255,61,.5)">
+        <div class="flag" style="background:var(--volt);color:var(--gece)">TR</div><div style="flex:1;font-size:46px;font-weight:600">Türkiye</div>
+        <div class="sora num v" style="font-weight:700;font-size:80px"><span data-count="146.80" data-cs="1.5" data-cd="1.0" data-fmt="2">0</span> TL</div></div>
+    </div>
+    <div class="el mono c" data-in="2.4" style="font-size:24px;margin-top:30px;line-height:1.6">TR: 33.030 TL brüt ÷ 225 saat</div>
+    <div class="el glass" data-in="3.4" data-fx="punch" style="margin-top:60px;padding:34px 40px;display:flex;align-items:center;justify-content:center;gap:22px;font-size:44px;font-weight:600">
+      <span>Oyun fiyatı</span><span class="v sora" style="font-size:56px">÷</span><span>saatlik ücret</span><span class="v sora" style="font-size:56px">=</span><span class="v">süre</span></div>
+  </div>
+</section>
+
+<!-- S5: Sonuç barları -->
+<section class="scene" data-s="22" data-e="33">
+  <div class="pad" style="top:360px">
+    <div class="el label" data-in="0.1">GTA 6 için gereken çalışma</div>
+    <div class="el h1" data-in="0.25" style="font-size:80px;margin-top:30px">Kaç saat sürüyor?</div>
+    <div style="display:flex;flex-direction:column;gap:64px;margin-top:80px">
+      <div class="el" data-in="0.6">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="sora" style="font-weight:600;font-size:56px">Almanya</span>
+        <span class="sora num" style="font-weight:700;font-size:76px"><span data-count="5.755" data-cs="0.8" data-cd="1.2" data-fmt="1">0</span> saat</span></div>
+        <div style="height:40px;border-radius:20px;background:rgba(26,31,43,.9);margin-top:16px;overflow:hidden"><div data-bar="0.2113" data-bs="0.8" data-bd="1.2" style="height:100%;width:0;border-radius:20px;background:var(--celik)"></div></div></div>
+      <div class="el" data-in="2.2">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="sora" style="font-weight:600;font-size:56px">ABD</span>
+        <span class="sora num" style="font-weight:700;font-size:76px"><span data-count="11.033" data-cs="2.4" data-cd="1.2" data-fmt="1">0</span> saat</span></div>
+        <div style="height:40px;border-radius:20px;background:rgba(26,31,43,.9);margin-top:16px;overflow:hidden"><div data-bar="0.4050" data-bs="2.4" data-bd="1.2" style="height:100%;width:0;border-radius:20px;background:var(--celik)"></div></div></div>
+      <div class="el" data-in="4.0">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="sora" style="font-weight:600;font-size:56px">Türkiye</span>
+        <span class="sora num v" style="font-weight:800;font-size:104px;text-shadow:0 0 50px rgba(198,255,61,.4)"><span data-count="27.241" data-cs="4.2" data-cd="2.6" data-fmt="1">0</span> saat</span></div>
+        <div style="height:56px;border-radius:28px;background:rgba(26,31,43,.9);margin-top:16px;overflow:hidden"><div data-bar="1" data-bs="4.2" data-bd="2.6" style="height:100%;width:0;border-radius:28px;background:var(--volt);box-shadow:0 0 40px rgba(198,255,61,.6)"></div></div></div>
+    </div>
+    <div class="el h1" data-in="7.6" data-fx="punch" style="font-size:96px;margin-top:110px">Almanya'nın neredeyse <span class="hl dark" data-hl="8.1">5 katı.<i></i></span></div>
+  </div>
+</section>
+
+<!-- S6: İş günü -->
+<section class="scene" data-s="33" data-e="39">
+  <div class="pad" style="top:400px">
+    <div class="el h1 c" data-in="0.1" style="font-size:72px">Türkiye'de bu süre</div>
+    <div style="display:flex;align-items:baseline;gap:30px;margin-top:10px">
+      <div class="el big v num" data-in="0.4" data-fx="punch" style="font-size:380px;text-shadow:0 0 90px rgba(198,255,61,.35)"><span data-count="3.632" data-cs="0.5" data-cd="1.4" data-fmt="1">0</span></div>
+      <div class="el h1" data-in="0.8" style="font-size:96px;white-space:nowrap">iş günü</div></div>
+    <div class="el" data-in="1.4" style="display:flex;gap:18px;margin-top:70px">
+      <div class="day"></div><div class="day"></div><div class="day"></div><div class="day"></div><div class="day"></div></div>
+    <div class="el mono c" data-in="1.4" style="display:flex;gap:18px;margin-top:18px;font-size:26px"><span style="width:166px;text-align:center">PZT</span><span style="width:166px;text-align:center">SAL</span><span style="width:166px;text-align:center">ÇAR</span><span style="width:166px;text-align:center">PER</span><span style="width:166px;text-align:center">CUM</span></div>
+    <div class="el h1" data-in="3.6" style="font-size:64px;margin-top:80px">Haftanın yarısından <span class="v">fazlası.</span></div>
+    <div class="el mono c" data-in="4.0" style="font-size:24px;margin-top:24px">Günde 7,5 saat çalışma üzerinden</div>
+  </div>
+</section>
+
+<!-- S7: Ultimate -->
+<section class="scene" data-s="39" data-e="44">
+  <div class="pad" style="top:420px">
+    <div class="el label" data-in="0.1">Bir de Ultimate sürüm var</div>
+    <div class="el sora c num" data-in="0.35" style="font-weight:700;font-size:96px;margin-top:40px">4.999 TL</div>
+    <div class="el" data-in="0.8" style="width:140px;height:8px;background:var(--volt);border-radius:4px;margin-top:36px"></div>
+    <div style="display:flex;align-items:baseline;gap:26px;margin-top:30px">
+      <div class="el big num" data-in="1.0" data-fx="punch" style="font-size:300px"><span data-count="34.053" data-cs="1.1" data-cd="1.3" data-fmt="int">0</span></div>
+      <div class="el h1 v" data-in="1.3" style="font-size:110px">saat</div></div>
+    <div class="el h1" data-in="2.3" style="font-size:64px;margin-top:30px">Yani <span class="v">4,5 iş günü.</span></div>
+    <div class="el mono c" data-in="3.0" style="font-size:26px;margin-top:44px;line-height:1.7">Almanya 7,2 saat · ABD 13,8 saat</div>
+  </div>
+</section>
+
+<!-- S8: Çağrı -->
+<section class="scene" data-s="44" data-e="49">
+  <div class="pad" style="top:430px">
+    <svg class="el" data-in="0.1" data-fx="plane" width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#C6FF3D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+    <div class="el h1" data-in="0.4" style="font-size:104px;margin-top:50px">GTA 6 bekleyen <span class="v">arkadaşına</span> gönder.</div>
+    <div class="el h1 c" data-in="1.2" style="font-size:66px;margin-top:30px">Hesabı o da görsün.</div>
+    <div class="el" data-in="2.0" style="display:flex;gap:22px;margin-top:80px">
+      <span class="chip" style="font-size:30px;padding:20px 34px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0B0E14" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>GÖNDER</span>
+      <span class="chip ghost" style="font-size:30px;padding:20px 34px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F3F5F8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>KAYDET</span></div>
+    <div class="el" data-in="2.8" style="font-size:44px;margin-top:70px;line-height:1.4">Sence bu fiyata değer mi? <span class="v">Yorumlara yaz.</span></div>
+  </div>
+</section>
+
+<!-- S9: Kapanış -->
+<section class="scene" data-s="49" data-e="99">
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:160px">
+    <div class="el" data-in="0.1" data-fx="punch" style="display:flex;align-items:center;gap:32px">
+      <svg width="170" height="170" viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="8" width="24" height="104" rx="5" fill="#F3F5F8"/><circle cx="68" cy="72" r="28" fill="none" stroke="#F3F5F8" stroke-width="24"/><circle id="dot" cx="68" cy="72" r="8" fill="#C6FF3D"/></svg>
+      <span class="sora" style="font-weight:700;font-size:170px;letter-spacing:-.045em;padding-bottom:14px">bentaka</span></div>
+    <div class="el sora c" data-in="0.7" style="font-weight:600;font-size:60px;margin-top:40px">Future, first<span class="v">.</span></div>
+    <div class="el" data-in="1.3" style="margin-top:60px"><span class="chip" style="font-size:28px;padding:16px 30px">TAKİP ET · @BENTAKA</span></div>
+    <div class="el mono c" data-in="1.8" style="font-size:20px;text-align:center;line-height:1.8;margin-top:90px;opacity:.8">Kaynak: PlayStation Store TR / DE / US (dijital, standart ve ultimate)<br>2026 brüt asgari ücret: TR 33.030 TL ÷ 225 saat · DE 13,90 € · ABD federal 7,25 $</div>
+  </div>
+</section>
+
+<!-- Geçiş bandı -->
+<div id="wipe" style="position:absolute;left:-400px;top:-200px;width:600px;height:2400px;background:var(--volt);transform:rotate(12deg) translateX(-2000px)"></div>
+<div id="flash" style="position:absolute;inset:0;background:#F3F5F8;opacity:0;pointer-events:none"></div>
+</div>
+
+<style>.day{width:166px;height:150px;border-radius:28px;background:rgba(26,31,43,.9);border:2px solid rgba(243,245,248,.1);position:relative;overflow:hidden}.day b{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--volt)}</style>
+<script>
+// ---------- yardımcılar ----------
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const prog=(t,s,d)=>clamp((t-s)/d,0,1);
+const eOut=p=>1-Math.pow(1-p,3);
+const eInOut=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const eBack=p=>{const c=1.7;return 1+(c+1)*Math.pow(p-1,3)+c*Math.pow(p-1,2)};
+const fmt=(x,f)=>{
+  if(f==='int') return Math.round(x).toLocaleString('tr-TR');
+  const d=+f; return x.toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
+};
+document.querySelectorAll('.day').forEach(d=>d.appendChild(document.createElement('b')));
+const CUTS=[5,9,16,22,33,39,44,49];
+const WIPES=[5,16,22,33,44,49];
+const FLASH=[0.35,26.8,33.4,49.1];
+
+// ---------- arka plan ----------
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');
+// sabit tohumlu rastgele
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const towers=[];{let x=-40;while(x<1140){const w=50+rnd()*90,h=140+rnd()*420;towers.push({x,w,h,win:[]});
+  for(let yy=20;yy<h-20;yy+=26)for(let xx=10;xx<w-10;xx+=18)if(rnd()<.32)towers[towers.length-1].win.push([xx,yy,rnd()]);x+=w+4+rnd()*14}}
+const far=[];{let x=-60;while(x<1160){const w=40+rnd()*70,h=80+rnd()*260;far.push({x,w,h});x+=w+2}}
+const stars=[...Array(120)].map(()=>[rnd()*1080,rnd()*900,rnd()]);
+const noise=document.createElement('canvas');noise.width=noise.height=256;
+{const n=noise.getContext('2d'),im=n.createImageData(256,256);for(let i=0;i<im.data.length;i+=4){const v=rnd()*255;im.data[i]=im.data[i+1]=im.data[i+2]=v;im.data[i+3]=22}n.putImageData(im,0,0)}
+
+// sahneye göre atmosfer yoğunluğu (0 = sade, 1 = sinematik)
+function mood(t){
+  const k=[[0,1],[4.6,1],[5.4,.55],[8.6,.55],[9.4,.35],[32.6,.35],[33.4,.6],[43.6,.6],[44.4,.8],[48.6,.8],[49.4,.45],[99,.45]];
+  for(let i=0;i<k.length-1;i++)if(t<=k[i+1][0]){const p=(t-k[i][0])/(k[i+1][0]-k[i][0]);return k[i][1]+(k[i+1][1]-k[i][1])*eInOut(clamp(p,0,1))}
+  return .45;
+}
+function drawBG(t){
+  const m=mood(t),W=1080,H=1920,hz=1180;
+  // gökyüzü
+  let g=cx.createLinearGradient(0,0,0,hz);
+  g.addColorStop(0,'#07090E');g.addColorStop(.55,'#0E1430');g.addColorStop(1,`rgba(91,124,255,${.35*m+.1})`);
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  // yıldızlar
+  stars.forEach(([x,y,r])=>{cx.fillStyle=`rgba(243,245,248,${(.15+.35*r)*(.6+.4*Math.sin(t*2+r*20))*m})`;cx.fillRect(x,y,r>.8?3:2,r>.8?3:2)});
+  // güneş
+  const sy=hz-200+Math.sin(t*.3)*6, sr=330;
+  const glow=cx.createRadialGradient(540,sy,40,540,sy,900);
+  glow.addColorStop(0,`rgba(198,255,61,${.28*m})`);glow.addColorStop(.35,`rgba(91,124,255,${.18*m})`);glow.addColorStop(1,'rgba(11,14,20,0)');
+  cx.fillStyle=glow;cx.fillRect(0,0,W,H);
+  cx.save();cx.beginPath();cx.arc(540,sy,sr,0,Math.PI*2);cx.clip();
+  const sg=cx.createLinearGradient(0,sy-sr,0,sy+sr);sg.addColorStop(0,'#C6FF3D');sg.addColorStop(.6,'#7FD6A0');sg.addColorStop(1,'#5B7CFF');
+  cx.globalAlpha=.9*m+.05;cx.fillStyle=sg;cx.fillRect(540-sr,sy-sr,sr*2,sr*2);cx.globalAlpha=1;
+  // güneş şeritleri (aşağı kayar)
+  cx.fillStyle='#0E1430';
+  for(let i=0;i<9;i++){const off=((t*22)%46);const y=sy-20+i*46+off;const h=4+i*2.4;cx.fillRect(540-sr,y,sr*2,h)}
+  cx.restore();
+  // uzak siluet
+  const px=Math.sin(t*.12)*14;
+  cx.fillStyle='#121830';far.forEach(b=>cx.fillRect(b.x+px*.5,hz-b.h,b.w,b.h));
+  // yakın kuleler
+  towers.forEach(b=>{const x=b.x+px;cx.fillStyle='#0B0E14';cx.fillRect(x,hz-b.h,b.w,b.h);
+    b.win.forEach(([xx,yy,r])=>{const on=Math.sin(t*1.3+r*40)>-.6;if(!on)return;cx.fillStyle=r>.85?`rgba(198,255,61,${.75*m})`:`rgba(91,124,255,${(.35+.4*r)*m})`;cx.fillRect(x+xx,hz-b.h+yy,7,10)})});
+  // palmiyeler (özgün, sade)
+  palm(130+px*1.6,hz+10,1.05,t);palm(960+px*1.6,hz+10,-1.15,t+1.3);
+  // zemin + perspektif ızgara
+  g=cx.createLinearGradient(0,hz,0,H);g.addColorStop(0,'#0F1428');g.addColorStop(1,'#07090E');cx.fillStyle=g;cx.fillRect(0,hz,W,H-hz);
+  cx.strokeStyle=`rgba(91,124,255,${.45*m})`;cx.lineWidth=2;
+  for(let i=-14;i<=14;i++){cx.beginPath();cx.moveTo(540+i*12,hz);cx.lineTo(540+i*170,H);cx.stroke()}
+  const sp=(t*.6)%1;
+  for(let i=0;i<14;i++){const z=(i+sp)/14;const y=hz+Math.pow(z,2.2)*(H-hz);cx.globalAlpha=z*m;cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
+  cx.globalAlpha=1;
+  // ufuk parlaması
+  const hg=cx.createLinearGradient(0,hz-6,0,hz+6);hg.addColorStop(0,'rgba(198,255,61,0)');hg.addColorStop(.5,`rgba(198,255,61,${.7*m})`);hg.addColorStop(1,'rgba(198,255,61,0)');cx.fillStyle=hg;cx.fillRect(0,hz-6,W,12);
+  // okunurluk için üst karartma (veri sahnelerinde güçlenir)
+  const dk=1-m;
+  g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,`rgba(11,14,20,${.55+.35*dk})`);g.addColorStop(.62,`rgba(11,14,20,${.35+.5*dk})`);g.addColorStop(1,`rgba(11,14,20,${.55+.3*dk})`);
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  // vinyet
+  const vg=cx.createRadialGradient(540,900,500,540,900,1300);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.6)');cx.fillStyle=vg;cx.fillRect(0,0,W,H);
+  // tarama çizgileri + gren
+  cx.fillStyle='rgba(0,0,0,.08)';for(let y=0;y<H;y+=4)cx.fillRect(0,y,W,1);
+  const f=Math.floor(t*30);cx.save();cx.globalCompositeOperation='overlay';
+  const ox=(f*97)%256,oy=(f*61)%256;for(let y=-oy;y<H;y+=256)for(let x=-ox;x<W;x+=256)cx.drawImage(noise,x,y);cx.restore();
+}
+function palm(x,y,s,t){
+  cx.save();cx.translate(x,y);cx.scale(s,Math.abs(s));cx.fillStyle='#06080C';cx.strokeStyle='#06080C';
+  cx.lineWidth=16;cx.lineCap='round';cx.beginPath();cx.moveTo(0,0);cx.quadraticCurveTo(26,-200,70,-420);cx.stroke();
+  cx.translate(70,-420);const sw=Math.sin(t*1.1)*.05;
+  for(let i=0;i<7;i++){const a=-Math.PI*.95+i*(Math.PI*1.1/6)+sw;cx.save();cx.rotate(a);cx.beginPath();cx.moveTo(0,0);
+    cx.quadraticCurveTo(110,-40,220,30);cx.quadraticCurveTo(110,-6,0,10);cx.fill();cx.restore()}
+  cx.restore();
+}
+
+// ---------- sahneler ----------
+const scenes=[...document.querySelectorAll('.scene')];
+const hud=document.getElementById('hud'),copy=document.getElementById('copy'),wm=document.getElementById('wm');
+const wipe=document.getElementById('wipe'),flash=document.getElementById('flash');
+
+window.render=function(t){
+  drawBG(t);
+  scenes.forEach(sc=>{
+    const s=+sc.dataset.s,e=+sc.dataset.e,lt=t-s;
+    if(t<s-.01||t>e+.4){sc.style.opacity=0;return}
+    const a=eOut(prog(lt,0,.45)), o=1-eInOut(prog(t,e-.3,.3));
+    sc.style.opacity=Math.min(a>0?1:0,o);
+    const outP=prog(t,e-.3,.3);
+    sc.style.transform=`translateY(${(-outP*60).toFixed(1)}px) scale(${(1+outP*.04).toFixed(4)})`;
+    sc.style.filter=outP>0?`blur(${(outP*14).toFixed(1)}px)`:'none';
+    sc.querySelectorAll('.el').forEach(el=>{
+      const p=prog(lt,+el.dataset.in,.55),fx=el.dataset.fx;
+      el.style.opacity=eOut(clamp(p*1.6,0,1));
+      if(fx==='punch'){const k=eBack(p);el.style.transform=`scale(${(.82+.18*k).toFixed(4)})`;el.style.transformOrigin='left center';el.style.filter=`blur(${((1-eOut(p))*10).toFixed(1)}px)`}
+      else if(fx==='left'){el.style.transform=`translateX(${((1-eOut(p))*-140).toFixed(1)}px)`;el.style.filter='none'}
+      else if(fx==='plane'){const q=eOut(p);el.style.transform=`translate(${(-200+200*q).toFixed(1)}px,${(120-120*q).toFixed(1)}px) rotate(${(-20+20*q).toFixed(1)}deg)`}
+      else {el.style.transform=`translateY(${((1-eOut(p))*70).toFixed(1)}px)`;el.style.filter=`blur(${((1-eOut(p))*8).toFixed(1)}px)`}
+    });
+    sc.querySelectorAll('[data-count]').forEach(el=>{
+      const p=eOut(prog(lt,+el.dataset.cs,+el.dataset.cd));el.textContent=fmt(+el.dataset.count*p,el.dataset.fmt)});
+    sc.querySelectorAll('[data-bar]').forEach(el=>{
+      const p=eOut(prog(lt,+el.dataset.bs,+el.dataset.bd));el.style.width=(+el.dataset.bar*100*p).toFixed(2)+'%'});
+    sc.querySelectorAll('[data-hl]').forEach(el=>{
+      const p=eInOut(prog(lt,+el.dataset.hl,.4));el.querySelector('i').style.transform=`scaleX(${p.toFixed(4)})`;
+      el.style.color=p>.5?'#0B0E14':'#F3F5F8'});
+    // iş günü kutuları
+    if(s===33){const days=sc.querySelectorAll('.day b');const fill=3.632*eInOut(prog(lt,1.7,1.8));
+      days.forEach((b,i)=>b.style.width=(clamp(fill-i,0,1)*100).toFixed(1)+'%')}
+  });
+  // sabit öğeler
+  const hv=Math.min(eOut(prog(t,.1,.5)),1-eOut(prog(t,48.7,.3)));
+  hud.style.opacity=hv;copy.style.opacity=hv;
+  wm.style.transform=`translateY(${(Math.sin(t*.4)*14).toFixed(1)}px) rotate(${(t*.6).toFixed(2)}deg)`;
+  // kapanıştaki nokta nabzı
+  const dot=document.getElementById('dot');dot.setAttribute('r',(8+Math.max(0,Math.sin((t-49)*4))*2.5*(t>49?1:0)).toFixed(2));
+  // geçiş bandı
+  let wx=-2600;WIPES.forEach(c=>{const p=prog(t,c-.32,.5);if(p>0&&p<1)wx=-1800+eInOut(p)*3600});
+  wipe.style.transform=`rotate(12deg) translateX(${wx.toFixed(0)}px)`;
+  // flaş
+  let fl=0;FLASH.forEach(c=>{const d=t-c;if(d>=0&&d<.35)fl=Math.max(fl,.55*(1-d/.35))});flash.style.opacity=fl.toFixed(3);
+  // genel kapanış kararması
+  document.getElementById('root').style.filter=t>53.2?`brightness(${(1-prog(t,53.2,.8)).toFixed(3)})`:'none';
+};
+window.TOTAL=54;
+render(2.6);
+</script>
+</body></html>
