@@ -34,6 +34,7 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
   - 05 iPhone 17 · Kaç Saat Çalışmalısın (Reels): https://drive.google.com/drive/folders/1Sp9hHliSYcdlCxbFr5u6oouGdUmEi1XU
   - 06 15 Yaş Sosyal Medya Yasağı (Kaydırmalı Gönderi): https://drive.google.com/drive/folders/15dDblMThKrNOMqBtg1rVUSC5PwYkT4e9
   - 07 Hikâye · Efsane Cuma Yarın: https://drive.google.com/drive/folders/1mLRMTIGsWpcGW3tXHOrvFb2kI-p5FYkT
+  - 08 Mizah · Efsane Cuma'dan Önceki Gece Sen (Reels, 26 Kasım 20:00): https://drive.google.com/drive/folders/12pgxa0k1ZdIbPgZ2cSStmZbBB5eurCCZ
   - Drive bağlantısı çağrı başına yaklaşık 3 MB dosya taşıyabiliyor. Videoları kullanıcı sohbetteki dosyadan "Paylaş → Drive" ile kendisi kaydediyor.
 - **Paylaşım Takvimi** (Google E-Tablo, tarih/saat/nerede/içerik/durum/klasör): https://docs.google.com/spreadsheets/d/1bshXdwxNtoJq18wW7-RrMkuFpW0JaU5ZeWe9nbb2o3s
 - Tasarım tuvali (Claude artifact; logo, palet, tipografi, Instagram, Haber/Kıyas/Alıntı şablonları): https://claude.ai/artifact/6jmevU6ezz12XUe2brtN84
@@ -66,6 +67,11 @@ Ayrıntılı kararlar, araştırma bulguları ve kaynaklar: `bentaka/NOTLAR.md`.
 - **Higgsfield API Soul 2 (ucuz yol):** POST api.higgsfield.ai/higgsfield-ai/soul/v2/standard {"prompt","aspect_ratio":"9:16"} → 960×1696 görsel, yaklaşık 0,005 $. Videoları API'den üretme (pahalı). Kullanıcı 21 Kasım'da 5 $ daha yükledi (bakiye 5,06 $).
 - **Açıklama kuralları:** Bayrak emojisi kullanma (Google Docs'tan kopyalanınca "?" kutusu çıkıyor). Açıklamalar "@bentakatr" ile biter. Paylaşırken konum eklenmez (kullanıcının konumu görünüyor), AI etiketi açılır. Paylaşım saatleri Türkiye saati; 21 Kasım 2026 Cumartesi.
 - **Kredi tasarrufu kuralı (kullanıcı kararı):** Reels başına en fazla 1 video (açılış, 35 kredi). Diğer sahneler Soul 2.0 görseli (ücretsiz, 2.999 hak) + montajda yakınlaşma/kayma hareketi. "Nasıl yapılır" sahneleri kullanıcının telefon ekran kaydı. Sık sahneler (hacker, bildirim, neon şehir, kapanış) tekrar kullanılır. Kalan Plus kredisi ~765 (21 Kasım 2026).
+
+## Performans dersleri (22 Kasım 2026)
+- GTA Reels (50 sn) 1. gün: 1.615 görüntüleme, 1.424 kişi, 14 beğeni, 8 DM paylaşımı, 0 kaydetme, ort. izlenme 14 sn, 1 takip. Grafik ilk saatlerden sonra düzleşti.
+- Sonuç: Cevabı/şok bilgiyi ilk 2 saniyede ver, Reels'i 25–35 sn tut, sonuna tek kelimelik yorum sorusu koy, sabitlenmiş yorum ekle.
+- Kullanıcı mizah da istiyor: haftada 1–2 "bu sensin" mizah Reels'i (seslendirmesiz, ~24 sn, perde açık, yazılar üstte, yüz ifadeleri görünür). Betik: `bentaka/scripts/mizah_efsane/`.
 
 ## Yarım kalan işler
 - **Seslendirme:** Önizlemede kullanılan Türkçe ses (Piper tr_TR-dfki) CC BY-NC-SA lisanslı, yani ticari kullanıma uygun değil, yayınlanmamalı. Seçenekler:
