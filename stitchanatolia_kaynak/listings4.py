@@ -1,6 +1,6 @@
 """SA-011..012 ilan metinleri -> URUN_BILGILERI.txt (UTF-8 BOM + CRLF)"""
 import os, shutil, glob
-from listings import details, COMMON_NOTE
+from listings import details, common_note
 ROOT = '../StitchAnatolia_TUM_DOSYALAR/1_URUNLER'
 PDF = {'kus': 'Anatolian_Kilim_Kus_Birds_Cross_Stitch_Pattern.pdf',
        'pitrak': 'Anatolian_Kilim_Pitrak_Cross_Stitch_Pattern.pdf'}
@@ -43,7 +43,7 @@ def wtxt(path, s):
 for it in L:
     assert len(it['title']) <= 140 and len(it['tags']) == 13 and all(len(t) <= 20 for t in it['tags']), it['slug']
     assert len(set(it['tags'])) == 13 and len(it['pin_title']) <= 100
-    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + COMMON_NOTE
+    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + common_note(it['W'], it['H'])
     D = f"{ROOT}/{it['folder']}"; os.makedirs(D + '/Etsy', exist_ok=True); os.makedirs(D + '/Pinterest', exist_ok=True)
     s = it['slug']
     shutil.copy(f'out/{s}/{PDF[s]}', D)

@@ -83,9 +83,18 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 ## Not
 - Kullanıcı bazen Etsy ile Pinterest'i karıştırıyor: Pinterest pinleri Etsy ilanlarına giden reklamlar, Etsy'de değişiklik gerekmez. Her akşam o günün dosyalarını SendUserFile ile direkt gönder. Tüm dosyalar tek zip olarak (StitchAnatolia_TUM_DOSYALAR.zip) 21 Kasım'da gönderildi.
 
+## ⚠️ Kalite kuralları (22 Kasım'dan itibaren ZORUNLU)
+- Her PDF: 5 sayfa + büyük boy şema parçaları (`tiles.js`, kare ~4,4 mm). Nazar türü desen 9 sayfa, küçükler 7, paket 45 sayfa.
+- Rehber sayfasında desene göre kumaş önerisi (beyaz ip varsa "beyaz kumaş kullanmayın").
+- Seviye: "Beginner" ya da "Advanced beginner" (PDF ve ilan aynı).
+- Ölçü iddiaları (inç/cm) desenden HESAPLANARAK yazılır, tahminle yazılmaz.
+- Her render sonrası: `python3 compress_pdf.py <pdf'ler>` (Etsy 20 MB sınırı) ve `python3 qa_check.py` → 0 hata olmadan kullanıcıya dosya gönderilmez.
+- Yeni desen eklerken qa_check.py içindeki MAP'e slug ve klasör eklenir.
+- 22 Kasım güncellemesi: 11 ilan + paketin PDF'i, 2. görseli ve açıklaması değişti. Kullanıcı Etsy'de güncelliyor (liste: StitchAnatolia_TUM_DOSYALAR/GUNCELLEME_22_KASIM_YUKLEME_LISTESI.txt). Durumunu sor.
+
 ## Teknik akış (`stitchanatolia_kaynak/`)
 - `designs.py`: desen üreticileri (`G` sınıfı: put, mirx, stamp, diamond, frame). Çıktı `designs/<slug>/pattern.js` dosyalarına, toplu hali `all_patterns.js`'e yazılır.
-- `pattern2.html#slug` ve `render_all.js`: 5 sayfalık A4 PDF (kapak, motifler ve DMC anahtarı, renkli şema, siyah-beyaz şema, rehber).
+- `pattern2.html#slug` ve `render_all.js [slug...]`: A4 PDF (kapak, motifler ve DMC anahtarı, renkli şema, siyah-beyaz şema, büyük boy şema parçaları, rehber).
 - `listing2.html`: Etsy görselleri (2000x1600).
 - `video.html` ve `render_video.js`: 12 saniyelik video (1080x1080, ffmpeg libx264).
 - `pins.html` ve `render_pins.js`: Pinterest pinleri.

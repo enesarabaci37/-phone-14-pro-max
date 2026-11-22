@@ -27,7 +27,8 @@
 <body>
 <div class="img linen" id="m1"><div class="frame" id="fr"><div class="mat" id="stitch"></div></div><div class="txt" id="txt"></div><div class="brand">StitchAnatolia</div></div>
 <div class="img linen" id="m2"><div class="ttl">What you get</div><div class="pages" id="pages"></div>
-  <div class="cap">5-page PDF · Color chart · Printer-friendly symbol chart · DMC key · Stitching guide · Motif meanings</div></div>
+  <div class="cap" id="cap"></div></div>
+<script src="tiles.js"></script>
 <script>
 const slug=(location.hash||'').slice(1);
 const sc=document.createElement('script'); sc.src=`designs/${slug}/pattern.js`; sc.onload=build; document.body.appendChild(sc);
@@ -43,7 +44,8 @@ function build(){
  const n=Object.keys(colors).length;
  document.getElementById('txt').innerHTML=`<div class="kick">Cross Stitch Pattern</div><h1>${meta.title}</h1><div class="sub">${meta.tagline}</div>
   <div class="badges"><div class="b"><i>↓</i>PDF · Instant download</div><div class="b"><i>${n}</i>DMC colors · full stitches only</div><div class="b"><i>✕</i>${W} × ${H} stitches · ${(W/14).toFixed(1)} × ${(H/14).toFixed(1)} in</div></div>`;
- document.getElementById('pages').innerHTML=[2,3,4].map(i=>`<img src="out/${slug}/page_${i}.png">`).join('');
+ document.getElementById('cap').innerHTML=`${pageCount(W,H)}-page PDF · Large print chart (${tiles(W,H).length} pages) · Color &amp; printer-friendly charts · DMC key · Stitching guide`;
+ document.getElementById('pages').innerHTML=[2,3,5].map(i=>`<img src="out/${slug}/page_${i}.png">`).join('');
  Promise.all([document.fonts.ready,...[...document.images].map(i=>i.complete?1:new Promise(r=>i.onload=r))]).then(()=>document.body.dataset.ready='1');
 }
 </script>

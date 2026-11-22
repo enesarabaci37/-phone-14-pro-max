@@ -34,6 +34,7 @@ td{padding:3mm 2mm;border-bottom:.25mm solid #E7DCCB;vertical-align:middle}
 <body>
 <div id="root"></div>
 <script src="all_patterns.js"></script>
+<script src="tiles.js"></script>
 <script>
 const D=DATA, ORDER=['nazar','tree_of_life','elibelinde','bereket','mini_nazar'];
 const NAME={nazar:'“Nazar” Medallion',tree_of_life:'Tree of Life',elibelinde:'Elibelinde',bereket:'Bereket',mini_nazar:'Mini Nazar Set'};
@@ -55,11 +56,11 @@ r.innerHTML+=`<section class="page" id="p_cover"><div class="band" style="top:0"
   <div class="cell" style="justify-content:center;height:100%"><div style="border:.4mm dashed #CFA14A;border-radius:3mm;padding:6mm;text-align:center"><div class="h" style="font-size:30pt;color:#B8312F;line-height:1.3;margin-bottom:1mm">5</div><div style="font-size:9pt;font-weight:600;letter-spacing:.12em">PATTERNS<br>IN ONE PDF</div></div></div></div>
  <div class="foot"><span>StitchAnatolia · The Anatolian Kilim Collection</span><span>Designed in Taşköprü, Türkiye</span></div><div class="band" style="bottom:0"></div></section>`;
 // ---- contents
-const PAGES={};let p=3;ORDER.forEach(s=>{PAGES[s]=p;p+=5;});
+const PAGES={};let p=3;ORDER.forEach(s=>{PAGES[s]=p;p+=pageCount(D[s].W,D[s].H);});const TOTALP=p-1;
 r.innerHTML+=`<section class="page" id="p_contents"><div class="kick" style="margin-top:4mm">Contents</div><div class="h" style="font-size:26pt;margin-top:2mm">What’s inside</div>
  <table><tr><th>#</th><th>Pattern</th><th>Meaning</th><th style="text-align:right">Stitches</th><th style="text-align:right">Colors</th><th style="text-align:right">Page</th></tr>
  ${ORDER.map((s,i)=>`<tr><td><b>${i+1}</b></td><td><b class="h" style="font-size:14pt">${NAME[s]}</b></td><td style="color:#6B5B4E">${MEAN[s]}</td><td style="text-align:right">${D[s].W} × ${D[s].H}</td><td style="text-align:right">${Object.keys(D[s].colors).length}</td><td style="text-align:right"><b>${PAGES[s]}</b></td></tr>`).join('')}</table>
- <div class="note"><b>How to use this collection</b><br>Each pattern has 5 pages: a cover, the motif meanings with the DMC floss key, a full color chart, a printer-friendly black &amp; white chart and a stitching guide. Print only the pages you need. All patterns use full cross stitches only, on 14 count Aida with 2 strands of DMC floss.</div>
+ <div class="note"><b>How to use this collection</b><br>Each pattern has its own section: a cover, the motif meanings with the DMC floss key, a color chart and a printer-friendly symbol chart (overview), large print charts split over several pages, and a stitching guide. Print only the pages you need. All patterns use full cross stitches only, on 14 count Aida with 2 strands of DMC floss.</div>
  <div class="note"><b>Please note:</b> This is a digital PDF — no physical items are included. For personal use only; you may sell items you stitch yourself, but please do not share or resell the pattern files. Thank you for supporting a small designer from Taşköprü, Türkiye!</div>
  <div class="foot"><span>StitchAnatolia · The Anatolian Kilim Collection</span><span>Page 2</span></div></section>`;
 // ---- etsy image 1
@@ -77,7 +78,7 @@ r.innerHTML+=`<div class="img" id="e2"><div class="linen" style="background:#F6E
  <div style="position:absolute;left:120px;right:120px;top:260px;display:grid;grid-template-columns:repeat(5,1fr);gap:30px">
  ${ORDER.map((s,i)=>`<div style="background:#FBF7EE;border-radius:16px;padding:24px;text-align:center;box-shadow:0 10px 30px rgba(60,40,20,.10)">${stitched(D[s],260,300,4)}<div class="h" style="font-size:36px;margin-top:16px">${NAME[s]}</div><div style="font-size:22px;color:#6B5B4E;margin-top:8px">${D[s].W} × ${D[s].H} · ${Object.keys(D[s].colors).length} colors</div></div>`).join('')}</div>
  <div style="position:absolute;left:160px;right:160px;top:900px;display:grid;grid-template-columns:1fr 1fr;gap:26px 60px;font-size:34px;line-height:1.3">
- ${['One 27-page PDF, instant download','Full color chart for every pattern','Printer-friendly black &amp; white charts','DMC floss keys with stitch counts','The meaning behind every kilim motif','Step-by-step stitching guides'].map(t=>`<div style="display:flex;gap:22px;align-items:center"><span style="width:52px;height:52px;border-radius:50%;background:#B8312F;color:#fff;display:grid;place-items:center;font-size:28px;flex:0 0 auto">✓</span>${t}</div>`).join('')}</div>
+ ${[`One ${TOTALP}-page PDF, instant download`,'Full color chart for every pattern','Large print charts + printer-friendly charts','DMC floss keys with stitch counts','The meaning behind every kilim motif','Step-by-step stitching guides'].map(t=>`<div style="display:flex;gap:22px;align-items:center"><span style="width:52px;height:52px;border-radius:50%;background:#B8312F;color:#fff;display:grid;place-items:center;font-size:28px;flex:0 0 auto">✓</span>${t}</div>`).join('')}</div>
  <div style="position:absolute;left:0;right:0;bottom:70px;text-align:center" class="h"><span style="font-size:42px;color:#7A5532">StitchAnatolia</span></div><div class="ib" style="bottom:0"></div></div>`;
 // ---- pinterest pin
 r.innerHTML+=`<div class="pin" id="pin"><div class="linen"></div><div class="ib" style="top:0;height:18px"></div><div class="ib" style="bottom:0;height:18px"></div>

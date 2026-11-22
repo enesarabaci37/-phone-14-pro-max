@@ -17,7 +17,7 @@
   .foot{position:absolute;left:15mm;right:15mm;bottom:9mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#9A8B7E}
   .specs{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-top:6mm}
   .spec{border:0.3mm solid #E7DCCB;border-radius:2mm;padding:3mm;background:#fff}
-  .spec b{display:block;font-size:12pt;margin-top:1mm}
+  .spec b{display:block;font-size:11pt;margin-top:1mm;white-space:nowrap}
   .spec span{font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:#9A8B7E}
   table{width:100%;border-collapse:collapse;font-size:9.5pt}
   th{text-align:left;font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;color:#9A8B7E;font-weight:600;padding:2mm 2mm;border-bottom:0.4mm solid #2A211B}
@@ -38,6 +38,7 @@
 </head>
 <body>
 <div id="doc"></div>
+<script src="tiles.js"></script>
 <script>
 const slug=(location.hash||'').slice(1);
 const sc=document.createElement('script'); sc.src=slug?`designs/${slug}/pattern.js`:'pattern.js';
@@ -45,8 +46,9 @@ sc.onload=build; document.body.appendChild(sc);
 function isDark(hex){const n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (0.299*r+0.587*g+0.114*b)<150;}
 function build(){
 const {W,H,grid,colors,counts}=P;
-const M=P.meta||{title:'Anatolian Kilim<br>“Nazar” Medallion',short:'“Nazar” Medallion',tagline:'A modern pattern inspired by centuries-old Turkish kilim weaving — the evil eye for protection, ram’s horns for strength and the river border for the flow of life.',level:'Beginner+',
- motifs:[['eye','Göz · Evil Eye','CENTER MEDALLION','A diamond with a dot at its heart. Woven into kilims to protect the home from envy and harm.'],['ram','Koçboynuzu · Ram’s Horn','TOP & BOTTOM','A symbol of strength, heroism and fertility, used by Anatolian weavers for generations.'],['water','Su Yolu · River Path','BORDER','The zigzag of flowing water. It stands for life, continuity and abundance.'],['star','Yıldız · Star','CORNERS','Stars represent happiness and good fortune — a wish woven for the owner.']]};
+const M=Object.assign({title:'Anatolian Kilim<br>“Nazar” Medallion',short:'“Nazar” Medallion',tagline:'A modern pattern inspired by centuries-old Turkish kilim weaving — the evil eye for protection, ram’s horns for strength and the river border for the flow of life.',level:'Beginner+',
+ motifs:[['eye','Göz · Evil Eye','CENTER MEDALLION','A diamond with a dot at its heart. Woven into kilims to protect the home from envy and harm.'],['ram','Koçboynuzu · Ram’s Horn','TOP & BOTTOM','A symbol of strength, heroism and fertility, used by Anatolian weavers for generations.'],['water','Su Yolu · River Path','BORDER','The zigzag of flowing water. It stands for life, continuity and abundance.'],['star','Yıldız · Star','CORNERS','Stars represent happiness and good fortune — a wish woven for the owner.']]},P.meta||{});
+if(M.level==='Beginner+')M.level='Advanced beginner';
 const keys=Object.keys(colors), total=Object.values(counts).reduce((a,b)=>a+b,0);
 const sizeIn=n=>(W/n).toFixed(1)+' × '+(H/n).toFixed(1);
 function stitched(cell,pad=6){const w=W*cell+pad*2,h=H*cell+pad*2;let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><pattern id="aida" width="${cell}" height="${cell}" patternUnits="userSpaceOnUse" x="${pad}" y="${pad}"><rect width="${cell}" height="${cell}" fill="#F4EEE2"/><circle cx="0" cy="0" r="${cell*0.13}" fill="#E2D8C6"/></pattern></defs><rect width="${w}" height="${h}" fill="url(#aida)"/>`;
@@ -65,6 +67,28 @@ function chart(mode){
   for(let y=0;y<=H;y++){const b=y%10===0||y===H;s+=`<line x1="${m}" y1="${m+y*cell}" x2="${m+W*cell}" y2="${m+y*cell}" stroke="${b?'#2A211B':'#BFB3A3'}" stroke-width="${b?0.28:0.08}"/>`;if(y%10===0)s+=`<text x="${m-1.4}" y="${m+y*cell+0.8}" text-anchor="end" font-size="${fs}" fill="#6B5B4E">${y}</text>`;}
   const cx=m+(W/2)*cell, cy=m+(H/2)*cell;
   s+=`<path d="M ${cx-1.6} ${m-4.6} L ${cx+1.6} ${m-4.6} L ${cx} ${m-2.2} Z" fill="#B8312F"/><path d="M ${cx-1.6} ${m+H*cell+4.6} L ${cx+1.6} ${m+H*cell+4.6} L ${cx} ${m+H*cell+2.2} Z" fill="#B8312F"/><path d="M ${m-4.6} ${cy-1.6} L ${m-4.6} ${cy+1.6} L ${m-2.2} ${cy} Z" fill="#B8312F"/>`;
+  return s+'</svg>';}
+
+function tint(hex,a){const n=parseInt(hex.slice(1),16);const r=n>>16,g=(n>>8)&255,b=n&255;const f=v=>Math.round(v+(255-v)*a).toString(16).padStart(2,'0');return '#'+f(r)+f(g)+f(b);}
+function bigChart(t){
+  const G=3, gx0=t.i>0?Math.max(0,t.x0-G):t.x0, gx1=t.i<t.nx-1?Math.min(W,t.x1+G):t.x1, gy0=t.j>0?Math.max(0,t.y0-G):t.y0, gy1=t.j<t.ny-1?Math.min(H,t.y1+G):t.y1;
+  const cols=gx1-gx0, rows=gy1-gy0, cell=Math.min(172/cols,222/rows,5.2), m=7, w=cols*cell+m*2, h=rows*cell+m*2, fs=Math.min(2.6,cell*0.6);
+  const X=x=>m+(x-gx0)*cell, Y=y=>m+(y-gy0)*cell;
+  let s=`<svg width="${w}mm" height="${h}mm" viewBox="0 0 ${w} ${h}">`;
+  for(let y=gy0;y<gy1;y++)for(let x=gx0;x<gx1;x++){const k=grid[y][x];const main=x>=t.x0&&x<t.x1&&y>=t.y0&&y<t.y1;
+    if(!main)s+=`<rect x="${X(x)}" y="${Y(y)}" width="${cell}" height="${cell}" fill="#EDE7DC"/>`;
+    if(!k)continue;const op=main?1:.38;
+    s+=`<rect x="${X(x)}" y="${Y(y)}" width="${cell}" height="${cell}" fill="${tint(colors[k].hex,.42)}" opacity="${op}"/><text x="${X(x)+cell/2}" y="${Y(y)+cell*0.76}" text-anchor="middle" font-size="${cell*0.74}" font-family="DejaVu Sans" fill="#1E1712" opacity="${op}">${colors[k].sym}</text>`;}
+  for(let x=gx0;x<=gx1;x++){const b=x%10===0;s+=`<line x1="${X(x)}" y1="${m}" x2="${X(x)}" y2="${m+rows*cell}" stroke="${b?'#2A211B':'#B5A999'}" stroke-width="${b?0.32:0.1}"/>`;if(b)s+=`<text x="${X(x)}" y="${m-1.8}" text-anchor="middle" font-size="${fs}" fill="#6B5B4E">${x}</text>`;}
+  for(let y=gy0;y<=gy1;y++){const b=y%10===0;s+=`<line x1="${m}" y1="${Y(y)}" x2="${m+cols*cell}" y2="${Y(y)}" stroke="${b?'#2A211B':'#B5A999'}" stroke-width="${b?0.32:0.1}"/>`;if(b)s+=`<text x="${m-1.5}" y="${Y(y)+0.9}" text-anchor="end" font-size="${fs}" fill="#6B5B4E">${y}</text>`;}
+  s+=`<rect x="${X(t.x0)}" y="${Y(t.y0)}" width="${(t.x1-t.x0)*cell}" height="${(t.y1-t.y0)*cell}" fill="none" stroke="#B8312F" stroke-width="0.6"/>`;
+  const cx=W/2, cy=H/2;
+  if(cx>=gx0&&cx<=gx1){const px=X(cx);s+=`<path d="M ${px-1.6} ${m-5.4} L ${px+1.6} ${m-5.4} L ${px} ${m-3.2} Z" fill="#B8312F"/>`;}
+  if(cy>=gy0&&cy<=gy1){const py=Y(cy);s+=`<path d="M ${m-6.2} ${py-1.6} L ${m-6.2} ${py+1.6} L ${m-4} ${py} Z" fill="#B8312F"/>`;}
+  return s+'</svg>';}
+function miniMap(t){const u=Math.min(34/W,24/H),w=W*u,h=H*u;let s=`<svg width="${w}mm" height="${h}mm" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="#F4EEE2"/>`;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=grid[y][x];if(k)s+=`<rect x="${x*u}" y="${y*u}" width="${u}" height="${u}" fill="${colors[k].hex}" opacity=".45"/>`;}
+  s+=`<rect x="${t.x0*u}" y="${t.y0*u}" width="${(t.x1-t.x0)*u}" height="${(t.y1-t.y0)*u}" fill="rgba(184,49,47,.12)" stroke="#B8312F" stroke-width="${Math.max(u*1.2,0.5)}"/>`;
   return s+'</svg>';}
 function icon(kind){const I={
    eye:`<path d="M14 4 L24 14 L14 24 L4 14 Z" fill="#1F3B5C"/><path d="M14 7 L21 14 L14 21 L7 14 Z" fill="#B8312F"/><path d="M14 10.5 L17.5 14 L14 17.5 L10.5 14 Z" fill="#CFA14A"/><circle cx="14" cy="14" r="1.4" fill="#1F3B5C"/>`,
@@ -86,7 +110,9 @@ function icon(kind){const I={
    burr:`<path d="M14 7 L21 14 L14 21 L7 14 Z" fill="#1F3B5C"/><path d="M14 10 L18 14 L14 18 L10 14 Z" fill="#CFA14A"/><path d="M14 2 V7 M14 21 V26 M2 14 H7 M21 14 H26 M6 6 L9 9 M22 6 L19 9 M6 22 L9 19 M22 22 L19 19" stroke="#B8312F" stroke-width="1.8"/>`};
   return `<svg width="11mm" height="11mm" viewBox="0 0 28 28"><rect width="28" height="28" rx="5" fill="#F6EFE3"/>${I[kind]||I.diamond}</svg>`;}
 const name=M.short||M.title.replace(/<br>/g,' ');
-const foot=n=>`<div class="foot"><span>StitchAnatolia · ${name}</span><span>Designed in Taşköprü, Türkiye · Page ${n}/5</span></div>`;
+const TL=tiles(W,H), TOTAL=5+TL.length;
+const foot=n=>`<div class="foot"><span>StitchAnatolia · ${name}</span><span>Designed in Taşköprü, Türkiye · Page ${n}/${TOTAL}</span></div>`;
+const hasWH=keys.includes('WH');
 const coverCell=Math.min((W>H?580:400)/W,520/H);
 document.getElementById('doc').innerHTML=`
 <section class="page"><div class="band" style="top:0"></div>
@@ -103,21 +129,25 @@ document.getElementById('doc').innerHTML=`
   <tr><td></td><td></td><td><b>Total</b></td><td style="text-align:right"><b>${total.toLocaleString('en')}</b></td><td style="text-align:right"><b>${keys.length}</b></td></tr></table>
   <div style="margin-top:4mm" class="sub">Full cross stitches only — no backstitch, no fractional stitches. Fabric is left unstitched as the background.</div>
   ${foot(2)}</section>
-<section class="page"><div class="kick">Chart 1 of 2</div><h2>Color chart</h2><div class="chartwrap">${chart('color')}</div>
-  <div class="sub" style="margin-top:2mm;text-align:center;font-size:8.5pt">Bold lines every 10 stitches · Red arrows mark the center</div>${foot(3)}</section>
-<section class="page"><div class="kick">Chart 2 of 2</div><h2>Symbol chart (printer-friendly)</h2><div class="chartwrap">${chart('bw')}</div>
+<section class="page"><div class="kick">Overview · Color chart</div><h2>Color chart</h2><div class="chartwrap">${chart('color')}</div>
+  <div class="sub" style="margin-top:2mm;text-align:center;font-size:8.5pt">Bold lines every 10 stitches · Red arrows mark the center · <b>Large print charts: pages 5–${4+TL.length}</b></div>${foot(3)}</section>
+<section class="page"><div class="kick">Overview · Printer-friendly</div><h2>Symbol chart</h2><div class="chartwrap">${chart('bw')}</div>
   <div class="sub" style="margin-top:2mm;text-align:center;font-size:8.5pt">${keys.map(k=>`<span style="font-family:'DejaVu Sans'">${colors[k].sym}</span> ${colors[k].dmc}`).join(' &nbsp;·&nbsp; ')}</div>${foot(4)}</section>
+${TL.map((t,n)=>`<section class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6mm"><div><div class="kick">Large print chart · Part ${n+1} of ${TL.length}</div><h2 style="margin-bottom:1.5mm">Columns ${t.x0+1}–${t.x1} · Rows ${t.y0+1}–${t.y1}</h2>
+  <div class="sub" style="font-size:8.5pt">Your part is inside the red frame. Faded squares repeat the edge of the next part to help you line up.</div></div><div style="flex:0 0 auto">${miniMap(t)}</div></div>
+  <div class="chartwrap" style="margin-top:2mm">${bigChart(t)}</div>
+  <div class="sub" style="margin-top:1.5mm;text-align:center;font-size:8.5pt">${keys.map(k=>`<span style="font-family:'DejaVu Sans'">${colors[k].sym}</span> ${colors[k].dmc}`).join(' &nbsp;·&nbsp; ')}</div>${foot(5+n)}</section>`).join('')}
 <section class="page"><div class="kick">Before you start</div><h2>How to stitch this pattern</h2>
-  <ol><li><b>Fabric:</b> 14 count Aida in cream, ecru or white. Leave at least 3 in (8 cm) extra on every side for framing.</li>
+  <ol><li><b>Fabric:</b> 14 count Aida in cream or ecru, like the preview on the cover. ${hasWH?'Avoid pure white fabric — the white (Blanc) stitches would disappear on it.':'White Aida also works; the cream (712) areas will then show a little more.'} Leave at least 3 in (8 cm) extra on every side for framing.</li>
   <li><b>Find the center:</b> Fold the fabric in half both ways. Start stitching from the center of the chart (red arrows).</li>
   <li><b>Floss:</b> Use 2 strands of DMC embroidery floss for all cross stitches.</li>
   <li><b>Stitch direction:</b> Keep all top stitches crossing in the same direction for a neat, even look.</li>
-  <li><b>Work in sections:</b> Complete one color area at a time and tick off the 10 × 10 blocks on a printed chart as you go.</li>
+  <li><b>Work in sections:</b> Use the large print charts (pages 5–${4+TL.length}) and tick off the 10 × 10 blocks as you go. Bold lines and numbers match on every chart.</li>
   <li><b>Finish:</b> Gently hand-wash, press face-down on a towel, then frame or mount in a hoop.</li></ol>
   <table style="margin:6mm 0"><tr><th>Fabric</th><th style="text-align:right">Finished size (inches)</th><th style="text-align:right">Finished size (cm)</th></tr>
   ${[11,14,16,18].map(n=>`<tr><td>${n} count Aida</td><td style="text-align:right">${sizeIn(n)}</td><td style="text-align:right">${(W/n*2.54).toFixed(1)} × ${(H/n*2.54).toFixed(1)}</td></tr>`).join('')}</table>
   <div class="note"><b>Please note:</b> This is a digital PDF pattern — no physical items or floss are included. Colors on screen may vary slightly from actual floss. The pattern is for personal use only; you may sell items you stitch yourself, but please do not share, resell or redistribute the pattern file.<br><br>Thank you for supporting a small designer from Taşköprü, Türkiye. If you stitch it, I would love to see your finished piece!</div>
-  ${foot(5)}<div class="band" style="bottom:0"></div></section>`;
+  ${foot(TOTAL)}<div class="band" style="bottom:0"></div></section>`;
 document.fonts.ready.then(()=>document.body.dataset.ready='1');
 }
 </script>

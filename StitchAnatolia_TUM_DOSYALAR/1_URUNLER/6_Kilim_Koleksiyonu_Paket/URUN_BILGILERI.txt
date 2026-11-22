@@ -8,7 +8,7 @@
 | 📸 Photos | **Delete all** → `etsy_gorsel_1_kapak.png` (ilk) + `etsy_gorsel_2_icerik.png` |
 | 🎬 Video | **Add videos** → `Kilim_Collection_bundle_video.mp4` |
 | ✏️ Title | Aşağıda |
-| 📄 Digital files | Nazar PDF'ini **✕ sil** → `Anatolian_Kilim_Collection_5_Cross_Stitch_Patterns.pdf` (27 sayfa, ~10 MB) |
+| 📄 Digital files | Nazar PDF'ini **✕ sil** → `Anatolian_Kilim_Collection_5_Cross_Stitch_Patterns.pdf` (45 sayfa, ~16 MB) |
 | 📝 Description | Aşağıda (Ctrl+A → Delete → yapıştır) |
 | 🏷️ Tags | **Delete all** → aşağıdaki 13 etiket |
 | 🏠 Occasion | Housewarming kalabilir |
@@ -57,9 +57,9 @@ Designed in Taşköprü, a small town in northern Türkiye.
 ━━━━━━━━━━━━━━━━━━━━
 WHAT YOU GET
 ━━━━━━━━━━━━━━━━━━━━
-One 27-page PDF (A4, also prints well on US Letter):
+One 45-page PDF (A4, also prints well on US Letter):
 • Collection cover + contents page
-• For every pattern: cover, motif meanings + DMC floss key with stitch counts, full color chart, printer-friendly black & white chart, step-by-step stitching guide
+• For every pattern: cover, motif meanings + DMC floss key with stitch counts, color + printer-friendly overview charts, LARGE PRINT charts split over several pages, step-by-step stitching guide
 
 ━━━━━━━━━━━━━━━━━━━━
 DETAILS

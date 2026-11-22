@@ -3,12 +3,12 @@ import json
 COMMON_NOTE = """━━━━━━━━━━━━━━━━━━━━
 WHAT YOU GET
 ━━━━━━━━━━━━━━━━━━━━
-A 5-page PDF (A4, also prints well on US Letter):
-1. Cover with stitched preview
-2. Motif meanings + DMC floss key with stitch counts
-3. Full color chart with symbols
-4. Printer-friendly black & white symbol chart
-5. Step-by-step stitching guide
+A {N}-page PDF (A4, also prints well on US Letter):
+• Cover with stitched preview
+• Motif meanings + DMC floss key with stitch counts
+• Color chart and printer-friendly symbol chart (one-page overview)
+• LARGE PRINT chart split over {T} pages – big, easy-to-read squares
+• Step-by-step stitching guide with fabric tips
 
 ━━━━━━━━━━━━━━━━━━━━
 PLEASE NOTE
@@ -20,6 +20,13 @@ PLEASE NOTE
 
 More Anatolian kilim patterns in my shop: StitchAnatolia 🧵
 Questions? Send me a message – I'm happy to help! 💛"""
+
+def _split(n, mx):
+    return -(-n // mx)
+def common_note(W, H):
+    """tiles.js ile aynı bölme: sütun en çok 38, satır en çok 54 ilmek."""
+    t = _split(W, 38) * _split(H, 54)
+    return COMMON_NOTE.replace('{N}', str(5 + t)).replace('{T}', str(t))
 
 def details(W, H, dmc, level):
     s = lambda n: f"{W/n:.1f} × {H/n:.1f} in ({W/n*2.54:.1f} × {H/n*2.54:.1f} cm)"
@@ -101,7 +108,7 @@ The NAZAR BONCUĞU (evil eye bead) is Türkiye's most famous protective symbol. 
 • Sea Nazar – turquoise and white, like the Aegean coast
 • Earth Nazar – Anatolian earth tones
 
-Each motif is about 2 × 2 inches on 14 count Aida — perfect for cards, bookmarks, ornaments, keychains and small gifts. Great for beginners!""",
+Each motif is about 1.6 × 1.6 inches (4 × 4 cm) on 14 count Aida — perfect for cards, bookmarks, ornaments, keychains and small gifts. Great for beginners!""",
   W=53, H=53, dmc=['347','311','729','712','938','3809','820','3846','Blanc','310'], level='Beginner'),
 ]
 
@@ -112,7 +119,7 @@ for it in L:
     assert len(it['title']) <= 140, (it['slug'], len(it['title']))
     assert len(it['tags']) == 13, it['slug']
     bad = [t for t in it['tags'] if len(t) > 20]; assert not bad, bad
-    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + COMMON_NOTE
+    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + common_note(it['W'], it['H'])
     out.append(f"\n---\n\n## {it['folder'].split('_',1)[0]}. {it['tr']}  ·  Önerilen fiyat: **{it['price']}**\n")
     out.append(f"**Klasör:** `{it['folder']}` → PDF'i ürün dosyası olarak, 2 görseli ilan görseli olarak yükle.\n")
     out.append(f"**Başlık** ({len(it['title'])}/140):\n```\n{it['title']}\n```\n")

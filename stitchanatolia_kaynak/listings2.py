@@ -1,6 +1,6 @@
 """SA-006..008 ilan metinleri -> URUN_BILGILERI.txt (UTF-8 BOM + CRLF)"""
 import os, shutil, glob
-from listings import details, COMMON_NOTE
+from listings import details, common_note
 ROOT = '../StitchAnatolia_TUM_DOSYALAR/1_URUNLER'
 PDF = {'goz_seti': 'Kilim_Goz_Evil_Eye_Sampler_Cross_Stitch_Pattern.pdf',
        'kurt_agzi': 'Anatolian_Kilim_Kurt_Agzi_Wolf_Cross_Stitch_Pattern.pdf',
@@ -21,7 +21,7 @@ In Turkish weaving, the GÖZ (eye) is woven in many forms, all with one wish: to
 • YILDIZ GÖZ (Star Eye) – an eye inside a star, for luck
 • NAZAR BONCUĞU (Blue Bead) – Türkiye's famous blue eye, kilim style
 
-Stitch the whole sampler for a frame, or stitch each motif on its own (about 1.4 in / 3.5 cm on 14 count) for cards, bookmarks, ornaments and small gifts.""",
+Stitch the whole sampler for a frame, or stitch each motif on its own (about 1.2–1.6 in / 3–4 cm on 14 count) for cards, bookmarks, ornaments and small gifts.""",
   pin_title='Evil Eye Cross Stitch Sampler | 6 Turkish Kilim Eye Motifs PDF', board='Evil Eye Cross Stitch',
   pin_desc="Six protective eye motifs from Turkish kilims in one cross stitch sampler: classic eye, amulet (muska), hooked eye, four eyes, star eye and the blue nazar bead. Stitch them together or one by one for cards and bookmarks. 75 × 53 stitches, beginner friendly. Instant PDF download. #evileye #crossstitch #nazar #kilim #crossstitchpattern"),
  dict(slug='kurt_agzi', folder='8_Kurt_Agzi', sku='SA-007', tr='Kurt Ağzı', price='5,50 $', W=61, H=87, level='Advanced beginner',
@@ -62,7 +62,7 @@ def wtxt(path, s):
 for it in L:
     assert len(it['title']) <= 140 and len(it['tags']) == 13 and all(len(t) <= 20 for t in it['tags']), it['slug']
     assert len(set(it['tags'])) == 13 and len(it['pin_title']) <= 100
-    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + COMMON_NOTE
+    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + common_note(it['W'], it['H'])
     D = f"{ROOT}/{it['folder']}"; os.makedirs(D + '/Etsy', exist_ok=True); os.makedirs(D + '/Pinterest', exist_ok=True)
     s = it['slug']
     shutil.copy(f'out/{s}/{PDF[s]}', D)

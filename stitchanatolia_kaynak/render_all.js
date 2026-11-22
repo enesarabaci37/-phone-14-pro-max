@@ -2,6 +2,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 const FILE = {
+  nazar: 'Anatolian_Kilim_Nazar_Cross_Stitch_Pattern.pdf',
   tree_of_life: 'Anatolian_Kilim_Tree_of_Life_Cross_Stitch_Pattern.pdf',
   elibelinde: 'Anatolian_Kilim_Elibelinde_Cross_Stitch_Pattern.pdf',
   bereket: 'Anatolian_Kilim_Bereket_Cross_Stitch_Pattern.pdf',

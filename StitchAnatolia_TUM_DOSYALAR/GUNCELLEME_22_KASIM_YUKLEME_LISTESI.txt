@@ -1,0 +1,50 @@
+﻿STITCHANATOLIA - KALİTE GÜNCELLEMESİ (22 Kasım 2026)
+=====================================================
+
+NE DEĞİŞTİ?
+1. Her PDF'e BÜYÜK BOY ŞEMA sayfaları eklendi (kareler 2,5 mm'den 4,4 mm'ye çıktı).
+   Desen 2-4 parçaya bölündü, parçaların kenarı soluk renkle tekrar ediyor, köşede küçük harita var.
+2. Rehber sayfasına desene göre KUMAŞ RENGİ önerisi eklendi.
+   (Beyaz ip olan desenlerde: "beyaz kumaş kullanmayın" uyarısı.)
+3. Zorluk seviyesi PDF ile ilanda aynı yapıldı ("Advanced beginner").
+4. İlan açıklamalarındaki yanlış bilgiler düzeltildi:
+   - Sayfa sayıları (5 sayfa -> 7 veya 9 sayfa, paket 27 -> 45 sayfa)
+   - Mini Nazar motif boyutu: "2 × 2 inç" yanlıştı -> doğrusu 1,6 × 1,6 inç (4 cm)
+   - Noel Süsleri ve Göz Seti motif boyutları gerçek ölçüyle yazıldı
+5. Etsy 2. görseli ("What you get") yeni sayfa sayısıyla güncellendi.
+
+HER İLAN İÇİN YAPILACAK (11 ilan + paket)
+-----------------------------------------
+Shop Manager -> Listings -> ilan kartındaki ⚙️ -> Edit
+
+  a) Photos: "What you get" yazan görseli ✕ ile sil.
+     Yerine klasördeki Etsy/etsy_gorsel_2_icerik.png dosyasını yükle.
+     Kapak görseli 1. sırada kalsın.
+  b) Digital files: eski PDF'i ✕ ile sil, klasördeki yeni PDF'i yükle (aynı isim).
+  c) Description: kutuyu tamamen temizle (Ctrl+A, Delete).
+     URUN_BILGILERI.txt içindeki AÇIKLAMA bölümünü baştan sona yapıştır.
+  d) Sağ alttaki Publish / Save butonuna bas.
+
+Başlık, etiket, fiyat ve SKU DEĞİŞMİYOR, onlara dokunma.
+
+KONTROL LİSTESİ (bitenin yanına X koy)
+[ ] 1_Nazar_Madalyonu            SA-001        yeni PDF 9 sayfa
+[ ] 2_Hayat_Agaci                SA-002        yeni PDF 9 sayfa
+[ ] 3_Elibelinde                 SA-003        yeni PDF 9 sayfa
+[ ] 4_Bereket                    SA-004        yeni PDF 9 sayfa
+[ ] 5_Mini_Nazar_Seti            SA-005        yeni PDF 7 sayfa
+[ ] 6_Kilim_Koleksiyonu_Paket    SA-BUNDLE-01  yeni PDF 45 sayfa
+[ ] 7_Goz_Seti                   SA-006        yeni PDF 7 sayfa
+[ ] 8_Kurt_Agzi                  SA-007        yeni PDF 9 sayfa
+[ ] 9_Yildiz                     SA-008        yeni PDF 9 sayfa
+[ ] 10_Noel_Susleri              SA-009        yeni PDF 7 sayfa
+[ ] 11_Noel_Agaci                SA-010        yeni PDF 9 sayfa
+
+YENİ İLANLAR (henüz yüklenmedi)
+-------------------------------
+[ ] 12_Kus      SA-011  -> Elibelinde'yi kopyala (yeni PDF 9 sayfa)
+[ ] 13_Pitrak   SA-012  -> Bereket'i kopyala (yeni PDF 9 sayfa)
+DİKKAT: Dün gönderilen "StitchAnatolia_Kus_Pitrak.zip" ESKİ PDF içeriyor, onu kullanma.
+Bu zip'teki 12_Kus ve 13_Pitrak klasörlerini kullan.
+
+Daha önce bu deseni satın alan olmadığı için (0 satış) kimseye bildirim gerekmiyor.

@@ -1,6 +1,6 @@
 """SA-009..010 ilan metinleri -> URUN_BILGILERI.txt (UTF-8 BOM + CRLF)"""
 import os, shutil, glob
-from listings import details, COMMON_NOTE
+from listings import details, common_note
 ROOT = '../StitchAnatolia_TUM_DOSYALAR/1_URUNLER'
 PDF = {'noel_susleri': 'Kilim_Christmas_Ornaments_Cross_Stitch_Pattern.pdf',
        'noel_agaci': 'Anatolian_Kilim_Christmas_Tree_Cross_Stitch_Pattern.pdf'}
@@ -11,7 +11,7 @@ L = [
   tags=['christmas ornament','xmas cross stitch','ornament pattern','mini cross stitch','holiday stitch','christmas pattern','snowflake stitch','christmas tree','easy cross stitch','cross stitch pdf','gift tag pattern','kilim cross stitch','beginner pattern'],
   intro="""Six tiny Christmas ornaments in Turkish kilim style — quick to stitch before the holidays. 🎄
 
-Each ornament is about 1 inch (2.5 cm) on 14 count Aida, so you can finish one in an evening. Stitch them for the tree, gift tags, Christmas cards or little gifts for friends:
+Each ornament is about 1 inch wide and 1.1–1.7 inches tall (2.5 × 3–4.5 cm) on 14 count Aida, including the hanging loop, so you can finish one in an evening. Stitch them for the tree, gift tags, Christmas cards or little gifts for friends:
 
 • YILDIZ (Star) – the kilim star of happiness and good fortune
 • ÇAM (Pine Tree) – a stepped kilim pine with red and gold baubles
@@ -22,7 +22,7 @@ Each ornament is about 1 inch (2.5 cm) on 14 count Aida, so you can finish one i
 
 Each design has a small golden loop on top, ready to hang. Great for beginners!""",
   pin_title='Christmas Ornament Cross Stitch Patterns | 6 Mini Kilim Designs PDF', board='Boho Cross Stitch Ideas',
-  pin_desc="Six tiny Christmas ornaments in Turkish kilim style: star, pine tree, snowflake, heart, bell and evil eye. About 1 inch each — quick to stitch for the tree, gift tags and cards. Beginner friendly, 6 DMC colors. Instant PDF download. #christmascrossstitch #christmasornaments #crossstitch #xmas #handmadechristmas"),
+  pin_desc="Six tiny Christmas ornaments in Turkish kilim style: star, pine tree, snowflake, heart, bell and evil eye. About 1 inch wide each — quick to stitch for the tree, gift tags and cards. Beginner friendly, 6 DMC colors. Instant PDF download. #christmascrossstitch #christmasornaments #crossstitch #xmas #handmadechristmas"),
  dict(slug='noel_agaci', folder='11_Noel_Agaci', sku='SA-010', tr='Noel Ağacı', price='5,50 $', W=61, H=85, level='Advanced beginner',
   dmc=['347','311','729','712','938','699'],
   title='Christmas Tree Cross Stitch Pattern PDF, Turkish Kilim Holiday Design, Boho Xmas Embroidery Chart, Folk Art Holiday Decor, Instant Download',
@@ -45,7 +45,7 @@ def wtxt(path, s):
 for it in L:
     assert len(it['title']) <= 140 and len(it['tags']) == 13 and all(len(t) <= 20 for t in it['tags']), it['slug']
     assert len(set(it['tags'])) == 13 and len(it['pin_title']) <= 100
-    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + COMMON_NOTE
+    desc = it['intro'] + "\n\nDesigned in Taşköprü, a small town in northern Türkiye.\n\n" + details(it['W'], it['H'], it['dmc'], it['level']) + "\n\n" + common_note(it['W'], it['H'])
     D = f"{ROOT}/{it['folder']}"; os.makedirs(D + '/Etsy', exist_ok=True); os.makedirs(D + '/Pinterest', exist_ok=True)
     s = it['slug']
     shutil.copy(f'out/{s}/{PDF[s]}', D)
