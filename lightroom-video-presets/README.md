@@ -3,11 +3,12 @@
 **Normal / Standart renk profiliyle** (Log değil) çekilmiş 4K videolar için 22 preset.
 DJI Mini 5 Pro · DJI Osmo Pocket 3 · Insta360 X5
 
-Her kamera için ayrı ayarlanmıştır: kameranın kendi renk karakteri (DJI'ın doygun rengi, Pocket 3'ün sert keskinliği, X5'in düz görüntüsü) önce düzeltilir, mevsim görünümü onun üstüne eklenir.
+Tüm DNG'lerin üzerinde preset adı yazılıdır. Her kamera için ayrı ayarlanmıştır: kameranın kendi renk karakteri (DJI'ın doygun rengi, Pocket 3'ün sert keskinliği, X5'in düz görüntüsü) önce düzeltilir, mevsim görünümü onun üstüne eklenir.
 
 ## Dosyalar
 - `Pro-Video-Presets-DNG.zip` → 22 DNG (Lightroom Mobile ücretsiz sürüm dahil, klasik yöntem)
-- `Pro-Video-Presets-XMP.zip` → aynı 22 preset, tek seferde içe aktarma için
+- `Pro-Video-Gece-DNG.zip` → 18 gece preseti
+- `Pro-Video-Presets-XMP.zip` → 40 presetin hepsi, tek seferde içe aktarma için
 
 ## 📱 DNG ile kurulum (iPhone)
 1. `Pro-Video-Presets-DNG.zip`'i Dosyalar uygulamasına kaydet ve üstüne dokunarak aç.
@@ -36,6 +37,25 @@ Hızlı yol: DNG'de **⋯ → Ayarları Kopyala**, videoda **⋯ → Ayarları Y
 Ön ekler: `M5P` = Mini 5 Pro · `OP3` = Osmo Pocket 3 · `X5` = Insta360 X5
 
 **Her kamerada çalışan (UNI):** Cinematic Teal Orange · Gece Şehir · Moody Dark · Siyah Beyaz Sinema
+
+## 🌃 Gece Seti (`Pro-Video-Gece-DNG.zip`)
+Her kamera için 6 gece preseti (toplam 18). DNG'lerin üstünde preset adı yazılıdır.
+
+| Preset | Görünüm | En iyi sahne |
+|---|---|---|
+| **Gece 01 Doğal** | Temiz siyah, kontrollü lambalar, gerçekçi | Her gece çekimi |
+| **Gece 02 Altın Şehir** | Altın sokaklar + derin mavi gök | Drone ile şehir, köprü, otoyol |
+| **Gece 03 Mavi Saat** | Koyu mavi gök + sıcak ışıklar | Gün batımından 20-40 dk sonra |
+| **Gece 04 Neon Şehir** | Mor-pembe-camgöbeği neon, modern | Cadde, AVM, tabelalar, yağmurlu gece |
+| **Gece 05 Sinematik** | Teal gölgeler, film havası | Sokak, araba, hikaye anlatımı |
+| **Gece 06 Beyaz Işık** | Turuncu sokak lambası rengini temizler | Turuncu lambalı sokaklar |
+
+**Gece çekim ipuçları (normal profil):**
+- ISO'yu olabildiğince düşük tut: Mini 5 Pro ≤ 1600, Pocket 3 ≤ 3200, X5 ≤ 800 (X5 gecede gürültülü).
+- Pozlamayı **ışıklara göre** ayarla (-0.7 EV). Patlayan ışık geri gelmez, karanlık biraz açılabilir.
+- 4K **30fps** gece için daha temizdir (60fps'te ışık yarıya iner). Hareketli çekimde 60 kullan.
+- Beyaz denge: 4000-4500K sabit. Turuncu lambalar fazlaysa "Gece 06 Beyaz Işık".
+- Lightroom videoda gürültü azaltma yok; bu yüzden presetler gölgeleri fazla açmaz.
 
 ## 🎥 Bu presetler için önerilen çekim ayarları
 | | Mini 5 Pro | Osmo Pocket 3 | Insta360 X5 |

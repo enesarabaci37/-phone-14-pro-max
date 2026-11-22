@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="01ECB7B1ED5542FDB1F4AB06A17FFAE2"
+   crs:UUID="693F0AE2FC004128BC769487C6A6403A"
    crs:SupportsAmount2="True"
    crs:SupportsAmount="True"
    crs:SupportsColor="True"
@@ -45,7 +45,7 @@
    crs:ConvertToGrayscale="False"
    crs:ToneCurveName2012="Custom"
    crs:HasSettings="True">
-   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">X5 05 Kis</rdf:li></rdf:Alt></crs:Name>
+   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">X5 05 Kış</rdf:li></rdf:Alt></crs:Name>
    <crs:ShortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:ShortName>
    <crs:SortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:SortName>
    <crs:Group><rdf:Alt><rdf:li xml:lang="x-default">Pro Video - Insta360 X5</rdf:li></rdf:Alt></crs:Group>

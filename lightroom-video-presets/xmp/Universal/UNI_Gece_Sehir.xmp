@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="509A0E8B49E74DCBBE5A9042E60A2778"
+   crs:UUID="9509EAB8CDB04DF59D370E13BA7C4737"
    crs:SupportsAmount2="True"
    crs:SupportsAmount="True"
    crs:SupportsColor="True"
@@ -42,7 +42,7 @@
    crs:ConvertToGrayscale="False"
    crs:ToneCurveName2012="Custom"
    crs:HasSettings="True">
-   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">UNI Gece Sehir</rdf:li></rdf:Alt></crs:Name>
+   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">UNI Gece Şehir</rdf:li></rdf:Alt></crs:Name>
    <crs:ShortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:ShortName>
    <crs:SortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:SortName>
    <crs:Group><rdf:Alt><rdf:li xml:lang="x-default">Pro Video - Universal</rdf:li></rdf:Alt></crs:Group>

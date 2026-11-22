@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="533C0946D47047C0B5AC2487839E969D"
+   crs:UUID="C25C3F56BA3F42C287870110C219790A"
    crs:SupportsAmount2="True"
    crs:SupportsAmount="True"
    crs:SupportsColor="True"
@@ -47,7 +47,7 @@
    crs:ConvertToGrayscale="False"
    crs:ToneCurveName2012="Custom"
    crs:HasSettings="True">
-   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">OP3 02 Ilkbahar</rdf:li></rdf:Alt></crs:Name>
+   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">OP3 02 İlkbahar</rdf:li></rdf:Alt></crs:Name>
    <crs:ShortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:ShortName>
    <crs:SortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:SortName>
    <crs:Group><rdf:Alt><rdf:li xml:lang="x-default">Pro Video - DJI Osmo Pocket 3</rdf:li></rdf:Alt></crs:Group>

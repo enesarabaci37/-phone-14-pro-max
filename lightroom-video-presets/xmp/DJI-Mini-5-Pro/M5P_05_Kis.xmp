@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="250934720023492DBB8C7A045F6978F7"
+   crs:UUID="DA6B925B9BA74711AAA7FE47DAF38843"
    crs:SupportsAmount2="True"
    crs:SupportsAmount="True"
    crs:SupportsColor="True"
@@ -45,7 +45,7 @@
    crs:ConvertToGrayscale="False"
    crs:ToneCurveName2012="Custom"
    crs:HasSettings="True">
-   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">M5P 05 Kis</rdf:li></rdf:Alt></crs:Name>
+   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">M5P 05 Kış</rdf:li></rdf:Alt></crs:Name>
    <crs:ShortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:ShortName>
    <crs:SortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:SortName>
    <crs:Group><rdf:Alt><rdf:li xml:lang="x-default">Pro Video - DJI Mini 5 Pro</rdf:li></rdf:Alt></crs:Group>

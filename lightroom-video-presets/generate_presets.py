@@ -29,7 +29,7 @@ LOOKS = [
   ("01 Clean Natural", "Temiz, dogal ve net. Her cekime guvenle uygulanabilir temel.", CLEAN_S, dict(
       Exposure2012=0.05, Contrast2012=6, Highlights2012=-10, Shadows2012=6, Whites2012=6, Blacks2012=-6,
       Vibrance=10, Clarity2012=2)),
-  ("02 Ilkbahar", "Taze yesiller, cicek tonlari, parlak ve hafif pastel bahar havasi.", SOFT_S, dict(
+  ("02 İlkbahar", "Taze yesiller, cicek tonlari, parlak ve hafif pastel bahar havasi.", SOFT_S, dict(
       Exposure2012=0.10, Contrast2012=4, Highlights2012=-20, Shadows2012=12, Whites2012=4, Blacks2012=-4,
       Vibrance=16, Clarity2012=2, Dehaze=2,
       HueAdjustmentGreen=-8, SaturationAdjustmentGreen=10, LuminanceAdjustmentGreen=8,
@@ -51,7 +51,7 @@ LOOKS = [
       ColorGradeGlobalHue=35, ColorGradeGlobalSat=9,
       SplitToningHighlightHue=45, SplitToningHighlightSaturation=12, SplitToningShadowHue=25, SplitToningShadowSaturation=8,
       PostCropVignetteAmount=-8)),
-  ("05 Kis", "Bembeyaz kar, soguk ve kristal netlikte gorunum; gri kari temizler.", CRISP_S, dict(
+  ("05 Kış", "Bembeyaz kar, soguk ve kristal netlikte gorunum; gri kari temizler.", CRISP_S, dict(
       Exposure2012=0.15, Contrast2012=10, Highlights2012=-28, Shadows2012=10, Whites2012=14, Blacks2012=-8,
       Vibrance=6, Saturation=-10, Clarity2012=8, Dehaze=8, Texture=6,
       HueAdjustmentBlue=-6, LuminanceAdjustmentBlue=6, SaturationAdjustmentAqua=-6,
@@ -74,7 +74,7 @@ UNIVERSAL = [
       SaturationAdjustmentGreen=-20, SaturationAdjustmentOrange=8,
       SplitToningShadowHue=195, SplitToningShadowSaturation=20, SplitToningHighlightHue=38, SplitToningHighlightSaturation=16,
       ColorGradeBlending=60, PostCropVignetteAmount=-10)),
-  ("Gece Sehir", "Gece cekimi: temiz siyahlar, canli neonlar, kontrollu isiklar.", CLEAN_S, dict(
+  ("Gece Şehir", "Gece cekimi: temiz siyahlar, canli neonlar, kontrollu isiklar.", CLEAN_S, dict(
       Contrast2012=8, Highlights2012=-35, Shadows2012=4, Blacks2012=-12, Vibrance=16, Dehaze=4,
       SaturationAdjustmentPurple=14, SaturationAdjustmentMagenta=12, SaturationAdjustmentBlue=10, SaturationAdjustmentOrange=6,
       SplitToningShadowHue=225, SplitToningShadowSaturation=12, SplitToningHighlightHue=35, SplitToningHighlightSaturation=8,
@@ -106,6 +106,64 @@ for cam, (short, base) in CAMERAS.items():
         P.append((cam, f"{short} {name}", desc, crv, merge(base, look)))
 for name, desc, crv, look in UNIVERSAL:
     P.append(("Universal", f"UNI {name}", desc, crv, look))
+
+
+# ======================= GECE SETI =======================
+NIGHT_S  = [(0,0),(40,31),(128,126),(200,205),(255,255)]   # derin ama temiz siyahlar
+NIGHT_CINE = [(0,8),(44,36),(128,125),(200,203),(255,250)]
+
+NIGHT_CAMERAS = {   # gece icin kamera duzeltmeleri (videoda gurultu azaltma yok -> golgeleri fazla acmiyoruz)
+  "DJI Mini 5 Pro": ("M5P", dict(Highlights2012=-15, Shadows2012=4, Dehaze=4, Texture=-6, Saturation=-4,
+                                 LuminanceAdjustmentBlue=-4)),
+  "DJI Osmo Pocket 3": ("OP3", dict(Highlights2012=-10, Shadows2012=6, Contrast2012=-2, Texture=-2,
+                                    SaturationAdjustmentOrange=-4)),
+  "Insta360 X5": ("X5", dict(Highlights2012=-15, Blacks2012=-6, Texture=-10, Clarity2012=-4, Vibrance=6, Dehaze=2)),
+}
+
+NIGHT_LOOKS = [
+  ("Gece 01 Doğal", "Dogal gece: temiz siyahlar, kontrollu sokak lambalari, gercekci renkler.", NIGHT_S, dict(
+      Exposure2012=0.05, Contrast2012=8, Highlights2012=-35, Shadows2012=6, Whites2012=-4, Blacks2012=-10,
+      Vibrance=10, Saturation=-2, SaturationAdjustmentOrange=-6, SaturationAdjustmentYellow=-8,
+      SplitToningShadowHue=225, SplitToningShadowSaturation=6)),
+  ("Gece 02 Altın Şehir", "Drone sehir klasigi: altin sokaklar, derin mavi gokyuzu ve golgeler.", NIGHT_S, dict(
+      Contrast2012=12, Highlights2012=-30, Shadows2012=4, Whites2012=4, Blacks2012=-12, Vibrance=14, Saturation=2, Dehaze=4,
+      HueAdjustmentOrange=-4, SaturationAdjustmentOrange=14, LuminanceAdjustmentOrange=6,
+      HueAdjustmentYellow=-10, SaturationAdjustmentYellow=8, LuminanceAdjustmentYellow=4,
+      HueAdjustmentBlue=-8, SaturationAdjustmentBlue=14, LuminanceAdjustmentBlue=-10,
+      HueAdjustmentAqua=-10, SaturationAdjustmentAqua=8,
+      SplitToningShadowHue=215, SplitToningShadowSaturation=14, SplitToningHighlightHue=40, SplitToningHighlightSaturation=14,
+      ColorGradeBlending=60, PostCropVignetteAmount=-8)),
+  ("Gece 03 Mavi Saat", "Gun batimindan hemen sonra: koyu mavi gok, sicak sehir isiklari.", NIGHT_S, dict(
+      Exposure2012=0.05, Contrast2012=10, Highlights2012=-32, Shadows2012=8, Blacks2012=-8, Vibrance=16,
+      HueAdjustmentBlue=-10, SaturationAdjustmentBlue=20, LuminanceAdjustmentBlue=-6,
+      HueAdjustmentAqua=-14, SaturationAdjustmentAqua=12, SaturationAdjustmentPurple=6,
+      SaturationAdjustmentOrange=10, LuminanceAdjustmentOrange=6, SaturationAdjustmentYellow=6,
+      ColorGradeGlobalHue=220, ColorGradeGlobalSat=4,
+      SplitToningShadowHue=225, SplitToningShadowSaturation=16, SplitToningHighlightHue=45, SplitToningHighlightSaturation=10)),
+  ("Gece 04 Neon Şehir", "Neon tabelalar, mor-pembe-camgobegi isiklar; modern sehir gecesi.", NIGHT_S, dict(
+      Contrast2012=14, Highlights2012=-30, Shadows2012=2, Whites2012=6, Blacks2012=-14, Vibrance=20, Saturation=4, Clarity2012=4,
+      HueAdjustmentPurple=6, SaturationAdjustmentPurple=22, SaturationAdjustmentMagenta=20, LuminanceAdjustmentMagenta=6,
+      HueAdjustmentBlue=-6, SaturationAdjustmentBlue=16, HueAdjustmentAqua=8, SaturationAdjustmentAqua=16,
+      HueAdjustmentOrange=-6, SaturationAdjustmentOrange=-10, SaturationAdjustmentYellow=-16, SaturationAdjustmentGreen=-20,
+      SplitToningShadowHue=240, SplitToningShadowSaturation=14, SplitToningHighlightHue=300, SplitToningHighlightSaturation=6,
+      PostCropVignetteAmount=-10)),
+  ("Gece 05 Sinematik", "Film gibi gece: teal golgeler, sicak isiklar, mat ve derin.", NIGHT_CINE, dict(
+      Contrast2012=10, Highlights2012=-35, Blacks2012=-6, Vibrance=4, Saturation=-10,
+      HueAdjustmentGreen=20, SaturationAdjustmentGreen=-30, HueAdjustmentBlue=-12, SaturationAdjustmentBlue=6, HueAdjustmentAqua=-15,
+      SaturationAdjustmentOrange=6, HueAdjustmentYellow=-8, SaturationAdjustmentYellow=-12,
+      SplitToningShadowHue=195, SplitToningShadowSaturation=22, SplitToningHighlightHue=38, SplitToningHighlightSaturation=14,
+      ColorGradeBlending=65, PostCropVignetteAmount=-14)),
+  ("Gece 06 Beyaz Işık", "Turuncu sokak lambasi rengini temizler; beyaz, modern ve net gece.", NIGHT_S, dict(
+      Contrast2012=10, Highlights2012=-30, Shadows2012=4, Blacks2012=-10, Vibrance=6, Clarity2012=2,
+      HueAdjustmentOrange=6, SaturationAdjustmentOrange=-25, LuminanceAdjustmentOrange=8,
+      HueAdjustmentYellow=10, SaturationAdjustmentYellow=-30, SaturationAdjustmentRed=-6, SaturationAdjustmentBlue=10,
+      ColorGradeGlobalHue=220, ColorGradeGlobalSat=8)),
+]
+
+NIGHT_GROUP = "Pro Video Gece"
+for cam, (short, base) in NIGHT_CAMERAS.items():
+    for name, desc, crv, look in NIGHT_LOOKS:
+        P.append((cam + " Gece", f"{short} {name}", desc, crv, merge(base, look)))
 
 def curve(points):
     return "".join(f"<rdf:li>{x}, {y}</rdf:li>" for x, y in points)
@@ -162,7 +220,8 @@ def xmp(cam, name, desc, cpts, s):
 </x:xmpmeta>
 '''
 
-def fname(name): return name.replace(" ", "_")
+TR = str.maketrans("İıŞşĞğÜüÖöÇç", "IiSsGgUuOoCc")
+def fname(name): return name.translate(TR).replace(" ", "_")
 
 def main(OUT):
     os.makedirs(OUT, exist_ok=True)
@@ -170,7 +229,7 @@ def main(OUT):
         for cam, name, desc, c, s in P:
             d = os.path.join(OUT, "xmp", cam.replace(" ", "-")); os.makedirs(d, exist_ok=True)
             data = xmp(cam, name, desc, c, s)
-            open(os.path.join(d, fname(name) + ".xmp"), "w").write(data)
+            open(os.path.join(d, fname(name) + ".xmp"), "w", encoding="utf-8").write(data)
             z.writestr(fname(name) + ".xmp", data)
     print(len(P), "XMP presets")
 
