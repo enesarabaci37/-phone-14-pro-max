@@ -46,8 +46,8 @@ def write_dng(path, xmp):
 
 IMG = scene()
 OUT = sys.argv[1]; os.makedirs(os.path.join(OUT, 'dng'), exist_ok=True)
-with zipfile.ZipFile(os.path.join(OUT, 'Video-Pro-Presets-DNG.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
+with zipfile.ZipFile(os.path.join(OUT, 'Pro-Video-Presets-DNG.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
     for cam, name, desc, c, s in G.P:
-        fn = name.replace(' ', '_').replace('&', 'and') + '.dng'
+        fn = G.fname(name) + '.dng'
         p = os.path.join(OUT, 'dng', fn); write_dng(p, dng_xmp(cam, name, desc, c, s)); z.write(p, fn)
 print('ok', len(G.P))

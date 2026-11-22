@@ -1,62 +1,61 @@
-# Video Pro – Lightroom Video Presetleri
+# Pro Video – Lightroom Video Presetleri (Normal Çekim)
 
-DJI Mini 5 Pro, DJI Osmo Pocket 3 ve Insta360 X5 için 16 video preseti. **Lightroom Mobile** (iPhone/Android) ve Lightroom Desktop ile çalışır.
+**Normal / Standart renk profiliyle** (Log değil) çekilmiş 4K videolar için 22 preset.
+DJI Mini 5 Pro · DJI Osmo Pocket 3 · Insta360 X5
 
-## 📱 Lightroom Mobile'a yükleme (iPhone)
-1. `Video-Pro-Presets.zip` dosyasını iPhone'a indir (Dosyalar uygulamasına kaydet).
-2. Lightroom'da herhangi bir videoyu aç, alttan **Ön Ayarlar (Presets)** sekmesine gir.
-3. Sağ üstteki **⋯** menüsü → **Ön Ayarları İçe Aktar (Import Presets)**.
-4. ZIP dosyasını seç. Presetler şu gruplarda görünür:
-   - `Video Pro - DJI Mini 5 Pro`
-   - `Video Pro - DJI Osmo Pocket 3`
-   - `Video Pro - Insta360 X5`
-   - `Video Pro - Universal`
+Her kamera için ayrı ayarlanmıştır: kameranın kendi renk karakteri (DJI'ın doygun rengi, Pocket 3'ün sert keskinliği, X5'in düz görüntüsü) önce düzeltilir, mevsim görünümü onun üstüne eklenir.
 
-> Desktop'ta: Geliştir (Edit) → Ön Ayarlar paneli → **+** → Ön Ayarları İçe Aktar → ZIP'i seç. Adobe hesabın açıksa mobilde de otomatik senkronize olur.
+## Dosyalar
+- `Pro-Video-Presets-DNG.zip` → 22 DNG (Lightroom Mobile ücretsiz sürüm dahil, klasik yöntem)
+- `Pro-Video-Presets-XMP.zip` → aynı 22 preset, tek seferde içe aktarma için
 
-## 📸 Alternatif: DNG yöntemi
-İçe aktarma menüsü sende çıkmazsa ya da ZIP çalışmazsa `Video-Pro-Presets-DNG.zip` kullan:
-1. ZIP'i iPhone'da aç (Dosyalar'da üstüne dokun). İçinden 16 adet `.dng` çıkar.
-2. Lightroom'da **+ (Fotoğraf ekle) → Dosyalardan** ile DNG'leri içe aktar.
-3. Bir DNG'yi aç → sağ üst **⋯** → **Ön Ayar Oluştur** → adını ve grubunu yaz → Kaydet.
-   - Tüm ayar kutularını işaretli bırak (Işık, Renk, Efektler, Eğri).
-4. 16 DNG için tekrarla. Artık videolarında Ön Ayarlar sekmesinde görünürler.
-   - Kısa yol: DNG'de **⋯ → Ayarları Kopyala**, sonra videoda **⋯ → Ayarları Yapıştır**.
+## 📱 DNG ile kurulum (iPhone)
+1. `Pro-Video-Presets-DNG.zip`'i Dosyalar uygulamasına kaydet ve üstüne dokunarak aç.
+2. Lightroom → **+** → **Dosyalardan** → 22 DNG'yi seç ve içe aktar.
+3. Bir DNG'yi aç → sağ üst **⋯** → **Ön Ayar Oluştur**
+   - Ad: dosya adıyla aynı (ör. `M5P 03 Yaz`)
+   - Grup: ör. `Pro Video - Mini 5 Pro`
+   - Tüm kutular işaretli kalsın → ✓
+4. Her DNG için tekrarla. Sonra videoyu aç → **Ön Ayarlar** → presetini seç.
 
-> Not: DNG'ler RAW olduğu için beyaz denge (sıcaklık) değerleri DNG versiyonunda yok. Golden Hour, Vlog Warm Skin gibi presetlerde istersen Sıcaklık'ı +5/+15 elle artır.
+Hızlı yol: DNG'de **⋯ → Ayarları Kopyala**, videoda **⋯ → Ayarları Yapıştır**.
 
-## 🎬 Preset listesi
+**XMP ile (daha hızlı):** Videoyu aç → Ön Ayarlar → **⋯ → Ön Ayarları İçe Aktar** → `Pro-Video-Presets-XMP.zip`. 22 preset tek seferde gruplarıyla gelir.
 
-| Kamera | Preset | Ne zaman? | Çekim profili |
+## 🎬 Presetler (her kamera için 6 adet)
+
+| # | Preset | Görünüm | En iyi sahne |
 |---|---|---|---|
-| Mini 5 Pro | M5P 01 – D-Log M Natural | Her şeyin temeli, doğal renk | D-Log M |
-| Mini 5 Pro | M5P 02 – Cinematic Teal Orange | Sinematik hava çekimi | D-Log M |
-| Mini 5 Pro | M5P 03 – Golden Hour | Gün batımı / doğumu | D-Log M |
-| Mini 5 Pro | M5P 04 – Epic Landscape | Dağ, deniz, şehir panoraması | D-Log M |
-| Mini 5 Pro | M5P 05 – Normal Profile Punch | Normal profilde çekilmiş video | Normal |
-| Pocket 3 | OP3 01 – D-Log M Natural | Doğal, ten renklerini koruyan | D-Log M |
-| Pocket 3 | OP3 02 – Vlog Warm Skin | Yüz/vlog çekimleri | D-Log M |
-| Pocket 3 | OP3 03 – Moody Film | Sokak, gece, karamsar hava | Normal / HLG |
-| Pocket 3 | OP3 04 – Clean Travel | Seyahat vlogu | D-Log M |
-| X5 | X5 01 – I-Log Natural | 360/reframe temel düzeltme | I-Log |
-| X5 | X5 02 – Action Vivid | Motor, kayak, bisiklet, su | I-Log |
-| X5 | X5 03 – Standard Clean Bright | Standart/Vivid profilde çekim | Standart |
-| X5 | X5 04 – Snow & Sky | Kar, gökyüzü, deniz | I-Log |
-| Hepsi | UNI 01 – Night City | Gece şehir, neon | Normal |
-| Hepsi | UNI 02 – Faded Film | Retro/analog his | Normal |
-| Hepsi | UNI 03 – B&W Cinema | Sinematik siyah-beyaz | Hepsi |
+| 01 | **Clean Natural** | Temiz, doğal, net | Her çekim, güvenli başlangıç |
+| 02 | **İlkbahar** | Taze yeşil, çiçek tonları, parlak-pastel | Park, doğa, çiçek, bahçe |
+| 03 | **Yaz** | Turkuaz deniz, derin mavi gök, sıcak ten | Plaj, tekne, havuz, şehir gündüz |
+| 04 | **Sonbahar** | Altın yaprak, turuncu-kahve, sıcak & derin | Orman, bağ, yaprak dökümü |
+| 05 | **Kış** | Bembeyaz kar, soğuk ve kristal net | Kar, dağ, kayak, sisli sabah |
+| 06 | **Golden Hour** | Sıcak, ışıltılı, sinematik | Gün batımı / doğumu |
 
-## ⚙️ Önemli notlar
-- **Log presetleri (D-Log M / I-Log) sadece Log ile çekilmiş videolarda doğru görünür.** Normal çekilmiş videoya uygularsan aşırı kontrastlı olur → onun yerine “Normal/Standard” presetlerini kullan.
-- Presetler **Miktar (Amount)** kaydırıcısını destekler: Mobilde preseti seçtikten sonra üstteki kaydırıcıyla %0–200 arası şiddet ayarlayabilirsin.
-- Her sahnenin ışığı farklıdır. Preset sonrası genelde yalnızca **Pozlama** ve **Sıcaklık** ile ince ayar yeter.
-- Lightroom video düzenlemede maske, detay (keskinlik/gürültü) ve optik ayarları desteklenmez; presetler yalnızca videoda çalışan ayarları kullanır (Işık, Ton Eğrisi, Renk, Renk Karışımı, Renk Derecelendirme, Efektler).
-- Log → Rec.709 dönüşümü ton eğrisi ile yapılan bir yaklaşımdır, resmi DJI/Insta360 LUT'u değildir. En iyi sonuç için doğru pozlanmış (histogram sağa yakın, patlamamış) çekim yap.
+Ön ekler: `M5P` = Mini 5 Pro · `OP3` = Osmo Pocket 3 · `X5` = Insta360 X5
 
-## 🎥 Önerilen çekim ayarları
-- **Mini 5 Pro:** D-Log M, 10-bit, ISO mümkün olduğunca düşük, enstantane ≈ 2× FPS (ND filtre ile), pozlamayı +0.3/+0.7 EV.
-- **Pocket 3:** D-Log M, 10-bit, Beyaz dengesi manuel (gün ışığı 5600K), yüz pozlaması için +0.3 EV.
-- **Insta360 X5:** I-Log, 8K/30 veya 5.7K/60, beyaz dengesi sabit; reframe işlemini Insta360 uygulamasında yapıp dışa aktardıktan sonra Lightroom'da preset uygula.
+**Her kamerada çalışan (UNI):** Cinematic Teal Orange · Gece Şehir · Moody Dark · Siyah Beyaz Sinema
 
-## 🔧 Değiştirme
-`generate_presets.py` içindeki değerleri düzenleyip `python3 generate_presets.py .` çalıştırarak presetleri yeniden üretebilirsin.
+## 🎥 Bu presetler için önerilen çekim ayarları
+| | Mini 5 Pro | Osmo Pocket 3 | Insta360 X5 |
+|---|---|---|---|
+| Renk profili | **Normal** (8-bit veya 10-bit) | **Normal** | **Standard** (Vivid değil) |
+| Çözünürlük | 4K 60fps | 4K 60fps | 8K 30 / 5.7K 60 |
+| Enstantane | 1/120 (ND filtre ile) | 1/120 (ND ile) veya otomatik | Otomatik |
+| Beyaz denge | Manuel 5500K (gün ışığı) | Manuel 5500K | Manuel / sabit |
+| Keskinlik | 0 veya -1 | -1 | Düşük |
+| Pozlama | Gökyüzü patlamasın, -0.3 EV | Yüze göre | -0.3 EV |
+
+Beyaz dengeyi **sabit** çekmek, presetlerin klipten klibe aynı görünmesini sağlayan en önemli adımdır.
+
+## ✨ Profesyonel sonuç için ince ayar
+1. Preseti uygula → üstteki kaydırıcıyla **şiddeti %60–100** arası ayarla.
+2. Sadece **Pozlama** ve **Sıcaklık** ile sahneye uydur (genelde ±0.3 EV, ±5 sıcaklık yeter).
+3. Aynı sahnedeki tüm klipleri tek tek yapmak yerine birinde ayarla → **Ayarları Kopyala/Yapıştır**.
+4. Dışa aktarırken: 4K, en yüksek kalite.
+
+Not: Lightroom video düzenlemede maske, keskinlik ve gürültü azaltma yok; presetler yalnızca videoda çalışan ayarları kullanır. Beyaz denge değeri presetlere konmadı (her çekimde farklı olduğu için); mevsim sıcaklığı renk derecelendirmesiyle verilir.
+
+## 🔧 Düzenleme
+`generate_presets.py` içinde kamera düzeltmeleri (`CAMERAS`) ve görünümler (`LOOKS`) ayrı tanımlıdır. Değiştirip `python3 generate_presets.py . && python3 generate_dng.py .` çalıştır.

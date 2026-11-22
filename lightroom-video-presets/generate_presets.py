@@ -1,153 +1,131 @@
+"""Normal (Rec.709) profille cekilmis videolar icin Lightroom presetleri.
+Her kamera icin: kamera duzeltmesi (BASE) + gorunum (LOOK) birlestirilir."""
 import uuid, os, zipfile, sys
 from xml.sax.saxutils import escape
-GROUP_ROOT = "Video Pro"
+
+GROUP_ROOT = "Pro Video"
+
+# ---- Ton egrileri (temiz, siyahlar soluk degil) ----
+CLEAN_S  = [(0,0),(60,55),(128,128),(196,201),(255,255)]
+SOFT_S   = [(0,0),(64,61),(128,128),(192,195),(255,255)]
+CRISP_S  = [(0,0),(56,49),(128,128),(200,207),(255,255)]
+CINE     = [(0,10),(58,52),(128,126),(196,200),(255,250)]
+
+# ---- Kamera bazli duzeltmeler (Normal / Standart renk profili) ----
+CAMERAS = {
+  "DJI Mini 5 Pro": ("M5P", dict(   # drone: hava pusu, DJI normal profil zaten doygun
+      Highlights2012=-15, Shadows2012=8, Contrast2012=4, Dehaze=8, Clarity2012=4, Texture=4,
+      Vibrance=6, Saturation=-4, LuminanceAdjustmentBlue=-6)),
+  "DJI Osmo Pocket 3": ("OP3", dict(  # 1" sensor, kontrastli ve keskinlestirilmis cikis
+      Highlights2012=-12, Shadows2012=10, Contrast2012=-4, Saturation=-6, Texture=-4,
+      SaturationAdjustmentOrange=-6, LuminanceAdjustmentOrange=6)),
+  "Insta360 X5": ("X5", dict(        # Standart profil daha duz ve yumusak
+      Highlights2012=-18, Shadows2012=6, Contrast2012=8, Vibrance=10, Saturation=2,
+      Dehaze=6, Clarity2012=6, Texture=8, SaturationAdjustmentGreen=-6)),
+}
+
+# ---- Gorunumler ----
+LOOKS = [
+  ("01 Clean Natural", "Temiz, dogal ve net. Her cekime guvenle uygulanabilir temel.", CLEAN_S, dict(
+      Exposure2012=0.05, Contrast2012=6, Highlights2012=-10, Shadows2012=6, Whites2012=6, Blacks2012=-6,
+      Vibrance=10, Clarity2012=2)),
+  ("02 Ilkbahar", "Taze yesiller, cicek tonlari, parlak ve hafif pastel bahar havasi.", SOFT_S, dict(
+      Exposure2012=0.10, Contrast2012=4, Highlights2012=-20, Shadows2012=12, Whites2012=4, Blacks2012=-4,
+      Vibrance=16, Clarity2012=2, Dehaze=2,
+      HueAdjustmentGreen=-8, SaturationAdjustmentGreen=10, LuminanceAdjustmentGreen=8,
+      LuminanceAdjustmentYellow=6, SaturationAdjustmentMagenta=10, SaturationAdjustmentPurple=6,
+      SaturationAdjustmentBlue=6, LuminanceAdjustmentOrange=4,
+      SplitToningHighlightHue=60, SplitToningHighlightSaturation=6, SplitToningShadowHue=190, SplitToningShadowSaturation=4)),
+  ("03 Yaz", "Parlak gunes, turkuaz deniz, derin mavi gokyuzu, sicak ten.", CRISP_S, dict(
+      Exposure2012=0.05, Contrast2012=10, Highlights2012=-30, Shadows2012=10, Whites2012=6, Blacks2012=-8,
+      Vibrance=22, Saturation=4, Clarity2012=4, Dehaze=4,
+      HueAdjustmentAqua=-10, SaturationAdjustmentAqua=18, SaturationAdjustmentBlue=12, LuminanceAdjustmentBlue=-10,
+      SaturationAdjustmentOrange=6, LuminanceAdjustmentOrange=6, SaturationAdjustmentYellow=8,
+      ColorGradeGlobalHue=45, ColorGradeGlobalSat=5,
+      SplitToningHighlightHue=45, SplitToningHighlightSaturation=10, SplitToningShadowHue=200, SplitToningShadowSaturation=6)),
+  ("04 Sonbahar", "Altin yapraklar, zengin turuncu-kahve tonlar, sicak ve derin.", CLEAN_S, dict(
+      Contrast2012=12, Highlights2012=-24, Shadows2012=6, Blacks2012=-10,
+      Vibrance=12, Saturation=-2, Clarity2012=6,
+      HueAdjustmentGreen=-30, SaturationAdjustmentGreen=-25, HueAdjustmentYellow=-12, SaturationAdjustmentYellow=15,
+      SaturationAdjustmentOrange=18, LuminanceAdjustmentOrange=-4, SaturationAdjustmentRed=8, SaturationAdjustmentBlue=-10,
+      ColorGradeGlobalHue=35, ColorGradeGlobalSat=9,
+      SplitToningHighlightHue=45, SplitToningHighlightSaturation=12, SplitToningShadowHue=25, SplitToningShadowSaturation=8,
+      PostCropVignetteAmount=-8)),
+  ("05 Kis", "Bembeyaz kar, soguk ve kristal netlikte gorunum; gri kari temizler.", CRISP_S, dict(
+      Exposure2012=0.15, Contrast2012=10, Highlights2012=-28, Shadows2012=10, Whites2012=14, Blacks2012=-8,
+      Vibrance=6, Saturation=-10, Clarity2012=8, Dehaze=8, Texture=6,
+      HueAdjustmentBlue=-6, LuminanceAdjustmentBlue=6, SaturationAdjustmentAqua=-6,
+      SaturationAdjustmentGreen=-20, SaturationAdjustmentOrange=-6,
+      ColorGradeGlobalHue=215, ColorGradeGlobalSat=7,
+      SplitToningHighlightHue=200, SplitToningHighlightSaturation=4, SplitToningShadowHue=210, SplitToningShadowSaturation=12)),
+  ("06 Golden Hour", "Gun batimi / gun dogumu icin sicak, isiltili ve sinematik.", SOFT_S, dict(
+      Exposure2012=0.05, Contrast2012=6, Highlights2012=-38, Shadows2012=14, Blacks2012=-6,
+      Vibrance=18, Clarity2012=2,
+      HueAdjustmentYellow=-6, SaturationAdjustmentYellow=10, SaturationAdjustmentOrange=12, SaturationAdjustmentRed=4,
+      SaturationAdjustmentBlue=-12,
+      ColorGradeGlobalHue=40, ColorGradeGlobalSat=12,
+      SplitToningHighlightHue=42, SplitToningHighlightSaturation=18, SplitToningShadowHue=220, SplitToningShadowSaturation=6)),
+]
+
+UNIVERSAL = [
+  ("Cinematic Teal Orange", "Film gorunumu: teal golgeler, sicak tenler. Her kamerada calisir.", CINE, dict(
+      Contrast2012=10, Highlights2012=-30, Shadows2012=6, Blacks2012=-6, Vibrance=12, Saturation=-4, Clarity2012=4,
+      HueAdjustmentBlue=-10, SaturationAdjustmentBlue=10, HueAdjustmentAqua=-12, HueAdjustmentGreen=18,
+      SaturationAdjustmentGreen=-20, SaturationAdjustmentOrange=8,
+      SplitToningShadowHue=195, SplitToningShadowSaturation=20, SplitToningHighlightHue=38, SplitToningHighlightSaturation=16,
+      ColorGradeBlending=60, PostCropVignetteAmount=-10)),
+  ("Gece Sehir", "Gece cekimi: temiz siyahlar, canli neonlar, kontrollu isiklar.", CLEAN_S, dict(
+      Contrast2012=8, Highlights2012=-35, Shadows2012=4, Blacks2012=-12, Vibrance=16, Dehaze=4,
+      SaturationAdjustmentPurple=14, SaturationAdjustmentMagenta=12, SaturationAdjustmentBlue=10, SaturationAdjustmentOrange=6,
+      SplitToningShadowHue=225, SplitToningShadowSaturation=12, SplitToningHighlightHue=35, SplitToningHighlightSaturation=8,
+      PostCropVignetteAmount=-8)),
+  ("Moody Dark", "Karamsar, mat ve sinematik; sehir, sokak, bulutlu hava.", CINE, dict(
+      Exposure2012=-0.10, Contrast2012=12, Highlights2012=-30, Shadows2012=-6, Blacks2012=-6,
+      Vibrance=-4, Saturation=-14, Clarity2012=6,
+      HueAdjustmentGreen=20, SaturationAdjustmentGreen=-30, SaturationAdjustmentBlue=-12, SaturationAdjustmentOrange=4,
+      SplitToningShadowHue=200, SplitToningShadowSaturation=14, SplitToningHighlightHue=40, SplitToningHighlightSaturation=8,
+      PostCropVignetteAmount=-15)),
+  ("Siyah Beyaz Sinema", "Net, yuksek kontrastli sinematik siyah-beyaz.", CRISP_S, dict(
+      ConvertToGrayscale=True, Contrast2012=20, Highlights2012=-20, Shadows2012=6, Whites2012=10, Blacks2012=-14,
+      Clarity2012=8, GrayMixerBlue=-20, GrayMixerOrange=12, GrayMixerRed=6, PostCropVignetteAmount=-12)),
+]
+
+LIMITS = dict(Exposure2012=(-5, 5))
+def merge(base, look):
+    out = dict(look)
+    for k, v in base.items():
+        if k in out and isinstance(v, (int, float)) and not isinstance(v, bool):
+            out[k] = max(-100, min(100, out[k] + v)) if not k.startswith("Exposure") else round(out[k] + v, 2)
+        else:
+            out.setdefault(k, v)
+    return out
+
+P = []
+for cam, (short, base) in CAMERAS.items():
+    for name, desc, crv, look in LOOKS:
+        P.append((cam, f"{short} {name}", desc, crv, merge(base, look)))
+for name, desc, crv, look in UNIVERSAL:
+    P.append(("Universal", f"UNI {name}", desc, crv, look))
 
 def curve(points):
     return "".join(f"<rdf:li>{x}, {y}</rdf:li>" for x, y in points)
 
-LOG = [(0,0),(22,0),(60,34),(128,128),(196,222),(236,255),(255,255)]      # D-Log M -> Rec709 approx
-ILOG = [(0,0),(18,0),(58,36),(128,130),(200,224),(240,255),(255,255)]     # I-Log -> Rec709 approx
-SOFT_S = [(0,0),(64,58),(128,128),(192,200),(255,255)]
-FADE = [(0,22),(60,62),(128,130),(196,204),(255,245)]
-MOODY = [(0,14),(64,54),(128,124),(192,198),(255,248)]
-
-P = []
-def add(cam, name, desc, curve_pts=None, **s):
-    P.append((cam, name, desc, curve_pts, s))
-
-# ---------- DJI Mini 5 Pro (D-Log M) ----------
-add("DJI Mini 5 Pro", "M5P 01 - D-Log M Natural",
-    "D-Log M -> dogal Rec.709 donusumu. Tum duzenlemelerin temeli.", LOG,
-    Exposure2012=0.10, Contrast2012=12, Highlights2012=-20, Shadows2012=10, Whites2012=8, Blacks2012=-8,
-    Vibrance=22, Saturation=14, Clarity2012=4, Dehaze=4,
-    SaturationAdjustmentBlue=8, LuminanceAdjustmentBlue=-6, SaturationAdjustmentGreen=-4)
-add("DJI Mini 5 Pro", "M5P 02 - Cinematic Teal Orange",
-    "Hava cekimleri icin sinematik teal-orange; gokyuzu derin, ten/kum sicak.", LOG,
-    Contrast2012=18, Highlights2012=-30, Shadows2012=6, Whites2012=4, Blacks2012=-12,
-    IncrementalTemperature=4, Vibrance=18, Saturation=8, Dehaze=8,
-    HueAdjustmentBlue=-10, SaturationAdjustmentBlue=14, LuminanceAdjustmentBlue=-14,
-    HueAdjustmentAqua=-12, SaturationAdjustmentAqua=10, HueAdjustmentGreen=18, SaturationAdjustmentGreen=-22,
-    SaturationAdjustmentOrange=10, HueAdjustmentOrange=-4,
-    SplitToningShadowHue=200, SplitToningShadowSaturation=22, SplitToningHighlightHue=38, SplitToningHighlightSaturation=18,
-    SplitToningBalance=10, ColorGradeBlending=60, PostCropVignetteAmount=-12)
-add("DJI Mini 5 Pro", "M5P 03 - Golden Hour",
-    "Gun batimi / gun dogumu hava cekimleri icin sicak, parlak tonlar.", LOG,
-    Exposure2012=0.15, Contrast2012=10, Highlights2012=-35, Shadows2012=14, Blacks2012=-6,
-    IncrementalTemperature=14, IncrementalTint=4, Vibrance=20, Saturation=6, Dehaze=6,
-    SaturationAdjustmentOrange=14, SaturationAdjustmentYellow=10, HueAdjustmentYellow=-6, LuminanceAdjustmentOrange=6,
-    SaturationAdjustmentBlue=-6, SplitToningHighlightHue=42, SplitToningHighlightSaturation=22,
-    SplitToningShadowHue=25, SplitToningShadowSaturation=8)
-add("DJI Mini 5 Pro", "M5P 04 - Epic Landscape",
-    "Daglar, deniz, sehir panoramalari icin net ve derin, punch'li gorunum.", LOG,
-    Contrast2012=20, Highlights2012=-40, Shadows2012=18, Whites2012=12, Blacks2012=-14,
-    Vibrance=28, Saturation=6, Clarity2012=10, Dehaze=14, Texture=8,
-    SaturationAdjustmentBlue=16, LuminanceAdjustmentBlue=-18, SaturationAdjustmentGreen=8, HueAdjustmentGreen=-6,
-    LuminanceAdjustmentGreen=-6, SaturationAdjustmentAqua=12)
-add("DJI Mini 5 Pro", "M5P 05 - Normal Profile Punch",
-    "Normal (Rec.709) renk profiliyle cekilmis drone videolari icin hafif iyilestirme.", SOFT_S,
-    Contrast2012=8, Highlights2012=-18, Shadows2012=10, Vibrance=14, Saturation=2, Dehaze=6, Clarity2012=4,
-    LuminanceAdjustmentBlue=-8, SaturationAdjustmentBlue=6)
-
-# ---------- DJI Osmo Pocket 3 (D-Log M) ----------
-add("DJI Osmo Pocket 3", "OP3 01 - D-Log M Natural",
-    "Pocket 3 D-Log M -> dogal Rec.709. Ten renklerini korur.", LOG,
-    Exposure2012=0.08, Contrast2012=10, Highlights2012=-18, Shadows2012=8, Whites2012=6, Blacks2012=-6,
-    Vibrance=20, Saturation=10, Clarity2012=2,
-    SaturationAdjustmentOrange=-4, LuminanceAdjustmentOrange=6, HueAdjustmentRed=4)
-add("DJI Osmo Pocket 3", "OP3 02 - Vlog Warm Skin",
-    "Vlog / yuz cekimleri icin sicak, temiz ve parlak ten tonu.", LOG,
-    Exposure2012=0.15, Contrast2012=6, Highlights2012=-24, Shadows2012=16, Blacks2012=-4,
-    IncrementalTemperature=6, IncrementalTint=3, Vibrance=16, Saturation=4, Clarity2012=-6, Texture=-8,
-    HueAdjustmentOrange=-3, SaturationAdjustmentOrange=-6, LuminanceAdjustmentOrange=10,
-    LuminanceAdjustmentRed=4, SaturationAdjustmentRed=-4,
-    SplitToningHighlightHue=40, SplitToningHighlightSaturation=10)
-add("DJI Osmo Pocket 3", "OP3 03 - Moody Film",
-    "Sokak / gece / sehir cekimleri icin karamsar, filmik gorunum.", MOODY,
-    Contrast2012=14, Highlights2012=-28, Shadows2012=-4, Blacks2012=-10,
-    IncrementalTemperature=-4, Vibrance=-6, Saturation=-10, Clarity2012=6,
-    HueAdjustmentGreen=24, SaturationAdjustmentGreen=-30, SaturationAdjustmentBlue=-10, HueAdjustmentBlue=-8,
-    SaturationAdjustmentOrange=4,
-    SplitToningShadowHue=195, SplitToningShadowSaturation=18, SplitToningHighlightHue=35, SplitToningHighlightSaturation=12,
-    ColorGradeBlending=70, PostCropVignetteAmount=-18, GrainAmount=10)
-add("DJI Osmo Pocket 3", "OP3 04 - Clean Travel",
-    "Seyahat vlog'lari icin canli ama dogal renkler.", LOG,
-    Exposure2012=0.10, Contrast2012=14, Highlights2012=-26, Shadows2012=12, Whites2012=8, Blacks2012=-10,
-    Vibrance=26, Saturation=8, Dehaze=4, Clarity2012=4,
-    SaturationAdjustmentBlue=10, SaturationAdjustmentAqua=10, LuminanceAdjustmentOrange=4)
-
-# ---------- Insta360 X5 (I-Log / Standard) ----------
-add("Insta360 X5", "X5 01 - I-Log Natural",
-    "I-Log -> dogal Rec.709 donusumu. 360 ve reframe videolar icin temel.", ILOG,
-    Exposure2012=0.10, Contrast2012=14, Highlights2012=-22, Shadows2012=10, Whites2012=8, Blacks2012=-8,
-    Vibrance=24, Saturation=12, Clarity2012=4, Dehaze=4)
-add("Insta360 X5", "X5 02 - Action Vivid",
-    "Motor, kayak, bisiklet, su sporlari icin enerjik ve canli renkler.", ILOG,
-    Contrast2012=22, Highlights2012=-30, Shadows2012=14, Whites2012=12, Blacks2012=-14,
-    Vibrance=32, Saturation=12, Clarity2012=10, Dehaze=10, Texture=6,
-    SaturationAdjustmentBlue=16, SaturationAdjustmentAqua=14, SaturationAdjustmentOrange=10, SaturationAdjustmentRed=6,
-    LuminanceAdjustmentBlue=-10)
-add("Insta360 X5", "X5 03 - Standard Clean Bright",
-    "Standart/Vivid profil ile cekilmis X5 videolari icin parlak, temiz duzeltme.", SOFT_S,
-    Exposure2012=0.12, Contrast2012=4, Highlights2012=-22, Shadows2012=14, Blacks2012=-4,
-    Vibrance=10, Saturation=-2, Dehaze=4, Clarity2012=2,
-    SaturationAdjustmentGreen=-6, LuminanceAdjustmentOrange=6)
-add("Insta360 X5", "X5 04 - Snow & Sky",
-    "Kar, gokyuzu ve deniz sahneleri icin; mavi kaymayi ve gri kari duzeltir.", ILOG,
-    Exposure2012=0.20, Contrast2012=16, Highlights2012=-34, Shadows2012=10, Whites2012=14, Blacks2012=-10,
-    IncrementalTemperature=3, Vibrance=18, Saturation=4, Dehaze=10,
-    SaturationAdjustmentBlue=14, LuminanceAdjustmentBlue=-12, SaturationAdjustmentAqua=8)
-
-# ---------- Universal ----------
-add("Universal", "UNI 01 - Night City",
-    "Gece sehir cekimleri: neon renkleri vurgular, golgeleri temiz tutar.", SOFT_S,
-    Contrast2012=12, Highlights2012=-30, Shadows2012=6, Blacks2012=-14,
-    IncrementalTemperature=-8, IncrementalTint=6, Vibrance=18, Saturation=4, Dehaze=6,
-    SaturationAdjustmentPurple=16, SaturationAdjustmentMagenta=12, SaturationAdjustmentBlue=10, SaturationAdjustmentOrange=8,
-    SplitToningShadowHue=230, SplitToningShadowSaturation=16, SplitToningHighlightHue=30, SplitToningHighlightSaturation=10,
-    PostCropVignetteAmount=-10)
-add("Universal", "UNI 02 - Faded Film",
-    "Retro / analog film hissi: soluk siyahlar, yumusak renkler, hafif grain.", FADE,
-    Contrast2012=-6, Highlights2012=-16, Shadows2012=8,
-    IncrementalTemperature=5, Vibrance=-8, Saturation=-12,
-    HueAdjustmentGreen=16, SaturationAdjustmentGreen=-18, SaturationAdjustmentBlue=-12,
-    SplitToningShadowHue=180, SplitToningShadowSaturation=10, SplitToningHighlightHue=45, SplitToningHighlightSaturation=14,
-    GrainAmount=18, PostCropVignetteAmount=-8)
-add("Universal", "UNI 03 - B&W Cinema",
-    "Yuksek kontrastli sinematik siyah-beyaz.", SOFT_S,
-    ConvertToGrayscale=True, Contrast2012=24, Highlights2012=-20, Shadows2012=6, Whites2012=10, Blacks2012=-16,
-    Clarity2012=10, GrayMixerBlue=-20, GrayMixerOrange=12, GrayMixerRed=6, GrainAmount=12, PostCropVignetteAmount=-15)
-
-def fmt(k, v):
-    if isinstance(v, bool): return f'crs:{k}="{"True" if v else "False"}"'
-    if k.startswith("Exposure"): return f'crs:{k}="{v:+.2f}"'
-    return f'crs:{k}="{v:+d}"' if v != 0 and not k.endswith("Hue") else f'crs:{k}="{v}"'
+def val(k, v):
+    if isinstance(v, bool): return "True" if v else "False"
+    if k.startswith("Exposure"): return f"{v:+.2f}"
+    return str(v)
 
 def xmp(cam, name, desc, cpts, s):
     s = dict(s)
-    attrs = []
-    if any(k.startswith("Incremental") for k in s):
-        attrs.append('crs:WhiteBalance="Custom"')
-    if any(k.startswith(("SplitToning","ColorGrade")) for k in s):
+    if any(k.startswith(("SplitToning", "ColorGrade")) for k in s):
         s.setdefault("ColorGradeBlending", 50)
         for k in ("SplitToningShadowHue","SplitToningShadowSaturation","SplitToningHighlightHue","SplitToningHighlightSaturation"):
             s.setdefault(k, 0)
-    if "GrainAmount" in s:
-        s.setdefault("GrainSize", 25); s.setdefault("GrainFrequency", 50)
     if "PostCropVignetteAmount" in s:
-        s.setdefault("PostCropVignetteMidpoint", 50); s.setdefault("PostCropVignetteFeather", 70)
-        s.setdefault("PostCropVignetteRoundness", 0); s.setdefault("PostCropVignetteStyle", 1)
-    bw = s.pop("ConvertToGrayscale", False)
-    attrs.append(f'crs:ConvertToGrayscale="{"True" if bw else "False"}"')
-    for k, v in s.items():
-        if k in ("ColorGradeBlending","GrainSize","GrainFrequency","PostCropVignetteMidpoint",
-                 "PostCropVignetteFeather","PostCropVignetteRoundness","PostCropVignetteStyle") or k.endswith(("Hue","Saturation")) and k.startswith("SplitToning"):
-            attrs.append(f'crs:{k}="{v}"')
-        else:
-            attrs.append(fmt(k, v))
-    curve_xml = ""
-    if cpts:
-        attrs.append('crs:ToneCurveName2012="Custom"')
-        curve_xml = f"<crs:ToneCurvePV2012><rdf:Seq>{curve(cpts)}</rdf:Seq></crs:ToneCurvePV2012>"
+        for k, d in (("PostCropVignetteMidpoint",50),("PostCropVignetteFeather",70),("PostCropVignetteRoundness",0),("PostCropVignetteStyle",1)):
+            s.setdefault(k, d)
+    s.setdefault("ConvertToGrayscale", False)
+    attrs = "\n".join(f'   crs:{k}="{val(k, v)}"' for k, v in s.items())
     alt = lambda t: f'<rdf:Alt><rdf:li xml:lang="x-default">{escape(t)}</rdf:li></rdf:Alt>'
     return f'''<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 7.0-c000 1.000000, 0000/00/00-00:00:00        ">
  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -170,31 +148,31 @@ def xmp(cam, name, desc, cpts, s):
    crs:ContactInfo=""
    crs:Version="15.0"
    crs:ProcessVersion="11.0"
-   {chr(10).join("   "+a for a in attrs).lstrip()}
+{attrs}
+   crs:ToneCurveName2012="Custom"
    crs:HasSettings="True">
    <crs:Name>{alt(name)}</crs:Name>
    <crs:ShortName>{alt("")}</crs:ShortName>
    <crs:SortName>{alt("")}</crs:SortName>
    <crs:Group>{alt(GROUP_ROOT + " - " + cam)}</crs:Group>
    <crs:Description>{alt(desc)}</crs:Description>
-   {curve_xml}
+   <crs:ToneCurvePV2012><rdf:Seq>{curve(cpts)}</rdf:Seq></crs:ToneCurvePV2012>
   </rdf:Description>
  </rdf:RDF>
 </x:xmpmeta>
 '''
 
+def fname(name): return name.replace(" ", "_")
+
 def main(OUT):
     os.makedirs(OUT, exist_ok=True)
-    zpath = os.path.join(OUT, "Video-Pro-Presets.zip")
-    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
+    with zipfile.ZipFile(os.path.join(OUT, "Pro-Video-Presets-XMP.zip"), "w", zipfile.ZIP_DEFLATED) as z:
         for cam, name, desc, c, s in P:
-            d = os.path.join(OUT, "xmp", cam.replace(" ", "-"))
-            os.makedirs(d, exist_ok=True)
-            fn = name.replace(" ", "_").replace("&", "and") + ".xmp"
+            d = os.path.join(OUT, "xmp", cam.replace(" ", "-")); os.makedirs(d, exist_ok=True)
             data = xmp(cam, name, desc, c, s)
-            open(os.path.join(d, fn), "w").write(data)
-            z.writestr(fn, data)
-    print(len(P), "presets ->", zpath)
+            open(os.path.join(d, fname(name) + ".xmp"), "w").write(data)
+            z.writestr(fname(name) + ".xmp", data)
+    print(len(P), "XMP presets")
 
 if __name__ == "__main__":
     main(sys.argv[1])

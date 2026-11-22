@@ -1,0 +1,58 @@
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 7.0-c000 1.000000, 0000/00/00-00:00:00        ">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about=""
+    xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
+   crs:PresetType="Normal"
+   crs:Cluster=""
+   crs:UUID="411F3F04B0AA4FB48754AE803A639583"
+   crs:SupportsAmount2="True"
+   crs:SupportsAmount="True"
+   crs:SupportsColor="True"
+   crs:SupportsMonochrome="True"
+   crs:SupportsHighDynamicRange="True"
+   crs:SupportsNormalDynamicRange="True"
+   crs:SupportsSceneReferred="True"
+   crs:SupportsOutputReferred="True"
+   crs:RequiresRGBTables="False"
+   crs:CameraModelRestriction=""
+   crs:Copyright=""
+   crs:ContactInfo=""
+   crs:Version="15.0"
+   crs:ProcessVersion="11.0"
+   crs:Exposure2012="+0.05"
+   crs:Contrast2012="14"
+   crs:Highlights2012="-45"
+   crs:Shadows2012="18"
+   crs:Whites2012="6"
+   crs:Blacks2012="-8"
+   crs:Vibrance="28"
+   crs:Saturation="0"
+   crs:Clarity2012="8"
+   crs:Dehaze="12"
+   crs:HueAdjustmentAqua="-10"
+   crs:SaturationAdjustmentAqua="18"
+   crs:SaturationAdjustmentBlue="12"
+   crs:LuminanceAdjustmentBlue="-16"
+   crs:SaturationAdjustmentOrange="6"
+   crs:LuminanceAdjustmentOrange="6"
+   crs:SaturationAdjustmentYellow="8"
+   crs:ColorGradeGlobalHue="45"
+   crs:ColorGradeGlobalSat="5"
+   crs:SplitToningHighlightHue="45"
+   crs:SplitToningHighlightSaturation="10"
+   crs:SplitToningShadowHue="200"
+   crs:SplitToningShadowSaturation="6"
+   crs:Texture="4"
+   crs:ColorGradeBlending="50"
+   crs:ConvertToGrayscale="False"
+   crs:ToneCurveName2012="Custom"
+   crs:HasSettings="True">
+   <crs:Name><rdf:Alt><rdf:li xml:lang="x-default">M5P 03 Yaz</rdf:li></rdf:Alt></crs:Name>
+   <crs:ShortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:ShortName>
+   <crs:SortName><rdf:Alt><rdf:li xml:lang="x-default"></rdf:li></rdf:Alt></crs:SortName>
+   <crs:Group><rdf:Alt><rdf:li xml:lang="x-default">Pro Video - DJI Mini 5 Pro</rdf:li></rdf:Alt></crs:Group>
+   <crs:Description><rdf:Alt><rdf:li xml:lang="x-default">Parlak gunes, turkuaz deniz, derin mavi gokyuzu, sicak ten.</rdf:li></rdf:Alt></crs:Description>
+   <crs:ToneCurvePV2012><rdf:Seq><rdf:li>0, 0</rdf:li><rdf:li>56, 49</rdf:li><rdf:li>128, 128</rdf:li><rdf:li>200, 207</rdf:li><rdf:li>255, 255</rdf:li></rdf:Seq></crs:ToneCurvePV2012>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>
