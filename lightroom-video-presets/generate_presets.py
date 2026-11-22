@@ -1,6 +1,5 @@
 import uuid, os, zipfile, sys
 from xml.sax.saxutils import escape
-OUT = sys.argv[1]
 GROUP_ROOT = "Video Pro"
 
 def curve(points):
@@ -184,14 +183,18 @@ def xmp(cam, name, desc, cpts, s):
 </x:xmpmeta>
 '''
 
-os.makedirs(OUT, exist_ok=True)
-zpath = os.path.join(OUT, "Video-Pro-Presets.zip")
-with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
-    for cam, name, desc, c, s in P:
-        d = os.path.join(OUT, "xmp", cam.replace(" ", "-"))
-        os.makedirs(d, exist_ok=True)
-        fn = name.replace(" ", "_").replace("&", "and") + ".xmp"
-        data = xmp(cam, name, desc, c, s)
-        open(os.path.join(d, fn), "w").write(data)
-        z.writestr(fn, data)
-print(len(P), "presets ->", zpath)
+def main(OUT):
+    os.makedirs(OUT, exist_ok=True)
+    zpath = os.path.join(OUT, "Video-Pro-Presets.zip")
+    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
+        for cam, name, desc, c, s in P:
+            d = os.path.join(OUT, "xmp", cam.replace(" ", "-"))
+            os.makedirs(d, exist_ok=True)
+            fn = name.replace(" ", "_").replace("&", "and") + ".xmp"
+            data = xmp(cam, name, desc, c, s)
+            open(os.path.join(d, fn), "w").write(data)
+            z.writestr(fn, data)
+    print(len(P), "presets ->", zpath)
+
+if __name__ == "__main__":
+    main(sys.argv[1])

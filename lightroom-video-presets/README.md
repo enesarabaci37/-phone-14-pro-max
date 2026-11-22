@@ -14,6 +14,17 @@ DJI Mini 5 Pro, DJI Osmo Pocket 3 ve Insta360 X5 için 16 video preseti. **Light
 
 > Desktop'ta: Geliştir (Edit) → Ön Ayarlar paneli → **+** → Ön Ayarları İçe Aktar → ZIP'i seç. Adobe hesabın açıksa mobilde de otomatik senkronize olur.
 
+## 📸 Alternatif: DNG yöntemi
+İçe aktarma menüsü sende çıkmazsa ya da ZIP çalışmazsa `Video-Pro-Presets-DNG.zip` kullan:
+1. ZIP'i iPhone'da aç (Dosyalar'da üstüne dokun). İçinden 16 adet `.dng` çıkar.
+2. Lightroom'da **+ (Fotoğraf ekle) → Dosyalardan** ile DNG'leri içe aktar.
+3. Bir DNG'yi aç → sağ üst **⋯** → **Ön Ayar Oluştur** → adını ve grubunu yaz → Kaydet.
+   - Tüm ayar kutularını işaretli bırak (Işık, Renk, Efektler, Eğri).
+4. 16 DNG için tekrarla. Artık videolarında Ön Ayarlar sekmesinde görünürler.
+   - Kısa yol: DNG'de **⋯ → Ayarları Kopyala**, sonra videoda **⋯ → Ayarları Yapıştır**.
+
+> Not: DNG'ler RAW olduğu için beyaz denge (sıcaklık) değerleri DNG versiyonunda yok. Golden Hour, Vlog Warm Skin gibi presetlerde istersen Sıcaklık'ı +5/+15 elle artır.
+
 ## 🎬 Preset listesi
 
 | Kamera | Preset | Ne zaman? | Çekim profili |
