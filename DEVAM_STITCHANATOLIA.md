@@ -27,8 +27,8 @@ Etsy'de dijital ürün mağazası **StitchAnatolia** (stitchanatolia.etsy.com). 
 | 9 | Yıldız (kare) — YAYINDA: etsy.com/listing/4622099525 | 69×69 | SA-008 |
 | 10 | Noel Süsü Seti (6 mini süs) — 3,50 $ — YAYINDA: etsy.com/listing/4622778027 | 63×47 | SA-009 |
 | 11 | Anadolu Noel Ağacı — 5,50 $ — YAYINDA: etsy.com/listing/4622790172 | 61×85 | SA-010 |
-| 12 | Kuş (kilim kuşları + hayat ağacı) — 5,50 $ — YAYINDA (link henüz alınmadı) | 61×85 | SA-011 |
-| 13 | Pıtrak (kare madalyon) — 5,50 $ — YAYINDA (link henüz alınmadı) | 71×71 | SA-012 |
+| 12 | Kuş (kilim kuşları + hayat ağacı) — 5,50 $ — YAYINDA: etsy.com/listing/4623765870 | 61×85 | SA-011 |
+| 13 | Pıtrak (kare madalyon) — 5,50 $ — YAYINDA: etsy.com/listing/4623767490 | 71×71 | SA-012 |
 
 > 7-9 numaralı ürünler Etsy'de yayında (toplam 9 ilan). Yıldız'da Holiday: Christmas.
 
@@ -58,6 +58,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
   - ✅ 20 Kas: Göz Seti a + Kurt Ağzı a + Yıldız a yayınlandı (Pinterest'te toplam 9 pin)
   - ✅ 21 Kas akşamı 3. pin: Noel Ağacı a.
   - Noel öncelikli sıra: 22 Noel Süsü a + Nazar videosu · 23 Noel Ağacı videosu + Kurt Ağzı videosu · 24 Noel Süsü videosu + Koleksiyon · 25 Noel Ağacı b + Yıldız videosu · 26 Noel Süsü b + Hayat Ağacı videosu · sonra eski sıra.
+  - Kuş/Pıtrak pinleri (a, b, video) Noel sırasından sonra araya eklenecek. Pano: Kuş → Anatolian Symbols & Meanings, Pıtrak → Turkish Kilim Cross Stitch Patterns.
   - Noel pinleri: Noel Süsü a/b/video, Noel Ağacı a/b/video. Pano: Süs → Boho Cross Stitch Ideas, Ağaç → Turkish Kilim Cross Stitch Patterns.
   - İpucu: Etsy Share & Save (⚙️ → Share) linkleri pinlerde kullanılmalı; kullanıcıdan 11 ürünün share linkleri istendi.
   - ✅ 21 Kas: Motiflerin anlamı (link: stitchanatolia.etsy.com) + Göz Seti videosu (Pinterest'te 11 pin)
@@ -91,7 +92,7 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 - Her render sonrası: `python3 compress_pdf.py <pdf'ler>` (Etsy 20 MB sınırı) ve `python3 qa_check.py` → 0 hata olmadan kullanıcıya dosya gönderilmez.
 - Yeni desen eklerken qa_check.py içindeki MAP'e slug ve klasör eklenir.
 - URUN_BILGILERI.txt'ye 'ETSY AYARLARI' bloğu yazılır (kopyalanacak ilan, Craft type, Self-published, Occasion, Holiday, Price, Quantity, SKU, Shop section). Kullanıcı bunları istiyor.
-- ✅ 23 Kasım: 11 ilan + paket güncellendi (yeni PDF, 2. görsel, açıklama). Kuş ve Pıtrak yayınlandı → toplam 13 ilan. Kuş/Pıtrak linklerini kullanıcıdan iste.
+- ✅ 23 Kasım: 11 ilan + paket güncellendi (yeni PDF, 2. görsel, açıklama). Kuş ve Pıtrak yayınlandı → toplam 13 ilan.
 - 22 Kasım güncellemesi: 11 ilan + paketin PDF'i, 2. görseli ve açıklaması değişti. Kullanıcı Etsy'de güncelledi ✅.
 
 ## Teknik akış (`stitchanatolia_kaynak/`)
