@@ -90,7 +90,9 @@ Tüm bitmiş dosyalar `StitchAnatolia_TUM_DOSYALAR/` klasöründe. Her ürünün
 - Ölçü iddiaları (inç/cm) desenden HESAPLANARAK yazılır, tahminle yazılmaz.
 - Her render sonrası: `python3 compress_pdf.py <pdf'ler>` (Etsy 20 MB sınırı) ve `python3 qa_check.py` → 0 hata olmadan kullanıcıya dosya gönderilmez.
 - Yeni desen eklerken qa_check.py içindeki MAP'e slug ve klasör eklenir.
-- 22 Kasım güncellemesi: 11 ilan + paketin PDF'i, 2. görseli ve açıklaması değişti. Kullanıcı Etsy'de güncelliyor (liste: StitchAnatolia_TUM_DOSYALAR/GUNCELLEME_22_KASIM_YUKLEME_LISTESI.txt). Durumunu sor.
+- URUN_BILGILERI.txt'ye 'ETSY AYARLARI' bloğu yazılır (kopyalanacak ilan, Craft type, Self-published, Occasion, Holiday, Price, Quantity, SKU, Shop section). Kullanıcı bunları istiyor.
+- ✅ 23 Kasım: 11 ilan + paket güncellendi (yeni PDF, 2. görsel, açıklama).
+- 22 Kasım güncellemesi: 11 ilan + paketin PDF'i, 2. görseli ve açıklaması değişti. Kullanıcı Etsy'de güncelledi ✅.
 
 ## Teknik akış (`stitchanatolia_kaynak/`)
 - `designs.py`: desen üreticileri (`G` sınıfı: put, mirx, stamp, diamond, frame). Çıktı `designs/<slug>/pattern.js` dosyalarına, toplu hali `all_patterns.js`'e yazılır.

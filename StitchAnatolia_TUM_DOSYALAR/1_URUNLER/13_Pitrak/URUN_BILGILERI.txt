@@ -4,6 +4,21 @@
 
 PDF -> Digital files. Etsy/ klasöründeki 2 görsel -> Photos, video -> Video.
 
+
+ETSY AYARLARI (alan alan):
+Kopyalanacak ilan : Bereket (⚙️ -> Copy)
+Craft type        : Cross stitch, Embroidery, Needlepoint
+Self-published    : Yes
+Occasion          : Housewarming
+Holiday           : BOŞ (Mother's Day gelirse ✕ ile kaldır)
+Price             : 5.50
+Quantity          : 999
+SKU               : SA-012
+Shop section      : Kilim Patterns
+Feature listing   : Kapalı
+Renewal           : Automatic
+How it's made     : I did · A supply or tool to make things · With an AI generator
+
 BAŞLIK (135/140):
 Turkish Kilim Cross Stitch Pattern PDF, Pitrak Burdock Medallion, Square Geometric Pillow Design, Boho Evil Eye Chart, Instant Download
 

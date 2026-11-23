@@ -4,6 +4,21 @@
 
 PDF -> Digital files. Etsy/ klasöründeki 2 görsel -> Photos, video -> Video.
 
+
+ETSY AYARLARI (alan alan):
+Kopyalanacak ilan : Elibelinde (⚙️ -> Copy)
+Craft type        : Cross stitch, Embroidery, Needlepoint
+Self-published    : Yes
+Occasion          : Wedding (kuş çifti = sevgi; düğün/yıldönümü hediyesi)
+Holiday           : BOŞ (Mother's Day gelirse ✕ ile kaldır)
+Price             : 5.50
+Quantity          : 999
+SKU               : SA-011
+Shop section      : Kilim Patterns
+Feature listing   : Kapalı
+Renewal           : Automatic
+How it's made     : I did · A supply or tool to make things · With an AI generator
+
 BAŞLIK (133/140):
 Folk Bird Cross Stitch Pattern PDF, Turkish Kilim Birds and Tree of Life, Boho Embroidery Chart, Anatolian Folk Art, Instant Download
 
