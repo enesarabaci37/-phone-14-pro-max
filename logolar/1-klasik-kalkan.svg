@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="400" height="480">
+  <defs>
+    <clipPath id="sh"><path d="M40 40 H360 V250 C360 360 280 420 200 455 C120 420 40 360 40 250 Z"/></clipPath>
+  </defs>
+  <path d="M28 28 H372 V250 C372 370 285 432 200 470 C115 432 28 370 28 250 Z" fill="#0b1f3a"/>
+  <path d="M40 40 H360 V250 C360 360 280 420 200 455 C120 420 40 360 40 250 Z" fill="#c8102e"/>
+  <g clip-path="url(#sh)">
+    <rect x="40" y="40" width="320" height="80" fill="#ffffff"/>
+    <rect x="40" y="300" width="320" height="200" fill="#0b1f3a"/>
+    <path d="M40 330 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" stroke="#5fa8d3" stroke-width="5" fill="none"/>
+    <path d="M40 360 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" stroke="#5fa8d3" stroke-width="5" fill="none" opacity=".6"/>
+  </g>
+  <text x="200" y="97" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="30" fill="#c8102e" letter-spacing="1">TAŞKÖPRÜSPOR</text>
+  <!-- stone bridge -->
+  <g fill="#ffffff">
+    <path fill-rule="evenodd" d="M52 236 H348 V305 H52 Z
+      M64 305 a22 42 0 0 1 44 0 Z M122 305 a24 50 0 0 1 48 0 Z M184 305 a16 56 0 0 1 32 0 Z M230 305 a24 50 0 0 1 48 0 Z M292 305 a22 42 0 0 1 44 0 Z"/>
+    <rect x="46" y="226" width="308" height="10"/>
+  </g>
+  <g fill="#ffffff"><rect x="58" y="214" width="12" height="12"/><rect x="88" y="214" width="12" height="12"/><rect x="118" y="214" width="12" height="12"/><rect x="148" y="214" width="12" height="12"/><rect x="240" y="214" width="12" height="12"/><rect x="270" y="214" width="12" height="12"/><rect x="300" y="214" width="12" height="12"/><rect x="330" y="214" width="12" height="12"/></g>
+  <!-- ball -->
+  <circle cx="200" cy="168" r="30" fill="#fff" stroke="#0b1f3a" stroke-width="4"/>
+  <path d="M200 154 l13 9 -5 15 h-16 l-5 -15 z" fill="#0b1f3a"/>
+  <path d="M200 154 v-16 M213 163 l15 -5 M208 178 l9 13 M192 178 l-9 13 M187 163 l-15 -5" stroke="#0b1f3a" stroke-width="3"/>
+  <text x="200" y="405" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="40" fill="#ffffff">1937</text>
+</svg>

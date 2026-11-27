@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <path id="top" d="M70 200 A130 130 0 0 1 330 200"/>
+    <path id="bot" d="M58 200 A142 142 0 0 0 342 200"/>
+    <clipPath id="in"><circle cx="200" cy="200" r="108"/></clipPath>
+  </defs>
+  <circle cx="200" cy="200" r="190" fill="#7a1020"/>
+  <circle cx="200" cy="200" r="178" fill="none" stroke="#f2c14e" stroke-width="4"/>
+  
+  <text font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="38" fill="#ffffff" letter-spacing="3"><textPath href="#top" startOffset="50%" text-anchor="middle">TAŞKÖPRÜSPOR</textPath></text>
+  <text font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="22" fill="#f2c14e" letter-spacing="4"><textPath href="#bot" startOffset="50%" text-anchor="middle">KASTAMONU</textPath></text>
+  <circle cx="64" cy="208" r="6" fill="#f2c14e"/><circle cx="336" cy="208" r="6" fill="#f2c14e"/>
+  <g clip-path="url(#in)">
+    <rect x="80" y="80" width="240" height="240" fill="#ffffff"/>
+    <rect x="80" y="232" width="240" height="100" fill="#1d4e89"/>
+    <path fill="#7a1020" fill-rule="evenodd" d="M80 180 H320 V245 H80 Z M96 245 a20 26 0 0 1 40 0 Z M146 245 a22 30 0 0 1 44 0 Z M200 245 a22 30 0 0 1 44 0 Z M254 245 a20 26 0 0 1 40 0 Z"/>
+    <rect x="80" y="170" width="240" height="10" fill="#7a1020"/>
+    <path d="M80 262 q15 -6 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>
+  </g>
+  <circle cx="200" cy="200" r="108" fill="none" stroke="#7a1020" stroke-width="6"/>
+  <text x="200" y="152" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-weight="bold" font-size="42" fill="#7a1020">1937</text>
+  <text x="200" y="290" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="18" fill="#fff" letter-spacing="3">TAŞKÖPRÜ</text>
+</svg>
