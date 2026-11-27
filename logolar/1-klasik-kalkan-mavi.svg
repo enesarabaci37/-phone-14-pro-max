@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 470" width="400" height="470">
+<defs><clipPath id="c1"><path d="M115 40 L285 40 L359 104 C368 228 320 350 200 427 C80 350 32 228 41 104 Z"/></clipPath><pattern id="b1" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#FFFFFF"/><path d="M0 0H12 M0 6H12 M6.0 0V6 M0 6V12 M12 6V12" stroke="#0B2545" stroke-width="0.9"/></pattern></defs>
+<path d="M110 28 L290 28 L372 98 C382 230 330 362 200 442 C70 362 18 230 28 98 Z" fill="#0B2545"/><path d="M115 40 L285 40 L359 104 C368 228 320 350 200 427 C80 350 32 228 41 104 Z" fill="#FFFFFF"/>
+<g clip-path="url(#c1)"><path d="M0 0 L132 0 L194 440 L0 440 Z" fill="#4FB3E8"/><path d="M268 0 L400 0 L400 440 L206 440 Z" fill="#4FB3E8"/></g>
+<path d="M115 40 L285 40 L359 104 C368 228 320 350 200 427 C80 350 32 228 41 104 Z" fill="none" stroke="#0B2545" stroke-width="3"/>
+<circle cx="194" cy="80" r="19" fill="#E30A17"/><circle cx="199.5" cy="80" r="15" fill="#FFFFFF"/><polygon points="206.00,80.00 211.53,78.20 211.53,72.39 214.94,77.09 220.47,75.30 217.06,80.00 220.47,84.70 214.94,82.91 211.53,87.61 211.53,81.80" fill="#E30A17"/>
+<path id="t1" d="M60 206 Q200 140 340 206" fill="none"/>
+<text font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="31" fill="#0B2545" stroke="#FFFFFF" stroke-width="5" paint-order="stroke" letter-spacing="0.5"><textPath href="#t1" startOffset="50%" text-anchor="middle">TAŞKÖPRÜSPOR</textPath></text>
+<g transform="translate(200 232) scale(0.82)" stroke="#0B2545" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+<path d="M-3 -29 C-3 -35 -2 -40 -1 -45 L2 -45 C2 -40 3 -35 3 -29" fill="#FFFFFF"/>
+<path d="M0 -28 C4 -19 10 -15 19 -10 C35 -2 37 16 27 26 C21 32 12 30 7 33 C3 35 -3 35 -7 33 C-12 30 -21 32 -27 26 C-37 16 -35 -2 -19 -10 C-10 -15 -4 -19 0 -28 Z" fill="#FFFFFF"/>
+<path d="M0 -22 C-6 -4 -8 16 -6 32 M0 -22 C6 -4 8 16 6 32 M-13 -8 C-24 6 -22 20 -16 29 M13 -8 C24 6 22 20 16 29" fill="none" stroke-width="2.4000000000000004"/>
+<path d="M-6 34 l-4 6 M-2 35 l-1 7 M2 35 l1 7 M6 34 l4 6" fill="none"/></g>
+<path d="M94 322 L94 292 Q200.0 252 306 292 L306 322 Z M105 322 L105 313 A13 13 0 0 1 131 313 L131 322 Z M141 322 L141 307 A17 17 0 0 1 175 307 L175 322 Z M178 322 L178 304 A22 22 0 0 1 222 304 L222 322 Z M225 322 L225 307 A17 17 0 0 1 259 307 L259 322 Z M269 322 L269 313 A13 13 0 0 1 295 313 L295 322 Z" fill="url(#b1)" fill-rule="evenodd" stroke="#0B2545" stroke-width="3" stroke-linejoin="round"/><path d="M90 291 Q200.0 250 310 291" fill="none" stroke="#0B2545" stroke-width="5" stroke-linecap="round"/>
+<path d="M108 334 q11.5 -7 23 0 t23 0 t23 0 t23 0 t23 0 t23 0 t23 0 t23 0" fill="none" stroke="#0B2545" stroke-width="3.5" stroke-linecap="round" opacity="1"/><path d="M130 345 q11.5 -6 23 0 t23 0 t23 0 t23 0 t23 0 t23 0" fill="none" stroke="#0B2545" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+<text x="200" y="384" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="40" fill="#0B2545">1937</text>
+</svg>

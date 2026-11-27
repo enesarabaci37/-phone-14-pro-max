@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<defs><pattern id="b2" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#FFFFFF"/><path d="M0 0H10 M0 5H10 M5.0 0V5 M0 5V10 M10 5V10" stroke="#0B2545" stroke-width="0.9"/></pattern><clipPath id="c2"><circle cx="200" cy="200" r="106"/></clipPath>
+<path id="tt" d="M70 200 A130 130 0 0 1 330 200"/><path id="tb" d="M56 200 A144 144 0 0 0 344 200"/></defs>
+<circle cx="200" cy="200" r="192" fill="#0B2545"/><circle cx="200" cy="200" r="182" fill="#4FB3E8"/>
+<circle cx="200" cy="200" r="174" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="200" cy="200" r="112" fill="#0B2545"/><circle cx="200" cy="200" r="106" fill="#FFFFFF"/>
+<text font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="38" fill="#0B2545" letter-spacing="3"><textPath href="#tt" startOffset="50%" text-anchor="middle">TAŞKÖPRÜSPOR</textPath></text>
+<text font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="21" fill="#FFFFFF" letter-spacing="4"><textPath href="#tb" startOffset="50%" text-anchor="middle">TAŞKÖPRÜ · KASTAMONU</textPath></text>
+<polygon points="46.00,195.00 48.02,201.22 54.56,201.22 49.27,205.06 51.29,211.28 46.00,207.44 40.71,211.28 42.73,205.06 37.44,201.22 43.98,201.22" fill="#FFFFFF"/><polygon points="354.00,195.00 356.02,201.22 362.56,201.22 357.27,205.06 359.29,211.28 354.00,207.44 348.71,211.28 350.73,205.06 345.44,201.22 351.98,201.22" fill="#FFFFFF"/>
+<g clip-path="url(#c2)"><rect x="90" y="232" width="220" height="90" fill="#4FB3E8"/>
+<path d="M90 246 q10.0 -6 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9"/><path d="M80 258 q10.0 -6 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/></g>
+<g transform="translate(200 150) scale(0.78)" stroke="#0B2545" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+<path d="M-3 -29 C-3 -35 -2 -40 -1 -45 L2 -45 C2 -40 3 -35 3 -29" fill="#FFFFFF"/>
+<path d="M0 -28 C4 -19 10 -15 19 -10 C35 -2 37 16 27 26 C21 32 12 30 7 33 C3 35 -3 35 -7 33 C-12 30 -21 32 -27 26 C-37 16 -35 -2 -19 -10 C-10 -15 -4 -19 0 -28 Z" fill="#FFFFFF"/>
+<path d="M0 -22 C-6 -4 -8 16 -6 32 M0 -22 C6 -4 8 16 6 32 M-13 -8 C-24 6 -22 20 -16 29 M13 -8 C24 6 22 20 16 29" fill="none" stroke-width="2.4000000000000004"/>
+<path d="M-6 34 l-4 6 M-2 35 l-1 7 M2 35 l1 7 M6 34 l4 6" fill="none"/></g>
+<path d="M112 232 L112 206 Q200.0 174 288 206 L288 232 Z M120 232 L120 224 A10 10 0 0 1 140 224 L140 232 Z M151 232 L151 220 A14 14 0 0 1 179 220 L179 232 Z M183 232 L183 217 A17 17 0 0 1 217 217 L217 232 Z M221 232 L221 220 A14 14 0 0 1 249 220 L249 232 Z M260 232 L260 224 A10 10 0 0 1 280 224 L280 232 Z" fill="url(#b2)" fill-rule="evenodd" stroke="#0B2545" stroke-width="2.5" stroke-linejoin="round"/><path d="M108 205 Q200.0 172 292 205" fill="none" stroke="#0B2545" stroke-width="4.5" stroke-linecap="round"/>
+<text x="200" y="295" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-weight="bold" font-size="32" fill="#0B2545">1937</text>
+</svg>

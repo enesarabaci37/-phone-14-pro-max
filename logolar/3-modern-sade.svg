@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 450" width="400" height="450">
+<path d="M60 34 H340 A20 20 0 0 1 360 54 V220 C360 330 282 398 200 430 C118 398 40 330 40 220 V54 A20 20 0 0 1 60 34 Z" fill="#4FB3E8"/>
+<path d="M60 34 H340 A20 20 0 0 1 360 54 V220 C360 330 282 398 200 430 C118 398 40 330 40 220 V54 A20 20 0 0 1 60 34 Z" fill="none" stroke="#FFFFFF" stroke-width="4" transform="translate(200 232) scale(0.95) translate(-200 -232)"/>
+<g transform="translate(200 128) scale(1.3)" stroke="#0B2545" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+<path d="M-3 -29 C-3 -35 -2 -40 -1 -45 L2 -45 C2 -40 3 -35 3 -29" fill="#FFFFFF"/>
+<path d="M0 -28 C4 -19 10 -15 19 -10 C35 -2 37 16 27 26 C21 32 12 30 7 33 C3 35 -3 35 -7 33 C-12 30 -21 32 -27 26 C-37 16 -35 -2 -19 -10 C-10 -15 -4 -19 0 -28 Z" fill="#FFFFFF"/>
+<path d="M0 -22 C-6 -4 -8 16 -6 32 M0 -22 C6 -4 8 16 6 32 M-13 -8 C-24 6 -22 20 -16 29 M13 -8 C24 6 22 20 16 29" fill="none" stroke-width="2.08"/>
+<path d="M-6 34 l-4 6 M-2 35 l-1 7 M2 35 l1 7 M6 34 l4 6" fill="none"/></g>
+<path d="M66 272 L66 232 Q200.0 192 334 232 L334 272 Z M90 272 L90 262 A16 16 0 0 1 122 262 L122 272 Z M134 272 L134 257 A19 19 0 0 1 172 257 L172 272 Z M178 272 L178 254 A22 22 0 0 1 222 254 L222 272 Z M228 272 L228 257 A19 19 0 0 1 266 257 L266 272 Z M278 272 L278 262 A16 16 0 0 1 310 262 L310 272 Z" fill="#0B2545" fill-rule="evenodd" stroke="#0B2545" stroke-width="2" stroke-linejoin="round"/><path d="M62 231 Q200.0 190 338 231" fill="none" stroke="#0B2545" stroke-width="4" stroke-linecap="round"/>
+<path d="M80 286 q12.0 -6 24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="1"/><path d="M104 299 q12.0 -5 24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+<text x="200" y="338" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="25" fill="#0B2545" letter-spacing="2">TAŞKÖPRÜSPOR</text>
+<path d="M136 364 H166 M234 364 H264" stroke="#0B2545" stroke-width="3"/>
+<text x="200" y="372" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="22" fill="#FFFFFF">1937</text>
+</svg>
