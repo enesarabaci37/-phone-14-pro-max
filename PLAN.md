@@ -126,3 +126,11 @@ Her değişiklikte üç yer güncellenmeli:
   - Kayıt anahtarlarını (`ders-bahcesi-v1`) değiştirme ve mevcut ilerlemeyi silecek bir değişiklik yapma.
   - Uygulamaya hiçbir kişisel bilgi (çocuk adı vb.) ekleme, hiçbir veriyi internete gönderme. Bu depo **herkese açık**, bu dosyaya da kişisel bilgi yazma.
 - Konuşulan ama henüz yapılmayan isteğe bağlı fikirler: yazı tiplerini sayfaya gömmek (Google Fonts bağlantısını kaldırmak), velilere bilgi notu, nötr isimli GitHub hesabına taşıma.
+
+## Yılan oyunu (28 Kasım 2026)
+
+Veli eski yılan oyununa benzer bir oyun istedi; Akıl Bahçesi'ne 10. oyun olarak **Yılan** eklendi (`RUN.snake`, etkinlik kimliği `snake`).
+- Kontrol: kaydırma, gitmek istenen yere dokunma, ekrandaki ok düğmeleri, klavye okları. Yılan ilk ok verilene kadar beklemede durur; çarpınca da yeniden bekler (çocuk ani hareketle şaşırmasın).
+- 3 can. Çarpmak ya da yanlış sayıyı yemek bir can götürür. Yıldız: hiç can kaybetmeden 3, bir can 2, iki can 1.
+- Bölümler: 1 meyve (kenarlardan geçilir) · 2 duvarlar · 3 sayıları 1'den sırayla · 4 ağaçlar · 5 ikişer · 6 beşer · 7 toplama (10'a kadar) · 8 onar · 9 toplama ve çıkarma (20'ye kadar). 10. bölümden sonra üçer/dörder/geriye sayma, daha büyük işlemler ve hızlanma ile sonsuz devam eder.
+- Telefonda ızgara 2 kare küçülür; iPad yatayda ok düğmeleri oyun alanının yanına geçer.

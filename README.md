@@ -7,7 +7,7 @@
 - **Türkçe** (8 konu): okuma-anlama hikâyeleri, zıt anlamlılar, olay sıralama, cümle kurma, büyük harf, noktalama, kısaltmalar, sözcük anlamı
 - **Hayat Bilgisi** (8 konu): trafik işaretleri, mevsimler ve hava, sağlıklı yaşam, güvenlik ve internet, ailem ve nezaket, ülkem ve Atatürk, doğa ve çevre, bilim-teknoloji-sanat
 - **İngilizce** (6 konu): sesli kelime kartları, dinle ve seç, resim-kelime, renkler, sayılar, selamlaşma ve günler
-- **Akıl Bahçesi** (9 zeka oyunu): hafıza kartları, sıradaki ne, meyve sudoku, kaydır diz, renk sırası, labirent (Apple Pencil ile), robot yolu (kodlama), terazi, Hanoi kulesi
+- **Akıl Bahçesi** (10 zeka oyunu): hafıza kartları, sıradaki ne, meyve sudoku, kaydır diz, renk sırası, labirent (Apple Pencil ile), robot yolu (kodlama), terazi, Hanoi kulesi, yılan (meyve toplama, sayıları sırayla yeme, ritmik sayma, toplama-çıkarma)
 
 **Özellikler**
 - Sesli okuma (Türkçe ve İngilizce). 🗣️ düğmesi otomatik okumayı açar/kapatır, 🔊 düğmeleri tekrar okutur.
