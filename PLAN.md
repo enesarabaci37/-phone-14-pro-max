@@ -134,3 +134,4 @@ Veli eski yılan oyununa benzer bir oyun istedi; Akıl Bahçesi'ne 10. oyun olar
 - 3 can. Çarpmak ya da yanlış sayıyı yemek bir can götürür. Yıldız: hiç can kaybetmeden 3, bir can 2, iki can 1.
 - Bölümler: 1 meyve (kenarlardan geçilir) · 2 duvarlar · 3 sayıları 1'den sırayla · 4 ağaçlar · 5 ikişer · 6 beşer · 7 toplama (10'a kadar) · 8 onar · 9 toplama ve çıkarma (20'ye kadar). 10. bölümden sonra üçer/dörder/geriye sayma, daha büyük işlemler ve hızlanma ile sonsuz devam eder.
 - Telefonda ızgara 2 kare küçülür; iPad yatayda ok düğmeleri oyun alanının yanına geçer.
+- ⚠️ GitHub Pages deposundaki (`enesarabaci37/ders-bahcesi`) `index.html`, bu daldaki `ders-bahcesi.html` dosyasından **daha yeni** (konu anlatımları, Blok Çiftliği, Orman Dostları ve yeni konular başka bir oturumda oraya eklenmiş). Yılan oyunu oradaki sürüme ayrıca eklendi. Bundan sonra değişiklik yaparken o depodaki `index.html` esas alınmalı; üzerine bu daldan üretilen dosya **yazılmamalı**.
