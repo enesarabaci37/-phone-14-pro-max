@@ -396,6 +396,101 @@ h2{font-family:var(--display);font-size:24px;margin:0;line-height:1.1}
 @keyframes pulse{50%{transform:scale(1.08)}}
 @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+/* ---------- konu anlatımı ---------- */
+body.noscroll{overflow:hidden}
+#lesson{position:fixed;inset:0;z-index:40;background:linear-gradient(#FFF8E6,var(--bg));display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.lhead{display:flex;align-items:center;gap:10px;padding:10px 14px;max-width:760px;width:100%;margin:0 auto}
+.lhead h2{flex:1;font-size:21px;display:flex;align-items:center;gap:8px;min-width:0}
+.lhead h2 small{font-family:var(--body);font-size:13px;color:var(--muted);font-weight:700;display:block}
+.lx{width:44px;height:44px;border:0;border-radius:50%;background:var(--card);box-shadow:0 3px 0 var(--well);font-size:22px;flex:none}
+#ldots{display:flex;gap:5px;justify-content:center;padding:0 14px 6px}
+#ldots i{width:9px;height:9px;border-radius:50%;background:var(--well)}#ldots i.on{background:var(--ok)}#ldots i.cur{background:var(--ink);transform:scale(1.25)}
+#lbody{flex:1;overflow-y:auto;padding:6px 14px 18px;max-width:760px;width:100%;margin:0 auto;-webkit-overflow-scrolling:touch}
+.lteach{display:flex;gap:10px;align-items:flex-start;animation:rise .35s both}
+.lteach .owl{font-size:52px;line-height:1;flex:none;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) rotate(-4deg)}}
+.lbub{position:relative;background:var(--card);border-radius:22px;padding:14px 16px;box-shadow:0 4px 0 var(--well);flex:1;min-width:0}
+.lbub:before{content:"";position:absolute;left:-9px;top:20px;border:10px solid transparent;border-right-color:var(--card);border-left:0}
+.lbub h3{font-family:var(--display);font-size:24px;line-height:1.15;margin:0 0 4px;color:var(--gc)}
+.lbub p{margin:0;font-size:18px;line-height:1.5}
+.lbub b{color:var(--ink);background:#FFF1C9;border-radius:6px;padding:0 3px}
+.lvis{margin:14px 0 0;display:flex;flex-direction:column;align-items:center;gap:10px;animation:rise .4s .1s both}
+.lvis.sm{margin:6px 0}
+.lvrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px}
+.eq{font-family:var(--display);font-size:38px;color:var(--gc)}
+.lnum{text-align:center}.lnum b{font-family:var(--display);font-size:48px;line-height:1;display:block}.lnum small{color:var(--muted);font-size:16px;font-weight:700}
+.lnum u{text-decoration:none;color:var(--coral)}
+.lbtns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lb{border:0;border-radius:999px;padding:10px 18px;min-height:48px;background:var(--gc);color:#fff;font-family:var(--display);font-size:19px;box-shadow:0 4px 0 rgba(30,58,74,.25)}
+.lb.ghost{background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--well)}
+.lb:active{transform:translateY(3px);box-shadow:none}
+.lmsg{background:#FFF1C9;border-radius:16px;padding:10px 14px;text-align:center;font-size:17px;max-width:560px;animation:pop .3s}
+.jrow{display:flex;gap:4px;overflow-x:auto;max-width:100%;padding:30px 6px 8px;scroll-behavior:smooth}
+.jt{position:relative;flex:none;width:40px;height:40px;border-radius:10px;background:var(--card);box-shadow:0 3px 0 var(--well);display:grid;place-items:center;font-family:var(--display);font-size:18px}
+.jt.hit{background:#DDF5E7;color:#17804c}.jt.on{background:var(--ok);color:#fff}
+.jt i{position:absolute;top:-30px;font-size:28px;font-style:normal;animation:pop .35s}
+.kids{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.kid{display:flex;flex-direction:column;align-items:center}.kid>span{font-size:34px}.kid .plate{width:96px;height:96px;font-size:20px}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;width:100%}
+.wcard{border:0;border-radius:18px;background:var(--card);box-shadow:0 4px 0 var(--well);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--body)}
+.wcard .wv{font-size:40px;line-height:1.1;min-height:46px;display:grid;place-items:center}.wcard .wv b{font-size:38px}
+.wcard>b{font-family:var(--display);font-size:22px;color:var(--grape)}.wcard small{color:var(--muted);font-size:14px}
+.wcard.pop{animation:pop .4s}
+.lcol{font-family:var(--display);font-size:42px;line-height:1.15;font-variant-numeric:tabular-nums;background:var(--card);border-radius:18px;padding:8px 26px 12px;box-shadow:0 4px 0 var(--well);display:inline-grid;grid-template-columns:34px 44px 44px;text-align:center}
+.lcol .hd{font-family:var(--body);font-size:13px;color:var(--muted)}.lcol .op{color:var(--gc)}
+.lcol .ln{border-top:4px solid var(--ink);margin:2px 0}
+.lcol .cr{font-size:20px;color:var(--coral);min-height:22px}
+.lcol .hl{background:#FFF1C9;border-radius:8px}.lcol .x{text-decoration:line-through;text-decoration-color:var(--coral);color:var(--muted)}
+.lcol .res{color:var(--ok)}
+.claps{display:flex;gap:12px;justify-content:center}.claps span{font-size:38px;display:flex;flex-direction:column;align-items:center;animation:pop .5s both}.claps small{font-size:16px;font-weight:800}
+.lchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+.lchips span{background:var(--card);border-radius:16px;padding:8px 12px;box-shadow:0 3px 0 var(--well);font-weight:800;font-size:16px;display:flex;align-items:center;gap:6px}
+.lchips i{font-style:normal;font-size:28px}
+.lpairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;width:100%;max-width:620px}
+.lpairs div{background:var(--card);border-radius:14px;padding:8px 10px;box-shadow:0 3px 0 var(--well);display:flex;align-items:center;justify-content:space-around;font-weight:800;font-size:17px}
+.lpairs i{font-style:normal;color:var(--gc);font-size:20px}
+.lshapes{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.lshapes>div{background:var(--card);border-radius:16px;padding:8px 10px;box-shadow:0 3px 0 var(--well);display:flex;flex-direction:column;align-items:center;gap:2px;min-width:90px;text-align:center;font-size:15px}
+.lshapes span{font-size:26px}
+.lplace{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.lplace>div{background:var(--card);border-radius:18px;padding:10px 16px;box-shadow:0 4px 0 var(--well);display:flex;flex-direction:column;align-items:center;gap:6px;min-width:120px}
+.lplace small{color:var(--muted);font-weight:800}.lplace>div>b{font-family:var(--display);font-size:44px;line-height:1;color:var(--gc)}
+.lplace .emrow{font-size:20px;letter-spacing:0}
+.lcmp{display:flex;gap:16px;align-items:center;font-family:var(--display);font-size:50px}.lcmp span{color:var(--coral);font-size:60px}.lcmp u{text-decoration:none;color:var(--coral)}
+.lseq{font-size:22px;color:var(--muted)}.lseq span{font-size:42px}
+.lseasons{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;width:100%;max-width:620px}
+.lseasons div{border-radius:16px;padding:10px;text-align:center;font-size:34px;display:flex;flex-direction:column}
+.lseasons b{font-family:var(--display);font-size:20px}.lseasons small{font-size:13px;color:var(--muted);font-weight:700}
+.lbins{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.lbins div{color:#fff;border-radius:14px 14px 18px 18px;padding:12px 10px;width:84px;text-align:center;font-size:30px;display:flex;flex-direction:column}.lbins b{font-size:14px}
+.lgraph{background:var(--card);border-radius:16px;padding:10px 14px;box-shadow:0 3px 0 var(--well);display:grid;gap:6px}
+.lgraph div{display:flex;gap:10px;align-items:center}.lgraph b{width:56px;font-size:15px}.lgraph span{font-size:26px;letter-spacing:2px}
+.lrg{display:inline-grid;gap:2px;font-size:32px;line-height:1}
+.symdemo{font-size:110px;line-height:1;position:relative;background:linear-gradient(90deg,transparent calc(50% - 2px),var(--coral) calc(50% - 2px) calc(50% + 2px),transparent 0)}
+.symgrid{display:grid;grid-template-columns:repeat(6,40px);gap:4px;background:linear-gradient(90deg,transparent calc(50% - 2px),var(--coral) calc(50% - 2px) calc(50% + 2px),transparent 0)}
+.symgrid i{height:40px;background:var(--card);border-radius:8px;box-shadow:0 2px 0 var(--well)}.symgrid i.on{background:var(--sky)}
+.lwords{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-family:var(--display);font-size:28px}
+.lwords span{background:var(--card);border-radius:14px;padding:6px 14px;box-shadow:0 3px 0 var(--well);display:flex;flex-direction:column;align-items:center}
+.lwords small{font-family:var(--body);font-size:13px;color:var(--muted)}.lwords .w1{background:#DDEEFB}.lwords .w2{background:#FFE3DE}
+.ltry{margin-top:16px;background:var(--card);border-radius:22px;padding:14px;box-shadow:0 4px 0 var(--well);border:3px dashed var(--sun);animation:rise .4s .15s both}
+.ltq{font-family:var(--display);font-size:22px;text-align:center;line-height:1.25}
+.lopts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+.lopt{border:0;border-radius:16px;min-height:56px;min-width:76px;padding:8px 16px;background:var(--bg);box-shadow:0 4px 0 var(--well);font-family:var(--display);font-size:21px}
+.lopt.ok{background:var(--ok);color:#fff;box-shadow:0 4px 0 #17804c;animation:pop .35s}
+.lopt.no{background:#FBE0E1;animation:shake .35s;opacity:.6}
+.lfb{margin-top:10px;border-radius:14px;padding:10px 12px;text-align:center;font-size:17px;font-weight:700}
+.lfb.ok{background:#DDF5E7}.lfb.no{background:#FFF1C9}
+.lfoot{display:flex;gap:8px;padding:10px 14px 14px;max-width:760px;width:100%;margin:0 auto;align-items:center}
+.lfoot button{border:0;border-radius:999px;min-height:54px;font-family:var(--display);font-size:20px;box-shadow:0 4px 0 rgba(30,58,74,.2)}
+#lprev{background:var(--card);padding:0 16px}#lprev:disabled{opacity:.35}
+#lsay{background:var(--card);width:54px;flex:none}
+#lnext{flex:1;background:var(--ink);color:#fff}#lnext.pulse{animation:pulse 1s infinite;background:var(--ok)}
+.learnq{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;border:0;border-radius:16px;padding:10px 14px;background:#FFF;box-shadow:0 4px 0 var(--well);font-family:var(--display);font-size:18px;color:var(--ink);text-align:left;animation:pop .4s}
+.learnq span{font-size:28px}.learnq b{color:var(--grape)}
+.fb.hint,.fb.exp{flex-wrap:wrap}
+.awrap{display:flex;gap:8px;align-items:stretch}.awrap .acard{flex:1;min-width:0}
+.alearn{flex:none;width:66px;border:0;border-radius:20px;background:var(--card);box-shadow:0 5px 0 var(--well);font-family:var(--display);font-size:14px;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.1}
+.alearn span{font-size:28px}.alearn.done{background:#DDF5E7}
+.alearn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--well)}
 </style>
 
 <div class="app">
@@ -447,6 +542,12 @@ h2{font-family:var(--display);font-size:24px;margin:0;line-height:1.1}
   </section>
 </div>
 <div id="modal" hidden><div class="mbox" id="mbox" role="dialog" aria-modal="true"></div></div>
+<div id="lesson" hidden role="dialog" aria-modal="true">
+  <div class="lhead"><button class="lx" id="lx" aria-label="Kapat">✕</button><h2 id="ltitle"></h2></div>
+  <div id="ldots"></div>
+  <div id="lbody"></div>
+  <div class="lfoot"><button id="lprev">◀ Geri</button><button id="lsay" aria-label="Tekrar dinle">🔊</button><button id="lnext">İleri ▶</button></div>
+</div>
 <canvas id="fx"></canvas>
 
 <script>
@@ -594,11 +695,13 @@ function openSubject(sid){
   const list=$('#acts');list.innerHTML='';
   ACTS.filter(a=>a.s===sid).forEach(a=>{
     const b=el('button','acard');b.style.setProperty('--c',s.color);
-    const nowTag=a.months&&a.months.includes(MONTH)?'<span class="now">Sınıfta şimdi</span>':'';
-    const lv=a.kind==='cards'?'Keşfet':`Seviye ${lvl(a.id)}${a.max?' / '+a.max:''}`;
+    const nowTag=a.isNew?'<span class="now">Yeni</span>':a.months&&a.months.includes(MONTH)?'<span class="now">Sınıfta şimdi</span>':'';
+    const lv=a.kind==='cards'?'Keşfet':a.href?(a.label||`Bölüm ${Math.min(lvl(a.id),a.max)} / ${a.max}`):`Seviye ${lvl(a.id)}${a.max?' / '+a.max:''}`;
     b.innerHTML=`<span class="gicon">${a.icon}</span><span class="gtext"><span class="gname">${a.name}${nowTag}</span><span class="gdesc">${a.desc}</span></span><span class="gmeta"><span class="lvl">${lv}</span>${a.kind==='cards'?'':`<span class="gst">★ ${actStars(a.id)}</span>`}</span>`;
     b.onclick=()=>{sfx.tap();startAct(a.id,Math.min(lvl(a.id),a.max||99))};
-    list.append(b);
+    if(LESSONS[a.id]){const w=el('div','awrap'),lb=el('button','alearn'+((save.learned||{})[a.id]?' done':''),`<span>📖</span>Öğren`);lb.setAttribute('aria-label',a.name+' konusunu öğren');
+      lb.onclick=()=>{sfx.tap();openLesson(a.id,{after:d=>d?startAct(a.id,Math.min(lvl(a.id),a.max||99)):openSubject(sid)})};w.append(b,lb);list.append(w)}
+    else list.append(b);
   });
   syncTools();
 }
@@ -606,17 +709,18 @@ $('#pback').onclick=()=>{sfx.tap();openSubject(cur?ACTS.find(a=>a.id===cur.id).s
 
 function startAct(id,L){
   const a=ACTS.find(x=>x.id===id),s=SUBJECTS.find(x=>x.id===a.s);
+  if(a.href){hush();location.href=a.href;return}
   show('play');cur={id,L,a};curSubject=a.s;
   $('#play').style.setProperty('--gc',s.color);
   $('#ptitle').textContent=a.name;
   const ch=$('#plevel');ch.hidden=a.kind==='cards';ch.textContent=(a.levels&&a.levels[L-1])?`Seviye ${L}: ${a.levels[L-1]}`:'Seviye '+L;ch.classList.toggle('dark',!!s.dark);
-  $('#introBtn').hidden=!a.intro;
+  $('#introBtn').hidden=!(a.intro||LESSONS[id]);$('#introBtn').textContent=LESSONS[id]?'📖':'💡';
   const stage=$('#stage');stage.innerHTML='';status('');
-  const firstTime=a.intro&&!save.seen[id];
+  const firstTime=(a.intro||LESSONS[id])&&!save.seen[id];
   if(a.kind==='game')RUN[id](stage,L,{win:winGame,lose:loseGame,status});
   else if(a.kind==='cards')a.run(stage);
   else runQuiz(stage,a,L,!firstTime);
-  if(firstTime){save.seen[id]=1;persist();showIntro()}
+  if(firstTime){save.seen[id]=1;persist();if(LESSONS[id])openLesson(id,{first:true,after:()=>cur&&cur.speakQ&&cur.speakQ()});else showIntro()}
   syncTools();
 }
 function showIntro(){
@@ -627,7 +731,8 @@ function showIntro(){
   const box=$('#mbox .intro');box.prepend(sayBtn(it.say));
   speak(it.say);
 }
-$('#introBtn').onclick=()=>{sfx.tap();showIntro()};
+$('#introBtn').onclick=()=>{sfx.tap();if(cur&&LESSONS[cur.id])openLesson(cur.id,{fromQuiz:true,after:()=>cur&&cur.speakQ&&cur.speakQ()});else showIntro()};
+function learnBtn(id,txt,after){const b=el('button','learnq',`<span>🦉</span><div>${txt}<br><b>Hadi birlikte öğrenelim! 📖</b></div>`);b.onclick=()=>{sfx.tap();openLesson(id,{fromQuiz:true,after})};return b}
 
 /* ---------- modal ---------- */
 function openModal(html,acts){
@@ -741,13 +846,15 @@ function runQuiz(stage,a,L,speakFirst=true){
         if(tries===1){
           w.retry&&w.retry();
           fb.className='fb hint';fb.innerHTML=`<span class="fi">💡</span><span class="ft">${q.hint||'Bir daha düşün. Sen yaparsın!'}</span>`;fb.hidden=false;
+          if(LESSONS[a.id])fb.append(learnBtn(a.id,'Bu konu aslında çok kolay!',()=>cur&&cur.speakQ&&cur.speakQ()));
           speak('İpucu: '+(q.hint||'Bir daha düşün.'));
         }else{
           done=true;w.reveal&&w.reveal();
           q._res='no';stat(a.id,false);addReview(a.id,q);persist();
           if(!q._again&&list.filter(x=>x._again).length<2)list.push(Object.assign({},q,{_again:1,_res:null}));
           fb.className='fb exp';fb.innerHTML=`<span class="fi">📘</span><span class="ft">${q.exp||'Doğru cevabı yeşil ile gösterdim.'}</span>`;
-          const g=el('button','go','Devam ▶');g.onclick=()=>{sfx.tap();next()};fb.append(g);fb.hidden=false;
+          const g=el('button','go','Devam ▶');g.onclick=()=>{sfx.tap();next()};fb.append(g);
+          if(LESSONS[a.id])fb.append(learnBtn(a.id,'Sanırım bu soru biraz zorladı. Aslında çok kolay!'));fb.hidden=false;
           speak([[q.exp||'Doğru cevabı yeşil ile gösterdim.','tr'],...(q.after||[])]);
           drawDots();
         }
@@ -1171,6 +1278,14 @@ function addHint(a,b){const s=a%10+b%10;return s>=10?`Önce birlikleri topla: ${
 function subHint(a,b){return a%10<b%10?`${ek(a%10,'abl')} ${b%10} çıkmaz. Bir onluğu boz: ${a%10+10} − ${b%10} = ${a%10+10-b%10}. Onluklar bir azaldı, unutma!`:`Önce birlikler: ${a%10} − ${b%10} = ${a%10-b%10}. Sonra onluklar.`}
 const ADDP=[(a,b,P)=>`${P.g} ${a} bilyesi var. Ablası ona ${b} bilye daha verdi. ${P.g} kaç bilyesi oldu?`,(a,b)=>`Bir otobüste ${a} yolcu vardı. Durakta ${b} yolcu daha bindi. Otobüste kaç yolcu oldu?`,(a,b)=>`Bahçede ${a} lale ve ${b} gül var. Bahçede toplam kaç çiçek var?`,(a,b)=>`Kütüphanede ${a} masal kitabı ve ${b} bilim kitabı var. Toplam kaç kitap var?`,(a,b,P)=>`${P.n} sabah ${a}, akşam ${b} sayfa kitap okudu. Toplam kaç sayfa okudu?`];
 const SUBP=[(a,b)=>`Ağaçta ${a} elma vardı. ${b} tanesi yere düştü. Ağaçta kaç elma kaldı?`,(a,b,P)=>`${P.g} ${a} lirası vardı. ${b} liraya bir kitap aldı. Kaç lirası kaldı?`,(a,b)=>`Bir kutuda ${a} kurabiye vardı. Misafirler ${b} tanesini yedi. Kutuda kaç kurabiye kaldı?`,(a,b)=>`Bir otoparkta ${a} araba vardı. ${b} araba çıktı. Kaç araba kaldı?`,(a,b)=>`Bir çiftlikte ${a} tavuk var. ${b} tanesi kümese girdi. Dışarıda kaç tavuk kaldı?`];
+const pairVis=(n,e)=>`<div class="emrow">${Array.from({length:Math.ceil(n/2)},(_,i)=>`<span style="display:inline-block;margin:0 6px">${e.repeat(Math.min(2,n-i*2))}</span>`).join('')}</div>`;
+A({id:'m_oddeven',s:'mat',name:'Tek ve Çift',icon:'🧦',desc:'Eşleştir, tek mi çift mi bul',max:3,isNew:true,levels:["10'a kadar","20'ye kadar","100'e kadar"],
+  gen(L){const M=L===1?10:L===2?20:99,t=pick(L===1?['v','v','n']:['v','n','pick','pick']);
+    const tek=n=>n%2===1;
+    if(t==='v'){const n=ri(2,L===1?10:16),e=pick(['🧦','🐥','🍎','⭐','🎈']);return MC(`Bu ${n} nesneyi ikişer eşleştirdik. ${n} <b>tek</b> mi, <b>çift</b> mi?`,tek(n)?'Tek':'Çift',[tek(n)?'Çift':'Tek'],{n:2,vis:pairVis(n,e),hint:'Eşi olmayan, yalnız kalan nesne var mı? Varsa sayı tektir.',exp:`${n} ${tek(n)?'tektir, bir tanesi eşsiz kaldı':'çifttir, hepsinin eşi var'}.`})}
+    if(t==='n'){const n=ri(L===1?1:11,M);return MC(`<b>${n}</b> sayısı tek mi, çift mi?`,tek(n)?'Tek':'Çift',[tek(n)?'Çift':'Tek'],{n:2,cls:'syms',hint:'Birler basamağına bak: 0, 2, 4, 6, 8 ise çift; 1, 3, 5, 7, 9 ise tektir.',exp:`${n} sayısının birler basamağı ${n%10}, o yüzden ${tek(n)?'tek':'çift'}.`})}
+    const wantOdd=rnd(2)===1,pool=[];for(let i=1;i<=M;i++)pool.push(i);const ok=pick(pool.filter(x=>tek(x)===wantOdd)),bad=shuffle(pool.filter(x=>tek(x)!==wantOdd)).slice(0,2);
+    return MC(`Hangisi <b>${wantOdd?'tek':'çift'}</b> sayıdır?`,ok,bad,{n:3,cls:'syms',hint:'Birler basamağına bak. Çift sayılar 0, 2, 4, 6, 8 ile biter.',exp:`${ok} ${wantOdd?'tek':'çift'} sayıdır.`})}});
 A({id:'m_add',s:'mat',name:'Toplama',icon:'➕',desc:"Eldeli ve eldesiz, 100'e kadar",months:[0,1,2],levels:['Eldesiz, tek basamak','Eldesiz, iki basamak','Eldeli, tek basamak','Eldeli, iki basamak','Üç sayı ve problemler'],
   intro:()=>({html:`<div class="vis">${colHTML(27,15,'+').replace(/<span>\?<\/span><span>\?<\/span>/,'<span>4</span><span>2</span>')}</div><p>Toplarken <b>önce birlikleri</b> toplarız: 7 + 5 = 12.<br>12'nin 2'sini yazarız, <b>1 onluğu</b> onlukların yanına ekleriz.<br>Sonra onluklar: 2 + 1 + 1 = 4. Sonuç <b>42</b>.</p>`,say:'Toplarken önce birlikleri toplarız. Yedi artı beş, on iki eder. İkiyi yazarız, bir onluğu onlukların yanına ekleriz. Sonra onlukları toplarız: iki artı bir artı bir, dört eder. Sonuç kırk iki.'}),
   gen(L){
@@ -1429,6 +1544,23 @@ A({id:'t_dict',s:'tur',name:'Sözcük Anlamı',icon:'🔍',desc:'Resimli sözlü
     const c=pick(CTX);return MC(`${c[0]}<br><small>Kalın yazılan sözcük ne anlama geliyor?</small>`,c[1],c[2],{n:3,cls:'long',hint:'Cümlenin tamamını bir daha oku. Sözcüğün yerine seçenekleri koyup dene, hangisi anlamlı oluyor?',exp:`Doğru cevap: <b>${c[1]}</b>`});
   }});
 
+function hece(w){const V='aeıioöuüâî';const idx=[];for(let i=0;i<w.length;i++)if(V.includes(w[i]))idx.push(i);const cuts=[];for(let k=1;k<idx.length;k++){const a=idx[k-1],b=idx[k];cuts.push(b-a-1===0?b:b-1)}const out=[];let p=0;cuts.forEach(c=>{out.push(w.slice(p,c));p=c});out.push(w.slice(p));return out}
+const HW=[['top','el','göz','su','kuş','süt','ay','gül'],['kalem','kitap','elma','okul','masa','kedi','çiçek','anne','bebek','armut','tavşan','bulut','silgi','çanta'],['araba','kelebek','öğretmen','domates','pencere','uçurtma','salıncak','zürafa','kırmızı','portakal','yumurta'],['ayakkabı','kaplumbağa','çikolata','bilgisayar','televizyon','anneanne']];
+A({id:'t_syl',s:'tur',name:'Heceler',icon:'👏',desc:'El çırp, heceleri say',max:3,isNew:true,
+  gen(L){const lv=L===1?[0,1]:L===2?[1,2]:[1,2,3],w=pick(HW[pick(lv)]),h=hece(w);
+    if(L===1||rnd(2)){return MC(`<b>${w}</b> sözcüğü kaç hecedir?`,h.length,[1,2,3,4].filter(x=>x!==h.length),{n:3,cls:'syms',say:w+' sözcüğü kaç hecedir?',hint:'Her hecede bir kez el çırp. Ünlüleri (a, e, ı, i, o, ö, u, ü) saymak da işe yarar!',exp:`${h.join(' - ')}: ${h.length} hece.`})}
+    const wr=[];for(let k=1;k<h.length&&wr.length<2;k++){const a=h[k-1],b=h[k];if(b.length>1)wr.push([...h.slice(0,k-1),a+b[0],b.slice(1),...h.slice(k+1)].join('-'));if(a.length>1&&wr.length<2)wr.push([...h.slice(0,k-1),a.slice(0,-1),a.slice(-1)+b,...h.slice(k+1)].join('-'))}
+    return MC(`<b>${w}</b> sözcüğü nasıl hecelenir?`,h.join('-'),wr,{n:3,say:w+' sözcüğü nasıl hecelenir?',hint:'Yavaşça söyle ve her ağız açılışında dur. Her hecede bir ünlü olur.',exp:`Doğrusu: ${h.join(' - ')}.`})}});
+const PLW=['kitap','top','kuş','kalem','ev','çiçek','göz','kız','balık','okul','ağaç','kedi','köpek','gül','elma','masa','defter','silgi','kapı','yıldız','bulut','ördek','üzüm','armut','tavuk','inek','çanta','oyuncak'];
+const plural=w=>{const v=[...w].reverse().find(c=>'aeıioöuü'.includes(c));return w+('aıou'.includes(v)?'lar':'ler')};
+A({id:'t_plural',s:'tur',name:'Tekil ve Çoğul',icon:'🐱',desc:'-lar mı, -ler mi?',max:3,isNew:true,
+  gen(L){const w=pick(PLW),pl=plural(w),wrong=pl.endsWith('lar')?w+'ler':w+'lar',t=pick(L===1?['p','v']:['p','v','s','t']);
+    if(t==='p')return MC(`<b>${w}</b> sözcüğünün çoğulu hangisidir?`,pl,[wrong],{n:2,hint:'Sözcüğün son ünlüsüne bak: a, ı, o, u ise -lar; e, i, ö, ü ise -ler.',exp:`${w} → ${pl}`});
+    if(t==='v'){const one=rnd(2),E={kitap:'📕',top:'⚽',kuş:'🐦',kalem:'✏️',ev:'🏠',çiçek:'🌸',göz:'👁️',balık:'🐟',ağaç:'🌳',kedi:'🐱',köpek:'🐶',gül:'🌹',elma:'🍎',yıldız:'⭐',bulut:'☁️',ördek:'🦆',üzüm:'🍇',armut:'🍐',tavuk:'🐔',inek:'🐄',çanta:'🎒',masa:'🪑',kapı:'🚪',oyuncak:'🧸',kız:'👧',okul:'🏫',defter:'📓',silgi:'🧽'}[w]||'⭐';
+      return MC('Resimdekileri hangi sözcük anlatır?',one?w:pl,[one?pl:w,wrong],{n:3,vis:`<div class="emrow">${E.repeat(one?1:ri(3,5))}</div>`,hint:'Bir tane varsa tekil, birden çok varsa çoğul sözcük kullanılır.',exp:one?`Bir tane var: ${w}.`:`Birden çok var: ${pl}.`})}
+    if(t==='s'){const ws=shuffle(PLW).slice(0,3),k=rnd(3),opts=ws.map((x,i)=>i===k?plural(x):x);return MC('Hangisi <b>çoğul</b> bir sözcüktür?',opts[k],opts.filter((_,i)=>i!==k),{n:3,hint:'Çoğul sözcüklerin sonunda -lar ya da -ler eki vardır.',exp:`${opts[k]} çoğuldur.`})}
+    return MC(`<b>${pl}</b> sözcüğünün tekili hangisidir?`,w,[pl,wrong],{n:3,hint:'Sondaki -lar / -ler ekini çıkar.',exp:`${pl} → ${w}`})}});
+
 /* ---------------- HAYAT BİLGİSİ ---------------- */
 const SG=k=>`<div class="signs">${signSVG(k)}</div>`;
 A({id:'h_traffic',s:'hay',name:'Trafik ve İşaretler',icon:'🚦',desc:'Trafik ışıkları ve işaret levhaları',max:3,
@@ -1471,6 +1603,18 @@ A({id:'h_health',s:'hay',name:'Sağlıklı Yaşam',icon:'🍎',desc:'Beslenme, t
     {q:'Kahvaltı yapmak neden önemlidir?',a:'Güne enerjiyle başlamak için',w:['Uykumuz gelsin diye','Önemli değildir'],h:'Sabah vücudumuzun yakıta ihtiyacı vardır.',l:2},{q:'Hapşırırken ne yapmalıyız?',a:'Ağzımızı mendil ya da dirseğimizle kapatmalıyız',w:['Arkadaşımıza doğru hapşırmalıyız','Elimizle yemeğe dokunmalıyız'],cls:'long',h:'Mikropların yayılmasını önlemek için.',l:2},
     {q:'Ekran karşısında çok uzun süre kalırsak ne olur?',a:'Gözlerimiz yorulur',w:['Daha uzun boylu oluruz','Hiçbir şey olmaz'],h:'Ekranlara bakarken arada mola vermeliyiz.',l:2},
     {q:'Meyve ve sebzeleri yemeden önce ne yapmalıyız?',a:'Yıkamalıyız',w:['Yere atmalıyız','Güneşte bekletmeliyiz'],h:'Üzerlerinde toz ve mikrop olabilir.',l:3},{q:'Hangisi kişisel temizliğimiz için gereklidir?',a:'Düzenli banyo yapmak',w:['Çok televizyon izlemek','Geç yatmak'],h:'Vücudumuzu temiz tutmalıyız.',l:3},
+  ],L)}});
+A({id:'h_body',s:'hay',name:'Beş Duyumuz',icon:'👀',desc:'Görme, işitme, koklama, tatma, dokunma',max:3,isNew:true,
+  round(L){return bankRound([
+    {q:'Gökkuşağının renklerini hangi organımızla görürüz?',a:'👁️ Göz',w:['👂 Kulak','👃 Burun'],h:'Görmek için…'},{q:'Kuşların cıvıltısını hangi organımızla duyarız?',a:'👂 Kulak',w:['👅 Dil','✋ Deri'],h:'Sesleri işitmek için…'},
+    {q:'Limonun ekşi olduğunu hangi organımızla anlarız?',a:'👅 Dil',w:['👁️ Göz','👂 Kulak'],h:'Tatları ağzımızdaki organla alırız.'},{q:'Taze ekmeğin kokusunu hangi organımızla alırız?',a:'👃 Burun',w:['✋ Deri','👅 Dil'],h:'Koklamak için…'},
+    {q:'Kedinin tüylerinin yumuşak olduğunu nasıl anlarız?',a:'✋ Dokunarak',w:['👂 Dinleyerek','👃 Koklayarak'],h:'Derimizle hissederiz.'},{q:'Hangisi bir duyu organı değildir?',a:'🦵 Bacak',w:['👁️ Göz','👃 Burun'],h:'Beş duyu organı: göz, kulak, burun, dil, deri.'},
+    {q:'Kaç duyumuz vardır?',a:'5',w:['3','10'],cls:'syms',h:'Görme, işitme, koklama, tatma, dokunma…'},
+    {q:'Gözlerimizi korumak için ne yapmalıyız?',a:'Ekrana çok yakından bakmamalıyız',w:['Güneşe doğrudan bakmalıyız','Gözümüzü sık sık ovuşturmalıyız'],cls:'long',h:'Gözlerimiz yorulmamalı.',l:2},
+    {q:'Kulaklarımızı korumak için ne yapmalıyız?',a:'Çok yüksek sesle müzik dinlememeliyiz',w:['Kulağımıza kalem sokmalıyız','Kulağımızı hiç temizlememeliyiz'],cls:'long',h:'Yüksek ses kulağa zarar verir.',l:2},
+    {q:'Sobanın sıcak olduğunu hangi duyumuz bize hissettirir?',a:'Dokunma',w:['Tatma','İşitme'],h:'Sıcağı ve soğuğu derimizle hissederiz.',l:2},
+    {q:'Dumanın kokusunu alınca ne yapmalıyız?',a:'Hemen bir büyüğe haber vermeliyiz',w:['Saklanmalıyız','Hiçbir şey yapmamalıyız'],cls:'long',h:'Duman yangın belirtisi olabilir.',l:3},
+    {q:'Görme engelli bireyler okumak için hangi duyularını kullanır?',a:'Dokunma',w:['Koklama','Tatma'],h:'Kabartma yazıya parmaklarıyla dokunurlar.',l:3},
   ],L)}});
 A({id:'h_safe',s:'hay',name:'Güvenlik ve İnternet',icon:'🛡️',desc:'Çevrim içi güvenlik, acil durumlar',max:3,
   round(L){return bankRound([
@@ -1612,7 +1756,9 @@ A({id:'e_talk',s:'ing',name:'Selamlaşma ve Günler',icon:'👋',desc:'Hello, Go
   }});
 
 /* ---------------- AKIL BAHÇESİ ---------------- */
-[{id:'memory',name:'Hafıza Kartları',desc:'Eş hayvanları bul',icon:'🐼'},
+[{id:'blok',name:'Blok Çiftliği',desc:'İnşa et, ek, hayvanlarını besle',icon:'🧱',href:'blok/',label:'Serbest oyun',isNew:true},
+ {id:'orman',name:'Orman Dostları',desc:'Hayvanları besle, yeni yerler keşfet',icon:'🐿️',href:'orman/',max:4},
+ {id:'memory',name:'Hafıza Kartları',desc:'Eş hayvanları bul',icon:'🐼'},
  {id:'pattern',name:'Sıradaki Ne?',desc:'Örüntüyü tamamla',icon:'🔮'},
  {id:'sudoku',name:'Meyve Sudoku',desc:'Her sırada bir kez',icon:'🍓'},
  {id:'slide',name:'Kaydır Diz',desc:'Sayıları sıraya koy',icon:'🧩'},
@@ -1621,7 +1767,7 @@ A({id:'e_talk',s:'ing',name:'Selamlaşma ve Günler',icon:'👋',desc:'Hello, Go
  {id:'robot',name:'Robot Yolu',desc:'Komutlarla yıldızları topla',icon:'🤖'},
  {id:'scale',name:'Terazi',desc:'Dengeyi çöz',icon:'⚖️'},
  {id:'hanoi',name:'Hanoi Kulesi',desc:'Halkaları kurala uyarak taşı',icon:'🗼'},
- {id:'snake',name:'Yılan',desc:'Ye, büyü, sayıları sırayla topla',icon:'🐍',levels:['Meyve topla','Duvarlara dikkat','1, 2, 3… sırayla ye','Ağaçların arasında','İkişer say','Beşer say','Toplama yılanı','Onar say','Toplama ve çıkarma']}].forEach(g=>ACTS.push(Object.assign({s:'akl',kind:'game',max:0},g)));
+ {id:'snake',name:'Yılan',desc:'Ye, büyü, sayıları sırayla topla',icon:'🐍',isNew:true,levels:['Meyve topla','Duvarlara dikkat','1, 2, 3… sırayla ye','Ağaçların arasında','İkişer say','Beşer say','Toplama yılanı','Onar say','Toplama ve çıkarma']}].forEach(g=>ACTS.push(Object.assign({s:'akl',kind:'game',max:0},g)));
 
 const RUN={};
 
@@ -2107,6 +2253,347 @@ RUN.hanoi=(stage,L,api)=>{
   render();
 };
 
+/* ================= KONU ANLATIMLARI ================= */
+/* Etkileşimli ders parçaları: her biri kutuyu (box) kendisi çizer */
+const LW={};
+const lbtn=(a,t,ghost)=>`<button class="lb${ghost?' ghost':''}" data-a="${a}">${t}</button>`;
+const bindL=(box,fn)=>box.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{sfx.tap();fn(b.dataset.a,b)});
+LW.tens=box=>{let T=2,O=7;
+  const draw=msg=>{box.innerHTML=`<div class="lnum"><b>${T*10+O}</b><small>${T} onluk, ${O} birlik</small></div>${blocksHTML(T,O)}<div class="lbtns">${lbtn('o','➕ 1 birlik')}${lbtn('t','➕ 1 onluk')}${lbtn('r','Baştan',1)}</div>${msg?`<div class="lmsg">${msg}</div>`:''}`;
+    bindL(box,a=>{
+      if(a==='o'){O++;if(O===10){draw('🎉 10 birlik oldu! Şimdi hepsi birleşip 1 onluk çubuk olacak…');speak('On birlik oldu! Hepsi birleşip bir onluk oluyor.',true);setTimeout(()=>{if(!box.isConnected)return;O=0;T=Math.min(9,T+1);draw('✨ 10 birlik = 1 onluk');sfx.good()},1500);return}}
+      if(a==='t')T=Math.min(9,T+1);if(a==='r'){T=0;O=0}
+      draw();speak(`${T*10+O}. ${T} onluk, ${O} birlik.`,true)})};draw()};
+LW.jump=(step,max,start=0)=>box=>{let v=start;
+  const draw=()=>{let h='';for(let n=0;n<=max;n++){const hit=step>0?(n>=start&&n<=v&&(n-start)%step===0):(n<=start&&n>=v&&(start-n)%(-step)===0);h+=`<span class="jt${n===v?' on':''}${hit?' hit':''}">${n===v?'<i>🐸</i>':''}${n}</span>`}
+    box.innerHTML=`<div class="jrow">${h}</div><div class="lbtns">${lbtn('j',`🐸 Zıpla (${step>0?'+':'−'}${Math.abs(step)})`)}${lbtn('r','Baştan',1)}</div>`;
+    const on=box.querySelector('.jt.on');if(on)on.parentNode.scrollLeft=on.offsetLeft-on.parentNode.clientWidth/2+20;
+    bindL(box,a=>{if(a==='r')v=start;else{const nv=v+step;if(nv<0||nv>max){sfx.bad();speak('Sayıların sonuna geldik! Baştan başlayabilirsin.',true);return}v=nv;tone(380+v*6,.14,'triangle',.12)}draw();speak(String(v),true)})};draw()};
+LW.share=(total,kids,e)=>box=>{let given=0;const plates=Array(kids).fill(0),each=Math.floor(total/kids),stop=each*kids;
+  const draw=()=>{const left=total-given,done=given>=stop;
+    box.innerHTML=`<div class="emrow">${e.repeat(left)||'&nbsp;'}</div><div class="kids">${plates.map(p=>`<div class="kid"><span>🧒</span><div class="plate">${e.repeat(p)||'&nbsp;'}</div></div>`).join('')}</div><div class="lbtns">${done?'':lbtn('g',`${e} Birer birer dağıt`)}${lbtn('r','Baştan',1)}</div>${done?`<div class="lmsg">Her birine <b>${each}</b> tane düştü${total-stop?`, <b>${total-stop}</b> tane arttı`:''}! <b>${total} ÷ ${kids} = ${each}</b>${total-stop?`, kalan ${total-stop}`:''}</div>`:''}`;
+    bindL(box,a=>{if(a==='r'){given=0;plates.fill(0)}else{if(given>=stop)return;plates[given%kids]++;given++}draw();
+      if(given===stop&&a==='g')speak(`Her birine ${each} tane düştü.${total-stop?` ${total-stop} tane arttı.`:''} ${total} bölü ${kids} eşittir ${each}.`,true)})};draw()};
+LW.clock=box=>{let t=3*60;const draw=()=>{box.innerHTML=`<div class="clockbox" style="width:210px;margin:0 auto">${clockSVG(t)}</div><div class="lnum"><b style="font-size:26px">${timeText(t)}</b></div><div class="lbtns">${lbtn('15','+15 dakika')}${lbtn('60','+1 saat')}</div>`;
+  bindL(box,a=>{t=(t+ +a)%(12*60);draw();speak(timeText(t),true)})};draw()};
+LW.pizza=box=>{let n=1;const info={1:['1 bütün pizza','Hiç kesmedik. Bu bir bütün.'],2:['2 yarım','Ortadan ikiye, eşit kestik. Renkli parça bir yarım.'],4:['4 çeyrek','Dört eş parçaya kestik. Renkli parça bir çeyrek.']};
+  const draw=()=>{box.innerHTML=`<div class="lvrow">${fracSVG('c',n,1,'#FFC23C')}</div><div class="lnum"><b>${info[n][0]}</b><small>${info[n][1]}</small></div><div class="lbtns">${lbtn('k',n===4?'🍕 Yeni pizza':'🔪 Kes!')}</div>`;
+    bindL(box,()=>{n=n===1?2:n===2?4:1;draw();speak(info[n][0]+'. '+info[n][1],true)})};draw()};
+LW.words=items=>box=>{box.innerHTML=`<div class="wgrid">${items.map((it,i)=>`<button class="wcard" data-i="${i}"><span class="wv">${it[2]}</span><b>${it[0]}</b><small>${it[1]}</small></button>`).join('')}</div><div class="lmsg">Bir karta dokun, dinle ve yüksek sesle tekrar et!</div>`;
+  box.querySelectorAll('.wcard').forEach(b=>b.onclick=()=>{const it=items[+b.dataset.i];b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');speak([[it[0],'en'],[it[1],'tr'],[it[0],'en']],true)})};
+LW.col=(a,b,op)=>box=>{let st=0;const add=op==='+',A1=a%10,A10=Math.floor(a/10),B1=b%10,B10=Math.floor(b/10);
+  let r1,r10,c=0,bor=false;if(add){const s=A1+B1;r1=s%10;c=s>9?1:0;r10=A10+B10+c}else{bor=A1<B1;r1=(bor?A1+10:A1)-B1;r10=(bor?A10-1:A10)-B10}
+  const M=add?[`${a} ile ${b} sayısını alt alta yazdık. Birler birlerin, onlar onların altında.`,
+      `1. adım: Önce birleri topla: ${A1} + ${B1} = ${A1+B1}. ${c?`10 ya da daha fazla oldu! ${r1} yazıyoruz, 1 onluk elde olarak onlara gidiyor.`:`${r1} yazıyoruz.`}`,
+      `2. adım: Şimdi onları topla: ${A10} + ${B10}${c?' + 1 elde':''} = ${r10}.`,`Sonuç: ${a} + ${b} = ${a+b}. Harika! 🎉`]
+    :[`${a} sayısından ${b} çıkaracağız. Alt alta yazdık. Önce birlerden başlayacağız.`,
+      `1. adım: Birler: ${bor?`${A1} içinden ${B1} çıkmaz! Yandaki onluktan 1 onluk alıp bozuyoruz. ${A1} birlik ${A1+10} oldu. ${A1+10} − ${B1} = ${r1}.`:`${A1} − ${B1} = ${r1}.`}`,
+      `2. adım: Onlar: ${bor?`Bir onluğu verdiğimiz için ${A10} onluk ${A10-1} kaldı. `:''}${bor?A10-1:A10} − ${B10} = ${r10}.`,`Sonuç: ${a} − ${b} = ${a-b}. Harika! 🎉`];
+  const draw=()=>{const s1=st===1?' hl':'',s2=st===2?' hl':'',crossed=!add&&bor&&st>=1;
+    box.innerHTML=`<div class="lcol">
+      <span></span><span class="hd">onlar</span><span class="hd">birler</span>
+      <span></span><span class="cr">${add?(st>=1&&c?'1':''):(crossed?A10-1:'')}</span><span class="cr">${crossed?A1+10:''}</span>
+      <span></span><span class="${crossed?'x':''}${s2}">${A10||''}</span><span class="${crossed?'x':''}${s1}">${A1}</span>
+      <span class="op">${op}</span><span class="${s2.trim()}">${B10||''}</span><span class="${s1.trim()}">${B1}</span>
+      <span class="ln"></span><span class="ln"></span><span class="ln"></span>
+      <span></span><span class="res${s2}">${st>=2?r10:''}</span><span class="res${s1}">${st>=1?r1:''}</span></div>
+      <div class="lmsg">${M[st]}</div><div class="lbtns">${st<3?lbtn('n','Sonraki adım ▶'):''}${lbtn('r','Baştan',1)}</div>`;
+    bindL(box,x=>{st=x==='r'?0:Math.min(3,st+1);draw();speak(M[st],true)})};draw()};
+LW.clap=words=>box=>{let i=0;const draw=()=>{const w=words[i],h=hece(w);
+    box.innerHTML=`<div class="lnum"><b>${h.join(' - ')}</b><small>${h.length} hece</small></div><div class="claps">${h.map((s,k)=>`<span style="animation-delay:${k*.35}s">👏<small>${s}</small></span>`).join('')}</div><div class="lbtns">${lbtn('n','Sonraki sözcük ▶')}</div>`;
+    bindL(box,()=>{i=(i+1)%words.length;draw();const hh=hece(words[i]);speak(hh.join(', ')+'. '+hh.length+' hece.',true)})};draw()};
+
+const chips=(arr)=>`<div class="lchips">${arr.map(([e,t])=>`<span><i>${e}</i>${t}</span>`).join('')}</div>`;
+const pairsV=(arr)=>`<div class="lpairs">${arr.map(([a,b])=>`<div><span>${a}</span><i>↔</i><span>${b}</span></div>`).join('')}</div>`;
+const SHC=['#3399E6','#FF6B57','#22A866','#FFC23C'];
+
+const LESSONS={
+m_oddeven:{steps:[
+  {who:'🧦',h:'Çiftler ve teklerin hikâyesi',p:'Çoraplar hep <b>çift</b> olur, her çorabın bir eşi vardır. Bir çorap kaybolursa eşi <b>tek</b> başına kalır!',v:()=>`<div class="lvrow">${pairVis(6,'🧦')}<b class="eq">|</b>${pairVis(5,'🧦')}</div><div class="lmsg">6 çift · 5 tek</div>`},
+  {h:'Eşleştirerek bul',p:'Nesneleri <b>ikişer ikişer</b> eşleştir. Hepsinin eşi varsa sayı <b>çift</b>tir. Bir tanesi yalnız kalıyorsa sayı <b>tek</b>tir.',v:()=>pairVis(7,'🐥')},
+  {h:'Birler basamağına bak',p:'Büyük sayılarda sadece <b>birler basamağına</b> bakmak yeter! <b>0, 2, 4, 6, 8</b> ile biterse çift; <b>1, 3, 5, 7, 9</b> ile biterse tektir. 48 çift, 73 tektir.',v:()=>`<div class="tiles">${[0,1,2,3,4,5,6,7,8,9].map(n=>`<span class="tile" style="background:${n%2?'#FFE3DE':'#DDF5E7'}">${n}</span>`).join('')}</div><div class="lmsg">🟩 çift · 🟥 tek</div>`},
+  {who:'🐸',h:'İkişer sayınca hep çift!',p:'0\'dan başlayıp ikişer sayarsan bastığın her sayı <b>çift</b>tir: 0, 2, 4, 6, 8, 10…',w:LW.jump(2,20)},
+  {h:'Sen dene!',p:'',try:{q:'Hangisi tek sayıdır?',o:['17','24','30'],a:'17',ok:'Harika! 17 sayısı 7 ile bitiyor, o yüzden tek.',no:'Birler basamağına bak: 1, 3, 5, 7, 9 ile biten sayı tektir.'}}]},
+m_shape:{steps:[
+  {h:'Şekiller her yerde!',p:'Etrafına bak! Pencere <b>kare</b>, kapı <b>dikdörtgen</b>, pizza dilimi <b>üçgen</b>, saat <b>daire</b> şeklindedir.',v:()=>`<div class="lshapes">${[['kare','🪟','Kare'],['dikdortgen','🚪','Dikdörtgen'],['ucgen','🍕','Üçgen'],['daire','🕐','Daire']].map(([k,e,n],i)=>`<div>${shapeSVG(k,SHC[i],70)}<span>${e}</span><b>${n}</b></div>`).join('')}</div>`},
+  {h:'Kenar ve köşe',p:'<b>Kenar</b>, şeklin düz çizgileridir. <b>Köşe</b>, iki kenarın birleştiği sivri noktadır. Parmağınla kenarların üstünden geçerek sayabilirsin!',v:()=>`<svg viewBox="0 0 220 170" class="svgs" style="max-width:280px"><rect x="40" y="25" width="120" height="120" fill="#CFE6FA" stroke="#3399E6" stroke-width="8"/>${[[40,25],[160,25],[40,145],[160,145]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="10" fill="#FF6B57"/>`).join('')}<text x="172" y="20" font-size="16" font-weight="800" fill="#FF6B57" font-family="Nunito">köşe</text><text x="72" y="168" font-size="16" font-weight="800" fill="#3399E6" font-family="Nunito">kenar</text></svg>`},
+  {h:'Kaç kenar, kaç köşe?',p:'Üçgenin <b>3</b> kenarı, <b>3</b> köşesi var. Karenin ve dikdörtgenin <b>4</b> kenarı, <b>4</b> köşesi var. Dairenin hiç kenarı ve köşesi yok, yuvarlacık!',v:()=>`<div class="lshapes">${[['ucgen','3 kenar<br>3 köşe'],['kare','4 kenar<br>4 köşe'],['dikdortgen','4 kenar<br>4 köşe'],['daire','kenar yok<br>köşe yok']].map(([k,t],i)=>`<div>${shapeSVG(k,SHC[i],64)}<b>${t}</b></div>`).join('')}</div>`},
+  {h:'Kare mi, dikdörtgen mi?',p:'İkisinin de 4 kenarı var. Ama <b>karenin bütün kenarları eşittir</b>. Dikdörtgenin ise <b>iki uzun, iki kısa</b> kenarı vardır.',v:()=>`<div class="lshapes"><div>${shapeSVG('kare','#FFC23C',90)}<b>4 kenar eşit</b></div><div>${shapeSVG('dikdortgen','#22A866',90)}<b>2 uzun, 2 kısa</b></div></div>`},
+  {h:'Cisimler',p:'Elimize alabildiğimiz şekillere <b>cisim</b> denir. Top <b>küre</b>, zar <b>küp</b>, konserve kutusu <b>silindir</b>, dondurma külahı <b>koni</b> gibidir. Küre yuvarlanır, küp yuvarlanmaz!',v:()=>chips([['⚽','Küre'],['🎲','Küp'],['🥫','Silindir'],['🍦','Koni']])},
+  {h:'Sen dene!',p:'Hadi bakalım, ne kadar öğrendin?',try:{q:'Bir üçgenin kaç köşesi vardır?',o:['3','4','0'],a:'3',ok:'Evet! Üçgenin 3 köşesi var.',no:'Üçgenin sivri uçlarını tek tek say.'}},
+  {h:'Bir soru daha!',p:'',try:{q:'Zar hangi cisme benzer?',v:'<span class="pic">🎲</span>',o:['Küp','Küre','Koni'],a:'Küp',ok:'Süper! Zarın her yüzü bir karedir, o yüzden küptür.',no:'Zarın yüzlerine bak: hepsi kare.'}}]},
+m_tens:{steps:[
+  {h:'Birlikler',p:'Her küçük sarı küp <b>1 birlik</b>tir. Onları tek tek sayarız: 1, 2, 3, 4, 5…',v:()=>blocksHTML(0,5,'5 birlik')},
+  {h:'10 birlik = 1 onluk',p:'<b>10 birlik</b> küp yan yana gelince birleşip <b>1 onluk</b> çubuk olur. Onluk çubuğun içinde tam 10 küp saklıdır!',v:()=>`<div class="lvrow">${blocksHTML(0,10,'10 birlik')}<b class="eq">=</b>${blocksHTML(1,0,'1 onluk')}</div>`},
+  {h:'Hadi bloklarla oynayalım!',p:'Düğmelere dokun. Birlik ekle ve 10 olunca ne olduğunu izle!',w:LW.tens},
+  {h:'Basamaklar',p:'<b>34</b> sayısında 3 onluk ve 4 birlik var. Soldaki rakam <b>onlar basamağı</b>, sağdaki rakam <b>birler basamağı</b>dır.',v:()=>`<div class="lplace"><div><small>onlar</small><b>3</b><div class="rods">${'<i class="rod"></i>'.repeat(3)}</div></div><div><small>birler</small><b>4</b><div class="ones">${'<i class="cube"></i>'.repeat(4)}</div></div></div>`},
+  {h:'Onlukları onar onar say',p:'Blokları sayarken önce onlukları onar onar say: <b>10, 20, 30</b>… Sonra birlikleri tek tek ekle: <b>31, 32, 33, 34</b>!',v:()=>blocksHTML(3,4,'30 + 4 = 34')},
+  {h:'Deste',p:'<b>10 tane</b> nesneye <b>1 deste</b> denir. 1 deste kalem 10 kalemdir, 2 deste kalem 20 kalemdir.',v:()=>`<div class="emrow">${'✏️'.repeat(10)}</div><div class="lmsg">10 kalem = 1 deste</div>`},
+  {h:'Sen dene!',p:'',try:{q:'5 onluk ve 2 birlik hangi sayıdır?',o:['52','25','7'],a:'52',ok:'Süper! 50 + 2 = 52.',no:'Her onluk 10 eder: 10, 20, 30, 40, 50. Sonra 2 ekle.'}},
+  {h:'Bir soru daha!',p:'',try:{q:'Bu bloklar hangi sayıyı gösteriyor?',v:()=>blocksHTML(4,6),o:['46','64','10'],a:'46',ok:'Harika! 4 onluk 40, 6 birlik daha: 46.',no:'Önce çubukları onar onar say: 10, 20, 30, 40. Sonra küpleri ekle.'}}]},
+m_skip:{steps:[
+  {who:'🐸',h:'Ritmik sayma nedir?',p:'Kurbağa Vırak sayıların üstünde zıplıyor! Her seferinde <b>aynı sayı kadar</b> zıplıyor. Buna <b>ritmik sayma</b> denir.'},
+  {who:'🐸',h:'İkişer sayalım',p:'Zıpla düğmesine dokun: 0, 2, 4, 6, 8… Her zıplayışta <b>2 ekliyoruz</b>!',w:LW.jump(2,20)},
+  {who:'🐸',h:'Beşer sayalım',p:'Bir elimizde 5 parmak var! Beşer sayarken: 5, 10, 15, 20… Sayılar hep <b>0 ya da 5</b> ile biter.',w:LW.jump(5,50)},
+  {who:'🐸',h:'Onar sayalım',p:'10, 20, 30, 40… Onar sayarken sadece <b>onlar basamağı</b> 1 artar, birler hep 0 kalır.',w:LW.jump(10,100)},
+  {who:'🐸',h:'Üçer sayalım',p:'0, 3, 6, 9, 12… Her seferinde 3 ekle. Parmaklarınla 3 sayarak ilerleyebilirsin.',w:LW.jump(3,30)},
+  {who:'🐸',h:'Geriye doğru',p:'Geriye sayarken her seferinde <b>aynı sayıyı çıkarırız</b>: 20, 18, 16, 14…',w:LW.jump(-2,20,20)},
+  {h:'Sen dene!',p:'',try:{q:'5, 10, 15, … sıradaki sayı hangisi?',o:['20','16','25'],a:'20',ok:'Evet! Beşer sayınca 15\'ten sonra 20 gelir.',no:'Her seferinde 5 ekleniyor. 15 + 5 kaç eder?'}},
+  {h:'Bir soru daha!',p:'',try:{q:'30, 27, 24, … sıradaki sayı hangisi?',o:['21','23','20'],a:'21',ok:'Süper! Geriye doğru üçer sayıyoruz.',no:'Her seferinde 3 azalıyor. 24 − 3 kaç eder?'}}]},
+m_cmp:{steps:[
+  {h:'Sayı doğrusu',p:'Sayılar bir doğru üzerinde sıralanır. <b>Sağa</b> gittikçe sayılar <b>büyür</b>, sola gittikçe küçülür.',v:()=>lineSVG(0,20,1,13,5,'13')},
+  {who:'🐊',h:'Aç timsah büyük sayıyı yer!',p:'<b>&gt;</b> ve <b>&lt;</b> işaretleri aç bir timsahın ağzı gibidir. Timsahın ağzı her zaman <b>büyük sayıya</b> açılır! 45 &lt; 52 → "45, 52\'den küçüktür."',v:()=>`<div class="lcmp"><b>45</b><span>&lt;</span><b>52</b></div><div class="lmsg">🐊 Ağız büyük sayıya, 52\'ye açık!</div>`},
+  {h:'Önce onluklara bak',p:'İki sayıyı karşılaştırırken önce <b>onlar</b> basamağına bakarız; büyük olan kazanır. Onlar aynıysa <b>birlere</b> bakarız: 67 &gt; 63.',v:()=>`<div class="lcmp"><b>6<u>7</u></b><span>&gt;</span><b>6<u>3</u></b></div>`},
+  {h:'Önceki ve sonraki sayı',p:'Bir sayının <b>sonraki</b> sayısı 1 fazlasıdır, <b>önceki</b> sayısı 1 eksiğidir.',v:()=>`<div class="tiles"><span class="tile">39</span><span class="tile" style="background:var(--sun)">40</span><span class="tile">41</span></div><div class="lmsg">40\'tan önce 39, sonra 41 gelir.</div>`},
+  {who:'⛰️',h:'Yuvarlama',p:'En yakın onluğa yuvarlarken birler basamağına bak. <b>0, 1, 2, 3, 4</b> ise aşağı yuvarlanır, <b>5, 6, 7, 8, 9</b> ise yukarı. 47 → 50, 43 → 40.',v:()=>lineSVG(40,50,1,47,5,'47')},
+  {h:'Sen dene!',p:'',try:{q:'Hangisi doğru?',o:['38 < 41','38 > 41','38 = 41'],a:'38 < 41',ok:'Harika! 38, 41\'den küçüktür.',no:'Onlara bak: 3 onluk mu daha büyük, 4 onluk mu?'}},
+  {h:'Bir soru daha!',p:'',try:{q:'36 sayısını en yakın onluğa yuvarla.',o:['40','30','36'],a:'40',ok:'Evet! 6, 5\'ten büyük, yukarı yuvarlanır.',no:'Birler basamağı 6. 5 ve üstü yukarı gider.'}}]},
+m_add:{steps:[
+  {h:'Toplama birleştirmektir',p:'Toplama, şeyleri bir araya getirmektir. 3 elmaya 2 elma eklersek 5 elma olur: <b>3 + 2 = 5</b>',v:()=>`<div class="lvrow"><span class="emrow">🍎🍎🍎</span><b class="eq">+</b><span class="emrow">🍎🍎</span><b class="eq">=</b><span class="emrow">🍎🍎🍎🍎🍎</span></div>`},
+  {h:'Büyük sayıdan ileri say',p:'8 + 3 için <b>8</b>\'i aklında tut, sonra 3 parmak kaldırarak ileri say: 9, 10, 11! Cevap 11.',v:()=>`<div class="tiles"><span class="tile" style="background:var(--sun)">8</span><span class="tile">9</span><span class="tile">10</span><span class="tile">11</span></div>`},
+  {h:'10 yapma hilesi',p:'8 + 5 için 5\'in 2\'sini 8\'e ver: 8 + 2 = <b>10</b>. Kalan 3 ile 10 + 3 = <b>13</b>. Önce 10\'a tamamlamak işi çok kolaylaştırır!'},
+  {h:'Alt alta toplama',p:'Birler birlerin, onlar onların altına yazılır. <b>Her zaman önce birleri</b> toplarız. Adım adım bakalım:',w:LW.col(23,14,'+')},
+  {h:'Eldeli toplama',p:'Birlerin toplamı 10 ya da daha fazla olursa, 1 onluğu <b>elde</b> olarak onlara taşırız.',w:LW.col(27,15,'+')},
+  {h:'Yer değiştirme',p:'Toplamada sayıların yeri değişse de sonuç değişmez: <b>4 + 6 = 6 + 4 = 10</b>. Büyük sayıyı başa almak işini kolaylaştırır.'},
+  {h:'Sen dene!',p:'',try:{q:'36 + 8 kaç eder?',o:['44','34','42'],a:'44',ok:'Süper! 6 + 8 = 14. 4 yaz, 1 elde. 3 + 1 = 4. Sonuç 44.',no:'Birler: 6 + 8 = 14. 4 yaz, 1 elde. Onlar: 3 + 1 = ?'}}]},
+m_sub:{steps:[
+  {h:'Çıkarma eksiltmektir',p:'7 balonumuz vardı, 3 tanesi uçtu. Kaç balon kaldı? <b>7 − 3 = 4</b>',v:()=>`<div class="emrow">🎈🎈🎈🎈<span style="opacity:.25">🎈🎈🎈</span></div>`},
+  {h:'Geriye say',p:'12 − 3 için 12\'den <b>geriye 3 adım</b> say: 11, 10, 9. Cevap 9.',w:LW.jump(-1,15,12)},
+  {h:'Alt alta çıkarma',p:'Önce <b>birlerden</b> başla! Birler birlerden, onlar onlardan çıkar.',w:LW.col(48,23,'−')},
+  {h:'Onluk bozma',p:'Birlerde küçük sayıdan büyük sayı çıkmaz. O zaman yandaki onluktan <b>1 onluk</b> alıp bozarız: 1 onluk = 10 birlik!',w:LW.col(42,17,'−')},
+  {h:'Kontrol et',p:'Sonucun doğru olduğunu anlamak için toplama yap: <b>sonuç + çıkan = ilk sayı</b>. 42 − 17 = 25 → 25 + 17 = 42 ✓'},
+  {h:'Sen dene!',p:'',try:{q:'53 − 28 kaç eder?',o:['25','35','31'],a:'25',ok:'Harika! 13 − 8 = 5, 4 − 2 = 2. Sonuç 25.',no:'3 içinden 8 çıkmaz. Bir onluk boz: 13 − 8 = 5. Onlar: 4 − 2 = ?'}}]},
+m_mul:{steps:[
+  {h:'Çarpma, kısayoldan toplamadır',p:'3 tabakta dörder elma var: 4 + 4 + 4 = 12. Bunu kısaca <b>3 × 4 = 12</b> yazarız ve "3 kere 4" diye okuruz.',v:()=>groupsHTML(3,4,'🍎')},
+  {h:'× işareti',p:'× işaretine "kere" ya da "çarpı" deriz. <b>2 × 5</b> = 2 kere 5 = 5 + 5 = 10.'},
+  {who:'🐸',h:'Ritmik sayma ile çarp',p:'4 × 5 için beşer say, 4 kez zıpla: 5, 10, 15, 20! Cevap 20.',w:LW.jump(5,30)},
+  {h:'Yer değiştirme',p:'2 × 3 ile 3 × 2 aynı sonucu verir: <b>6</b>. Sıralar değişti, toplam aynı kaldı!',v:()=>`<div class="lvrow">${groupsHTML(2,3,'⭐')}<b class="eq">=</b>${groupsHTML(3,2,'⭐')}</div>`},
+  {h:'Sihirli kurallar',p:'Bir sayıyı <b>1</b> ile çarparsak sayı aynı kalır: 7 × 1 = 7. <b>2</b> ile çarpmak, sayıyı iki kere almaktır: 6 × 2 = 12.'},
+  {h:'Sen dene!',p:'',try:{q:'5 × 3 kaç eder?',o:['15','8','53'],a:'15',ok:'Süper! 5 + 5 + 5 = 15.',no:'Beşer say, 3 kez: 5, 10, …'}}]},
+m_div:{steps:[
+  {h:'Bölme, eşit paylaştırmaktır',p:'12 kurabiyeyi 3 arkadaşa <b>eşit</b> paylaştıralım. Düğmeye dokun ve birer birer dağıt!',w:LW.share(12,3,'🍪')},
+  {h:'÷ işareti',p:'Az önceki paylaşımı <b>12 ÷ 3 = 4</b> diye yazarız. "12 bölü 3 eşittir 4" diye okunur.'},
+  {h:'Ardışık çıkarma',p:'12\'den 3\'er 3\'er çıkaralım: 12, 9, 6, 3, 0. Kaç kez çıkardık? <b>4 kez</b>! Demek ki 12 ÷ 3 = 4.',v:()=>`<div class="tiles">${[12,9,6,3,0].map(n=>`<span class="tile">${n}</span>`).join('')}</div>`},
+  {h:'Çarpma ile kontrol',p:'Bölme ve çarpma kardeştir! 3 × 4 = 12 ise, 12 ÷ 3 = 4 ve 12 ÷ 4 = 3 olur.'},
+  {h:'Artan',p:'Bazen paylaştırınca birkaç tane <b>artar</b>. 7 elmayı 2 kişiye paylaştıralım:',w:LW.share(7,2,'🍎')},
+  {h:'Sen dene!',p:'',try:{q:'15 ÷ 5 kaç eder?',o:['3','5','10'],a:'3',ok:'Harika! 5 × 3 = 15, o yüzden 15 ÷ 5 = 3.',no:'5 kere kaç 15 eder? 5, 10, 15…'}}]},
+m_frac:{steps:[
+  {who:'🍕',h:'Bütün, yarım, çeyrek',p:'Bıçağa dokun ve pizzayı kes! Parçaların adlarını öğren.',w:LW.pizza},
+  {h:'Yarım',p:'Bir bütünü <b>2 eş parçaya</b> bölersek her parça bir <b>yarım</b> olur. 2 yarım = 1 bütün.',v:()=>`<div class="lvrow">${fracSVG('c',2,1)}${fracSVG('r',2,1)}</div>`},
+  {h:'Çeyrek',p:'Bir bütünü <b>4 eş parçaya</b> bölersek her parça bir <b>çeyrek</b> olur. 4 çeyrek = 1 bütün.',v:()=>`<div class="lvrow">${fracSVG('c',4,1)}${fracSVG('r',4,1)}</div>`},
+  {h:'Parçalar eş olmalı!',p:'Parçalar aynı büyüklükte değilse yarım ya da çeyrek <b>olmaz</b>. Kardeşinle paylaşırken iki parça da aynı olmalı!',v:()=>`<div class="lvrow">${fracSVG('u',2,1)}<b class="eq" style="color:var(--no)">✗</b>${fracSVG('r',2,1)}<b class="eq" style="color:var(--ok)">✓</b></div>`},
+  {h:'Bir çokluğun yarısı',p:'8 elmanın yarısını bulmak için elmaları <b>2 eş gruba</b> ayır: her grupta 4 elma var. 8\'in yarısı 4!',v:()=>groupsHTML(2,4,'🍎')},
+  {h:'Sen dene!',p:'',try:{q:'10 kalemin yarısı kaçtır?',o:['5','2','10'],a:'5',ok:'Evet! 10\'u iki eş gruba ayırınca 5 ve 5.',no:'10 kalemi iki kişiye eşit paylaştır. Her biri kaç alır?'}}]},
+m_money:{steps:[
+  {h:'Paramız: Türk lirası',p:'Paramızın adı <b>Türk lirası</b>dır. 1 liranın içinde <b>100 kuruş</b> vardır.',v:()=>`<div class="money">${moneyEl(100)}<b class="eq">=</b>${moneyEl(50)}${moneyEl(50)}</div>`},
+  {h:'Madeni paralar',p:'Madeni paralarımız: <b>1, 5, 10, 25, 50 kuruş</b> ve <b>1 lira</b>.',v:()=>`<div class="money">${[1,5,10,25,50,100].map(moneyEl).join('')}</div>`},
+  {h:'Kâğıt paralar',p:'Kâğıt paralarımız: <b>5, 10, 20, 50, 100 ve 200 lira</b>.',v:()=>`<div class="money">${[500,1000,2000,5000,10000,20000].map(moneyEl).join('')}</div>`},
+  {h:'Paraları sayalım',p:'Bir 10 lira ve bir 5 lira: 10 + 5 = <b>15 lira</b>. Saymaya hep <b>büyük paradan</b> başla!',v:()=>`<div class="money">${moneyEl(1000)}${moneyEl(500)}</div>`},
+  {h:'Para üstü',p:'7 liralık kitap için 10 lira verirsen para üstü: 10 − 7 = <b>3 lira</b>. Verdiğin paradan fiyatı çıkarırsın!'},
+  {h:'Sen dene!',p:'',try:{q:'2 tane 25 kuruş kaç kuruş eder?',o:['50 kuruş','25 kuruş','1 lira'],a:'50 kuruş',ok:'Süper! 25 + 25 = 50.',no:'25 ile 25\'i topla.'}}]},
+m_clock:{steps:[
+  {who:'⏰',h:'Saatin kolları',p:'Kısa kola <b>akrep</b> denir, saati gösterir. Uzun kola <b>yelkovan</b> denir, dakikayı gösterir.',v:()=>`<div class="clockbox" style="width:210px;margin:0 auto">${clockSVG(3*60)}</div>`},
+  {h:'Tam saat',p:'Yelkovan <b>12</b>\'nin üstündeyse saat tamdır. Akrep hangi sayıyı gösteriyorsa saat odur. Akrep 3\'te ise saat <b>üç</b>.'},
+  {h:'Buçuk',p:'Yelkovan <b>6</b>\'nın üstündeyse yarım saat geçmiştir, saat <b>buçuk</b>tur. Örneğin: saat üç buçuk.',v:()=>`<div class="clockbox" style="width:190px;margin:0 auto">${clockSVG(3*60+30)}</div>`},
+  {h:'Çeyrek geçiyor, çeyrek var',p:'Yelkovan <b>3</b>\'teyse "çeyrek geçiyor", <b>9</b>\'daysa "çeyrek var" deriz.',v:()=>`<div class="lvrow"><div class="clockbox" style="width:160px">${clockSVG(3*60+15)}</div><div class="clockbox" style="width:160px">${clockSVG(3*60+45)}</div></div>`},
+  {h:'Saati sen kur!',p:'Düğmelere dokun ve kolların nasıl döndüğünü izle.',w:LW.clock},
+  {h:'Sen dene!',p:'',try:{q:'Yelkovan 12\'de, akrep 7\'de. Saat kaç?',o:['Yedi','On iki','Altı buçuk'],a:'Yedi',ok:'Harika! Yelkovan 12\'de ise saat tam, akrep 7\'de: saat yedi.',no:'Yelkovan 12\'deyse saat tamdır. Akrep hangi sayıda?'}}]},
+m_meas:{steps:[
+  {h:'Uzunluk',p:'Kısa şeyleri <b>santimetre (cm)</b>, uzun şeyleri <b>metre (m)</b> ile ölçeriz. 1 metre = 100 santimetre.',v:()=>rulerSVG(6,'✏️')},
+  {h:'Cetvelle ölçme',p:'Ölçerken nesnenin bir ucunu cetvelin <b>0</b> çizgisine koyarız. Öbür ucu hangi sayıdaysa uzunluk odur.'},
+  {h:'Ağırlık',p:'Ağırlığı <b>kilogram (kg)</b> ile ölçeriz. Terazide <b>ağır olan taraf aşağı iner</b>.',v:()=>`<div class="lvrow"><span class="pic">⚖️</span><span class="emrow">🍉 &gt; 🍓</span></div>`},
+  {h:'Zaman',p:'1 gün = <b>24 saat</b>. 1 hafta = <b>7 gün</b>. 1 yıl = <b>12 ay</b>. Bir yılda 4 mevsim vardır.',v:()=>`<div class="tiles">${['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'].map(d=>`<span class="tile" style="font-size:17px">${d}</span>`).join('')}</div>`},
+  {h:'Sen dene!',p:'',try:{q:'Bir hafta kaç gündür?',o:['7','5','12'],a:'7',ok:'Evet! Pazartesiden pazara 7 gün.',no:'Günleri say: pazartesi, salı, çarşamba…'}},
+  {h:'Bir soru daha!',p:'',try:{q:'Sınıf kapısının boyunu hangi birimle ölçeriz?',o:['Metre','Kilogram','Gün'],a:'Metre',ok:'Süper! Uzun şeyleri metre ile ölçeriz.',no:'Bu bir uzunluk. Kilogram ağırlık, gün zaman ölçer.'}}]},
+m_sym:{steps:[
+  {who:'🦋',h:'Simetri nedir?',p:'Bir şekli tam ortasından katladığında iki yarısı birbirinin <b>aynısı</b> oluyorsa o şekil <b>simetrik</b>tir. Kelebeğin kanatlarına bak!',v:()=>`<div class="symdemo">🦋</div>`},
+  {h:'Ayna gibi',p:'Ortadaki çizgi bir <b>ayna</b> gibidir. Bir taraftaki kare, öbür tarafta çizgiden <b>aynı uzaklıkta</b> görünür.',v:()=>`<div class="symgrid">${[0,1,2,3,4,5].map(i=>`<i class="${i===1||i===4?'on':''}"></i>`).join('')}</div>`},
+  {h:'Etrafımızda simetri',p:'Yüzümüz, kalp ❤️, yaprak 🍃 ve birçok harf simetriktir: <b>A, H, M, O, T</b>.'},
+  {h:'Sen dene!',p:'',try:{q:'Hangisi simetriktir?',o:['❤️','🐌','👉'],a:'❤️',ok:'Evet! Kalbi ortadan katlarsan iki yarısı aynı olur.',no:'Hangisini ortadan katlarsan iki yarısı aynı olur?'}}]},
+m_robot:{steps:[
+  {who:'🤖',h:'Ben Robot Bip!',p:'Ben sadece bana verilen <b>komutları sırayla</b> yaparım. Her ok beni <b>1 kare</b> ilerletir.'},
+  {who:'🤖',h:'Okların anlamı',p:'⬆️ yukarı, ⬇️ aşağı, ⬅️ sola, ➡️ sağa. Yıldıza ulaşmak için önce kaç kare gideceğimi say, sonra o kadar ok koy!',v:()=>`<div class="lrg">${'⬜⬜⭐|⬜⬜⬜|🤖⬜⬜'.split('|').map(r=>`<div>${[...r].join('')}</div>`).join('')}</div><div class="lmsg">➡️ ➡️ ⬆️ ⬆️</div>`},
+  {who:'🤖',h:'Hata ayıklama',p:'Robot yanlış yere giderse komutlara tek tek bak, yanlış oku bul ve değiştir. Bilgisayarcılar buna <b>hata ayıklama</b> der!'},
+  {h:'Sen dene!',p:'',try:{q:'Robot 2 kare sağdaki yıldıza nasıl gider?',v:'<div class="emrow">🤖⬜⭐</div>',o:['➡️➡️','⬆️⬆️','➡️'],a:'➡️➡️',ok:'Harika! İki kere sağa.',no:'Yıldız sağda ve 2 kare uzakta.'}}]},
+m_graph:{steps:[
+  {h:'Nesne grafiği',p:'Nesne grafiğinde <b>her resim 1</b> kişiyi gösterir. Resimleri sayarak kaç kişinin seçtiğini buluruz.',v:()=>`<div class="lgraph"><div><b>Elma</b><span>🍎🍎🍎🍎</span></div><div><b>Muz</b><span>🍌🍌</span></div><div><b>Çilek</b><span>🍓🍓🍓🍓🍓</span></div></div>`},
+  {h:'Çetele',p:'Çetelede her şey için bir çizgi çizeriz. 5. çizgiyi çapraz çizeriz: <b><s>||||</s></b> = 5. Sonra beşer sayarız!'},
+  {h:'En çok, en az',p:'En uzun sıra <b>en çok</b>, en kısa sıra <b>en az</b> seçileni gösterir. Yukarıda çilek en çok, muz en az seçilmiş. Farkı bulmak için çıkarma yaparız: 5 − 2 = 3.'},
+  {h:'Sen dene!',p:'',try:{q:'Kaç kişi elmayı seçmiş?',v:'<div class="lgraph"><div><b>Elma</b><span>🍎🍎🍎🍎</span></div><div><b>Muz</b><span>🍌🍌</span></div></div>',o:['4','2','6'],a:'4',ok:'Süper! 4 elma resmi var.',no:'Elma sırasındaki resimleri say.'}}]},
+t_read:{steps:[
+  {who:'📚',h:'Okumaya hazırlan',p:'Önce <b>başlığa</b> ve resimlere bak. "Bu hikâye ne anlatıyor olabilir?" diye düşün. Sonra yavaş yavaş, dikkatle oku.'},
+  {h:'5N1K soruları',p:'Bir hikâyeyi anlamak için şu sihirli soruları sor:',v:()=>chips([['👧','Kim?'],['🎈','Ne?'],['🏠','Nerede?'],['⏰','Ne zaman?'],['❓','Neden?'],['🛠️','Nasıl?']])},
+  {h:'Örnek hikâye',p:'<i>"Elif sabah parka gitti. Salıncakta sallandı. Çok eğlendi."</i><br>Kim? <b>Elif</b>. Nerede? <b>Parkta</b>. Ne zaman? <b>Sabah</b>. Ne yaptı? <b>Salıncakta sallandı</b>.'},
+  {h:'Ana fikir',p:'Ana fikir, hikâyenin bize öğrettiği <b>en önemli şeydir</b>. Kendine sor: "Bu hikâyeden ne öğrendim?"'},
+  {h:'Cevabı metinde ara',p:'Soruyu okuduktan sonra hikâyeye geri dön ve cevabı ara. Cevap çoğu zaman metnin içinde saklıdır! 🔍'},
+  {h:'Sen dene!',p:'',try:{q:'"Ali akşam bahçede top oynadı." Ali ne zaman top oynadı?',o:['Akşam','Sabah','Okulda'],a:'Akşam',ok:'Harika! "Ne zaman?" sorusunun cevabı: akşam.',no:'Cümlede zaman bildiren sözcüğü bul.'}}]},
+t_ant:{steps:[
+  {h:'Zıt anlamlı sözcükler',p:'Anlamları birbirinin <b>tam tersi</b> olan sözcüklere <b>zıt anlamlı</b> denir.',v:()=>pairsV([['🐘 büyük','🐭 küçük'],['☀️ gündüz','🌙 gece'],['🔥 sıcak','❄️ soğuk'],['😀 mutlu','😢 üzgün']])},
+  {h:'Daha fazla örnek',p:'Bunları da öğrenelim:',v:()=>pairsV([['uzun','kısa'],['hızlı','yavaş'],['dolu','boş'],['açık','kapalı'],['ağır','hafif'],['yakın','uzak'],['erken','geç']])},
+  {h:'Cümlede zıt anlam',p:'"Çorba çok <b>sıcak</b>." Sözcüğün zıttını koyalım: "Çorba çok <b>soğuk</b>." Cümlenin anlamı tamamen değişti!'},
+  {h:'Dikkat et!',p:'"Güzel ↔ çirkin" zıttır. Ama "güzel – hoş" zıt <b>değildir</b>; bunlar <b>eş anlamlıdır</b>, yani aynı anlama gelir.'},
+  {h:'Sen dene!',p:'',try:{q:'"Hızlı" sözcüğünün zıt anlamlısı hangisi?',o:['yavaş','çabuk','koşmak'],a:'yavaş',ok:'Süper! Hızlı ↔ yavaş.',no:'Kaplumbağa nasıl yürür?'}}]},
+t_seq:{steps:[
+  {h:'Olayların bir sırası var',p:'Her şey sırayla olur. Önce tohum ekilir, sonra sulanır, sonra filiz çıkar, en sonunda çiçek açar.',v:()=>`<div class="lvrow lseq"><span>🌰</span>→<span>💧</span>→<span>🌱</span>→<span>🌸</span></div>`},
+  {h:'Sıra sözcükleri',p:'Şu sözcükler bize sırayı söyler: <b>önce, sonra, daha sonra, en sonunda</b>.'},
+  {h:'Kendine sor',p:'"Bu olmadan öbürü olabilir mi?" Dişleri fırçalamadan önce fırçaya macun sürülür. Keki yemeden önce fırında pişirmek gerekir!'},
+  {h:'Sen dene!',p:'',try:{q:'Hangisi önce olur?',o:['Keki fırında pişirmek','Keki yemek'],a:'Keki fırında pişirmek',ok:'Evet! Önce pişirir, sonra yeriz.',no:'Pişmemiş kek yenir mi?'}}]},
+t_sent:{steps:[
+  {h:'Cümle nedir?',p:'Bir düşünceyi tam olarak anlatan sözcük grubuna <b>cümle</b> denir. "Kedi süt içti." bir cümledir.'},
+  {h:'Cümlenin kuralları',p:'Cümle <b>büyük harfle</b> başlar. Sonuna <b>nokta</b>, <b>soru işareti</b> ya da <b>ünlem</b> konur.'},
+  {h:'Kim? Ne yaptı?',p:'Cümlede genellikle önce <b>kim</b> olduğu söylenir, <b>ne yaptığı</b> en sona gelir.',v:()=>`<div class="lwords"><span class="w1">Ali<small>kim?</small></span><span>topu</span><span class="w2">attı.<small>ne yaptı?</small></span></div>`},
+  {h:'Karışık sözcükleri dizme',p:'Önce <b>büyük harfle başlayan</b> sözcüğü bul, ilk o gelir. Sonunda <b>nokta</b> olan sözcük en sona gelir!'},
+  {h:'Sen dene!',p:'',try:{q:'Hangisi doğru bir cümledir?',o:['Kuşlar ağaçta ötüyor.','ötüyor kuşlar ağaçta.','Ağaçta. kuşlar ötüyor'],a:'Kuşlar ağaçta ötüyor.',ok:'Harika! Büyük harfle başlıyor, ne yaptığı sonda ve nokta ile bitiyor.',no:'Büyük harfle başlayan ve noktayla biten cümleyi bul.'}}]},
+t_cap:{steps:[
+  {h:'Büyük harf nerede kullanılır?',p:'Büyük harf kullandığımız yerler:',v:()=>chips([['1️⃣','Cümlenin ilk harfi'],['👧','Kişi adları: Ali, Zeynep'],['🏙️','Şehir, ülke: Ankara, Türkiye'],['🐶','Hayvan adları: Pamuk'],['🇹🇷','Atatürk']])},
+  {h:'Kesme işareti',p:'Özel adlara gelen ekleri <b>kesme işareti (\')</b> ile ayırırız: Ankara\'ya, Ali\'nin, Türkiye\'de.'},
+  {h:'Küçük harf kalanlar',p:'Genel adlar küçük harfle yazılır: kedi, şehir, okul. Ama kedinin adı <b>Pamuk</b> ise büyük harfle yazılır.'},
+  {h:'Sen dene!',p:'',try:{q:'Hangisi doğru yazılmıştır?',o:["Yazın İzmir'e gittik.","yazın izmir'e gittik.","Yazın izmir'e gittik."],a:"Yazın İzmir'e gittik.",ok:'Süper! Cümle başı ve şehir adı büyük harfle.',no:'Cümlenin ilk harfi ve şehir adı nasıl yazılır?'}}]},
+t_punc:{steps:[
+  {h:'Nokta ( . )',p:'Bir şey <b>anlatan</b> cümlenin sonuna nokta koyarız: "Bugün hava güzel<b>.</b>"'},
+  {h:'Soru işareti ( ? )',p:'<b>Soru soran</b> cümlenin sonuna soru işareti koyarız: "Kaç yaşındasın<b>?</b>" Bu cümlelerde <b>mi, ne, nerede, kaç</b> gibi soru sözcükleri olur.'},
+  {h:'Ünlem ( ! )',p:'Sevinç, korku, şaşkınlık gibi <b>güçlü duyguları</b> anlatan cümlenin sonuna ünlem koyarız: "Yaşasın, kar yağıyor<b>!</b>"'},
+  {h:'Virgül ( , )',p:'<b>Sıralanan</b> sözcüklerin arasına virgül koyarız: "Elma<b>,</b> armut ve muz aldık."'},
+  {h:'Sen dene!',p:'',try:{q:'"Eyvah, süt taştı" cümlesinin sonuna ne gelir?',o:['!','?','.'],a:'!',ok:'Evet! Şaşkınlık var, ünlem gelir.',no:'Bu cümlede güçlü bir duygu var mı?'}}]},
+t_abbr:{steps:[
+  {h:'Kısaltma nedir?',p:'Uzun sözcükleri ya da adları <b>kısaca</b> yazmaya kısaltma denir. Böylece daha hızlı yazarız.'},
+  {h:'Ölçü birimleri',p:'Ölçü kısaltmalarına nokta koymayız: <b>cm</b> santimetre, <b>m</b> metre, <b>km</b> kilometre, <b>kg</b> kilogram.'},
+  {h:'Noktalı kısaltmalar',p:'Bazı kısaltmaların sonunda nokta vardır: <b>Dr.</b> doktor, <b>Cad.</b> cadde, <b>Sok.</b> sokak, <b>No.</b> numara.'},
+  {h:'Kurum adları',p:'Kurumların adları baş harfleriyle büyük yazılır: <b>TBMM</b> Türkiye Büyük Millet Meclisi, <b>TDK</b> Türk Dil Kurumu.'},
+  {h:'Sen dene!',p:'',try:{q:'"kg" neyin kısaltmasıdır?',o:['kilogram','kilometre','kâğıt'],a:'kilogram',ok:'Süper! kg = kilogram.',no:'Ağırlık ölçerken kullanırız.'}}]},
+t_dict:{steps:[
+  {h:'Sözcüklerin anlamı',p:'Bilmediğimiz bir sözcüğün anlamını <b>sözlükten</b> bulabiliriz. Sözlükte sözcükler <b>alfabe sırasına</b> göre dizilir.'},
+  {h:'Cümleden tahmin et',p:'"Dedem bahçeye bir <b>fidan</b> dikti." Dikilen ve büyüyecek bir şey… Fidan, <b>küçük ve genç ağaç</b> demek! Cümledeki ipuçları anlamı bulmamıza yardım eder.'},
+  {h:'Eş anlamlı sözcükler',p:'Yazılışı farklı ama anlamı <b>aynı</b> olan sözcüklere eş anlamlı denir.',v:()=>pairsV([['cevap','yanıt'],['okul','mektep'],['siyah','kara'],['hediye','armağan']]).replace(/↔/g,'=')},
+  {h:'Resimli sözlük',p:'Resimli sözlükte her sözcüğün yanında resmi olur.',v:()=>chips([['🦋','kelebek'],['🐢','kaplumbağa'],['☂️','şemsiye'],['🪁','uçurtma']])},
+  {h:'Sen dene!',p:'',try:{q:'"Yanıt" sözcüğünün eş anlamlısı hangisi?',o:['cevap','soru','kitap'],a:'cevap',ok:'Harika! Yanıt = cevap.',no:'Bir soruya ne veririz?'}}]},
+t_syl:{steps:[
+  {h:'Hece nedir?',p:'Sözcükleri söylerken ağzımız açılıp kapanır. Her açılışta çıkan ses parçasına <b>hece</b> denir.'},
+  {h:'El çırp, heceyi bul!',p:'Her hecede bir kez el çırp. "Ka-lem" derken 2 kez çırparız, kalem <b>2 hecelidir</b>. Sonraki sözcüğe geç!',w:LW.clap(['kalem','araba','kelebek','top','ayakkabı','çiçek'])},
+  {h:'Sihirli ipucu: ünlüler',p:'Türkçede her hecede <b>bir ünlü</b> vardır. Ünlü harfler: <b>a, e, ı, i, o, ö, u, ü</b>. Sözcükteki ünlüleri say, hece sayısını bul!',v:()=>`<div class="lnum"><b>k<u>a</u>-l<u>e</u>m</b><small>2 ünlü = 2 hece</small></div>`},
+  {h:'Sen dene!',p:'',try:{q:'"Kelebek" kaç hecedir?',o:['3','2','4'],a:'3',ok:'Süper! ke-le-bek.',no:'Ünlüleri say: e, e, e…'}}]},
+t_plural:{steps:[
+  {h:'Tekil ve çoğul',p:'<b>Bir</b> tane varlığı anlatan sözcük <b>tekil</b>dir: kedi 🐱. <b>Birden çok</b> varlığı anlatan sözcük <b>çoğul</b>dur: kediler 🐱🐱🐱.'},
+  {h:'-lar mı, -ler mi?',p:'Çoğul yaparken sözcüğe <b>-lar</b> ya da <b>-ler</b> ekleriz. Sözcüğün son ünlüsü <b>a, ı, o, u</b> ise <b>-lar</b>; <b>e, i, ö, ü</b> ise <b>-ler</b> gelir.',v:()=>`<div class="lplace"><div><small>a, ı, o, u</small><b>-lar</b><span class="emrow">kitap<b>lar</b> 📚<br>top<b>lar</b> ⚽</span></div><div><small>e, i, ö, ü</small><b>-ler</b><span class="emrow">ev<b>ler</b> 🏠<br>çiçek<b>ler</b> 🌸</span></div></div>`},
+  {h:'Sen dene!',p:'',try:{q:'"Kalem" sözcüğünün çoğulu hangisi?',o:['kalemler','kalemlar'],a:'kalemler',ok:'Harika! Son ünlü "e", o yüzden -ler.',no:'Son ünlüye bak: kal-E-m.'}}]},
+h_traffic:{steps:[
+  {who:'🚦',h:'Trafik ışıkları',p:'<b>Kırmızı</b>: dur! <b>Sarı</b>: hazırlan. <b>Yeşil</b>: geç. Yaya ışığında yeşil yanınca karşıya geçeriz.',v:()=>`<div class="lvrow">${signSVG('kirmizi')}${signSVG('sari')}${signSVG('yesil')}</div>`},
+  {h:'Karşıya güvenle geç',p:'Karşıya <b>yaya geçidinden</b> geçeriz. Önce sola, sonra sağa, sonra tekrar sola bakarız. Asla koşmayız!',v:()=>`<div class="lvrow">${signSVG('yaya')}</div>`},
+  {h:'İşaret levhaları',p:'<b>DUR</b> levhası durmamız gerektiğini, <b>okul geçidi</b> levhası yakında okul olduğunu, <b>P</b> park yerini gösterir.',v:()=>`<div class="lvrow">${signSVG('dur')}${signSVG('okul')}${signSVG('park')}</div>`},
+  {h:'Arabada güvenlik',p:'Arabada <b>arka koltukta</b> otururuz ve <b>emniyet kemerimizi</b> takarız. Okul servisinde de kemer takılır. 🚗'},
+  {h:'Sen dene!',p:'',try:{q:'Hangi ışık yanınca yayalar karşıya geçer?',o:['Yeşil','Kırmızı','Sarı'],a:'Yeşil',ok:'Evet! Yeşil "geç" demektir.',no:'Kırmızı dur, sarı hazırlan demek.'}}]},
+h_season:{steps:[
+  {h:'Dört mevsim',p:'Bir yılda dört mevsim vardır ve her mevsim <b>3 ay</b> sürer.',v:()=>`<div class="lseasons"><div style="background:#FFE3EE">🌸<b>İlkbahar</b><small>Mart, Nisan, Mayıs</small></div><div style="background:#FFF1C9">☀️<b>Yaz</b><small>Haziran, Temmuz, Ağustos</small></div><div style="background:#FFE2CC">🍂<b>Sonbahar</b><small>Eylül, Ekim, Kasım</small></div><div style="background:#E1EEFB">❄️<b>Kış</b><small>Aralık, Ocak, Şubat</small></div></div>`},
+  {h:'Mevsimlerin özellikleri',p:'<b>İlkbaharda</b> çiçekler açar. <b>Yazın</b> hava sıcaktır, okullar tatildir. <b>Sonbaharda</b> yapraklar sararıp dökülür. <b>Kışın</b> kar yağar, hava soğuktur.'},
+  {h:'Hava olayları',p:'Yağmur 🌧️, kar ❄️, rüzgâr 🌬️, sis 🌫️ ve gökkuşağı 🌈 hava olaylarıdır. Yağmurdan sonra güneş çıkınca gökkuşağı görebiliriz!'},
+  {h:'Havaya göre giyin',p:'Kışın mont, atkı ve eldiven; yazın ince kıyafet ve şapka giyeriz. Yağmurda şemsiye kullanırız. ☂️'},
+  {h:'Sen dene!',p:'',try:{q:'Yaprakların döküldüğü mevsim hangisi?',o:['Sonbahar','Yaz','İlkbahar'],a:'Sonbahar',ok:'Süper! Sonbaharda yapraklar sararıp dökülür.',no:'🍂 Yapraklar hangi mevsimde sararır?'}}]},
+h_health:{steps:[
+  {who:'🍎',h:'Dengeli beslenme',p:'Her gün meyve, sebze, süt, yumurta ve ekmek gibi <b>farklı besinler</b> yeriz. Şekerli ve paketli yiyecekleri <b>az</b> yeriz.',v:()=>`<div class="lvrow"><span class="emrow">🍎🥦🥛🥚🍞 ✅</span><span class="emrow">🍬🍟 ⚠️</span></div>`},
+  {h:'Bol su iç',p:'Vücudumuzun suya ihtiyacı vardır. Gün boyunca su içmeyi unutma! 💧'},
+  {h:'Temizlik',p:'Ellerimizi yemekten önce ve tuvaletten sonra en az <b>20 saniye</b> sabunla yıkarız. Dişlerimizi günde <b>2 kez</b> fırçalarız. 🪥'},
+  {h:'Uyku ve spor',p:'Büyümek için her gece erken yatar, <b>10 saat</b> kadar uyuruz. Her gün koşup oynamak ve spor yapmak bizi güçlü yapar. ⚽'},
+  {h:'Sen dene!',p:'',try:{q:'Dişlerimizi günde en az kaç kez fırçalamalıyız?',o:['2','1','5'],a:'2',ok:'Evet! Sabah ve gece yatmadan önce.',no:'Sabah kalkınca ve gece yatarken…'}}]},
+h_body:{steps:[
+  {h:'Beş duyumuz',p:'Çevremizi <b>5 duyumuzla</b> tanırız:',v:()=>chips([['👁️','Göz: görme'],['👂','Kulak: işitme'],['👃','Burun: koklama'],['👅','Dil: tatma'],['✋','Deri: dokunma']])},
+  {h:'Duyu organlarımızı koruyalım',p:'Ekrana çok yakından bakmayız. Kulağımıza sivri şeyler sokmayız. Çok sıcak yiyecekleri üfleyerek yeriz. Güneşte şapka takarız.'},
+  {h:'Sen dene!',p:'',try:{q:'Çiçeğin kokusunu hangi organımızla alırız?',o:['Burun','Kulak','Göz'],a:'Burun',ok:'Harika! Burnumuzla koklarız.',no:'Koklamak için hangi organı kullanırız?'}}]},
+h_safe:{steps:[
+  {who:'🛡️',h:'İnternette güvenlik',p:'İnternette <b>adını soyadını, adresini, okulunu ve şifreni</b> kimseyle paylaşma. Tanımadığın kişilerle konuşma.'},
+  {h:'Bir büyüğüne söyle',p:'İnternette seni korkutan ya da üzen bir şey görürsen hemen anne-babana ya da öğretmenine söyle.'},
+  {h:'Acil durumlar',p:'Acil bir durumda <b>112</b>\'yi ararız. Ambulansa, itfaiyeye ve polise buradan ulaşılır.',v:()=>`<div class="lnum"><b>📞 112</b><small>Acil çağrı</small></div>`},
+  {h:'Deprem anında',p:'<b>Çök, kapan, tutun!</b> Sağlam bir masanın yanına çök, başını koru ve sallantı bitene kadar tutun.',v:()=>chips([['🧎','Çök'],['🙇','Kapan'],['✊','Tutun']])},
+  {h:'Tanımadığın kişiler',p:'Tanımadığın biri seni bir yere çağırırsa ya da bir şey verirse gitme, alma. Hemen güvendiğin bir büyüğüne haber ver.'},
+  {h:'Sen dene!',p:'',try:{q:'Acil durumda hangi numarayı ararız?',o:['112','100','555'],a:'112',ok:'Süper! 112 acil çağrı numarasıdır.',no:'Bir, bir, iki…'}}]},
+h_family:{steps:[
+  {who:'👨‍👩‍👧',h:'Ailemiz',p:'Aile; anne, baba, kardeşler, dede ve nineden oluşabilir. Ailemizle <b>sevgi ve saygı</b> içinde yaşarız.'},
+  {h:'Sihirli sözcükler',p:'Bu sözcükler herkesi mutlu eder:',v:()=>chips([['🙏','Lütfen'],['💐','Teşekkür ederim'],['🤝','Özür dilerim'],['☀️','Günaydın'],['🌙','İyi geceler']])},
+  {h:'Görev paylaşımı',p:'Evde herkesin görevi vardır. Oyuncaklarımızı toplamak, sofrayı kurmaya yardım etmek bizim görevimiz olabilir.'},
+  {h:'Sen dene!',p:'',try:{q:'Biri sana yardım edince ne dersin?',o:['Teşekkür ederim','Hoşça kal','Günaydın'],a:'Teşekkür ederim',ok:'Harika! Teşekkür etmek çok kibarca.',no:'Yardım edene ne söyleriz?'}}]},
+h_country:{steps:[
+  {who:'🇹🇷',h:'Bayrağımız',p:'Bayrağımız <b>kırmızı</b> zemin üzerinde <b>beyaz ay ve yıldızdan</b> oluşur. Bayrağımıza saygı gösteririz.'},
+  {h:'İstiklal Marşı',p:'Millî marşımız <b>İstiklal Marşı</b>\'dır. Şairi <b>Mehmet Âkif Ersoy</b>\'dur. Okunurken hazır ol duruşunda dururuz.'},
+  {h:'Atatürk',p:'Mustafa Kemal Atatürk 1881\'de <b>Selanik</b>\'te doğdu. Çok çalışkan bir öğrenciydi. <b>Cumhuriyetimizi</b> kurdu ve çocukları çok severdi.'},
+  {h:'Bayramlarımız',p:'<b>23 Nisan</b> Ulusal Egemenlik ve Çocuk Bayramı, <b>19 Mayıs</b> Atatürk\'ü Anma, Gençlik ve Spor Bayramı, <b>30 Ağustos</b> Zafer Bayramı, <b>29 Ekim</b> Cumhuriyet Bayramı.'},
+  {h:'Başkentimiz',p:'Türkiye\'nin başkenti <b>Ankara</b>\'dır. Anıtkabir de Ankara\'dadır.'},
+  {h:'Sen dene!',p:'',try:{q:'23 Nisan hangi bayramdır?',o:['Ulusal Egemenlik ve Çocuk Bayramı','Cumhuriyet Bayramı','Zafer Bayramı'],a:'Ulusal Egemenlik ve Çocuk Bayramı',ok:'Süper! 23 Nisan çocukların bayramı.',no:'Atatürk bu bayramı çocuklara armağan etti.'}}]},
+h_nature:{steps:[
+  {who:'🌳',h:'Tasarruf',p:'Dişlerimizi fırçalarken <b>musluğu kapatırız</b> 🚰. Odadan çıkarken <b>ışığı söndürürüz</b> 💡. Böylece su ve elektrik boşa gitmez.'},
+  {h:'Geri dönüşüm',p:'Atıklarımızı ayırırız:',v:()=>`<div class="lbins"><div style="background:#3399E6">📄<b>Kâğıt</b></div><div style="background:#FFC23C;color:#1E3A4A">🧴<b>Plastik</b></div><div style="background:#22A866">🍾<b>Cam</b></div><div style="background:#8A939B">🥫<b>Metal</b></div></div>`},
+  {h:'Yön bulma',p:'Güneş <b>doğudan</b> doğar, <b>batıdan</b> batar. Sağ kolumuzu güneşin doğduğu yöne açarsak önümüz <b>kuzey</b> olur.'},
+  {h:'Doğayı koru',p:'Ağaçlar bize temiz hava verir. Çiçekleri koparmayız, hayvanlara iyi davranırız, çöplerimizi yere atmayız.'},
+  {h:'Sen dene!',p:'',try:{q:'Plastik şişeyi hangi renk kutuya atarız?',o:['Sarı','Mavi','Yeşil'],a:'Sarı',ok:'Harika! Plastikler sarı kutuya.',no:'Mavi kâğıt, yeşil cam içindir.'}}]},
+h_science:{steps:[
+  {who:'💡',h:'Eskiden ve bugün',p:'Eskiden mumla aydınlanırdık, bugün <b>ampul</b> kullanıyoruz 💡. Eskiden mektup yazardık, bugün <b>telefonla</b> haberleşiyoruz 📱.'},
+  {h:'Mucitler ve bilim insanları',p:'<b>Thomas Edison</b> ampulü geliştirdi. <b>Aziz Sancar</b> Nobel ödülü alan bilim insanımızdır. <b>Piri Reis</b> ünlü dünya haritasını çizdi. <b>Mimar Sinan</b> Selimiye Camii\'ni yaptı.'},
+  {h:'Sanat',p:'Resim 🎨, müzik 🎻, tiyatro 🎭 ve dans birer <b>sanat dalıdır</b>.'},
+  {h:'Teknolojiyi doğru kullan',p:'Teknolojik araçları <b>kısa süre</b> ve dikkatli kullanırız. Islak elle prize ve cihazlara dokunmayız.'},
+  {h:'Sen dene!',p:'',try:{q:'Ampulü geliştiren mucit kimdir?',o:['Thomas Edison','Mimar Sinan','Piri Reis'],a:'Thomas Edison',ok:'Süper!',no:'Adı T harfiyle başlıyor.'}}]},
+e_vocab:{steps:[
+  {who:'🦉',h:'Kelime öğrenmenin sırrı',p:'Kelimeyi <b>dinle</b>, yüksek sesle <b>tekrar et</b> ve <b>resmini hatırla</b>. Kartlara dokunarak öğrenelim!'},
+  {h:'Fruits · Meyveler',p:'Karta dokun, dinle ve tekrar et.',w:LW.words(EN.fruits.items)},
+  {h:'Animals · Hayvanlar',p:'Karta dokun, dinle ve tekrar et.',w:LW.words(EN.pets.items)},
+  {h:'Body · Vücudumuz',p:'Karta dokun, dinle ve tekrar et.',w:LW.words(EN.body.items)},
+  {h:'Family · Ailem',p:'Karta dokun, dinle ve tekrar et.',w:LW.words(EN.family.items)},
+  {h:'School · Sınıfım',p:'Karta dokun, dinle ve tekrar et.',w:LW.words(EN.school.items)},
+  {h:'Clothes · Kıyafetler',p:'Karta dokun, dinle ve tekrar et.',w:LW.words(EN.clothes.items)},
+  {h:'Sen dene!',p:'',try:{q:'"Apple" hangisi?',o:['🍎','🍌','🍇'],a:'🍎',ok:'Harika! Apple = elma.',no:'Apple kırmızı ve yuvarlak bir meyve.'}}]},
+e_colors:{steps:[
+  {who:'🎨',h:'Colors · Renkler',p:'Renklere dokun ve İngilizcesini dinle. Yüksek sesle tekrar et!',w:LW.words(EN.colors.items)},
+  {h:'Renkleri cümlede kullan',p:'Etrafındaki şeylerin rengini İngilizce söyle: "The apple is <b>red</b>." (Elma kırmızı.) "The sky is <b>blue</b>." (Gökyüzü mavi.)',s:[['Etrafındaki şeylerin rengini İngilizce söyle.','tr'],['The apple is red. The sky is blue.','en']]},
+  {h:'Sen dene!',p:'',try:{q:'"Yellow" hangi renktir?',o:['Sarı','Mavi','Yeşil'],a:'Sarı',ok:'Süper! Yellow = sarı, güneş gibi.',no:'Güneşin rengi…'}}]},
+e_numbers:{steps:[
+  {who:'🔢',h:'Numbers 1–10',p:'Sayılara dokun ve dinle. Parmaklarınla birlikte say!',w:LW.words(EN.numbers.items.slice(0,10))},
+  {h:'11–20',p:'13\'ten 19\'a kadar sayıların sonunda <b>-teen</b> vardır: thir<b>teen</b>, four<b>teen</b>, fif<b>teen</b>… 20 ise <b>twenty</b>.',w:LW.words(EN.numbers.items.slice(10,20))},
+  {h:'Sen dene!',p:'',try:{q:'"Seven" kaçtır?',o:['7','6','9'],a:'7',ok:'Harika! Seven = 7.',no:'one, two, three, four, five, six, seven…'}}]},
+e_talk:{steps:[
+  {who:'👋',h:'Selamlaşma',p:'Karşılaşınca <b>Hello!</b> ya da <b>Hi!</b> deriz. Ayrılırken <b>Goodbye!</b> ya da <b>Bye!</b> deriz.',s:[['Karşılaşınca','tr'],['Hello! Hi!','en'],['deriz. Ayrılırken','tr'],['Goodbye! Bye!','en'],['deriz.','tr']]},
+  {h:'Günün saatleri',p:'Sabah <b>Good morning</b>, öğleden sonra <b>Good afternoon</b>, akşam <b>Good evening</b>, yatarken <b>Good night</b> deriz.',s:[['Sabah','tr'],['Good morning','en'],['öğleden sonra','tr'],['Good afternoon','en'],['akşam','tr'],['Good evening','en'],['yatarken','tr'],['Good night','en']]},
+  {h:'Tanışma',p:'<b>What is your name?</b> (Adın ne?) → <b>My name is Elif.</b> (Benim adım Elif.)<br><b>How are you?</b> (Nasılsın?) → <b>I am fine, thank you.</b> (İyiyim, teşekkürler.)',s:[['What is your name? My name is Elif. How are you? I am fine, thank you.','en']]},
+  {h:'Days · Günler',p:'Haftanın günlerine dokun ve dinle.',w:LW.words(EN.days.items)},
+  {h:'Sen dene!',p:'',try:{q:'Sabah öğretmenine ne dersin?',o:['Good morning','Good night','Goodbye'],a:'Good morning',ok:'Süper! Good morning = günaydın.',no:'"Morning" sabah demek.'}}]}
+};
+LESSONS.e_cards=LESSONS.e_vocab;LESSONS.e_listen=LESSONS.e_vocab;LESSONS.e_read=LESSONS.e_vocab;
+
+/* ders ekranı */
+let LS=null;
+function openLesson(id,opt={}){
+  const L=LESSONS[id];if(!L)return false;const a=ACTS.find(x=>x.id===id);
+  hush();closeModal();save.seen[id]=1;LS={id,L,i:0,opt,a};$('#lesson').hidden=false;{const sb=a&&SUBJECTS.find(x=>x.id===a.s);$('#lesson').style.setProperty('--gc',sb?sb.color:'var(--grape)')}document.body.classList.add('noscroll');
+  $('#ltitle').innerHTML=`<span>${a?a.icon:'📖'}</span> ${a?a.name:''}`;
+  drawLesson();return true;
+}
+function closeLesson(){if(!LS)return;const o=LS.opt,id=LS.id;LS=null;hush();$('#lesson').hidden=true;document.body.classList.remove('noscroll');
+  save.learned=save.learned||{};if(o.done)save.learned[id]=1;persist();
+  if(o.after)o.after(!!o.done)}
+function drawLesson(){
+  const {L,i}=LS,st=L.steps[i],n=L.steps.length,last=i===n-1;
+  $('#ldots').innerHTML=L.steps.map((_,k)=>`<i class="${k<i?'on':k===i?'cur':''}"></i>`).join('');
+  const who=st.who||(st.try?'🦉':'🦉');
+  const b=$('#lbody');b.innerHTML=`<div class="lteach"><span class="owl">${who}</span><div class="lbub"><h3>${st.h}</h3>${st.p?`<p>${st.p}</p>`:''}</div></div>`;
+  b.scrollTop=0;
+  if(st.v){const v=el('div','lvis',typeof st.v==='function'?st.v():st.v);b.append(v)}
+  if(st.w){const v=el('div','lvis');b.append(v);st.w(v)}
+  let segs=st.s||(st.h+'. '+(st.p||''));
+  if(st.try){const t=st.try,box=el('div','ltry');
+    box.innerHTML=`<div class="ltq">${t.q}</div>${t.v?`<div class="lvis sm">${typeof t.v==='function'?t.v():t.v}</div>`:''}<div class="lopts">${shuffle(t.o).map(o=>`<button class="lopt">${o}</button>`).join('')}</div><div class="lfb" hidden></div>`;
+    b.append(box);const fb=box.querySelector('.lfb');
+    box.querySelectorAll('.lopt').forEach(btn=>btn.onclick=()=>{
+      if(box.dataset.done)return;
+      if(btn.textContent===t.a){box.dataset.done=1;btn.classList.add('ok');sfx.good();fb.className='lfb ok';fb.innerHTML='🌟 '+(t.ok||'Doğru!');fb.hidden=false;speak(t.ok||'Doğru!',true);$('#lnext').classList.add('pulse')}
+      else{btn.classList.add('no');sfx.bad();fb.className='lfb no';fb.innerHTML='💡 '+(t.no||'Bir daha düşün.');fb.hidden=false;speak(t.no||'Bir daha düşün.',true)}});
+    segs=(st.h+'. '+(st.p||'')+' '+t.q)}
+  LS.segs=segs;
+  $('#lprev').disabled=i===0;
+  const nx=$('#lnext');nx.classList.remove('pulse');nx.textContent=last?(LS.opt.fromQuiz?'Soruya dön ▶':'Hadi soruları çözelim! ▶'):'İleri ▶';
+  speak(segs);
+}
+function lessonNav(d){if(!LS)return;sfx.tap();const n=LS.L.steps.length;
+  if(d>0&&LS.i===n-1){LS.opt.done=1;sfx.win();closeLesson();return}
+  LS.i=Math.max(0,Math.min(n-1,LS.i+d));drawLesson()}
+$('#lprev').onclick=()=>lessonNav(-1);$('#lnext').onclick=()=>lessonNav(1);$('#lsay').onclick=()=>{if(LS)speak(LS.segs,true)};
+$('#lx').onclick=()=>{sfx.tap();closeLesson()};
+addEventListener('keydown',e=>{if(!LS)return;if(e.key==='ArrowRight')lessonNav(1);if(e.key==='ArrowLeft')lessonNav(-1);if(e.key==='Escape')closeLesson()});
 /* ---------- 10. Yılan ---------- */
 const SNK_LV=[
   {m:'fruit',goal:5,wrap:1,sp:300,rocks:0,N:12},
@@ -2312,6 +2799,7 @@ RUN.snake=(stage,L,api)=>{
 };
 
 syncTools();renderHome();
+if(location.hash==='#akl'){try{history.replaceState(null,'',location.pathname)}catch(e){}openSubject('akl')}
 </script>
 
 </html>
