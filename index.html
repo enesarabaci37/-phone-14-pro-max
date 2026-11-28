@@ -1691,6 +1691,7 @@ const EN={
   days:{n:'Günler',items:[['Monday','Pazartesi','1️⃣'],['Tuesday','Salı','2️⃣'],['Wednesday','Çarşamba','3️⃣'],['Thursday','Perşembe','4️⃣'],['Friday','Cuma','5️⃣'],['Saturday','Cumartesi','6️⃣'],['Sunday','Pazar','7️⃣']]},
   adj:{n:'Büyük, küçük',items:[['big','büyük','🐘'],['small','küçük','🐭'],['tall','uzun boylu','🦒'],['short','kısa','🐧'],['happy','mutlu','😀'],['sad','üzgün','😢']]},
 };
+ACTS.push({id:'pip',s:'ing',kind:'game',name:"Pip's House",icon:'🦜',desc:'İngilizce macera: dinle, bul, yerleştir. Her şey İngilizce!',href:'ingilizce/',max:8,isNew:true});
 A({id:'e_cards',s:'ing',name:'Kelime Kartları',icon:'🃏',desc:'Dokun, dinle, öğren',kind:'cards',
   run(stage){
     const tabs=el('div','tabs'),grid=el('div','wcards');let curT=save.enTab&&EN[save.enTab]?save.enTab:'colors';
@@ -2799,7 +2800,7 @@ RUN.snake=(stage,L,api)=>{
 };
 
 syncTools();renderHome();
-if(location.hash==='#akl'){try{history.replaceState(null,'',location.pathname)}catch(e){}openSubject('akl')}
+{const hs=location.hash.slice(1);if(SUBJECTS.some(s=>s.id===hs)){try{history.replaceState(null,'',location.pathname)}catch(e){}openSubject(hs)}}
 </script>
 
 </html>
